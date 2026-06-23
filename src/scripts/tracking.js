@@ -47,6 +47,11 @@ export function initTracking() {
       try { gtag('event', eventName, payload); } catch(e) {}
     }
 
+    // TikTok Pixel
+    if (window.ttq) {
+      try { ttq.track(eventName, payload); } catch(e) {}
+    }
+
     // Console.debug in dev
     if (import.meta.env.DEV) {
       console.debug('[Tracking]', eventName, payload);

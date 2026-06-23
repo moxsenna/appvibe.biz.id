@@ -31,7 +31,16 @@ export function initLeadForm() {
     const utm = getUtmParams();
     const session = getSessionMeta();
 
+    // Generate event_id for TikTok Events API dedup
+    const eventId = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
+
+    // Fire TikTok Lead event with event_id for client→server dedup
+    if (window.ttq) {
+      try { ttq.track('Lead', { email, niche, name, event_id: eventId }); } catch(e) {}
+    }
+
     const payload = {
+      event_id: eventId,
       name,
       email,
       niche,
