@@ -28,9 +28,6 @@ export function initAppLauncher() {
     detailList.innerHTML = item.points.map(point => `<li>${point}</li>`).join("");
     detailFooter.textContent = item.footer;
     state.selectedApp = appKey;
-    if (!state.selectedPack) {
-      state.selectedPack = item.packs[0] || null;
-    }
     const packContext = item.packs.join(',');
     track('vault_app_selected', { app_id: appKey, pack_context: packContext });
     // Scroll detail ke view (mobile)
@@ -44,22 +41,14 @@ export function initAppLauncher() {
     button.addEventListener("click", () => setActiveApp(button.dataset.app));
   });
 
-  // Pack CTAs in detail panel
+  // Pack CTAs — delegate to single orchestration point
   document.querySelectorAll("[data-pack]").forEach(btn => {
     btn.addEventListener("click", () => {
       const packId = btn.dataset.pack;
-      const pack = vaultPacks[packId];
-      if (!pack) return;
-      state.selectedPack = packId;
-      detailLabel.textContent = "NICHE POSITIONING / " + pack.label.toUpperCase();
-      detailTitle.innerHTML = `Start with <em>${pack.label}.</em>`;
-      detailText.textContent = "Paket ini adalah titik masuk untuk membangun lini produk AI yang nyambung dengan market Anda.";
-      detailList.innerHTML = pack.appIds.map(id => {
-        const app = vaultApps[id];
-        return app ? `<li>${app.exampleRebrandName} &mdash; ${app.tagline}</li>` : '';
-      }).join("");
-      detailFooter.textContent = "\u201cBukan tentang menjual lebih banyak aplikasi, tapi tentang meluncurkan produk yang tepat ke audiens yang tepat.\u201d";
-      track('vault_pack_selected', { pack_id: packId, entry_point: 'app_launcher' });
+      if (!packId || !vaultPacks[packId]) return;
+      if (typeof window.setSelectedPack === 'function') {
+        window.setSelectedPack(packId, 'app_launcher');
+      }
     });
   });
 
@@ -88,7 +77,6 @@ export function initAppLauncher() {
   const firstActive = document.querySelector(".app-card.active");
   if (firstActive) {
     setActiveApp(firstActive.dataset.app || "adsprint");
-    state.selectedPack = null; // jangan pre-fill pack dari default app
   }
 }
 

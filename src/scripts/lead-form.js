@@ -23,11 +23,9 @@ export function initLeadForm() {
     const whatsapp = formData.get('whatsapp')?.trim() || '';
     const modelPenggunaan = formData.get('model_penggunaan')?.trim() || '';
 
-    // READ ONLY FROM HIDDEN FORM FIELDS — no fallback to vaultState
     const selectedPack = formData.get('selected_pack')?.trim() || null;
     const selectedApp = formData.get('selected_app')?.trim() || null;
 
-    // Turnstile token
     const turnstileToken = (function() {
       const widget = document.querySelector('.cf-turnstile iframe');
       if (widget && typeof window.turnstile !== 'undefined') {
@@ -87,8 +85,6 @@ export function initLeadForm() {
 
       if (response.ok) {
         const data = await response.json().catch(() => ({}));
-
-        // Only fire success if backend confirmed delivery
         if (data.success) {
           if (typeof window.fireStandardConversions === 'function') {
             window.fireStandardConversions({
@@ -97,7 +93,6 @@ export function initLeadForm() {
               model_penggunaan: modelPenggunaan,
             });
           }
-
           if (typeof window.trackVaultEvent === 'function') {
             window.trackVaultEvent('vault_lead_submit_success', {
               selected_pack: selectedPack,
@@ -106,25 +101,41 @@ export function initLeadForm() {
               form_open_source: formOpenSource,
             });
           }
-
           showSuccess(message);
           form.reset();
-          // Clear hidden fields after reset
           ['formSelectedPack', 'formSelectedApp', 'formOpenSource'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
           });
         }
       } else {
-        console.error('Lead submission rejected:', response.status);
+        showErrorByStatus(response.status, response);
       }
     } catch (err) {
-      console.error('Lead submission error:', err);
+      showModalError('Gagal terhubung ke server. Coba lagi nanti.');
     } finally {
       submitting = false;
       if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Kirim minat akses →'; }
     }
   });
+}
+
+function showErrorByStatus(status, response) {
+  const map = {
+    400: 'Data tidak lengkap. Periksa kembali isian Anda.',
+    403: 'Verifikasi keamanan gagal. Silakan muat ulang halaman.',
+    409: 'Pengiriman terdeteksi ganda. Tunggu sebentar sebelum mencoba lagi.',
+    502: 'Server pemrosesan sedang sibuk. Coba lagi nanti.',
+    503: 'Sistem belum siap menerima data. Tim kami sedang menyiapkan konfigurasi.',
+  };
+  const msg = map[status] || `Terjadi kendala (${status}). Coba lagi.`;
+  showModalError(msg);
+}
+
+function showModalError(msg) {
+  if (typeof window.showModalError === 'function') {
+    window.showModalError(msg);
+  }
 }
 
 function showSuccess(el) {

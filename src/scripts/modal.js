@@ -12,7 +12,6 @@ export function initModal() {
     document.body.style.overflow = "hidden";
     if (stickyCta) stickyCta.classList.add("hidden");
 
-    // ALWAYS set hidden fields — clear if no context
     const packField = document.getElementById('formSelectedPack');
     const appField = document.getElementById('formSelectedApp');
     const sourceField = document.getElementById('formOpenSource');
@@ -20,7 +19,10 @@ export function initModal() {
     if (appField) appField.value = appId || '';
     if (sourceField) sourceField.value = formSource || 'general';
 
-    // Focus first visible input
+    // Clear error message on re-open
+    const errEl = document.getElementById('modalError');
+    if (errEl) { errEl.classList.remove('show'); errEl.textContent = ''; }
+
     setTimeout(() => {
       const firstInput = modal.querySelector('input[name="name"], input[name]');
       if (firstInput && typeof firstInput.focus === 'function') firstInput.focus();
@@ -46,18 +48,36 @@ export function initModal() {
     }
   }
 
+  function showError(message) {
+    const errEl = document.getElementById('modalError');
+    if (errEl) { errEl.textContent = message; errEl.classList.add('show'); }
+  }
+
   window.openModal = openModal;
   window.closeModal = closeModal;
+  window.showModalError = showError;
 
-  // Generic CTAs — no pack/app context
+  // Delegated CTA click listener (vault_cta_click)
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cta], [data-open-modal], [data-open-form], [data-scroll-to]');
+    if (!btn) return;
+    const placement = btn.dataset.placement || btn.dataset.ctaPlacement || 'unknown';
+    const ctaLabel = btn.dataset.ctaLabel || btn.textContent.trim()?.slice(0, 60) || '';
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_cta_click', { placement, cta_label: ctaLabel });
+    }
+  });
+
+  // [data-open-modal] — never pre-fill pack/app
   document.querySelectorAll("[data-open-modal]").forEach(btn => {
     btn.addEventListener("click", (e) => {
       lastTrigger = e.currentTarget;
-      openModal('general', null, null);
+      const formSource = btn.dataset.formSource || btn.dataset.form_source || 'general';
+      openModal(formSource, null, null);
     });
   });
 
-  // Contextual CTAs
+  // [data-open-form] — contextual CTAs
   document.querySelectorAll("[data-open-form]").forEach(btn => {
     btn.addEventListener("click", (e) => {
       lastTrigger = e.currentTarget;
@@ -68,7 +88,7 @@ export function initModal() {
     });
   });
 
-  modalClose?.addEventListener("click", () => { lastTrigger = modalClose; closeModal(); });
+  modalClose?.addEventListener("click", () => closeModal());
   modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal?.classList.contains("show")) closeModal();
