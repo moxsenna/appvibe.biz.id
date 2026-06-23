@@ -39,7 +39,7 @@ export const vaultPacks = {
     code: '02',
     label: 'Commerce & Marketplace Pack',
     product_key: 'pack_commerce',
-    amount: 99000,
+    amount: 97000,
     currency: 'IDR',
     scope: 'FOR ECOMMERCE OPERATORS',
     targetAudience: 'Seller mentor, marketplace operator, ecommerce agency',

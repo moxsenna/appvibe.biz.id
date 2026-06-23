@@ -6,7 +6,6 @@ import { initModal } from './scripts/modal.js';
 import { initTracking } from './scripts/tracking.js';
 import { initLeadForm } from './scripts/lead-form.js';
 import { initPricing } from './scripts/pricing.js';
-import { initCheckoutUI } from './scripts/checkout-ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTracking();
@@ -16,9 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initModal();
   initPricing();
   initLeadForm();
-  initCheckoutUI();
 
-  // Scroll-to handlers for hero CTAs
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.scrollTo;
@@ -27,14 +24,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Pack card selection — single orchestration point
+  // Pack card CTA — redirect to dedicated checkout page
   document.querySelectorAll('[data-sel]').forEach(btn => {
     btn.addEventListener('click', () => {
       const packId = btn.dataset.pack;
       if (!packId) return;
-      if (typeof window.setSelectedPack === 'function') {
-        window.setSelectedPack(packId, 'pack_card');
-      }
+      const params = new URLSearchParams({ plan: 'single-pack', pack: packId });
+
+      // Persist UTM from session
+      const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      utmKeys.forEach((key) => {
+        const val = sessionStorage.getItem(key);
+        if (val) params.set(key, val);
+      });
+
+      const entryPoint = sessionStorage.getItem('entry_point') || 'pack_card';
+      params.set('ref', entryPoint);
+
+      window.location.href = `/checkout/?${params.toString()}`;
     });
   });
 });

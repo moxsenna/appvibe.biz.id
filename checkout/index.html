@@ -2,113 +2,105 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Checkout Test — White-Label Vault | AppVibe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Selesaikan Pembelian — AppVibe</title>
+  <meta name="description" content="Selesaikan akses AppVibe Anda. Pembayaran aman via Duitku." />
   <link rel="icon" href="/favicon.webp" type="image/webp" />
-  <link rel="stylesheet" href="/src/styles/index.css" />
-  <style>
-    .checkout-page { max-width: 520px; margin: 0 auto; padding: 2rem 1rem 4rem; }
-    .checkout-card {
-      background: rgba(255,253,248,.95);
-      border: 1px solid var(--line, #e2e0d8);
-      border-radius: 24px;
-      padding: 1.75rem;
-      box-shadow: 0 10px 32px rgba(14,18,27,.08);
-    }
-    .checkout-card h1 { font-family: "Playfair Display", Georgia, serif; font-size: 1.75rem; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
-    .checkout-card .sub { color: #626a72; font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.5rem; }
-    .checkout-form label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #5f6873; margin-bottom: 0.35rem; }
-    .checkout-form input, .checkout-form select {
-      width: 100%; padding: 0.75rem 0.85rem; border: 1px solid #ddd9ce; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem;
-    }
-    .checkout-form button {
-      width: 100%; padding: 0.9rem; border: none; border-radius: 13px; background: #d8ff42; color: #172008;
-      font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 5px 0 #b7dc20;
-    }
-    .checkout-form button:disabled { opacity: 0.6; cursor: not-allowed; }
-    .msg { margin-top: 1rem; padding: 0.75rem; border-radius: 10px; font-size: 0.8rem; display: none; }
-    .msg.err { display: block; background: #ffe8e5; color: #8b2e24; }
-    .msg.ok { display: block; background: #eff8ca; color: #4b5e19; }
-    .sandbox-badge {
-      display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
-      background: #eef4ff; border: 1px solid #c5d4f5; font-size: 0.65rem; font-weight: 700; color: #3d5080; margin-bottom: 1rem;
-    }
-    .back { display: inline-block; margin-bottom: 1rem; font-size: 0.8rem; color: #465ec6; }
-  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Playfair+Display:wght@700&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet" />
+  <script type="module" src="/src/checkout/main.js"></script>
 </head>
 <body>
-  <div class="checkout-page wrap">
-    <a class="back" href="/">← Kembali ke landing</a>
-    <div class="checkout-card">
-      <span class="sandbox-badge">Sandbox · PayCore staging + Duitku</span>
-      <h1>Checkout lisensi</h1>
-      <p class="sub">Form uji pembayaran untuk <strong>appvibe.web.id</strong> via <strong>PayCore</strong>. Bukan Narraza. Setelah submit Anda diarahkan ke halaman bayar Duitku sandbox.</p>
-      <form class="checkout-form" id="checkout-form">
-        <label for="name">Nama</label>
-        <input id="name" name="name" required autocomplete="name" placeholder="Nama lengkap" />
-        <label for="email">Email</label>
-        <input id="email" name="email" type="email" required autocomplete="email" placeholder="email@example.com" />
-        <label for="phone">WhatsApp / telepon (opsional)</label>
-        <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" />
-        <label for="pack_id">Paket</label>
-        <select id="pack_id" name="pack_id">
-          <option value="vault_full">Full Vault — 13 aplikasi (Rp 199.000 test)</option>
-          <option value="advertiser">Advertiser App Pack (Rp 99.000 test)</option>
-          <option value="commerce">Commerce & Marketplace Pack (Rp 99.000 test)</option>
-          <option value="creator">Creator & Affiliate Pack (Rp 99.000 test)</option>
-          <option value="branding">Brand & Launch Pack (Rp 99.000 test)</option>
-        </select>
-        <button type="submit" id="submit-btn">Lanjut ke pembayaran Duitku</button>
-      </form>
-      <div class="msg" id="form-msg" role="alert"></div>
+  <!-- Header -->
+  <header class="co-header">
+    <a class="co-header-brand" href="/">appvibe</a>
+    <a class="co-header-back" href="/#harga">← Kembali ke halaman utama</a>
+  </header>
+
+  <main class="co-wrapper" id="co-wrapper">
+    <!-- Invalid offer state (hidden by default) -->
+    <div class="co-invalid" id="co-invalid" style="display:none">
+      <h2>Pilihan tidak valid</h2>
+      <p id="co-error-message"></p>
+      <a href="/#harga">Lihat paket yang tersedia</a>
     </div>
-  </div>
-  <script type="module">
-    const form = document.getElementById('checkout-form');
-    const msg = document.getElementById('form-msg');
-    const btn = document.getElementById('submit-btn');
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      msg.className = 'msg';
-      msg.textContent = '';
-      btn.disabled = true;
-      btn.textContent = 'Membuat order…';
+    <!-- Order summary -->
+    <div class="co-order-summary" id="co-order-summary">
+      <h2>Ringkasan Pesanan</h2>
+      <div class="co-offer-name" id="co-offer-name"></div>
+      <div class="co-pack-name" id="co-pack-name" style="display:none"></div>
+      <div class="co-offer-price" id="co-offer-price"></div>
+      <div class="co-once" id="co-once">Sekali bayar · Tidak ada biaya bulanan</div>
+      <ul class="co-app-list" id="co-app-list"></ul>
+      <p class="co-license-note" id="co-license-note"></p>
+      <a class="co-change-link" id="co-change-link" href="/#harga">Ubah pilihan</a>
+    </div>
 
-      const payload = {
-        name: form.name.value.trim(),
-        email: form.email.value.trim(),
-        phone: form.phone.value.trim(),
-        pack_id: form.pack_id.value,
-      };
+    <!-- Checkout form -->
+    <div class="co-form-card" id="co-form-card">
+      <div id="co-form-content">
+        <h1 class="co-heading">Selesaikan akses AppVibe Anda.</h1>
+        <p class="co-subcopy">
+          Isi detail untuk invoice, akses, dan informasi pembayaran. Setelah ini Anda diarahkan ke halaman pembayaran aman.
+        </p>
 
-      try {
-        const res = await fetch('/api/checkout/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          msg.className = 'msg err';
-          msg.textContent = data.message || data.error || `Gagal (${res.status}). Cek secret PayCore di Pages.`;
-          btn.disabled = false;
-          btn.textContent = 'Lanjut ke pembayaran Duitku';
-          return;
-        }
-        if (data.checkout_url) {
-          window.location.href = data.checkout_url;
-          return;
-        }
-        msg.className = 'msg err';
-        msg.textContent = 'Tidak ada checkout_url dari PayCore.';
-      } catch (err) {
-        msg.className = 'msg err';
-        msg.textContent = 'Koneksi gagal. Jalankan dengan Cloudflare Pages (wrangler pages dev) agar API /api/checkout berjalan.';
-      }
-      btn.disabled = false;
-      btn.textContent = 'Lanjut ke pembayaran Duitku';
-    });
-  </script>
+        <form id="co-form" novalidate>
+          <div class="co-field">
+            <label for="co-name">Nama lengkap</label>
+            <input type="text" id="co-name" name="name" required autocomplete="name" placeholder="Nama lengkap" />
+          </div>
+
+          <div class="co-field">
+            <label for="co-email">Email aktif</label>
+            <input type="email" id="co-email" name="email" required autocomplete="email" placeholder="email@example.com" />
+          </div>
+
+          <div class="co-field">
+            <label for="co-phone">Nomor WhatsApp</label>
+            <input type="tel" id="co-phone" name="phone" required autocomplete="tel" placeholder="08xxxxxxxxxx" />
+          </div>
+
+          <div class="co-checkbox">
+            <input type="checkbox" id="co-agree" name="agree" required />
+            <label for="co-agree">
+              Saya setuju dengan
+              <a href="/license" target="_blank">ketentuan lisensi</a>
+              dan
+              <a href="/privacy" target="_blank">kebijakan privasi</a>.
+            </label>
+          </div>
+
+          <!-- Mobile: submit sticky -->
+          <div class="co-submit-sticky" id="co-submit-area">
+            <div class="co-submit-area">
+              <button type="submit" class="co-submit" id="co-submit">
+                Lanjut ke Pembayaran Aman — Rp97.000
+              </button>
+              <div class="co-error" id="co-submit-error" role="alert" aria-live="polite"></div>
+              <p class="co-privacy-note" id="co-privacy-note">
+                Data Anda digunakan untuk invoice, akses produk, dan komunikasi transaksi. Kami tidak menjual data Anda.
+              </p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Return / polling view (hidden by default) -->
+    <div class="co-return-view" id="co-return-view">
+      <span class="co-status-icon" id="co-status-icon">⏳</span>
+      <div class="co-status-badge pending" id="co-status-badge">Menunggu pembayaran</div>
+      <h2 class="co-status-title" id="co-status-title">Menunggu konfirmasi pembayaran</h2>
+      <p class="co-status-desc" id="co-status-desc">
+        Halaman ini akan diperbarui secara otomatis saat pembayaran dikonfirmasi.
+      </p>
+      <a class="co-status-action" id="co-status-action" style="display:none" href="/">Kembali ke halaman utama</a>
+    </div>
+  </main>
+
+  <!-- Aria-live region for screen reader status updates -->
+  <div class="sr-only" aria-live="polite" id="co-sr-live"></div>
 </body>
 </html>
