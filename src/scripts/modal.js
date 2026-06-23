@@ -1,12 +1,45 @@
+import { getSelectedOffer } from './pricing.js';
+
 export function initModal() {
   const modal = document.getElementById("leadModal");
   const modalClose = document.getElementById("modalClose");
   const stickyCta = document.getElementById("stickyCta");
+  const title = document.getElementById('modalTitle');
+  const description = document.getElementById('modalDescription');
+  const offerSummary = document.getElementById('modalOfferSummary');
+  const offerName = document.getElementById('modalOfferName');
+  const offerMeta = document.getElementById('modalOfferMeta');
   let lastTrigger = null;
+
+  function renderOffer(offer) {
+    if (!offer?.plan) return;
+
+    const packLabel = offer.pack ? ` · ${offer.pack.name}` : '';
+    if (title) title.textContent = 'Pilihan Anda sudah disiapkan.';
+    if (description) {
+      description.textContent = 'Isi detail singkat di bawah agar kami dapat mengarahkan Anda ke paket yang dipilih dan informasi aksesnya.';
+    }
+    if (offerName) offerName.textContent = `${offer.plan.name}${packLabel}`;
+    if (offerMeta) offerMeta.textContent = `${offer.plan.priceLabel} sekali bayar`;
+    offerSummary?.removeAttribute('hidden');
+  }
+
+  function clearOffer() {
+    offerSummary?.setAttribute('hidden', '');
+    if (title) title.textContent = 'Lihat opsi akses.';
+    if (description) {
+      description.textContent = 'Tinggalkan detail singkat. Anda akan menerima informasi paket, batas lisensi, dan jalur yang paling sesuai dengan market Anda.';
+    }
+  }
 
   function openModal(formSource, packId, appId) {
     if (!modal) return;
     if (modal.classList.contains('show')) return;
+
+    // Clear pricing offer summary for non-pricing CTAs
+    if (!formSource?.startsWith('pricing')) {
+      clearOffer();
+    }
 
     modal.classList.add("show");
     document.body.style.overflow = "hidden";
@@ -86,6 +119,39 @@ export function initModal() {
       const appId = btn.dataset.app || null;
       openModal(src, packId, appId);
     });
+  });
+
+  // Pricing CTA — appvibe:open-lead-modal event contract
+  window.addEventListener('appvibe:open-lead-modal', (event) => {
+    const offer = event.detail?.offer;
+    if (!offer?.plan) return;
+
+    lastTrigger = document.activeElement;
+    renderOffer(offer);
+
+    // Set hidden plan/pack fields
+    const planIdField = document.getElementById('selectedPlanId');
+    const planNameField = document.getElementById('selectedPlanName');
+    const planPriceField = document.getElementById('selectedPlanPrice');
+    const packIdField = document.getElementById('selectedPackId');
+    const packNameField = document.getElementById('selectedPackName');
+    if (planIdField) planIdField.value = offer.plan.id;
+    if (planNameField) planNameField.value = offer.plan.name;
+    if (planPriceField) planPriceField.value = String(offer.plan.price);
+    if (packIdField) packIdField.value = offer.pack?.id || '';
+    if (packNameField) packNameField.value = offer.pack?.name || '';
+
+    openModal('pricing_cta', offer.pack?.id || null, null);
+
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_pricing_cta_click', {
+        plan_id: offer.plan.id,
+        plan_name: offer.plan.name,
+        pack_id: offer.pack?.id || null,
+        value: offer.plan.price,
+        currency: 'IDR',
+      });
+    }
   });
 
   modalClose?.addEventListener("click", () => closeModal());

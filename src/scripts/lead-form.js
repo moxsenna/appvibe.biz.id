@@ -25,6 +25,11 @@ export function initLeadForm() {
 
     const selectedPack = formData.get('selected_pack')?.trim() || null;
     const selectedApp = formData.get('selected_app')?.trim() || null;
+    const planId = formData.get('plan_id')?.trim() || '';
+    const planName = formData.get('plan_name')?.trim() || '';
+    const planPrice = Number(formData.get('plan_price')) || 0;
+    const packId = formData.get('pack_id')?.trim() || '';
+    const packName = formData.get('pack_name')?.trim() || '';
 
     const turnstileToken = (function() {
       const widget = document.querySelector('.cf-turnstile iframe');
@@ -63,6 +68,11 @@ export function initLeadForm() {
       model_penggunaan: modelPenggunaan,
       selected_pack: selectedPack,
       selected_app: selectedApp,
+      plan_id: planId || undefined,
+      plan_name: planName || undefined,
+      plan_price: planPrice || undefined,
+      pack_id: packId || undefined,
+      pack_name: packName || undefined,
       form_open_source: formOpenSource,
       turnstileToken,
       utm_source: utm.source,
@@ -103,7 +113,7 @@ export function initLeadForm() {
           }
           showSuccess(message);
           form.reset();
-          ['formSelectedPack', 'formSelectedApp', 'formOpenSource'].forEach(id => {
+          ['formSelectedPack', 'formSelectedApp', 'formOpenSource', 'selectedPlanId', 'selectedPlanName', 'selectedPlanPrice', 'selectedPackId', 'selectedPackName'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';
           });
