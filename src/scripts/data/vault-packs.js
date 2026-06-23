@@ -58,7 +58,7 @@ export const vaultPacks = {
     code: '03',
     label: 'Creator & Affiliate Pack',
     product_key: 'pack_creator',
-    amount: 99000,
+    amount: 97000,
     currency: 'IDR',
     scope: 'FOR CREATOR EDUCATORS',
     targetAudience: 'Creator educator, affiliate mentor, social media agency',
@@ -112,11 +112,6 @@ export const vaultPacks = {
   }
 };
 
-/** Canonical list of sellable pack IDs in display order */
 export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch', 'vault_full'];
-
-// Expose on window for inline event handlers
-if (typeof window !== 'undefined') {
-  window.vaultPacks = vaultPacks;
-  window.PACK_ORDER = PACK_ORDER;
-}
+export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000, vault_full: 199000 };
+export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding', vault_full: 'vault_full_license' };
