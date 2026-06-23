@@ -1,32 +1,5 @@
 import { signPayCoreRequest } from '../../lib/paycore-sign.js';
-
-const PACKS = {
-  advertiser: {
-    product_key: 'pack_advertiser',
-    description: 'White-Label Vault — Advertiser App Pack',
-    amount: 99000,
-  },
-  commerce: {
-    product_key: 'pack_commerce',
-    description: 'White-Label Vault — Commerce & Marketplace Pack',
-    amount: 99000,
-  },
-  creator: {
-    product_key: 'pack_creator',
-    description: 'White-Label Vault — Creator & Affiliate Pack',
-    amount: 99000,
-  },
-  branding: {
-    product_key: 'pack_branding',
-    description: 'White-Label Vault — Brand & Launch Pack',
-    amount: 99000,
-  },
-  vault_full: {
-    product_key: 'vault_full_license',
-    description: 'White-Label AI App Vault — Full License (13 apps)',
-    amount: 199000,
-  },
-};
+import { PACKS, VALID_PACK_IDS, DEFAULT_PACK_ID } from '../../lib/packs.js';
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -37,7 +10,11 @@ function json(data, status = 200, extraHeaders = {}) {
 
 function corsHeaders(request) {
   const origin = request.headers.get('Origin') || '';
-  const allowed = origin.startsWith('http://localhost') || origin.startsWith('http://127.0.0.1') || origin === 'https://appvibe.web.id';
+  const allowed =
+    origin.startsWith('http://localhost') ||
+    origin.startsWith('http://127.0.0.1') ||
+    origin === 'https://appvibe.web.id' ||
+    origin === 'https://appvibe.biz.id';
   return {
     'Access-Control-Allow-Origin': allowed ? origin : 'https://appvibe.web.id',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
@@ -66,7 +43,8 @@ export async function onRequest(context) {
     return json(
       {
         error: 'payments_not_configured',
-        message: 'Set PAYCORE_KEY_ID and PAYCORE_APP_SECRET in Cloudflare Pages (sama dengan PayCore Worker VAULT_*).',
+        message:
+          'Pembayaran belum siap. Pastikan PAYCORE_KEY_ID dan PAYCORE_APP_SECRET sudah diatur di environment Cloudflare Pages.',
       },
       503,
       cors,
@@ -83,14 +61,37 @@ export async function onRequest(context) {
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim();
   const phone = String(body.phone || '').trim();
-  const packId = String(body.pack_id || 'vault_full').trim();
+  const packId = String(body.pack_id || '').trim();
 
-  if (!name || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    return json({ error: 'validation', message: 'Nama dan email valid wajib diisi.' }, 422, cors);
+  // Validate pack
+  if (!packId || !VALID_PACK_IDS.includes(packId)) {
+    return json(
+      { error: 'invalid_pack', message: 'Paket tidak valid. Silakan pilih paket yang tersedia.' },
+      422,
+      cors,
+    );
   }
 
-  const pack = PACKS[packId] || PACKS.vault_full;
+  // Validate customer info
+  if (!name || name.length < 2) {
+    return json(
+      { error: 'validation', message: 'Nama lengkap wajib diisi (minimal 2 karakter).' },
+      422,
+      cors,
+    );
+  }
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return json(
+      { error: 'validation', message: 'Email valid wajib diisi.' },
+      422,
+      cors,
+    );
+  }
+
+  const pack = PACKS[packId];
   const externalOrderId = `vault-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+
+  // Check idempotency: same (email + packId) within short window to prevent double-click
   const idempotencyKey = crypto.randomUUID();
 
   const orderBody = {
@@ -99,7 +100,7 @@ export async function onRequest(context) {
     product_key: pack.product_key,
     description: pack.description,
     amount: pack.amount,
-    currency: 'IDR',
+    currency: pack.currency,
     customer: {
       name,
       email,
@@ -108,7 +109,10 @@ export async function onRequest(context) {
     return_url: returnUrl,
     fulfillment_data: {
       pack_id: packId,
+      product_key: pack.product_key,
       email,
+      name,
+      phone,
       source: 'appvibe.web.id_checkout',
     },
   };
@@ -124,6 +128,7 @@ export async function onRequest(context) {
     rawBody,
   });
 
+  // Call PayCore API
   const paycoreRes = await fetch(`${baseUrl.replace(/\/+$/, '')}${path}`, {
     method: 'POST',
     headers: {
@@ -144,7 +149,7 @@ export async function onRequest(context) {
       {
         error: 'paycore_error',
         status: paycoreRes.status,
-        paycore: paycoreJson,
+        message: 'Gagal membuat order pembayaran. Silakan coba lagi.',
       },
       paycoreRes.status >= 500 ? 502 : 400,
       cors,
@@ -152,10 +157,46 @@ export async function onRequest(context) {
   }
 
   if (!paycoreJson.checkout_url) {
-    return json(
-      { error: 'no_checkout_url', paycore: paycoreJson },
-      502,
-      cors,
+    return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
+  }
+
+  // Persist order locally in KV for status tracking
+  if (env.CHECKOUT_EVENTS) {
+    const orderRecord = {
+      external_order_id: externalOrderId,
+      paycore_order_id: paycoreJson.order_id,
+      pack_id: packId,
+      product_key: pack.product_key,
+      amount: pack.amount,
+      currency: pack.currency,
+      customer_name: name,
+      customer_email: email,
+      customer_phone: phone,
+      payment_status: paycoreJson.payment_status || 'pending',
+      fulfillment_status: 'pending',
+      checkout_url: paycoreJson.checkout_url,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
+
+    await env.CHECKOUT_EVENTS.put(
+      `order:${paycoreJson.order_id}`,
+      JSON.stringify(orderRecord),
+      { expirationTtl: 60 * 60 * 24 * 90 }, // 90 days
+    );
+
+    // Also index by external_order_id
+    await env.CHECKOUT_EVENTS.put(
+      `ext:${externalOrderId}`,
+      paycoreJson.order_id,
+      { expirationTtl: 60 * 60 * 24 * 90 },
+    );
+
+    // Track last order by email (for quick lookup)
+    await env.CHECKOUT_EVENTS.put(
+      `buyer:${email}`,
+      paycoreJson.order_id,
+      { expirationTtl: 60 * 60 * 24 * 90 },
     );
   }
 
@@ -164,7 +205,7 @@ export async function onRequest(context) {
       checkout_url: paycoreJson.checkout_url,
       order_id: paycoreJson.order_id,
       external_order_id: paycoreJson.external_order_id,
-      payment_status: paycoreJson.payment_status,
+      payment_status: paycoreJson.payment_status || 'pending',
       amount: pack.amount,
     },
     201,

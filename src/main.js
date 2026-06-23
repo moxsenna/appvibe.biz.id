@@ -6,6 +6,7 @@ import { initModal } from './scripts/modal.js';
 import { initTracking } from './scripts/tracking.js';
 import { initLeadForm } from './scripts/lead-form.js';
 import { initPricing } from './scripts/pricing.js';
+import { initCheckoutUI } from './scripts/checkout-ui.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTracking();
@@ -15,7 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initModal();
   initPricing();
   initLeadForm();
+  initCheckoutUI();
 
+  // Scroll-to handlers for hero CTAs
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.scrollTo;

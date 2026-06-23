@@ -1,51 +1,5 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#050B1D" />
-  <title>White-Label AI App Vault — Ubah Audiens Anda Menjadi Pembeli Produk AI</title>
-  <meta name="description" content="13 aplikasi AI siap rebrand untuk advertiser, agency, mentor marketing, dan owner komunitas. Bangun produk digital dengan brand Anda tanpa membuat aplikasi dari nol." />
-  <link rel="canonical" href="https://appvibe.web.id/" />
-  <link rel="icon" href="/favicon.webp" type="image/webp" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.webp" />
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/src/styles/index.css">
-  <script type="module" src="/src/main.js"></script>
-  <meta property="og:title" content="AppVibe — White-Label AI App Vault" />
-  <meta property="og:description" content="13 aplikasi AI siap rebrand untuk dijual dengan brand Anda sendiri." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://appvibe.biz.id/" />
-  <meta name="twitter:card" content="summary_large_image" />
+$body = @'
 
-  <!-- Meta Pixel -->
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '000000000000000');
-    fbq('track', 'PageView');
-  </script>
-
-  <!-- TikTok Pixel -->
-  <script>
-    !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-      ttq.load('D8TCSU3C77UDQUH9CQQ0');
-      ttq.page();
-    }(window, document, 'ttq');
-  </script>
-
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
-
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
-</head>
-<body>
-  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=000000000000000&amp;ev=PageView&amp;noscript=1"></noscript>
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="wrap">
     <header class="topbar">
       <a class="brand" href="#top" aria-label="AppVibe">
@@ -54,7 +8,6 @@
       <nav class="nav" aria-label="Navigasi utama">
         <a href="#cara-kerja">Cara kerja</a>
         <a href="#niche-pack">Pilih pack</a>
-        <a href="#harga">Harga</a>
         <a href="#aplikasi">13 aplikasi</a>
         <a href="#lisensi">Lisensi</a>
       </nav>
@@ -68,7 +21,6 @@
     <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi seluler">
       <a href="#cara-kerja">Cara kerja</a>
       <a href="#niche-pack">Pilih pack</a>
-      <a href="#harga">Harga</a>
       <a href="#aplikasi">13 aplikasi</a>
       <a href="#lisensi">Lisensi</a>
       <a href="#faq">FAQ</a>
@@ -208,48 +160,48 @@
               <span class="pack-code">01 / FOR MEDIA BUYERS</span>
               <div class="pack-icon">📊</div>
             </div>
-            <h3>Advertiser App Pack <span class="pack-price pack-price-97">Rp97.000</span></h3>
+            <h3>Advertiser App Pack</h3>
             <p>Untuk media buyer, agency performance, dan mentor ads. Mulai dengan Campaign Blueprint AI — tool yang memberi campaign direction dan creative testing ideas sebelum budget iklan digunakan.</p>
             <div class="pack-tags">
               <span>ADSprint</span><span>RUPA</span><span>ADEGAN</span><span>BUKTI</span><span>MULA</span>
             </div>
-            <button class="btn paper" data-pack="advertiser" data-sel="true">Beli Advertiser Pack →</button>
+            <button class="btn paper" data-pack="advertiser" data-sel="true">Pilih Advertiser Pack →</button>
           </article>
           <article class="pack commerce" data-pack="commerce">
             <div class="pack-top">
               <span class="pack-code">02 / FOR ECOMMERCE OPERATORS</span>
               <div class="pack-icon">🛒</div>
             </div>
-            <h3>Commerce &amp; Marketplace Pack <span class="pack-price pack-price-97">Rp97.000</span></h3>
+            <h3>Commerce &amp; Marketplace Pack</h3>
             <p>Untuk seller mentor, marketplace operator, dan ecommerce agency. Mulai dengan Marketplace Growth AI — tool merchandising, listing optimization, proof asset, dan affiliate content system.</p>
             <div class="pack-tags">
               <span>KATALOG</span><span>RUPA</span><span>BUKTI</span><span>PIKAT</span><span>ADSprint</span>
             </div>
-            <button class="btn paper" data-pack="commerce" data-sel="true">Beli Commerce Pack →</button>
+            <button class="btn paper" data-pack="commerce" data-sel="true">Pilih Commerce Pack →</button>
           </article>
           <article class="pack creator" data-pack="creator">
             <div class="pack-top">
               <span class="pack-code">03 / FOR CREATOR EDUCATORS</span>
               <div class="pack-icon">🎬</div>
             </div>
-            <h3>Creator &amp; Affiliate Pack <span class="pack-price pack-price-97">Rp97.000</span></h3>
+            <h3>Creator &amp; Affiliate Pack</h3>
             <p>Untuk creator educator, affiliate mentor, dan social media agency. Mulai dengan Affiliate Content Engine — sistem konten, hook library, voice direction, script planning, dan persona continuity.</p>
             <div class="pack-tags">
               <span>PIKAT</span><span>RITME</span><span>MIMIK</span><span>RUPA</span><span>SUARA</span>
             </div>
-            <button class="btn paper" data-pack="creator" data-sel="true">Beli Creator Pack →</button>
+            <button class="btn paper" data-pack="creator" data-sel="true">Pilih Creator Pack →</button>
           </article>
           <article class="pack branding" data-pack="brand_launch">
             <div class="pack-top">
               <span class="pack-code">04 / FOR STRATEGISTS &amp; BUILDERS</span>
               <div class="pack-icon">🚀</div>
             </div>
-            <h3>Brand &amp; Launch Pack <span class="pack-price pack-price-97">Rp97.000</span></h3>
+            <h3>Brand &amp; Launch Pack</h3>
             <p>Untuk brand strategist, web designer, course creator, dan consultant. Mulai dengan Brand Compass AI — fondasi brand, launch map, website blueprint, print campaign, dan voice system.</p>
             <div class="pack-tags">
               <span>ARAH</span><span>MIMIK</span><span>MULA</span><span>TAYANG</span><span>CETAK</span>
             </div>
-            <button class="btn paper" data-pack="brand_launch" data-sel="true">Beli Brand &amp; Launch Pack →</button>
+            <button class="btn paper" data-pack="brand_launch" data-sel="true">Pilih Brand &amp; Launch Pack →</button>
           </article>
         </div>
       </section>
@@ -369,113 +321,6 @@
         </div>
       </section>
 
-      <!-- PRICING -->
-      <section class="section pricing-section" id="harga" aria-labelledby="pricing-title">
-        <div class="section-head">
-          <div class="pricing-intro">
-            <div class="section-kicker">Pilih skala produk Anda</div>
-            <h2 id="pricing-title">Mulai dari satu niche. Atau buka <em>seluruh katalog sekaligus.</em></h2>
-            <p class="section-copy">
-              Kedua pilihan memberi marketing kit dan lisensi white-label yang sama. Perbedaannya hanya pada jumlah niche pack dan aplikasi yang langsung bisa Anda bawa ke pasar.
-            </p>
-          </div>
-        </div>
-
-        <div class="pricing-license-band" role="note">
-          <div class="pricing-license-icon" aria-hidden="true">✦</div>
-          <div>
-            <strong>Semua pilihan sudah termasuk marketing kit + lisensi jual ulang + hak rebrand.</strong>
-            <p>Anda dapat mengganti nama, visual, niche, dan positioning; lalu menjual akses produk branded kepada end user sesuai ketentuan lisensi.</p>
-          </div>
-        </div>
-
-        <div class="pricing-grid">
-          <article class="price-card price-card--single" aria-labelledby="single-pack-title">
-            <span class="price-badge"><i></i> mulai dari satu niche</span>
-            <h3 id="single-pack-title">Pilih <em>1 Niche Pack.</em></h3>
-            <p class="price-description">Untuk Anda yang ingin fokus memvalidasi satu pasar terlebih dahulu dengan lini produk yang lebih spesifik.</p>
-
-            <div class="price-block" aria-label="Harga Rp97.000 sekali bayar">
-              <span class="price-currency">Rp</span>
-              <span class="price-amount">97.000</span>
-              <span class="price-period">sekali bayar</span>
-            </div>
-
-            <div class="price-divider"></div>
-
-            <ul class="price-includes">
-              <li>Pilih tepat 1 dari 4 niche pack</li>
-              <li>Aplikasi yang ada di pack pilihan Anda</li>
-              <li>Marketing kit khusus untuk pack tersebut</li>
-              <li>Lisensi jual ulang akses produk + rebrand</li>
-            </ul>
-
-            <div class="pack-picker">
-              <span class="pack-picker-label" id="single-pack-label">Pilih niche pack Anda</span>
-              <div class="pack-options" role="radiogroup" aria-labelledby="single-pack-label">
-                <button class="pack-option" type="button" role="radio" aria-checked="false"
-                  data-pack-choice data-pack-id="advertiser" data-pack-name="Advertiser &amp; Agency">
-                  <strong>Advertiser &amp; Agency</strong>
-                  <span>ADSprint &middot; RUPA &middot; MULA</span>
-                </button>
-                <button class="pack-option" type="button" role="radio" aria-checked="false"
-                  data-pack-choice data-pack-id="commerce" data-pack-name="Commerce &amp; Affiliate">
-                  <strong>Commerce &amp; Affiliate</strong>
-                  <span>PIKAT &middot; CETAK &middot; KATALOG</span>
-                </button>
-                <button class="pack-option" type="button" role="radio" aria-checked="false"
-                  data-pack-choice data-pack-id="creator" data-pack-name="Creator &amp; Content">
-                  <strong>Creator &amp; Content</strong>
-                  <span>ADEGAN &middot; SUARA &middot; MIMIK &middot; RITME</span>
-                </button>
-                <button class="pack-option" type="button" role="radio" aria-checked="false"
-                  data-pack-choice data-pack-id="branding" data-pack-name="Brand &amp; Website">
-                  <strong>Brand &amp; Website</strong>
-                  <span>ARAH &middot; BUKTI &middot; TAYANG</span>
-                </button>
-              </div>
-            </div>
-
-            <button class="btn paper full price-cta" type="button"
-              data-pricing-cta="single-pack" disabled>
-              Pilih 1 Niche Pack →
-            </button>
-            <p class="price-helper">Pilih pack dulu untuk melanjutkan.</p>
-          </article>
-
-          <article class="price-card price-card--featured" aria-labelledby="full-vault-title">
-            <span class="price-badge price-badge--featured"><i></i> pilihan paling rasional</span>
-            <h3 id="full-vault-title">Full <em>AppVibe Vault.</em></h3>
-            <p class="price-description">Untuk Anda yang ingin punya lebih banyak lini produk, angle promosi, dan ruang untuk menjual ke berbagai tipe buyer.</p>
-
-            <div class="price-block" aria-label="Harga Rp147.000 sekali bayar">
-              <span class="price-currency">Rp</span>
-              <span class="price-amount">147.000</span>
-              <span class="price-period">sekali bayar</span>
-            </div>
-
-            <div class="price-divider"></div>
-
-            <ul class="price-includes">
-              <li>Semua 4 niche pack</li>
-              <li>Seluruh 13 aplikasi siap rebrand</li>
-              <li>Semua marketing kit dan arah positioning</li>
-              <li>Lisensi jual ulang akses produk + rebrand</li>
-            </ul>
-
-            <div class="price-comparison" aria-label="Perbandingan nilai paket">
-              <span>Tambahkan Rp50.000 dari 1 pack untuk membuka tiga niche pack tambahan.</span>
-              <b>+ 3 pack</b>
-            </div>
-
-            <button class="btn full price-cta" type="button" data-pricing-cta="full-vault">
-              Ambil Semua 13 Aplikasi →
-            </button>
-            <p class="price-value-logic"><strong>Rp11.300-an per aplikasi</strong> saat Anda membuka seluruh vault.</p>
-          </article>
-        </div>
-      </section>
-
       <!-- LICENSE -->
       <section class="section" id="lisensi" aria-labelledby="lisensi-title">
         <div class="section-head">
@@ -583,24 +428,12 @@
       <div class="modal-card">
         <button class="modal-close" id="modalClose" aria-label="Tutup">&times;</button>
         <h3 id="modalTitle">Lihat opsi akses.</h3>
-        <p id="modalDescription">Tinggalkan detail singkat. Anda akan menerima informasi paket, batas lisensi, dan jalur yang paling sesuai dengan market Anda.</p>
-
-        <div class="modal-offer-summary" id="modalOfferSummary" hidden>
-          <span>Pilihan Anda</span>
-          <strong id="modalOfferName"></strong>
-          <small id="modalOfferMeta"></small>
-        </div>
-
+        <p>Tinggalkan detail Anda untuk menerima informasi paket, lisensi white-label, dan jalur paling cocok berdasarkan niche bisnis Anda.</p>
         <form class="modal-form" id="leadForm">
-          <input type="text" id="honeypot" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <input type="hidden" id="honeypot" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
           <input type="hidden" id="formSelectedPack" name="selected_pack" value="" />
           <input type="hidden" id="formSelectedApp" name="selected_app" value="" />
           <input type="hidden" id="formOpenSource" name="form_open_source" value="" />
-          <input type="hidden" id="selectedPlanId" name="plan_id" value="" />
-          <input type="hidden" id="selectedPlanName" name="plan_name" value="" />
-          <input type="hidden" id="selectedPlanPrice" name="plan_price" value="" />
-          <input type="hidden" id="selectedPackId" name="pack_id" value="" />
-          <input type="hidden" id="selectedPackName" name="pack_name" value="" />
           <input type="text" name="name" placeholder="Nama lengkap" required />
           <input type="email" name="email" placeholder="Email aktif" required />
           <input type="tel" name="whatsapp" placeholder="WhatsApp (contoh: 0812xxxx)" />
@@ -614,8 +447,6 @@
             <option value="community_benefit">Community / member benefit</option>
           </select>
           <div class="cf-turnstile" data-sitekey="0x4AAAAAAAXxxxxx_REPLACE_ME"></div>
-          <input type="hidden" name="cf-turnstile-response" id="cfTurnstileResponse" />
-          <div class="modal-error" id="modalError"></div>
           <button class="btn lime full" type="submit">Kirim minat akses →</button>
           <p class="form-privacy">Dengan mengirim form ini, Anda setuju dihubungi AppVibe terkait informasi akses dan paket yang relevan.</p>
         </form>
@@ -627,3 +458,58 @@
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>
+'@
+
+$prefix = @'
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <title>White-Label AI App Vault — Ubah Audiens Anda Menjadi Pembeli Produk AI</title>
+  <meta name="description" content="13 aplikasi AI siap rebrand untuk advertiser, agency, mentor marketing, dan owner komunitas. Bangun produk digital dengan brand Anda tanpa membuat aplikasi dari nol." />
+  <link rel="canonical" href="https://appvibe.web.id/" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/src/styles/index.css">
+  <script type="module" src="/src/main.js"></script>
+  <meta property="og:title" content="AppVibe — White-Label AI App Vault" />
+  <meta property="og:description" content="13 aplikasi AI siap rebrand untuk dijual dengan brand Anda sendiri." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://appvibe.biz.id/" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '000000000000000');
+    fbq('track', 'PageView');
+  </script>
+
+  <!-- TikTok Pixel -->
+  <script>
+    !function (w, d, t) {
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+      ttq.load('D8TCSU3C77UDQUH9CQQ0');
+      ttq.page();
+    }(window, document, 'ttq');
+  </script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script>
+
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
+</head>
+<body>
+  <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=000000000000000&amp;ev=PageView&amp;noscript=1"></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+'@
+
+Set-Content "$PSScriptRoot\index.html" -Value ($prefix + $body)
+Write-Host "Done. Lines: $((Get-Content index.html | Measure-Object -Line).Lines)"

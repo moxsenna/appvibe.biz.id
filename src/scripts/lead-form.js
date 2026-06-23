@@ -23,6 +23,7 @@ export function initLeadForm() {
     const whatsapp = formData.get('whatsapp')?.trim() || '';
     const modelPenggunaan = formData.get('model_penggunaan')?.trim() || '';
 
+    // READ ONLY FROM HIDDEN FORM FIELDS — no fallback to vaultState
     const selectedPack = formData.get('selected_pack')?.trim() || null;
     const selectedApp = formData.get('selected_app')?.trim() || null;
     const planId = formData.get('plan_id')?.trim() || '';
@@ -31,6 +32,7 @@ export function initLeadForm() {
     const packId = formData.get('pack_id')?.trim() || '';
     const packName = formData.get('pack_name')?.trim() || '';
 
+    // Turnstile token
     const turnstileToken = (function() {
       const widget = document.querySelector('.cf-turnstile iframe');
       if (widget && typeof window.turnstile !== 'undefined') {
@@ -95,6 +97,8 @@ export function initLeadForm() {
 
       if (response.ok) {
         const data = await response.json().catch(() => ({}));
+
+        // Only fire success if backend confirmed delivery
         if (data.success) {
           if (typeof window.fireStandardConversions === 'function') {
             window.fireStandardConversions({
@@ -103,6 +107,7 @@ export function initLeadForm() {
               model_penggunaan: modelPenggunaan,
             });
           }
+
           if (typeof window.trackVaultEvent === 'function') {
             window.trackVaultEvent('vault_lead_submit_success', {
               selected_pack: selectedPack,
@@ -111,8 +116,10 @@ export function initLeadForm() {
               form_open_source: formOpenSource,
             });
           }
+
           showSuccess(message);
           form.reset();
+          // Clear hidden fields after reset
           ['formSelectedPack', 'formSelectedApp', 'formOpenSource', 'selectedPlanId', 'selectedPlanName', 'selectedPlanPrice', 'selectedPackId', 'selectedPackName'].forEach(id => {
             const el = document.getElementById(id);
             if (el) el.value = '';

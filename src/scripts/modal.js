@@ -45,6 +45,7 @@ export function initModal() {
     document.body.style.overflow = "hidden";
     if (stickyCta) stickyCta.classList.add("hidden");
 
+    // ALWAYS set hidden fields — clear if no context
     const packField = document.getElementById('formSelectedPack');
     const appField = document.getElementById('formSelectedApp');
     const sourceField = document.getElementById('formOpenSource');
@@ -154,7 +155,7 @@ export function initModal() {
     }
   });
 
-  modalClose?.addEventListener("click", () => closeModal());
+  modalClose?.addEventListener("click", () => { lastTrigger = modalClose; closeModal(); });
   modal?.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && modal?.classList.contains("show")) closeModal();

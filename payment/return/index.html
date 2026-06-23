@@ -7,30 +7,208 @@
   <link rel="icon" href="/favicon.webp" type="image/webp" />
   <link rel="stylesheet" href="/src/styles/index.css" />
   <style>
+    :root {
+      --return-success: #4b5e19;
+      --return-success-bg: #eff8ca;
+      --return-pending: #6b5200;
+      --return-pending-bg: #fff8e0;
+      --return-fail: #8b2e24;
+      --return-fail-bg: #ffe8e5;
+    }
     .return-page { max-width: 480px; margin: 0 auto; padding: 3rem 1rem; text-align: center; }
-    .return-page h1 { font-family: "Playfair Display", Georgia, serif; font-size: 1.6rem; }
-    .return-page p { color: #626a72; font-size: 0.9rem; line-height: 1.65; }
-    .order-id { font-family: "DM Mono", monospace; font-size: 0.75rem; background: #f4f2ea; padding: 0.5rem 0.75rem; border-radius: 8px; margin: 1rem 0; word-break: break-all; }
-    .note { font-size: 0.75rem; color: #8b7355; margin-top: 1.5rem; padding: 1rem; background: #fff8e6; border-radius: 12px; text-align: left; }
+    .return-page h1 { font-family: "Playfair Display", Georgia, serif; font-size: 1.6rem; margin: 0; }
+    .return-card {
+      background: rgba(255,253,248,.95);
+      border: 1px solid var(--line, #e2e0d8);
+      border-radius: 24px;
+      padding: 1.75rem;
+      margin-top: 1.5rem;
+      box-shadow: 0 10px 32px rgba(14,18,27,.08);
+    }
+    .return-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
+    .return-status { display: inline-block; padding: 6px 14px; border-radius: 99px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1rem; }
+    .return-status.success { background: var(--return-success-bg); color: var(--return-success); }
+    .return-status.pending { background: var(--return-pending-bg); color: var(--return-pending); }
+    .return-status.failed { background: var(--return-fail-bg); color: var(--return-fail); }
+    .return-page p { color: #626a72; font-size: 0.85rem; line-height: 1.65; margin: 0.5rem 0; }
+    .return-actions { display: flex; gap: 10px; justify-content: center; margin-top: 1.25rem; flex-wrap: wrap; }
+    .return-actions .btn { min-width: 140px; }
+    .order-id { font-family: "DM Mono", monospace; font-size: 0.7rem; background: #f4f2ea; padding: 0.5rem 0.75rem; border-radius: 8px; margin: 0.75rem 0; word-break: break-all; }
+    .return-loader { display: inline-block; width: 24px; height: 24px; border: 3px solid #e2e0d8; border-top-color: #91aa2e; border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 0.75rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .return-hint { font-size: 0.7rem; color: #8b7355; margin-top: 1rem; padding: 0.75rem; background: #fff8e6; border-radius: 12px; text-align: left; }
+    @media (max-width: 480px) {
+      .return-page { padding: 2rem 0.75rem; }
+      .return-card { padding: 1.25rem; }
+      .return-actions { flex-direction: column; }
+      .return-actions .btn { width: 100%; }
+    }
   </style>
 </head>
 <body>
   <div class="return-page wrap">
-    <h1>Terima kasih</h1>
-    <p>Anda kembali dari halaman pembayaran. Konfirmasi resmi diproses oleh PayCore setelah Duitku mengirim callback.</p>
-    <p id="order-line" class="order-id" hidden></p>
-    <p><a href="/">Kembali ke beranda</a> · <a href="/checkout/">Checkout lagi</a></p>
-    <div class="note">
-      <strong>Untuk tim / tester:</strong> Halaman ini tidak mengaktifkan lisensi. Cek status di PayCore D1 (<code>payment_orders</code>) atau log webhook <code>/api/webhooks/paycore</code> setelah bayar sandbox.
+    <div id="returnContainer">
+      <div class="return-card" id="statusCard">
+        <div class="return-loader" id="statusLoader"></div>
+        <h1 id="statusTitle">Memeriksa status pembayaran…</h1>
+        <p id="statusDesc">Mohon tunggu sebentar.</p>
+        <div class="order-id" id="orderLine" hidden></div>
+        <div class="return-actions" id="returnActions">
+          <a href="/" class="btn ghost">Kembali ke beranda</a>
+        </div>
+      </div>
+      <div class="return-hint" id="returnHint">
+        <strong>Catatan:</strong> Konfirmasi resmi pembayaran diproses oleh sistem setelah pembayaran diverifikasi. Akses vault akan dikirim ke email Anda.
+      </div>
     </div>
   </div>
+
   <script>
+    const STATUS_ICONS = {
+      paid: '&#10003;',
+      success: '&#10003;',
+      pending: '&#8987;',
+      failed: '&#10007;',
+      expired: '&#9201;',
+      cancelled: '&#10007;',
+    };
+
+    const STATUS_LABELS = {
+      paid: 'Pembayaran berhasil',
+      success: 'Pembayaran berhasil',
+      pending: 'Menunggu konfirmasi',
+      failed: 'Pembayaran gagal',
+      expired: 'Pembayaran kedaluwarsa',
+      cancelled: 'Pembayaran dibatalkan',
+      already_paid: 'Sudah diproses sebelumnya',
+    };
+
+    const STATUS_DESCS = {
+      paid: 'Pembayaran Anda telah dikonfirmasi. Akses vault akan dikirim ke email Anda dalam beberapa menit.',
+      success: 'Pembayaran Anda telah dikonfirmasi. Akses vault akan dikirim ke email Anda dalam beberapa menit.',
+      pending: 'Pembayaran Anda sedang diverifikasi. Halaman ini akan otomatis mengecek status.',
+      failed: 'Pembayaran tidak dapat diproses. Silakan coba lagi dengan metode pembayaran lain.',
+      expired: 'Waktu pembayaran telah habis. Silakan lakukan pemesanan ulang.',
+      cancelled: 'Anda membatalkan pembayaran. Silakan pilih paket dan coba lagi.',
+      already_paid: 'Pembayaran untuk order ini sudah berhasil diproses sebelumnya.',
+    };
+
+    const STATUS_CLASSES = {
+      paid: 'success',
+      success: 'success',
+      pending: 'pending',
+      failed: 'failed',
+      expired: 'failed',
+      cancelled: 'failed',
+      already_paid: 'success',
+    };
+
     const params = new URLSearchParams(window.location.search);
-    const oid = params.get('order_id');
-    if (oid) {
-      const el = document.getElementById('order-line');
-      el.hidden = false;
-      el.textContent = 'Order ID: ' + oid;
+    const orderId = params.get('order_id');
+    const statusParam = params.get('status') || '';
+
+    const loader = document.getElementById('statusLoader');
+    const title = document.getElementById('statusTitle');
+    const desc = document.getElementById('statusDesc');
+    const orderLine = document.getElementById('orderLine');
+    const actions = document.getElementById('returnActions');
+
+    /** Render a status view */
+    function showStatus(status, orderId) {
+      const icon = STATUS_ICONS[status] || '&#8987;';
+      const label = STATUS_LABELS[status] || 'Memeriksa…';
+      const description = STATUS_DESCS[status] || '';
+      const cls = STATUS_CLASSES[status] || 'pending';
+
+      loader.style.display = 'none';
+      title.innerHTML = icon + ' ' + label;
+
+      // Remove old status badge
+      const oldBadge = title.nextElementSibling;
+      if (oldBadge?.classList?.contains('return-status')) oldBadge.remove();
+
+      const badge = document.createElement('div');
+      badge.className = 'return-status ' + cls;
+      badge.textContent = label;
+      title.after(badge);
+
+      desc.textContent = description;
+
+      if (orderId) {
+        orderLine.hidden = false;
+        orderLine.textContent = 'Order ID: ' + orderId;
+      }
+
+      // Actions vary by status
+      if (status === 'paid' || status === 'success' || status === 'already_paid') {
+        actions.innerHTML = '<a href="/" class="btn lime">Kembali ke beranda</a>';
+      } else {
+        actions.innerHTML =
+          '<a href="/#niche-pack" class="btn lime">Coba lagi</a>' +
+          '<a href="/" class="btn ghost">Kembali ke beranda</a>';
+      }
+    }
+
+    /** Poll status from backend */
+    async function pollStatus(orderId) {
+      let attempts = 0;
+      const maxAttempts = 24; // ~2 minutes
+
+      function poll() {
+        fetch('/api/checkout/status?order_id=' + encodeURIComponent(orderId))
+          .then(function (r) { return r.json().catch(function () { return {}; }); })
+          .then(function (data) {
+            var ps = data.payment_status;
+            if (ps === 'paid' || ps === 'success' || data.fulfillment_status === 'delivered') {
+              showStatus('paid', orderId);
+              return;
+            }
+            if (ps === 'failed' || ps === 'expired' || ps === 'cancelled') {
+              showStatus(ps, orderId);
+              return;
+            }
+            if (ps === 'already_paid') {
+              showStatus('already_paid', orderId);
+              return;
+            }
+            attempts++;
+            if (attempts < maxAttempts) {
+              setTimeout(poll, 5000);
+            } else {
+              showStatus('pending', orderId);
+            }
+          })
+          .catch(function () {
+            attempts++;
+            if (attempts < maxAttempts) {
+              setTimeout(poll, 5000);
+            } else {
+              showStatus('pending', orderId);
+            }
+          });
+      }
+
+      poll();
+    }
+
+    // Main entry
+    if (orderId) {
+      orderLine.hidden = false;
+      orderLine.textContent = 'Order ID: ' + orderId;
+
+      if (statusParam === 'failed') {
+        showStatus('failed', orderId);
+      } else if (statusParam === 'cancelled') {
+        showStatus('cancelled', orderId);
+      } else if (statusParam === 'expired') {
+        showStatus('expired', orderId);
+      } else {
+        // Normal return — show pending and poll
+        showStatus('pending', orderId);
+        pollStatus(orderId);
+      }
+    } else {
+      showStatus('pending', null);
     }
   </script>
 </body>
