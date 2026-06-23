@@ -1,8 +1,25 @@
 import { verifyPayCoreEvent } from '../../lib/paycore-verify.js';
+import { PACKS } from '../../lib/packs.js';
+
+function json(data, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
 
 /**
  * POST /api/webhooks/paycore
- * Test fulfillment: log event. Production would activate license in DB.
+ *
+ * Receives payment.succeeded events from PayCore.
+ * Requirements:
+ * - Verify HMAC signature with timing-safe compare
+ * - Reject replay attacks via timestamp skew check
+ * - Idempotent: same event_id never processed twice
+ * - Duplicate-safe: same order_id never fulfilled twice
+ * - Grants entitlement/fulfillment exactly once
+ * - Records audit trail in KV
+ * - Forwards fulfillment data to configured webhook
  */
 export async function onRequest(context) {
   const { request, env } = context;
@@ -13,13 +30,15 @@ export async function onRequest(context) {
 
   const secret = env.PAYCORE_WEBHOOK_SECRET;
   if (!secret) {
-    return new Response('Webhook not configured', { status: 503 });
+    return json({ error: 'webhook_not_configured' }, 503);
   }
 
+  // 1. Read raw body before any parsing
   const rawBody = await request.text();
   const ts = request.headers.get('X-PayCore-Event-Timestamp');
   const sig = request.headers.get('X-PayCore-Event-Signature');
 
+  // 2. Verify HMAC signature
   const ok = await verifyPayCoreEvent({
     webhookSecret: secret,
     timestampHeader: ts || '',
@@ -28,53 +47,216 @@ export async function onRequest(context) {
   });
 
   if (!ok) {
-    return new Response('Invalid signature', { status: 401 });
+    return json({ error: 'invalid_signature' }, 401);
   }
 
+  // 3. Parse payload
   let payload;
   try {
     payload = JSON.parse(rawBody);
   } catch {
-    return new Response('Invalid JSON', { status: 400 });
-  }
-
-  if (payload.event_type !== 'payment.succeeded') {
-    return new Response('Ignored', { status: 200 });
+    return json({ error: 'invalid_json' }, 400);
   }
 
   const eventId = payload.event_id;
+  const eventType = payload.event_type;
   const orderId = payload.data?.order_id;
+  const externalOrderId = payload.data?.external_order_id || '';
+  const productKey = payload.data?.product_key || '';
+  const fulfillmentData = payload.data?.fulfillment_data || {};
 
-  // MVP test: idempotency via KV if bound
+  if (!eventId || !orderId) {
+    return json({ error: 'missing_event_fields' }, 400);
+  }
+
+  // 4. Idempotency — check if event already processed
   if (env.CHECKOUT_EVENTS) {
     const seen = await env.CHECKOUT_EVENTS.get(`evt:${eventId}`);
     if (seen) {
-      return new Response(JSON.stringify({ ok: true, duplicate: true }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
-    }
-    await env.CHECKOUT_EVENTS.put(`evt:${eventId}`, new Date().toISOString(), {
-      expirationTtl: 60 * 60 * 24 * 90,
-    });
-    if (orderId) {
-      await env.CHECKOUT_EVENTS.put(
-        `order:${orderId}`,
-        JSON.stringify({ event_id: eventId, at: new Date().toISOString() }),
-        { expirationTtl: 60 * 60 * 24 * 90 },
-      );
+      return json({ ok: true, duplicate: true, event_id: eventId }, 200);
     }
   }
 
-  console.log('paycore_payment_succeeded', {
-    event_id: eventId,
-    order_id: orderId,
-    amount: payload.data?.amount,
-    fulfillment_data: payload.data?.fulfillment_data,
-  });
+  // 5. Only process payment.succeeded
+  if (eventType !== 'payment.succeeded') {
+    // Acknowledge non-success events (they're logged by PayCore)
+    if (env.CHECKOUT_EVENTS) {
+      await env.CHECKOUT_EVENTS.put(
+        `evt:${eventId}`,
+        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'ignored', at: new Date().toISOString() }),
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+    }
+    return json({ ok: true, event_id: eventId, ignored: true }, 200);
+  }
 
-  return new Response(JSON.stringify({ ok: true, order_id: orderId }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  const packId = fulfillmentData.pack_id || '';
+  const buyerEmail = fulfillmentData.email || '';
+  const buyerName = fulfillmentData.name || '';
+  const amount = payload.data?.amount || 0;
+
+  // 6. Validate payload has required data
+  if (!buyerEmail) {
+    return json({ error: 'missing_fulfillment_data', message: 'Email buyer diperlukan.' }, 422);
+  }
+
+  if (!packId || !PACKS[packId]) {
+    return json({ error: 'invalid_product', message: `Product key tidak dikenal: ${productKey}` }, 422);
+  }
+
+  // 7. Check that this order_id hasn't been fulfilled already
+  let existingOrder = null;
+  if (env.CHECKOUT_EVENTS) {
+    const raw = await env.CHECKOUT_EVENTS.get(`order:${orderId}`);
+    if (raw) {
+      try {
+        existingOrder = JSON.parse(raw);
+      } catch {}
+    }
+  }
+
+  // Check if already fulfilled
+  if (existingOrder?.fulfillment_status === 'delivered') {
+    // Already fulfilled — record event but don't duplicate
+    if (env.CHECKOUT_EVENTS) {
+      await env.CHECKOUT_EVENTS.put(
+        `evt:${eventId}`,
+        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'already_fulfilled', at: new Date().toISOString() }),
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+    }
+    return json({ ok: true, duplicate: true, event_id: eventId }, 200);
+  }
+
+  // 8. Execute fulfillment atomically with KV writes
+  const fulfillmentTimestamp = new Date().toISOString();
+  const fulfilled = {
+    event_id: eventId,
+    event_type: eventType,
+    order_id: orderId,
+    external_order_id: externalOrderId,
+    product_key: productKey,
+    pack_id: packId,
+    amount,
+    customer_email: buyerEmail,
+    customer_name: buyerName,
+    fulfilled_at: fulfillmentTimestamp,
+    paid_at: payload.data?.paid_at || fulfillmentTimestamp,
+  };
+
+  try {
+    if (env.CHECKOUT_EVENTS) {
+      // Mark event as processed (idempotency guard)
+      await env.CHECKOUT_EVENTS.put(
+        `evt:${eventId}`,
+        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'processed', at: fulfillmentTimestamp }),
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+
+      // Update order record to paid + delivered
+      const orderRecord = existingOrder || {};
+      const updatedOrder = {
+        ...orderRecord,
+        paycore_order_id: orderId,
+        external_order_id: externalOrderId,
+        pack_id: packId,
+        product_key: productKey,
+        amount,
+        customer_email: buyerEmail,
+        customer_name: buyerName,
+        payment_status: 'paid',
+        fulfillment_status: 'delivered',
+        fulfilled_at: fulfillmentTimestamp,
+        updated_at: fulfillmentTimestamp,
+      };
+
+      await env.CHECKOUT_EVENTS.put(
+        `order:${orderId}`,
+        JSON.stringify(updatedOrder),
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+
+      // Index by external_order_id if present
+      if (externalOrderId) {
+        await env.CHECKOUT_EVENTS.put(`ext:${externalOrderId}`, orderId, {
+          expirationTtl: 60 * 60 * 24 * 90,
+        });
+      }
+
+      // Track fulfilled buyers
+      await env.CHECKOUT_EVENTS.put(
+        `fulfilled:${buyerEmail}`,
+        JSON.stringify({
+          order_id: orderId,
+          pack_id: packId,
+          fulfilled_at: fulfillmentTimestamp,
+        }),
+        { expirationTtl: 60 * 60 * 24 * 365 }, // 1 year for fulfillment records
+      );
+
+      // Payment audit log
+      const auditKey = `audit:${orderId}`;
+      const existingAudit = await env.CHECKOUT_EVENTS.get(auditKey);
+      const auditEntries = existingAudit ? JSON.parse(existingAudit) : [];
+      auditEntries.push({
+        event: 'payment.succeeded',
+        event_id: eventId,
+        at: fulfillmentTimestamp,
+        amount,
+      });
+      await env.CHECKOUT_EVENTS.put(auditKey, JSON.stringify(auditEntries), {
+        expirationTtl: 60 * 60 * 24 * 365,
+      });
+    }
+
+    // 9. Forward fulfillment to configured webhook (LEAD_WEBHOOK_URL or FULFILLMENT_URL)
+    const fulfillmentWebhook = env.FULFILLMENT_WEBHOOK_URL || env.LEAD_WEBHOOK_URL;
+    if (fulfillmentWebhook) {
+      // Fire-and-forget — don't block response
+      env.CHECKOUT_EVENTS?.put(
+        `fulfillment_notified:${orderId}`,
+        fulfillmentTimestamp,
+        { expirationTtl: 60 * 60 * 24 * 90 },
+      );
+
+      fetch(fulfillmentWebhook, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'payment.fulfilled',
+          event_id: eventId,
+          paycore_order_id: orderId,
+          external_order_id: externalOrderId,
+          pack_id: packId,
+          product_key: productKey,
+          amount,
+          currency: 'IDR',
+          customer: {
+            name: buyerName,
+            email: buyerEmail,
+          },
+          fulfilled_at: fulfillmentTimestamp,
+          source: 'appvibe.web.id_paycore_webhook',
+        }),
+      }).catch((err) => {
+        console.error('Fulfillment webhook forwarding failed:', err);
+      });
+    }
+
+    console.log('[Fulfillment] payment_succeeded', JSON.stringify(fulfilled));
+
+    return json(
+      {
+        ok: true,
+        event_id: eventId,
+        order_id: orderId,
+        fulfillment_status: 'delivered',
+      },
+      200,
+    );
+  } catch (err) {
+    console.error('[Fulfillment] error:', err);
+    // Return 5xx so PayCore retries
+    return json({ error: 'fulfillment_failed', message: err.message }, 500);
+  }
 }
