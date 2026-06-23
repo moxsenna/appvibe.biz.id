@@ -64,3 +64,7 @@ export const vaultPacks = {
     gradient: 'linear-gradient(145deg,#e8f5ee,#d2ecdc)'
   }
 };
+
+export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch'];
+export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000 };
+export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding' };
