@@ -1,5 +1,5 @@
 @media (max-width:1120px){
-  .brand-logo{height:52px}
+  .brand-logo{height:50px}
   .nav{display:none}
   .menu-btn{display:inline-grid;width:40px;height:40px;place-items:center;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05);color:#fff}
   .hero{grid-template-columns:1fr;min-height:auto}
@@ -14,7 +14,7 @@
 @media (max-width:760px){
   .wrap{padding:12px}
   .topbar{top:8px;padding:10px;gap:10px}
-  .brand-logo{height:44px}
+  .brand-logo{height:42px}
   .brand-copy strong{display:none}
   .brand-logo{height:28px}
   .header-actions .status{display:none}
