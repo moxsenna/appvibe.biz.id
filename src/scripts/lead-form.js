@@ -22,8 +22,20 @@ export function initLeadForm() {
     const niche = formData.get('niche')?.trim();
     const whatsapp = formData.get('whatsapp')?.trim() || '';
     const modelPenggunaan = formData.get('model_penggunaan')?.trim() || '';
-    const selectedPack = formData.get('selected_pack')?.trim() || window.vaultState?.selectedPack || null;
-    const selectedApp = formData.get('selected_app')?.trim() || window.vaultState?.selectedApp || null;
+
+    // READ ONLY FROM HIDDEN FORM FIELDS — no fallback to vaultState
+    const selectedPack = formData.get('selected_pack')?.trim() || null;
+    const selectedApp = formData.get('selected_app')?.trim() || null;
+
+    // Turnstile token
+    const turnstileToken = (function() {
+      const widget = document.querySelector('.cf-turnstile iframe');
+      if (widget && typeof window.turnstile !== 'undefined') {
+        return window.turnstile.getResponse?.() || '';
+      }
+      const hidden = formData.get('cf-turnstile-response');
+      return hidden || '';
+    })();
 
     if (!name || !email || !niche) return;
 
@@ -35,7 +47,6 @@ export function initLeadForm() {
     const formOpenSource = formData.get('form_open_source')?.trim() || 'general';
     const eventId = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
 
-    // Vault internal: submit attempt
     if (typeof window.trackVaultEvent === 'function') {
       window.trackVaultEvent('vault_lead_submit_attempt', {
         selected_pack: selectedPack,
@@ -55,6 +66,7 @@ export function initLeadForm() {
       selected_pack: selectedPack,
       selected_app: selectedApp,
       form_open_source: formOpenSource,
+      turnstileToken,
       utm_source: utm.source,
       utm_medium: utm.medium,
       utm_campaign: utm.campaign,
@@ -74,27 +86,37 @@ export function initLeadForm() {
       });
 
       if (response.ok) {
-        // Standard platform conversions (direct, NOT through dataLayer)
-        if (typeof window.fireStandardConversions === 'function') {
-          window.fireStandardConversions({
-            selected_pack: selectedPack,
-            selected_app: selectedApp,
-            model_penggunaan: modelPenggunaan,
+        const data = await response.json().catch(() => ({}));
+
+        // Only fire success if backend confirmed delivery
+        if (data.success) {
+          if (typeof window.fireStandardConversions === 'function') {
+            window.fireStandardConversions({
+              selected_pack: selectedPack,
+              selected_app: selectedApp,
+              model_penggunaan: modelPenggunaan,
+            });
+          }
+
+          if (typeof window.trackVaultEvent === 'function') {
+            window.trackVaultEvent('vault_lead_submit_success', {
+              selected_pack: selectedPack,
+              selected_app: selectedApp,
+              model_penggunaan: modelPenggunaan,
+              form_open_source: formOpenSource,
+            });
+          }
+
+          showSuccess(message);
+          form.reset();
+          // Clear hidden fields after reset
+          ['formSelectedPack', 'formSelectedApp', 'formOpenSource'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
           });
         }
-
-        // Vault internal: submit success
-        if (typeof window.trackVaultEvent === 'function') {
-          window.trackVaultEvent('vault_lead_submit_success', {
-            selected_pack: selectedPack,
-            selected_app: selectedApp,
-            model_penggunaan: modelPenggunaan,
-            form_open_source: formOpenSource,
-          });
-        }
-
-        showSuccess(message);
-        form.reset();
+      } else {
+        console.error('Lead submission rejected:', response.status);
       }
     } catch (err) {
       console.error('Lead submission error:', err);
