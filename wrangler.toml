@@ -1,6 +1,3 @@
 name = "white-label-ai-vault"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-06-01"
-
-[env.production]
-routes = [{ pattern = "appvibe.web.id", custom_domain = true }]
