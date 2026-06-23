@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Status pembayaran | AppVibe</title>
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="stylesheet" href="/src/styles/index.css" />
+  <style>
+    .return-page { max-width: 480px; margin: 0 auto; padding: 3rem 1rem; text-align: center; }
+    .return-page h1 { font-family: "Playfair Display", Georgia, serif; font-size: 1.6rem; }
+    .return-page p { color: #626a72; font-size: 0.9rem; line-height: 1.65; }
+    .order-id { font-family: "DM Mono", monospace; font-size: 0.75rem; background: #f4f2ea; padding: 0.5rem 0.75rem; border-radius: 8px; margin: 1rem 0; word-break: break-all; }
+    .note { font-size: 0.75rem; color: #8b7355; margin-top: 1.5rem; padding: 1rem; background: #fff8e6; border-radius: 12px; text-align: left; }
+  </style>
+</head>
+<body>
+  <div class="return-page wrap">
+    <h1>Terima kasih</h1>
+    <p>Anda kembali dari halaman pembayaran. Konfirmasi resmi diproses oleh PayCore setelah Duitku mengirim callback.</p>
+    <p id="order-line" class="order-id" hidden></p>
+    <p><a href="/">Kembali ke beranda</a> · <a href="/checkout/">Checkout lagi</a></p>
+    <div class="note">
+      <strong>Untuk tim / tester:</strong> Halaman ini tidak mengaktifkan lisensi. Cek status di PayCore D1 (<code>payment_orders</code>) atau log webhook <code>/api/webhooks/paycore</code> setelah bayar sandbox.
+    </div>
+  </div>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const oid = params.get('order_id');
+    if (oid) {
+      const el = document.getElementById('order-line');
+      el.hidden = false;
+      el.textContent = 'Order ID: ' + oid;
+    }
+  </script>
+</body>
+</html>

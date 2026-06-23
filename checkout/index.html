@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout Test — White-Label Vault | AppVibe</title>
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="stylesheet" href="/src/styles/index.css" />
+  <style>
+    .checkout-page { max-width: 520px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .checkout-card {
+      background: rgba(255,253,248,.95);
+      border: 1px solid var(--line, #e2e0d8);
+      border-radius: 24px;
+      padding: 1.75rem;
+      box-shadow: 0 10px 32px rgba(14,18,27,.08);
+    }
+    .checkout-card h1 { font-family: "Playfair Display", Georgia, serif; font-size: 1.75rem; margin: 0 0 0.5rem; letter-spacing: -0.03em; }
+    .checkout-card .sub { color: #626a72; font-size: 0.85rem; line-height: 1.6; margin-bottom: 1.5rem; }
+    .checkout-form label { display: block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #5f6873; margin-bottom: 0.35rem; }
+    .checkout-form input, .checkout-form select {
+      width: 100%; padding: 0.75rem 0.85rem; border: 1px solid #ddd9ce; border-radius: 12px; margin-bottom: 1rem; font-size: 0.9rem;
+    }
+    .checkout-form button {
+      width: 100%; padding: 0.9rem; border: none; border-radius: 13px; background: #d8ff42; color: #172008;
+      font-weight: 800; font-size: 0.85rem; cursor: pointer; box-shadow: 0 5px 0 #b7dc20;
+    }
+    .checkout-form button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .msg { margin-top: 1rem; padding: 0.75rem; border-radius: 10px; font-size: 0.8rem; display: none; }
+    .msg.err { display: block; background: #ffe8e5; color: #8b2e24; }
+    .msg.ok { display: block; background: #eff8ca; color: #4b5e19; }
+    .sandbox-badge {
+      display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px;
+      background: #eef4ff; border: 1px solid #c5d4f5; font-size: 0.65rem; font-weight: 700; color: #3d5080; margin-bottom: 1rem;
+    }
+    .back { display: inline-block; margin-bottom: 1rem; font-size: 0.8rem; color: #465ec6; }
+  </style>
+</head>
+<body>
+  <div class="checkout-page wrap">
+    <a class="back" href="/">← Kembali ke landing</a>
+    <div class="checkout-card">
+      <span class="sandbox-badge">Sandbox · PayCore staging + Duitku</span>
+      <h1>Checkout lisensi</h1>
+      <p class="sub">Form uji pembayaran untuk <strong>appvibe.web.id</strong> via <strong>PayCore</strong>. Bukan Narraza. Setelah submit Anda diarahkan ke halaman bayar Duitku sandbox.</p>
+      <form class="checkout-form" id="checkout-form">
+        <label for="name">Nama</label>
+        <input id="name" name="name" required autocomplete="name" placeholder="Nama lengkap" />
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" required autocomplete="email" placeholder="email@example.com" />
+        <label for="phone">WhatsApp / telepon (opsional)</label>
+        <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx" />
+        <label for="pack_id">Paket</label>
+        <select id="pack_id" name="pack_id">
+          <option value="vault_full">Full Vault — 13 aplikasi (Rp 199.000 test)</option>
+          <option value="advertiser">Advertiser App Pack (Rp 99.000 test)</option>
+          <option value="commerce">Commerce & Marketplace Pack (Rp 99.000 test)</option>
+          <option value="creator">Creator & Affiliate Pack (Rp 99.000 test)</option>
+          <option value="branding">Brand & Launch Pack (Rp 99.000 test)</option>
+        </select>
+        <button type="submit" id="submit-btn">Lanjut ke pembayaran Duitku</button>
+      </form>
+      <div class="msg" id="form-msg" role="alert"></div>
+    </div>
+  </div>
+  <script type="module">
+    const form = document.getElementById('checkout-form');
+    const msg = document.getElementById('form-msg');
+    const btn = document.getElementById('submit-btn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'msg';
+      msg.textContent = '';
+      btn.disabled = true;
+      btn.textContent = 'Membuat order…';
+
+      const payload = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        phone: form.phone.value.trim(),
+        pack_id: form.pack_id.value,
+      };
+
+      try {
+        const res = await fetch('/api/checkout/create-order', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          msg.className = 'msg err';
+          msg.textContent = data.message || data.error || `Gagal (${res.status}). Cek secret PayCore di Pages.`;
+          btn.disabled = false;
+          btn.textContent = 'Lanjut ke pembayaran Duitku';
+          return;
+        }
+        if (data.checkout_url) {
+          window.location.href = data.checkout_url;
+          return;
+        }
+        msg.className = 'msg err';
+        msg.textContent = 'Tidak ada checkout_url dari PayCore.';
+      } catch (err) {
+        msg.className = 'msg err';
+        msg.textContent = 'Koneksi gagal. Jalankan dengan Cloudflare Pages (wrangler pages dev) agar API /api/checkout berjalan.';
+      }
+      btn.disabled = false;
+      btn.textContent = 'Lanjut ke pembayaran Duitku';
+    });
+  </script>
+</body>
+</html>
