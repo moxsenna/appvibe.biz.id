@@ -1,19 +1,3 @@
-export const PACK_PRODUCT_KEYS = {
-  advertiser: 'pack_advertiser',
-  commerce: 'pack_commerce',
-  creator: 'pack_creator',
-  brand_launch: 'pack_branding',  // 'branding' is the PayCore product_key
-  vault_full: 'vault_full_license',
-};
-
-export const PACK_PRICES = {
-  advertiser: 97000,
-  commerce: 97000,
-  creator: 97000,
-  brand_launch: 97000,
-  vault_full: 199000,
-};
-
 export const vaultPacks = {
   advertiser: {
     id: 'advertiser',
