@@ -237,3 +237,68 @@ details p{margin:14px 0 0;color:var(--muted);font-size:11px;line-height:1.72}
 footer{padding:0 2px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:10px}
 footer .foot-brand{font-weight:800;color:var(--ink)}
 footer a{text-decoration:underline;text-underline-offset:3px}
+
+/* ===== SCROLL MARGIN ===== */
+#niche-pack,#aplikasi,#first-product,#lisensi,#faq,#cara-kerja{scroll-margin-top:140px}
+
+/* ===== TRANSITION STRIP ===== */
+.transition-strip{
+  margin-top:24px;padding:20px 24px;border-radius:var(--r-lg);
+  background:var(--gradient-brand);color:#fff;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+}
+.transition-strip p{font:600 14px/1.5 "Space Grotesk",sans-serif;margin:0}
+.transition-strip span{font-size:22px;display:inline-block;vertical-align:middle;margin:0 4px}
+.transition-strip .btn{flex:none}
+
+/* ===== SECTION NOTE ===== */
+.section-note{margin-top:22px;padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--paper-2);color:var(--muted);font-size:12px;line-height:1.6}
+
+/* ===== FIRST PRODUCT ===== */
+.first-product-section{padding:28px 0 0}
+.first-product-card{
+  padding:28px;border:1px solid var(--line);border-radius:var(--r-xl);
+  background:var(--paper-2);box-shadow:var(--soft-shadow)
+}
+.fp-loading{color:var(--muted);font-size:13px;text-align:center;padding:20px}
+.fp-eyebrow{font:600 10px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase;color:var(--av-blue-600);margin-bottom:14px}
+.fp-title{margin:0 0 14px;font:700 38px/.98 "Space Grotesk",sans-serif;letter-spacing:-1.2px}
+.fp-title em{font-style:italic;background:var(--gradient-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fp-outcome{max-width:760px;margin:0 0 20px;color:var(--muted);font-size:14px;line-height:1.65}
+.fp-meta{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px}
+.fp-meta-item b{display:block;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--av-blue-600)}
+.fp-meta-item span{display:block;margin-top:4px;font-size:13px;font-weight:600}
+.fp-apps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:22px}
+.fp-app-pill{display:flex;align-items:center;gap:7px;padding:8px 11px;border:1px solid var(--line);border-radius:var(--pill);background:var(--white);font-size:12px}
+.fp-app-pill.primary{background:var(--ink-2);color:#fff;border-color:var(--ink-2)}
+.fp-app-pill .fp-app-symbol{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;background:var(--av-blue-600);color:#fff;font:700 11px/1 "Space Grotesk",sans-serif}
+.fp-app-pill em{font-style:normal;color:var(--av-cyan-500)}
+.fp-actions{display:flex;gap:10px;flex-wrap:wrap}
+
+/* ===== PRODUCT SHOWCASE ===== */
+.showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+.showcase-placeholder{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px}
+.showcase-cta{text-align:center;margin-top:8px}
+
+/* ===== PACK SELECTED STATE ===== */
+.pack.selected{border-color:var(--av-blue-600);box-shadow:0 0 0 3px rgba(18,107,255,.15)}
+
+/* ===== LICENSE GRID ===== */
+.license-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+.license-allowed,.license-forbidden{padding:22px;border-radius:var(--r-lg);background:var(--paper-2);border:1px solid var(--line)}
+.license-allowed h3,.license-forbidden h3{margin:0 0 16px;font:700 19px/1 "Space Grotesk",sans-serif}
+.license-allowed h3{color:#2d8048}
+.license-forbidden h3{color:#c94a3b}
+.license-point{padding:11px 13px;border-radius:12px;margin-bottom:8px;font-size:11px;line-height:1.55;display:flex;gap:9px;align-items:flex-start}
+.license-point.allowed{background:rgba(45,128,72,.06);border:1px solid rgba(45,128,72,.18);color:#25663b}
+.license-point.allowed i{background:#2d8048;color:#fff;border-radius:50%;width:19px;height:19px;display:grid;place-items:center;flex:none;font-style:normal;font-weight:900;font-size:10px}
+.license-point.forbidden{background:rgba(201,74,59,.06);border:1px solid rgba(201,74,59,.18);color:#914236}
+.license-point.forbidden i{background:#c94a3b;color:#fff;border-radius:50%;width:19px;height:19px;display:grid;place-items:center;flex:none;font-style:normal;font-weight:900;font-size:10px}
+.license-links{margin-top:12px;font-size:12px;color:var(--muted)}
+.license-links a{color:var(--av-blue-600);font-weight:600}
+
+/* ===== FORM PRIVACY ===== */
+.form-privacy{margin-top:8px;color:rgba(255,255,255,.35);font-size:9px;line-height:1.5;text-align:center}
+
+/* ===== APP LAUNCHER CTA ===== */
+#detailCta{margin-top:14px;display:inline-flex}

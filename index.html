@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050B1D" />
-  <title>White-Label AI App Vault — Jadikan Audiens Anda Pasar untuk Produk AI Anda</title>
+  <title>White-Label AI App Vault — Ubah Audiens Anda Menjadi Pembeli Produk AI</title>
   <meta name="description" content="13 aplikasi AI siap rebrand untuk advertiser, agency, mentor marketing, dan owner komunitas. Bangun produk digital dengan brand Anda tanpa membuat aplikasi dari nol." />
   <link rel="canonical" href="https://appvibe.web.id/" />
   <link rel="icon" href="/favicon.webp" type="image/webp" />
@@ -14,6 +14,11 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/src/styles/index.css">
   <script type="module" src="/src/main.js"></script>
+  <meta property="og:title" content="AppVibe — White-Label AI App Vault" />
+  <meta property="og:description" content="13 aplikasi AI siap rebrand untuk dijual dengan brand Anda sendiri." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://appvibe.biz.id/" />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <!-- Meta Pixel -->
   <script>
@@ -25,10 +30,7 @@
   <!-- TikTok Pixel -->
   <script>
     !function (w, d, t) {
-      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
-      var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
-      ;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
-
+      w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
       ttq.load('D8TCSU3C77UDQUH9CQQ0');
       ttq.page();
     }(window, document, 'ttq');
@@ -40,784 +42,261 @@
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
-  <link rel="stylesheet" href="/src/styles/index.css">
-  </head>
-<body>
-  <noscript>
-      --muted-2:#a8abb2;
-      --lime:#d8ff42;
-      --lime-deep:#b7dc20;
-      --red:#ff5e4d;
-      --blue:#7094ff;
-      --gold:#ffc85b;
-      --mint:#7ee1bd;
-      --shadow:0 24px 70px rgba(6,8,13,.17);
-      --soft-shadow:0 10px 32px rgba(14,18,27,.08);
-      --r-xl:34px;
-      --r-lg:24px;
-      --r-md:16px;
-      --pill:999px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      background:var(--paper);
-      color:var(--ink);
-      font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;
-      min-width:320px;
-      overflow-x:hidden;
-    }
-    body:before{
-      content:"";
-      pointer-events:none;
-      position:fixed;
-      z-index:-2;
-      inset:0;
-      opacity:.52;
-      background-image:
-        linear-gradient(rgba(13,15,19,.055) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(13,15,19,.055) 1px, transparent 1px);
-      background-size:36px 36px;
-      mask-image:linear-gradient(to bottom,black 0%, transparent 70%);
-    }
-    body:after{
-      content:"";
-      pointer-events:none;
-      position:fixed;
-      z-index:-1;
-      inset:0;
-      background:
-        radial-gradient(circle at 9% 3%,rgba(216,255,66,.20),transparent 19%),
-        radial-gradient(circle at 92% 16%,rgba(112,148,255,.14),transparent 24%),
-        radial-gradient(circle at 85% 92%,rgba(255,94,77,.10),transparent 28%);
-    }
-
-    button,input,textarea,select{font:inherit}
-    button{cursor:pointer}
-    a{color:inherit;text-decoration:none}
-    ::selection{background:var(--lime);color:var(--ink)}
-
-    .wrap{max-width:1460px;margin:0 auto;padding:18px}
-    .topbar{
-      position:sticky;top:12px;z-index:50;
-      display:flex;justify-content:space-between;align-items:center;gap:18px;
-      padding:12px 14px 12px 20px;
-      background:rgba(13,15,19,.93);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:var(--pill);
-      box-shadow:0 16px 42px rgba(0,0,0,.18);
-      backdrop-filter:blur(18px);
-    }
-    .brand{display:flex;align-items:center;gap:12px;min-width:0}
-    .brand-mark{
-      position:relative;width:44px;height:44px;display:grid;place-items:center;
-      overflow:hidden;flex:none;border-radius:14px;background:var(--lime);color:var(--ink);
-      font:700 22px/1 "Playfair Display",Georgia,serif;
-      box-shadow:inset 0 -4px 0 rgba(0,0,0,.14);
-    }
-    .brand-mark:after{
-      content:"";position:absolute;inset:8px;border:1px solid rgba(13,15,19,.34);border-radius:9px;transform:rotate(45deg)
-    }
-    .brand-copy strong{display:block;font-size:15px;letter-spacing:-.4px;white-space:nowrap}
-    .brand-copy span{display:block;margin-top:4px;color:#b4b7c0;font:500 9px/1 "DM Mono",monospace;letter-spacing:1.25px;text-transform:uppercase;white-space:nowrap}
-    .nav{display:flex;align-items:center;gap:2px}
-    .nav a{font-size:11px;font-weight:700;color:#bec1ca;padding:10px 12px;border-radius:var(--pill);transition:.18s}
-    .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
-    .header-actions{display:flex;align-items:center;gap:9px;flex:none}
-    .status{
-      display:flex;align-items:center;gap:7px;color:#c8cbd3;font:500 9px/1 "DM Mono",monospace;
-      letter-spacing:.5px;white-space:nowrap;padding:9px 11px;border:1px solid rgba(255,255,255,.13);border-radius:var(--pill)
-    }
-    .status i{width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(216,255,66,.12)}
-    .menu-btn{display:none}
-
-    .btn{
-      border:1px solid transparent;border-radius:13px;padding:12px 15px;font-size:11px;font-weight:800;line-height:1;
-      display:inline-flex;justify-content:center;align-items:center;gap:8px;transition:all .18s ease;
-    }
-    .btn:hover:not(:disabled){transform:translateY(-2px)}
-    .btn:active:not(:disabled){transform:translateY(1px)}
-    .btn.lime{background:var(--lime);color:#182008;box-shadow:0 5px 0 var(--lime-deep)}
-    .btn.lime:hover{box-shadow:0 7px 0 var(--lime-deep)}
-    .btn.paper{background:var(--white);color:var(--ink);border-color:var(--line);box-shadow:0 2px 7px rgba(0,0,0,.04)}
-    .btn.paper:hover{border-color:#abb0a3}
-    .btn.ghost{color:#d6d8dd;border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.04)}
-    .btn.ghost:hover{background:rgba(255,255,255,.1)}
-    .btn.dark{background:var(--ink);color:#fff;box-shadow:0 5px 0 #000}
-    .btn.small{padding:9px 11px;font-size:10px;border-radius:10px}
-    .btn.full{width:100%}
-
-    .hero{
-      position:relative;overflow:hidden;margin-top:18px;min-height:610px;padding:52px;
-      border-radius:var(--r-xl);
-      background:linear-gradient(126deg,#0d1015 0%,#141824 56%,#232b45 100%);
-      color:#fff;box-shadow:var(--shadow);
-      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(350px,.9fr);align-items:center;gap:30px;
-    }
-    .hero:before{
-      content:"";position:absolute;width:590px;height:590px;border-radius:50%;right:-200px;top:-255px;
-      border:1px dashed rgba(216,255,66,.42);
-      box-shadow:0 0 0 52px rgba(216,255,66,.04),0 0 0 110px rgba(112,148,255,.06);
-    }
-    .hero:after{
-      content:"";position:absolute;left:-120px;bottom:-190px;width:400px;height:400px;border-radius:50%;
-      background:rgba(255,94,77,.14);filter:blur(3px)
-    }
-    .hero-copy{position:relative;z-index:1;max-width:790px}
-    .eyebrow{
-      display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--pill);
-      color:#e4ff90;background:rgba(216,255,66,.10);border:1px solid rgba(216,255,66,.24);
-      font:500 10px/1 "DM Mono",monospace;letter-spacing:1.1px;text-transform:uppercase;
-    }
-    .eyebrow:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px rgba(216,255,66,.8)}
-    .hero h1{
-      margin:21px 0 18px;max-width:810px;font:600 clamp(44px,6vw,82px)/.91 "Playfair Display",Georgia,serif;
-      letter-spacing:-3.6px;
-    }
-    .hero h1 em{font-style:italic;color:var(--lime)}
-    .hero p{max-width:650px;margin:0;color:#c3c6cf;font-size:15px;line-height:1.8}
-    .hero-actions{display:flex;align-items:center;flex-wrap:wrap;gap:11px;margin-top:31px}
-    .hero-micro{display:flex;align-items:flex-start;gap:10px;margin-top:28px;max-width:590px;color:#a4a8b4;font-size:11px;line-height:1.58}
-    .hero-micro b{color:#f4f6fb}
-    .micro-icon{width:29px;height:29px;flex:none;border:1px solid rgba(216,255,66,.32);border-radius:10px;display:grid;place-items:center;color:var(--lime);font-weight:900}
-    .hero-visual{position:relative;z-index:1;min-height:440px;display:grid;place-items:center}
-    .vault-card{
-      position:relative;width:min(426px,100%);min-height:390px;padding:20px;
-      border:1px solid rgba(255,255,255,.2);border-radius:25px;
-      background:linear-gradient(150deg,rgba(41,47,70,.94),rgba(19,23,33,.98));
-      box-shadow:20px 22px 0 rgba(112,148,255,.16),inset 0 1px 0 rgba(255,255,255,.12);
-      transform:rotate(2deg);
-      overflow:hidden;
-    }
-    .vault-card:before{
-      content:"";position:absolute;inset:0;background-image:
-      linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
-      linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);background-size:24px 24px;opacity:.7
-    }
-    .vault-card > *{position:relative;z-index:1}
-    .vault-top{display:flex;align-items:center;justify-content:space-between;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase;color:#aeb4c4}
-    .vault-top b{color:#f3ffbb;font-weight:500}
-    .vault-word{
-      margin:34px 0 21px;font:600 44px/.92 "Playfair Display",Georgia,serif;letter-spacing:-1.6px;color:#fff
-    }
-    .vault-word em{font-style:italic;color:var(--lime)}
-    .vault-divider{height:1px;background:rgba(255,255,255,.13);margin:18px 0}
-    .vault-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .vault-box{padding:12px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.045)}
-    .vault-box span{display:block;color:#96a1b7;font:500 8px/1 "DM Mono",monospace;letter-spacing:.8px;text-transform:uppercase}
-    .vault-box b{display:block;margin-top:8px;font-size:12px;line-height:1.35;color:#fff}
-    .vault-sticker{
-      position:absolute;right:17px;bottom:17px;padding:10px 11px;max-width:190px;border-radius:11px;
-      background:var(--lime);color:var(--ink);font:700 10px/1.36 "DM Mono",monospace;transform:rotate(-4deg);box-shadow:4px 5px 0 rgba(0,0,0,.3)
-    }
-
-    .proof-strip{
-      margin:17px 0 0;padding:11px 18px;border:1px solid var(--line);border-radius:var(--pill);background:rgba(255,253,248,.7);
-      display:flex;gap:14px;align-items:center;justify-content:space-between;overflow:auto;
-    }
-    .proof-strip::-webkit-scrollbar{height:0}
-    .proof-strip > span{white-space:nowrap;color:#73776f;font:500 10px/1 "DM Mono",monospace;letter-spacing:.3px}
-    .proof-strip > span b{color:var(--ink);font-weight:800}
-    .proof-divider{width:1px;height:17px;background:var(--line);flex:none}
-
-    /* Product preview marquee — lightweight live CSS miniatures, not 13 embedded apps */
-    .product-gallery{padding:54px 0 0;overflow:hidden}
-    .gallery-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:0 0 16px}
-    .gallery-intro h2{margin:8px 0 0;font:600 clamp(30px,3.8vw,48px)/.98 "Playfair Display",Georgia,serif;letter-spacing:-1.5px}
-    .gallery-intro h2 em{font-style:italic;color:#405cb7}
-    .gallery-intro p{max-width:460px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
-    .gallery-eyebrow{color:#5f6f34;font:600 10px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}
-    .gallery-viewport{position:relative;overflow:hidden;padding:8px 0}
-    .gallery-viewport:before,.gallery-viewport:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:92px;pointer-events:none}
-    .gallery-viewport:before{left:0;background:linear-gradient(90deg,var(--paper),rgba(246,244,238,0))}
-    .gallery-viewport:after{right:0;background:linear-gradient(270deg,var(--paper),rgba(246,244,238,0))}
-    .gallery-track{display:flex;width:max-content;gap:12px;will-change:transform}
-    .gallery-track.left{animation:gallery-left 62s linear infinite}
-    .gallery-track.right{animation:gallery-right 70s linear infinite}
-    .gallery-viewport:hover .gallery-track,.gallery-viewport:focus-within .gallery-track{animation-play-state:paused}
-    @keyframes gallery-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-    @keyframes gallery-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
-    .preview-card{
-      --p-bg:#122820;--p-panel:#244a3c;--p-ink:#fffdf8;--p-soft:#b9e4cf;--p-accent:#f6cc63;--p-line:rgba(255,255,255,.18);
-      position:relative;width:246px;flex:none;padding:9px;border:1px solid var(--line);border-radius:19px;background:var(--white);text-align:left;
-      box-shadow:0 8px 18px rgba(13,15,19,.06);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
-    }
-    .preview-card:hover{transform:translateY(-3px);border-color:#aeb5a7;box-shadow:0 14px 26px rgba(13,15,19,.11)}
-    .preview-card:focus-visible{outline:3px solid rgba(112,148,255,.45);outline-offset:3px}
-    .preview-window{position:relative;overflow:hidden;height:137px;padding:9px;border-radius:13px;background:var(--p-bg);color:var(--p-ink)}
-    .preview-window:before{content:"";position:absolute;inset:0;opacity:.21;background-image:linear-gradient(var(--p-line) 1px,transparent 1px),linear-gradient(90deg,var(--p-line) 1px,transparent 1px);background-size:17px 17px}
-    .preview-window > *{position:relative;z-index:1}
-    .preview-top{display:flex;justify-content:space-between;align-items:center;font:500 6px/1 "DM Mono",monospace;letter-spacing:.75px;text-transform:uppercase;color:var(--p-soft)}
-    .preview-top i{display:block;width:7px;height:7px;border-radius:2px;background:var(--p-accent)}
-    .preview-hero{margin-top:18px;display:grid;grid-template-columns:1fr 59px;gap:8px;align-items:end}
-    .preview-title{font:700 19px/.9 "Playfair Display",Georgia,serif;letter-spacing:-.8px;color:var(--p-ink)}
-    .preview-title em{color:var(--p-accent);font-style:italic}
-    .preview-title.small{font-size:16px;line-height:.94}
-    .preview-side{height:51px;border:1px solid var(--p-line);border-radius:10px;background:var(--p-panel)}
-    .preview-lines{display:grid;gap:5px;margin-top:10px}
-    .preview-lines span{display:block;height:4px;border-radius:999px;background:var(--p-soft);opacity:.83}
-    .preview-lines span:nth-child(1){width:83%}.preview-lines span:nth-child(2){width:60%;background:var(--p-accent)}.preview-lines span:nth-child(3){width:72%}
-    .preview-chips{display:flex;gap:5px;margin-top:12px}.preview-chips span{display:block;width:28px;height:12px;border:1px solid var(--p-line);border-radius:5px;background:rgba(255,255,255,.06)}
-    .preview-meta{padding:10px 4px 3px}.preview-meta b{display:block;font-size:12px;letter-spacing:-.25px}.preview-meta span{display:block;margin-top:4px;color:#6d7480;font-size:9px;line-height:1.3}
-    .p-adsprint{--p-bg:#10231f;--p-panel:#1d4b3d;--p-ink:#fffef9;--p-soft:#b9e4cf;--p-accent:#f6cc63}
-    .p-pikat{--p-bg:#4f46e5;--p-panel:#7c3aed;--p-ink:#fff;--p-soft:#fbcfe8;--p-accent:#f8b7df}
-    .p-rupa{--p-bg:#1d43ff;--p-panel:#ff6b3d;--p-ink:#fff;--p-soft:#dfff35;--p-accent:#dfff35}
-    .p-mula{--p-bg:#1c2126;--p-panel:#9d475b;--p-ink:#fcfaf5;--p-soft:#dbe4d2;--p-accent:#edae49}
-    .p-arah{--p-bg:#132235;--p-panel:#2556d9;--p-ink:#fffdf7;--p-soft:#bcd6ef;--p-accent:#e8b84b}
-    .p-cetak{--p-bg:#2855d7;--p-panel:#e84d3d;--p-ink:#fffdf8;--p-soft:#dce6ff;--p-accent:#ffc945}
-    .p-adegan{--p-bg:#121212;--p-panel:#282621;--p-ink:#f4efe2;--p-soft:#d9a441;--p-accent:#d95f3d}
-    .p-suara{--p-bg:#121416;--p-panel:#303639;--p-ink:#f5f8f7;--p-soft:#41d7d7;--p-accent:#ff9d47}
-    .p-bukti{--p-bg:#13242b;--p-panel:#28536b;--p-ink:#fffdf8;--p-soft:#dce9df;--p-accent:#dfb750}
-    .p-mimik{--p-bg:#17213a;--p-panel:#3156c9;--p-ink:#fffdf8;--p-soft:#dce5ff;--p-accent:#c99d54}
-    .p-ritme{--p-bg:#15212b;--p-panel:#2658d8;--p-ink:#fffef9;--p-soft:#b9d9cf;--p-accent:#f3d46c}
-    .p-tayang{--p-bg:#102a43;--p-panel:#21a6d6;--p-ink:#fff;--p-soft:#dff5fc;--p-accent:#ef7f4d}
-    .p-katalog{--p-bg:#17211f;--p-panel:#165dff;--p-ink:#fffdf8;--p-soft:#dceee5;--p-accent:#ffd83e}
-
-    .section{padding:94px 0 0}
-    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:28px;margin-bottom:23px}
-    .section-kicker{color:#5f6f34;font:600 10px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}
-    .section h2{margin:10px 0 0;max-width:740px;font:600 clamp(36px,4.4vw,60px)/.97 "Playfair Display",Georgia,serif;letter-spacing:-2px}
-    .section h2 em{font-style:italic;color:#405cb7}
-    .section-copy{max-width:420px;margin:0;color:var(--muted);font-size:12px;line-height:1.7}
-    .section-tag{
-      flex:none;padding:10px 12px;border:1px solid #b7cc68;border-radius:var(--pill);background:#eff8ca;
-      color:#4d6213;font:600 9px/1 "DM Mono",monospace;letter-spacing:.7px;white-space:nowrap
-    }
-
-    .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .pain{
-      min-height:230px;padding:22px;border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(255,253,248,.85);
-      box-shadow:var(--soft-shadow);
-    }
-    .pain:nth-child(2){background:linear-gradient(145deg,#eef4ff,#e1eaff)}
-    .pain:nth-child(3){background:linear-gradient(145deg,#fff3ed,#ffe1d8)}
-    .pain-index{font:500 10px/1 "DM Mono",monospace;color:#7f867b;letter-spacing:1px}
-    .pain-icon{width:44px;height:44px;margin:19px 0 15px;border-radius:14px;background:#fff;display:grid;place-items:center;border:1px solid var(--line);font-size:19px}
-    .pain h3{margin:0;font-size:17px;letter-spacing:-.35px}
-    .pain p{margin:9px 0 0;color:var(--muted);font-size:12px;line-height:1.65}
-
-    .three-steps{
-      display:grid;grid-template-columns:.9fr 1.2fr .9fr;gap:14px;align-items:stretch
-    }
-    .step-card{
-      min-height:280px;padding:24px;border:1px solid var(--line);border-radius:var(--r-lg);
-      background:rgba(255,253,248,.82);box-shadow:var(--soft-shadow);display:flex;flex-direction:column
-    }
-    .step-card.featured{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:13px 14px 0 rgba(112,148,255,.18)}
-    .step-no{font:500 10px/1 "DM Mono",monospace;letter-spacing:1px;color:#7281a8}
-    .step-card:not(.featured) .step-no{color:#57721a}
-    .step-card h3{margin:23px 0 10px;font:600 30px/1 "Playfair Display",Georgia,serif;letter-spacing:-.7px}
-    .step-card p{margin:0;font-size:12px;line-height:1.7;color:#697078}
-    .step-card.featured p{color:#bbc0ca}
-    .step-chip{display:inline-flex;align-items:center;align-self:flex-start;gap:7px;margin-top:auto;padding:9px 10px;border-radius:10px;font:600 9px/1 "DM Mono",monospace}
-    .step-card:not(.featured) .step-chip{background:#eff8ca;color:#4e6514;border:1px solid #c9df75}
-    .step-card.featured .step-chip{background:rgba(216,255,66,.12);border:1px solid rgba(216,255,66,.28);color:#e4ff8d}
-    .step-chip i{display:block;width:7px;height:7px;border-radius:50%;background:currentColor}
-
-    .packs{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}
-    .pack{
-      position:relative;overflow:hidden;min-height:313px;padding:25px;border:1px solid var(--line);border-radius:var(--r-lg);
-      background:rgba(255,253,248,.9);box-shadow:var(--soft-shadow)
-    }
-    .pack:after{content:"";position:absolute;width:170px;height:170px;right:-58px;bottom:-65px;border-radius:50%;border:1px dashed rgba(13,15,19,.18)}
-    .pack.advertiser{background:linear-gradient(145deg,#edf2ff,#dce6ff)}
-    .pack.commerce{background:linear-gradient(145deg,#fff5df,#ffe6aa)}
-    .pack.creator{background:linear-gradient(145deg,#fff0ec,#ffdbd2)}
-    .pack.branding{background:linear-gradient(145deg,#edf7ef,#d9eedb)}
-    .pack-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .pack-code{font:600 9px/1 "DM Mono",monospace;color:#617086;letter-spacing:1px;text-transform:uppercase}
-    .pack-icon{width:42px;height:42px;border-radius:14px;background:#fff;display:grid;place-items:center;border:1px solid rgba(13,15,19,.12);font-size:19px}
-    .pack h3{position:relative;z-index:1;max-width:420px;margin:23px 0 8px;font:600 34px/.98 "Playfair Display",Georgia,serif;letter-spacing:-1px}
-    .pack p{position:relative;z-index:1;max-width:470px;margin:0;color:#55606b;font-size:12px;line-height:1.65}
-    .pack-tags{position:relative;z-index:1;display:flex;gap:7px;flex-wrap:wrap;margin-top:19px}
-    .pack-tags span{padding:8px 9px;border:1px solid rgba(13,15,19,.13);border-radius:9px;background:rgba(255,255,255,.62);font:600 9px/1 "DM Mono",monospace;color:#45515f}
-    .pack .btn{position:relative;z-index:1;margin-top:20px;align-self:flex-start}
-
-    .vault-explorer{
-      display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:15px;align-items:stretch
-    }
-    .app-grid-wrap{min-width:0}
-    .app-browser-head{display:none}
-    .app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-    .app-card{
-      position:relative;text-align:left;padding:15px;border:1px solid var(--line);border-radius:17px;background:rgba(255,253,248,.8);
-      transition:all .17s ease;min-height:135px
-    }
-    .app-card:hover,.app-card.active{background:var(--ink);border-color:var(--ink);color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px rgba(13,15,19,.14)}
-    .app-card .app-symbol{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:#eef5ce;border:1px solid #d4e98a;color:#365000;font-weight:900}
-    .app-card:hover .app-symbol,.app-card.active .app-symbol{background:var(--lime);border-color:var(--lime);color:var(--ink)}
-    .app-card b{display:block;margin-top:17px;font-size:13px;letter-spacing:-.2px}
-    .app-card span{display:block;margin-top:5px;color:#757a83;font-size:10px;line-height:1.4}
-    .app-card:hover span,.app-card.active span{color:#bcc1cb}
-    .app-detail{
-      min-height:530px;padding:26px;border-radius:var(--r-lg);background:var(--ink);color:#fff;
-      box-shadow:15px 15px 0 rgba(112,148,255,.16)
-    }
-    .detail-label{display:flex;align-items:center;gap:8px;color:#c2cae3;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
-    .detail-label i{width:8px;height:8px;background:var(--lime);border-radius:2px}
-    .app-detail h3{margin:23px 0 10px;font:600 45px/.93 "Playfair Display",Georgia,serif;letter-spacing:-1.3px}
-    .app-detail h3 em{font-style:italic;color:var(--lime)}
-    .app-detail p{margin:0;color:#bac0cc;font-size:12px;line-height:1.72}
-    .detail-line{height:1px;background:rgba(255,255,255,.13);margin:21px 0}
-    .detail-list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
-    .detail-list li{display:flex;align-items:flex-start;gap:9px;color:#d6dae3;font-size:11px;line-height:1.5}
-    .detail-list li:before{content:"✓";color:var(--lime);font-weight:900}
-    .detail-footer{margin-top:25px;padding:13px;border:1px dashed rgba(216,255,66,.42);border-radius:14px;color:#e8ff99;font:500 10px/1.55 "DM Mono",monospace}
-    .detail-mobile-hint{display:none}
-
-    .included-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:15px}
-    .included-main{padding:30px;border-radius:var(--r-xl);background:var(--ink);color:#fff;box-shadow:var(--shadow);overflow:hidden;position:relative}
-    .included-main:before{content:"";position:absolute;right:-115px;top:-130px;width:350px;height:350px;border:1px dashed rgba(216,255,66,.38);border-radius:50%}
-    .included-main > *{position:relative;z-index:1}
-    .included-main h3{max-width:600px;margin:19px 0 12px;font:600 49px/.94 "Playfair Display",Georgia,serif;letter-spacing:-1.8px}
-    .included-main h3 em{font-style:italic;color:var(--lime)}
-    .included-main p{max-width:560px;margin:0;color:#c2c6cf;font-size:12px;line-height:1.75}
-    .included-main ul{margin:25px 0 0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:10px;list-style:none}
-    .included-main li{padding:11px 12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);border-radius:12px;color:#e2e4e9;font-size:11px;line-height:1.45}
-    .included-main li:before{content:"✓";color:var(--lime);margin-right:8px;font-weight:900}
-    .included-side{display:grid;grid-template-columns:1fr;gap:15px}
-    .small-included{padding:23px;border:1px solid var(--line);border-radius:var(--r-lg);background:rgba(255,253,248,.86);box-shadow:var(--soft-shadow)}
-    .small-included:nth-child(1){background:linear-gradient(145deg,#eef6ff,#dce8ff)}
-    .small-included:nth-child(2){background:linear-gradient(145deg,#f7fce5,#e9f6b6)}
-    .small-included .tiny{font:600 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase;color:#596879}
-    .small-included h4{margin:14px 0 8px;font:600 25px/1 "Playfair Display",Georgia,serif;letter-spacing:-.5px}
-    .small-included p{margin:0;color:#5f6873;font-size:11px;line-height:1.65}
-
-    .license-note{
-      padding:28px;border:1px solid var(--line);border-radius:var(--r-xl);background:rgba(255,253,248,.84);box-shadow:var(--soft-shadow);
-      display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center
-    }
-    .license-note h3{margin:12px 0 10px;font:600 42px/.98 "Playfair Display",Georgia,serif;letter-spacing:-1.4px}
-    .license-note h3 em{font-style:italic;color:#465ec6}
-    .license-note p{max-width:640px;margin:0;color:var(--muted);font-size:12px;line-height:1.72}
-    .license-points{display:grid;gap:9px}
-    .license-point{display:flex;align-items:flex-start;gap:9px;padding:12px;border:1px solid #d6e4a0;border-radius:13px;background:#f7fce8;color:#475438;font-size:11px;line-height:1.5}
-    .license-point i{display:grid;place-items:center;width:19px;height:19px;flex:none;border-radius:50%;background:var(--lime);color:#253000;font-size:11px;font-style:normal;font-weight:900}
-
-    .faq{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    details{padding:19px 19px 18px;border:1px solid var(--line);border-radius:17px;background:rgba(255,253,248,.84);box-shadow:0 5px 14px rgba(13,15,19,.035)}
-    summary{list-style:none;cursor:pointer;font-size:13px;font-weight:800;letter-spacing:-.2px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-    summary::-webkit-details-marker{display:none}
-    summary:after{content:"+";font:500 23px/1 "DM Mono",monospace;color:#5f7030}
-    details[open] summary:after{content:"–"}
-    details p{margin:14px 0 0;color:#626a72;font-size:11px;line-height:1.72}
-
-    .cta{
-      position:relative;overflow:hidden;margin:94px 0 24px;padding:54px;border-radius:var(--r-xl);
-      background:linear-gradient(135deg,#d8ff42,#bce52b);color:#172008;box-shadow:0 18px 40px rgba(142,170,30,.22)
-    }
-    .cta:before{content:"";position:absolute;width:470px;height:470px;right:-90px;top:-270px;border-radius:50%;border:1px dashed rgba(23,32,8,.42)}
-    .cta:after{content:"";position:absolute;left:-80px;bottom:-160px;width:270px;height:270px;border-radius:50%;background:rgba(112,148,255,.18)}
-    .cta-copy{position:relative;z-index:1;max-width:860px}
-    .cta h2{margin:0;font:600 clamp(42px,5.4vw,75px)/.92 "Playfair Display",Georgia,serif;letter-spacing:-2.7px}
-    .cta h2 em{font-style:italic;color:#344b97}
-    .cta p{max-width:650px;margin:16px 0 0;color:#3a4923;font-size:14px;line-height:1.68}
-    .cta-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:27px}
-    .btn.cta-dark{background:var(--ink);color:#fff;box-shadow:0 6px 0 #000}
-    .btn.cta-paper{background:rgba(255,255,255,.72);border-color:rgba(13,15,19,.16);color:var(--ink)}
-    .cta-note{margin-top:22px;color:#4b5b2d;font:500 10px/1.5 "DM Mono",monospace}
-
-    footer{padding:0 2px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:#767a81;font-size:10px}
-    footer .foot-brand{font-weight:800;color:#4f555c}
-    footer a{text-decoration:underline;text-underline-offset:3px}
-
-    .modal{
-      position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(6,8,13,.62);backdrop-filter:blur(9px)
-    }
-    .modal.show{display:grid}
-    .modal-card{width:min(560px,100%);padding:25px;border-radius:23px;background:var(--white);box-shadow:var(--shadow);position:relative}
-    .modal-card h3{margin:0;font:600 34px/1 "Playfair Display",Georgia,serif;letter-spacing:-.8px}
-    .modal-card p{margin:12px 0 0;color:#626a72;font-size:12px;line-height:1.7}
-    .modal-form{display:grid;gap:10px;margin-top:20px}
-    .modal-form input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;background:#fff;font-size:12px}
-    .modal-form input:focus{border-color:#91aa2e;box-shadow:0 0 0 4px rgba(216,255,66,.22)}
-    .modal-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:18px;color:#4e535b}
-    .modal-message{display:none;margin-top:12px;padding:10px 11px;border-radius:10px;background:#eff8ca;color:#4b5e19;font-size:11px;line-height:1.5}
-    .modal-message.show{display:block}
-
-    @media (max-width:1120px){
-      .nav{display:none}
-      .hero{grid-template-columns:1fr;min-height:auto}
-      .hero-visual{min-height:370px}
-      .vault-card{max-width:470px}
-      .three-steps{grid-template-columns:1fr 1fr}
-      .three-steps .step-card:last-child{grid-column:1/-1}
-      .vault-explorer{grid-template-columns:1fr}
-      .app-detail{min-height:auto}
-      .included-grid{grid-template-columns:1fr}
-    }
-    @media (max-width:760px){
-      .wrap{padding:12px}
-      .topbar{top:8px;padding:10px 10px 10px 14px}
-      .brand-mark{width:40px;height:40px}
-      .brand-copy strong{font-size:13px}
-      .brand-copy span{font-size:8px}
-      .header-actions .status{display:none}
-      .header-actions .btn{display:none}
-      .menu-btn{display:inline-grid;width:40px;height:40px;place-items:center;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05);color:#fff}
-      .mobile-nav{display:none;position:fixed;top:72px;left:12px;right:12px;z-index:49;padding:10px;background:#141820;border:1px solid rgba(255,255,255,.12);border-radius:17px;box-shadow:0 18px 45px rgba(0,0,0,.22)}
-      .mobile-nav.show{display:grid}
-      .mobile-nav a{padding:12px;color:#d7d9e0;border-radius:10px;font-size:12px;font-weight:700}
-      .mobile-nav a:hover{background:rgba(255,255,255,.07)}
-      .hero{margin-top:12px;padding:34px 24px;border-radius:26px}
-      .hero h1{font-size:48px;letter-spacing:-2.5px}
-      .hero p{font-size:13px}
-      .hero-visual{min-height:315px}
-      .vault-card{transform:rotate(0deg);min-height:315px}
-      .vault-word{font-size:36px;margin:25px 0 16px}
-      .proof-strip{justify-content:flex-start}
-      .product-gallery{padding-top:44px}
-      .gallery-intro{display:block;margin-bottom:12px}
-      .gallery-intro h2{font-size:34px;letter-spacing:-1.1px}
-      .gallery-intro p{margin-top:10px;font-size:11px}
-      .gallery-viewport:before,.gallery-viewport:after{width:32px}
-      .gallery-track{gap:9px}
-      .gallery-track.left{animation-duration:72s}
-      .gallery-track.right{animation-duration:80s}
-      .preview-card{width:184px;padding:7px;border-radius:16px}
-      .preview-window{height:106px;padding:7px;border-radius:11px}
-      .preview-hero{margin-top:13px;grid-template-columns:1fr 43px;gap:6px}
-      .preview-title{font-size:15px}.preview-title.small{font-size:13px}
-      .preview-side{height:38px;border-radius:8px}
-      .preview-lines{gap:4px;margin-top:7px}.preview-lines span{height:3px}
-      .preview-chips{margin-top:8px}.preview-chips span{width:21px;height:9px}
-      .preview-meta{padding:8px 3px 2px}.preview-meta b{font-size:10px}.preview-meta span{font-size:8px}
-      .section{padding-top:68px}
-      .section-head{display:block}
-      .section-copy{margin-top:13px}
-      .section-tag{display:inline-flex;margin-top:13px}
-      .pain-grid,.packs,.faq{grid-template-columns:1fr}
-      .three-steps{grid-template-columns:1fr}
-      .three-steps .step-card:last-child{grid-column:auto}
-      .hero-actions,.cta-actions{display:grid;grid-template-columns:1fr;gap:10px}
-      .hero-actions .btn,.cta-actions .btn{width:100%}
-      .vault-explorer{display:block}
-      .app-grid-wrap{padding:14px;border:1px solid var(--line);border-radius:20px;background:rgba(255,253,248,.88);box-shadow:var(--soft-shadow)}
-      .app-browser-head{display:flex;flex-direction:column;gap:7px;margin-bottom:12px}
-      .app-browser-head b{font-size:15px;letter-spacing:-.3px}
-      .app-browser-head span{color:#67706e;font-size:11px;line-height:1.45}
-      .app-browser-pill{display:inline-flex;align-items:center;align-self:flex-start;gap:6px;padding:8px 10px;border-radius:999px;background:#eef8ca;border:1px solid #c9df75;color:#46571c;font:600 9px/1 "DM Mono",monospace;letter-spacing:.5px;text-transform:uppercase}
-      .app-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-      .app-card{
-        min-height:auto;
-        aspect-ratio:1/1;
-        padding:8px 6px;
-        border-radius:14px;
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-        justify-content:center;
-        text-align:center;
-        gap:8px;
-      }
-      .app-card.active{border-color:var(--lime);box-shadow:0 8px 18px rgba(13,15,19,.10),0 0 0 2px rgba(216,255,66,.16)}
-      .app-card.active::after{
-        content:"";position:absolute;top:8px;right:8px;width:7px;height:7px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 3px rgba(216,255,66,.18)
-      }
-      .app-card .app-symbol{width:32px;height:32px;border-radius:10px;flex:none}
-      .app-card b{margin-top:0;font-size:10px;line-height:1.15;word-break:break-word}
-      .app-card span:last-child{display:none}
-      .app-detail{
-        margin-top:12px;min-height:auto;padding:18px 16px;border-radius:18px;box-shadow:0 12px 28px rgba(13,15,19,.12)
-      }
-      .detail-label{font-size:8px;letter-spacing:.8px}
-      .app-detail h3{margin:14px 0 8px;font-size:30px;line-height:.96}
-      .app-detail p{font-size:11px;line-height:1.62}
-      .detail-line{margin:14px 0}
-      .detail-list{gap:7px}
-      .detail-list li{font-size:10px;line-height:1.45}
-      .detail-footer{margin-top:14px;padding:10px 11px;font-size:9px;line-height:1.5}
-      .detail-mobile-hint{display:block;margin-top:12px;color:#9ea7b8;font:500 9px/1.45 "DM Mono",monospace;letter-spacing:.35px}
-      .included-main{padding:25px}
-      .included-main h3{font-size:40px}
-      .included-main ul{grid-template-columns:1fr}
-      .license-note{grid-template-columns:1fr;padding:23px}
-      .license-note h3{font-size:37px}
-      .cta{margin-top:68px;padding:35px 24px;border-radius:25px}
-      .cta h2{font-size:49px;letter-spacing:-2px}
-      footer{display:block;line-height:1.7}
-      footer div:last-child{margin-top:4px}
-    }
-    @media (max-width:420px){
-      .brand-copy span{display:none}
-      .app-detail{padding:16px 14px}
-      .app-detail h3{font-size:27px}
-      .app-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
-      .app-card{padding:8px 5px;gap:7px}
-      .app-card .app-symbol{width:28px;height:28px;font-size:12px}
-      .app-card b{font-size:9px}
-    }
-    @media (prefers-reduced-motion:reduce){
-      html{scroll-behavior:auto}
-      .gallery-track{animation-play-state:paused!important}
-      .app-card,.preview-card,.btn{transition:none!important}
-    }
-    @media (min-width:761px){.mobile-nav{display:none!important}}
-  </style>
 </head>
 <body>
   <noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=000000000000000&amp;ev=PageView&amp;noscript=1"></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="wrap">
     <header class="topbar">
       <a class="brand" href="#top" aria-label="AppVibe">
         <img src="/logo-dark.webp" alt="AppVibe" class="brand-logo" width="160" height="41" />
-
+      </a>
       <nav class="nav" aria-label="Navigasi utama">
         <a href="#cara-kerja">Cara kerja</a>
-        <a href="#niche-pack">Niche pack</a>
+        <a href="#niche-pack">Pilih pack</a>
         <a href="#aplikasi">13 aplikasi</a>
         <a href="#lisensi">Lisensi</a>
       </nav>
-
       <div class="header-actions">
         <span class="status"><i></i> untuk advertiser &amp; agency</span>
-        <button class="btn lime small" data-open-modal>Ambil akses awal <span>→</span></button>
+        <button class="btn lime small" data-open-modal>Lihat opsi akses <span>→</span></button>
         <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
       </div>
     </header>
 
     <nav class="mobile-nav" id="mobileNav" aria-label="Navigasi seluler">
       <a href="#cara-kerja">Cara kerja</a>
-      <a href="#niche-pack">Niche pack</a>
+      <a href="#niche-pack">Pilih pack</a>
       <a href="#aplikasi">13 aplikasi</a>
       <a href="#lisensi">Lisensi</a>
       <a href="#faq">FAQ</a>
-      <button class="btn lime" data-open-modal>Ambil akses awal →</button>
+      <button class="btn lime" data-open-modal>Lihat opsi akses →</button>
     </nav>
 
     <main id="top">
+
+      <!-- HERO -->
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <span class="eyebrow">13 aplikasi marketing siap rebrand</span>
-          <h1 id="hero-title">Jadikan audiens Anda pasar untuk <em>produk AI</em> Anda sendiri.</h1>
+          <span class="eyebrow">WHITE-LABEL AI APP VAULT · FOR OWNERS WITH AN AUDIENCE</span>
+          <h1 id="hero-title">Ubah audiens Anda menjadi pembeli <em>produk AI</em> ber-brand Anda.</h1>
           <p>
-            Pilih aplikasi. Ganti nama, identitas, dan positioning-nya. Lalu luncurkan sebagai produk digital
-            berbayar untuk advertiser, seller, creator, atau komunitas Anda — tanpa membangun aplikasi dari nol.
+            Pilih aplikasi yang relevan, sesuaikan nama dan positioning-nya, lalu kemas sebagai tool berbayar, bonus program, atau client portal — tanpa membangun software dari nol.
           </p>
-
           <div class="hero-actions">
-            <button class="btn lime" data-open-modal>Ambil akses awal <span>→</span></button>
-            <a class="btn ghost" href="#cara-kerja">Lihat cara kerjanya <span>↓</span></a>
+            <button class="btn lime" data-scroll-to="niche-pack">Pilih pack untuk audiens saya <span>→</span></button>
+            <a class="btn ghost" href="#aplikasi">Lihat demo aplikasi <span>↓</span></a>
           </div>
-
           <ul class="hero-stats" aria-label="Ringkasan paket">
             <li><b>13</b><span>aplikasi siap rebrand</span></li>
             <li><b>4</b><span>niche pack siap jual</span></li>
             <li><b>100%</b><span>white-label, lifetime</span></li>
             <li><b>0</b><span>butuh coding</span></li>
           </ul>
-
           <div class="hero-micro">
             <span class="micro-icon">✦</span>
-            <span><b>Bukan kumpulan prompt generik.</b> Ini adalah katalog produk aplikasi AI yang dapat Anda kemas, beri brand, dan jual sebagai aset digital milik brand Anda.</span>
+            <span>Setiap aplikasi sudah <b>siap pakai</b> — Anda mengubah nama, niche, positioning, dan copy-nya. <b>Termasuk arahan rebranding, launch kit, dan model monetisasi.</b></span>
           </div>
         </div>
-
-        <div class="hero-visual" aria-label="Ilustrasi produk White-Label AI Vault">
-          <div class="vault-card">
-            <div class="vault-top">
-              <span>WHITE-LABEL LICENSE</span>
-              <b>13 APPS / 4 NICHE PACKS</b>
-            </div>
-            <div class="vault-word">Your <em>brand.</em><br>Your product.</div>
+        <div class="hero-visual">
+          <div class="vault-card" aria-hidden="true">
+            <div class="vault-top"><span># VAULT CARD</span><b>APPVIBE</b></div>
+            <div class="vault-word">Your brand.<br><em>Your product.</em></div>
             <div class="vault-divider"></div>
             <div class="vault-grid">
               <div class="vault-box"><span>Rebrand</span><b>Nama, niche &amp; identitas produk</b></div>
               <div class="vault-box"><span>Launch</span><b>Copy, offer &amp; marketing kit</b></div>
               <div class="vault-box"><span>Deliver</span><b>Produk siap dipasarkan</b></div>
-              <div class="vault-box"><span>Monetize</span><b>Lifetime, bundle atau bonus komunitas</b></div>
+              <div class="vault-box"><span>Monetize</span><b>Lifetime, bundle atau bonus</b></div>
             </div>
             <div class="vault-sticker">BANGUN KATALOG APLIKASI ANDA TANPA CODING DARI NOL</div>
           </div>
         </div>
       </section>
 
-      <div class="proof-strip" aria-label="Ringkasan manfaat">
+      <div class="proof-strip" role="list">
         <span><b>01</b> Rebrand menjadi produk Anda</span>
-        <i class="proof-divider"></i>
+        <span class="proof-divider" aria-hidden="true"></span>
         <span><b>02</b> Fokus ke niche yang sudah Anda kuasai</span>
-        <i class="proof-divider"></i>
-        <span><b>03</b> Jual akses, bundle, atau bonus membership</span>
-        <i class="proof-divider"></i>
-        <span><b>04</b> Dilengkapi kit pemasaran &amp; arah positioning</span>
+        <span class="proof-divider" aria-hidden="true"></span>
+        <span><b>03</b> Jual akses, bundle, atau bonus</span>
+        <span class="proof-divider" aria-hidden="true"></span>
+        <span><b>04</b> Dilengkapi kit pemasaran &amp; positioning</span>
       </div>
 
-      <section class="product-gallery" aria-labelledby="gallery-title">
-        <div class="gallery-intro">
-          <div>
-            <div class="gallery-eyebrow">13 APLIKASI · SATU KATALOG PRODUK</div>
-            <h2 id="gallery-title">Bukan sekadar link. Ini adalah <em>produk yang terlihat nyata.</em></h2>
-          </div>
-          <p>Preview ini dibuat ringan agar tetap cepat di mobile. Ketuk salah satu aplikasi untuk melihat positioning produk dan peluang rebrand-nya.</p>
-        </div>
-
-        <div class="gallery-viewport" aria-label="Preview bergerak aplikasi baris pertama">
-          <div class="gallery-track left">
-            <button class="preview-card p-adsprint" data-app="adsprint" aria-label="Preview ADSprint"><div class="preview-window"><div class="preview-top"><i></i><span>Campaign Command</span></div><div class="preview-hero"><div><div class="preview-title">Ads <em>Blueprint</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ADSprint</b><span>Campaign command center</span></div></button>
-            <button class="preview-card p-pikat" data-app="pikat" aria-label="Preview PIKAT"><div class="preview-window"><div class="preview-top"><i></i><span>Affiliate Factory</span></div><div class="preview-hero"><div><div class="preview-title">Content <em>Hook</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>PIKAT</b><span>Affiliate content factory</span></div></button>
-            <button class="preview-card p-rupa" data-app="rupa" aria-label="Preview RUPA"><div class="preview-window"><div class="preview-top"><i></i><span>Visual Commerce</span></div><div class="preview-hero"><div><div class="preview-title">Make it <em>pop</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>RUPA</b><span>Visual commerce studio</span></div></button>
-            <button class="preview-card p-mula" data-app="mula" aria-label="Preview MULA"><div class="preview-window"><div class="preview-top"><i></i><span>Launch Atelier</span></div><div class="preview-hero"><div><div class="preview-title">Make the <em>move</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>MULA</b><span>Launch campaign atelier</span></div></button>
-            <button class="preview-card p-arah" data-app="arah" aria-label="Preview ARAH"><div class="preview-window"><div class="preview-top"><i></i><span>Brand Atlas</span></div><div class="preview-hero"><div><div class="preview-title">Find your <em>north</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ARAH</b><span>Brand atlas studio</span></div></button>
-            <button class="preview-card p-cetak" data-app="cetak" aria-label="Preview CETAK"><div class="preview-window"><div class="preview-top"><i></i><span>Print Campaign</span></div><div class="preview-hero"><div><div class="preview-title">Print it <em>bold</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>CETAK</b><span>Print campaign studio</span></div></button>
-            <button class="preview-card p-adsprint" data-app="adsprint" aria-label="Preview ADSprint duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Campaign Command</span></div><div class="preview-hero"><div><div class="preview-title">Ads <em>Blueprint</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ADSprint</b><span>Campaign command center</span></div></button>
-            <button class="preview-card p-pikat" data-app="pikat" aria-label="Preview PIKAT duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Affiliate Factory</span></div><div class="preview-hero"><div><div class="preview-title">Content <em>Hook</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>PIKAT</b><span>Affiliate content factory</span></div></button>
-            <button class="preview-card p-rupa" data-app="rupa" aria-label="Preview RUPA duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Visual Commerce</span></div><div class="preview-hero"><div><div class="preview-title">Make it <em>pop</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>RUPA</b><span>Visual commerce studio</span></div></button>
-            <button class="preview-card p-mula" data-app="mula" aria-label="Preview MULA duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Launch Atelier</span></div><div class="preview-hero"><div><div class="preview-title">Make the <em>move</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>MULA</b><span>Launch campaign atelier</span></div></button>
-            <button class="preview-card p-arah" data-app="arah" aria-label="Preview ARAH duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Brand Atlas</span></div><div class="preview-hero"><div><div class="preview-title">Find your <em>north</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ARAH</b><span>Brand atlas studio</span></div></button>
-            <button class="preview-card p-cetak" data-app="cetak" aria-label="Preview CETAK duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Print Campaign</span></div><div class="preview-hero"><div><div class="preview-title">Print it <em>bold</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>CETAK</b><span>Print campaign studio</span></div></button>
-          </div>
-        </div>
-
-        <div class="gallery-viewport" aria-label="Preview bergerak aplikasi baris kedua">
-          <div class="gallery-track right">
-            <button class="preview-card p-adegan" data-app="adegan" aria-label="Preview ADEGAN"><div class="preview-window"><div class="preview-top"><i></i><span>Director Lab</span></div><div class="preview-hero"><div><div class="preview-title small">Frame the <em>story</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ADEGAN</b><span>Director's treatment lab</span></div></button>
-            <button class="preview-card p-suara" data-app="suara" aria-label="Preview SUARA"><div class="preview-window"><div class="preview-top"><i></i><span>Voice Direction</span></div><div class="preview-hero"><div><div class="preview-title small">Shape the <em>voice</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>SUARA</b><span>Voice direction desk</span></div></button>
-            <button class="preview-card p-bukti" data-app="bukti" aria-label="Preview BUKTI"><div class="preview-window"><div class="preview-top"><i></i><span>Proof Ledger</span></div><div class="preview-hero"><div><div class="preview-title">Make trust <em>visible</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>BUKTI</b><span>Social proof ledger</span></div></button>
-            <button class="preview-card p-mimik" data-app="mimik" aria-label="Preview MIMIK"><div class="preview-window"><div class="preview-top"><i></i><span>Persona Studio</span></div><div class="preview-hero"><div><div class="preview-title">Keep the <em>voice</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>MIMIK</b><span>Persona continuity studio</span></div></button>
-            <button class="preview-card p-ritme" data-app="ritme" aria-label="Preview RITME"><div class="preview-window"><div class="preview-top"><i></i><span>Editorial Planner</span></div><div class="preview-hero"><div><div class="preview-title">Find your <em>rhythm</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>RITME</b><span>Editorial rhythm planner</span></div></button>
-            <button class="preview-card p-tayang" data-app="tayang" aria-label="Preview TAYANG"><div class="preview-window"><div class="preview-top"><i></i><span>Website Blueprint</span></div><div class="preview-hero"><div><div class="preview-title">Page it <em>right</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>TAYANG</b><span>Website blueprint lab</span></div></button>
-            <button class="preview-card p-katalog" data-app="katalog" aria-label="Preview KATALOG"><div class="preview-window"><div class="preview-top"><i></i><span>Merchandising Board</span></div><div class="preview-hero"><div><div class="preview-title small">Make the shelf <em>sell</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>KATALOG</b><span>Marketplace merchandising board</span></div></button>
-            <button class="preview-card p-adegan" data-app="adegan" aria-label="Preview ADEGAN duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Director Lab</span></div><div class="preview-hero"><div><div class="preview-title small">Frame the <em>story</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>ADEGAN</b><span>Director's treatment lab</span></div></button>
-            <button class="preview-card p-suara" data-app="suara" aria-label="Preview SUARA duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Voice Direction</span></div><div class="preview-hero"><div><div class="preview-title small">Shape the <em>voice</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>SUARA</b><span>Voice direction desk</span></div></button>
-            <button class="preview-card p-bukti" data-app="bukti" aria-label="Preview BUKTI duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Proof Ledger</span></div><div class="preview-hero"><div><div class="preview-title">Make trust <em>visible</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>BUKTI</b><span>Social proof ledger</span></div></button>
-            <button class="preview-card p-mimik" data-app="mimik" aria-label="Preview MIMIK duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Persona Studio</span></div><div class="preview-hero"><div><div class="preview-title">Keep the <em>voice</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>MIMIK</b><span>Persona continuity studio</span></div></button>
-            <button class="preview-card p-ritme" data-app="ritme" aria-label="Preview RITME duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Editorial Planner</span></div><div class="preview-hero"><div><div class="preview-title">Find your <em>rhythm</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>RITME</b><span>Editorial rhythm planner</span></div></button>
-            <button class="preview-card p-tayang" data-app="tayang" aria-label="Preview TAYANG duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Website Blueprint</span></div><div class="preview-hero"><div><div class="preview-title">Page it <em>right</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>TAYANG</b><span>Website blueprint lab</span></div></button>
-            <button class="preview-card p-katalog" data-app="katalog" aria-label="Preview KATALOG duplikat"><div class="preview-window"><div class="preview-top"><i></i><span>Merchandising Board</span></div><div class="preview-hero"><div><div class="preview-title small">Make the shelf <em>sell</em></div><div class="preview-lines"><span></span><span></span><span></span></div></div><div class="preview-side"></div></div><div class="preview-chips"><span></span><span></span><span></span></div></div><div class="preview-meta"><b>KATALOG</b><span>Marketplace merchandising board</span></div></button>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="masalah">
+      <!-- PAIN CARDS -->
+      <section class="section" id="masalah" aria-labelledby="masalah-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Masalah yang kami pecahkan</div>
-            <h2>Anda sudah punya distribusi. Yang belum ada adalah <em>produk yang layak dijual.</em></h2>
+            <div class="section-kicker">THE PROBLEM YOU FIX FOR YOUR AUDIENCE</div>
+            <h2 id="masalah-title">Anda sudah punya distribusi. Yang belum ada adalah <em>produk yang layak dibeli berulang.</em></h2>
           </div>
-          <p class="section-copy">
-            Advertiser, agency, mentor, dan owner komunitas sering punya audiens atau klien — tetapi tidak punya produk digital yang terasa eksklusif, niche, dan benar-benar “milik mereka”.
-          </p>
+          <p class="section-copy">Bangun pemasukan berulang tanpa membangun aplikasi dari nol.</p>
         </div>
-
         <div class="pain-grid">
           <article class="pain">
-            <div class="pain-index">01 / KONTEN BUKAN PRODUK</div>
-            <div class="pain-icon">⌁</div>
+            <div class="pain-index">01 / Pain</div>
+            <div class="pain-icon">⏳</div>
             <h3>Insight Anda sulit dimonetisasi berulang.</h3>
             <p>Konten, edukasi, dan konsultasi hanya menjual waktu. Audiens membutuhkan tool yang memberi output nyata untuk pekerjaan mereka.</p>
           </article>
           <article class="pain">
-            <div class="pain-index">02 / BIKIN APP MAHAL</div>
-            <div class="pain-icon">◈</div>
+            <div class="pain-index">02 / Pain</div>
+            <div class="pain-icon">🧱</div>
             <h3>Membangun aplikasi sendiri terlalu berat untuk diuji cepat.</h3>
             <p>Validasi ide menjadi lambat saat harus melewati coding, desain, prompt engineering, revisi alur, dan biaya development.</p>
           </article>
           <article class="pain">
-            <div class="pain-index">03 / PROMPT TERASA MURAH</div>
-            <div class="pain-icon">✦</div>
+            <div class="pain-index">03 / Pain</div>
+            <div class="pain-icon">💎</div>
             <h3>Menjual prompt tidak cukup membangun persepsi produk premium.</h3>
             <p>Yang orang mau beli bukan sekadar instruksi. Mereka ingin sistem, pengalaman aplikasi, positioning, dan hasil yang jelas.</p>
           </article>
         </div>
+        <div class="transition-strip">
+          <p>Dari insight dan audiens <span>→</span> produk AI bernama, berbentuk, dan bisa dijual.</p>
+          <a class="btn paper" href="#niche-pack">Pilih produk pertama saya →</a>
+        </div>
       </section>
 
-      <section class="section" id="cara-kerja">
+      <!-- HOW IT WORKS -->
+      <section class="section" id="cara-kerja" aria-labelledby="cara-kerja-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Cara kerja sederhana</div>
-            <h2>Dari aplikasi siap pakai menjadi <em>produk branded</em> dalam tiga langkah.</h2>
+            <div class="section-kicker">HOW IT WORKS</div>
+            <h2 id="cara-kerja-title">Tiga langkah dari <em>memilih audiens</em> ke meluncurkan produk.</h2>
           </div>
-          <span class="section-tag">BUILT TO LAUNCH, NOT JUST TO USE</span>
+          <div class="section-tag">NO CODING REQUIRED</div>
         </div>
-
         <div class="three-steps">
           <article class="step-card">
-            <div class="step-no">LANGKAH 01</div>
-            <h3>Pilih niche yang sudah punya pasar Anda.</h3>
-            <p>Ambil aplikasi yang relevan dengan audiens: advertiser, seller marketplace, affiliate creator, atau bisnis yang sedang membangun brand.</p>
-            <span class="step-chip"><i></i> Contoh: Advertiser App Pack</span>
+            <div class="step-no">LANGKAH 1</div>
+            <h3>Pilih niche.</h3>
+            <p>Pilih niche yang sudah punya pasar Anda — advertiser, seller marketplace, creator, atau owner bisnis.</p>
+            <div class="step-chip"><i></i> Audience-first launch</div>
           </article>
-
           <article class="step-card featured">
-            <div class="step-no">LANGKAH 02</div>
-            <h3>Rebrand menjadi produk yang terasa milik Anda.</h3>
-            <p>Ubah nama, logo, warna, copy, contoh output, niche, dan paket penawaran agar selaras dengan positioning brand atau komunitas Anda.</p>
-            <span class="step-chip"><i></i> Contoh: “Winning Creative AI”</span>
+            <div class="step-no">LANGKAH 2</div>
+            <h3>Rebrand.</h3>
+            <p>Rebrand menjadi produk yang terasa milik Anda — nama, niche, copy, dan strategi penawaran disesuaikan.</p>
+            <div class="step-chip"><i></i> Your brand, your rules</div>
           </article>
-
           <article class="step-card">
-            <div class="step-no">LANGKAH 03</div>
-            <h3>Luncurkan sebagai akses, bundle, atau bonus premium.</h3>
-            <p>Jual lifetime access, paket niche, add-on program mentoring, atau manfaat eksklusif untuk komunitas dan client portal Anda.</p>
-            <span class="step-chip"><i></i> Contoh: Bundle Rp149K–Rp799K</span>
+            <div class="step-no">LANGKAH 3</div>
+            <h3>Luncurkan.</h3>
+            <p>Luncurkan sebagai akses, bundle, atau bonus premium yang menambah value ke audiens yang sudah Anda miliki.</p>
+            <div class="step-chip"><i></i> Sell without building</div>
           </article>
         </div>
+        <p class="section-note">Setelah memilih paket, Anda akan menerima detail akses dan jalur implementasi yang sesuai dengan paket serta model distribusi Anda.</p>
       </section>
 
-      <section class="section" id="niche-pack">
+      <!-- NICHE PACK SELECTOR -->
+      <section class="section" id="niche-pack" aria-labelledby="niche-pack-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Bukan 13 tool acak</div>
-            <h2>Mulai dari niche yang sudah Anda <em>pahami dan miliki aksesnya.</em></h2>
+            <div class="section-kicker">PRODUK PERTAMA ANDA</div>
+            <h2 id="niche-pack-title">Produk pertama Anda sebaiknya mengikuti <em>market yang sudah Anda pahami.</em></h2>
           </div>
-          <p class="section-copy">Setiap pack memberi jalan masuk yang lebih jelas: siapa pembeli akhirnya, masalah apa yang diselesaikan, dan aplikasi mana yang paling tepat diluncurkan dulu.</p>
+          <p class="section-copy">Pilih tipe audiens Anda. Kami akan tunjukkan pack yang paling logis untuk diluncurkan lebih dulu.</p>
         </div>
-
         <div class="packs">
-          <article class="pack advertiser">
-            <div class="pack-top"><span class="pack-code">01 / FOR MEDIA BUYERS</span><span class="pack-icon">⚡</span></div>
+          <article class="pack advertiser" data-pack="advertiser">
+            <div class="pack-top">
+              <span class="pack-code">01 / FOR MEDIA BUYERS</span>
+              <div class="pack-icon">📊</div>
+            </div>
             <h3>Advertiser App Pack</h3>
-            <p>Untuk media buyer, agency performance, dan mentor ads yang ingin punya lini produk untuk strategi campaign, creative, video script, serta social proof.</p>
-            <div class="pack-tags"><span>ADSprint</span><span>RUPA</span><span>ADEGAN</span><span>BUKTI</span><span>MULA</span></div>
-            <button class="btn dark small" data-pack="Advertiser App Pack">Lihat positioning →</button>
+            <p>Untuk media buyer, agency performance, dan mentor ads. Mulai dengan Campaign Blueprint AI — tool yang memberi campaign direction dan creative testing ideas sebelum budget iklan digunakan.</p>
+            <div class="pack-tags">
+              <span>ADSprint</span><span>RUPA</span><span>ADEGAN</span><span>BUKTI</span><span>MULA</span>
+            </div>
+            <button class="btn paper" data-pack="advertiser" data-sel="true">Pilih Advertiser Pack →</button>
           </article>
-
-          <article class="pack commerce">
-            <div class="pack-top"><span class="pack-code">02 / FOR ECOMMERCE OPERATORS</span><span class="pack-icon">▣</span></div>
+          <article class="pack commerce" data-pack="commerce">
+            <div class="pack-top">
+              <span class="pack-code">02 / FOR ECOMMERCE OPERATORS</span>
+              <div class="pack-icon">🛒</div>
+            </div>
             <h3>Commerce &amp; Marketplace Pack</h3>
-            <p>Untuk mentor seller, agency marketplace, dan operator ecommerce yang ingin menjual solusi listing, creative, conversion proof, serta content affiliate.</p>
-            <div class="pack-tags"><span>KATALOG</span><span>RUPA</span><span>BUKTI</span><span>PIKAT</span><span>ADSprint</span></div>
-            <button class="btn dark small" data-pack="Commerce & Marketplace Pack">Lihat positioning →</button>
+            <p>Untuk seller mentor, marketplace operator, dan ecommerce agency. Mulai dengan Marketplace Growth AI — tool merchandising, listing optimization, proof asset, dan affiliate content system.</p>
+            <div class="pack-tags">
+              <span>KATALOG</span><span>RUPA</span><span>BUKTI</span><span>PIKAT</span><span>ADSprint</span>
+            </div>
+            <button class="btn paper" data-pack="commerce" data-sel="true">Pilih Commerce Pack →</button>
           </article>
-
-          <article class="pack creator">
-            <div class="pack-top"><span class="pack-code">03 / FOR CREATOR EDUCATORS</span><span class="pack-icon">◌</span></div>
+          <article class="pack creator" data-pack="creator">
+            <div class="pack-top">
+              <span class="pack-code">03 / FOR CREATOR EDUCATORS</span>
+              <div class="pack-icon">🎬</div>
+            </div>
             <h3>Creator &amp; Affiliate Pack</h3>
-            <p>Untuk mentor affiliate, creator educator, dan social media agency yang ingin menjual sistem perencanaan konten, hook, visual brief, script, dan voice direction.</p>
-            <div class="pack-tags"><span>PIKAT</span><span>RITME</span><span>MIMIK</span><span>RUPA</span><span>SUARA</span></div>
-            <button class="btn dark small" data-pack="Creator & Affiliate Pack">Lihat positioning →</button>
+            <p>Untuk creator educator, affiliate mentor, dan social media agency. Mulai dengan Affiliate Content Engine — sistem konten, hook library, voice direction, script planning, dan persona continuity.</p>
+            <div class="pack-tags">
+              <span>PIKAT</span><span>RITME</span><span>MIMIK</span><span>RUPA</span><span>SUARA</span>
+            </div>
+            <button class="btn paper" data-pack="creator" data-sel="true">Pilih Creator Pack →</button>
           </article>
-
-          <article class="pack branding">
-            <div class="pack-top"><span class="pack-code">04 / FOR STRATEGISTS &amp; BUILDERS</span><span class="pack-icon">◐</span></div>
+          <article class="pack branding" data-pack="brand_launch">
+            <div class="pack-top">
+              <span class="pack-code">04 / FOR STRATEGISTS &amp; BUILDERS</span>
+              <div class="pack-icon">🚀</div>
+            </div>
             <h3>Brand &amp; Launch Pack</h3>
-            <p>Untuk brand strategist, web designer, course creator, dan konsultan bisnis yang ingin menjual aplikasi untuk fondasi brand, launch, website, dan materi kampanye.</p>
-            <div class="pack-tags"><span>ARAH</span><span>MIMIK</span><span>MULA</span><span>TAYANG</span><span>CETAK</span></div>
-            <button class="btn dark small" data-pack="Brand & Launch Pack">Lihat positioning →</button>
+            <p>Untuk brand strategist, web designer, course creator, dan consultant. Mulai dengan Brand Compass AI — fondasi brand, launch map, website blueprint, print campaign, dan voice system.</p>
+            <div class="pack-tags">
+              <span>ARAH</span><span>MIMIK</span><span>MULA</span><span>TAYANG</span><span>CETAK</span>
+            </div>
+            <button class="btn paper" data-pack="brand_launch" data-sel="true">Pilih Brand &amp; Launch Pack →</button>
           </article>
         </div>
       </section>
 
-      <section class="section" id="aplikasi">
+      <!-- FIRST-PRODUCT RECOMMENDATION -->
+      <section class="first-product-section" id="first-product" aria-labelledby="fp-title">
+        <div class="first-product-card" id="firstProductCard">
+          <div id="firstProductContent">
+            <div class="fp-loading">Pilih pack di atas untuk melihat rekomendasi produk pertama Anda.</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRODUCT SHOWCASE (3 featured apps) -->
+      <section class="section" id="showcase" aria-labelledby="showcase-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">13 product-ready apps</div>
-            <h2>Bangun satu produk dulu. Lalu perluas menjadi <em>katalog aplikasi niche.</em></h2>
+            <div class="section-kicker">3 PRODUK UNGGULAN BERDASARKAN PACK</div>
+            <h2 id="showcase-title">Aplikasi yang paling <em>siap Anda luncurkan.</em></h2>
           </div>
-          <p class="section-copy">Klik aplikasi untuk melihat contoh positioning, pasar akhir, dan bentuk produk yang dapat Anda luncurkan dengan brand sendiri.</p>
+          <p class="section-copy">Tiga produk unggulan yang paling relevan dengan pack yang Anda pilih.</p>
+        </div>
+        <div class="showcase-grid" id="showcaseGrid">
+          <div class="showcase-placeholder">Pilih pack untuk melihat 3 produk unggulan.</div>
+        </div>
+        <div class="showcase-cta">
+          <a class="btn lime" href="#aplikasi">Lihat seluruh 13 aplikasi →</a>
+        </div>
+      </section>
+
+      <!-- APP LAUNCHER -->
+      <section class="section" id="aplikasi" aria-labelledby="aplikasi-title">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">13 PRODUCT-READY APPS</div>
+            <h2 id="aplikasi-title">Klik aplikasi untuk melihat contoh <em>positioning dan bentuk produk.</em></h2>
+          </div>
+          <p class="section-copy">Ketuk aplikasi untuk melihat contoh positioning, pasar akhir, dan bentuk produk yang dapat Anda luncurkan dengan brand sendiri.</p>
         </div>
 
+        <!-- App launcher grid + detail -->
         <div class="vault-explorer">
           <div class="app-grid-wrap">
             <div class="app-browser-head">
-              <b>Pilih aplikasi dari launcher di bawah.</b>
-              <span>Layout ini dibuat seperti app launcher: ketuk icon + nama, lalu detail produk akan tampil di bawah.</span>
-              <div class="app-browser-pill">Preview aktif: <strong id="activeAppName">ADSprint</strong></div>
+              <b id="activeAppName">ADSprint</b>
+              <span>Pilih aplikasi untuk melihat detail</span>
+              <div class="app-browser-pill">PRODUCT DETAIL</div>
             </div>
-            <div class="app-grid" id="appGrid" aria-label="Daftar aplikasi">
+            <div class="app-grid">
               <button class="app-card active" data-app="adsprint"><span class="app-symbol">A</span><b>ADSprint</b><span>Campaign command center</span></button>
               <button class="app-card" data-app="pikat"><span class="app-symbol">P</span><b>PIKAT</b><span>Affiliate content factory</span></button>
               <button class="app-card" data-app="rupa"><span class="app-symbol">R</span><b>RUPA</b><span>Visual commerce studio</span></button>
@@ -833,37 +312,37 @@
               <button class="app-card" data-app="katalog"><span class="app-symbol">K</span><b>KATALOG</b><span>Marketplace merchandising board</span></button>
             </div>
           </div>
-
-          <aside class="app-detail" aria-live="polite">
-            <div class="detail-label"><i></i><span id="detailLabel">FOR ADVERTISERS &amp; PERFORMANCE AGENCIES</span></div>
+          <div class="app-detail" aria-live="polite">
+            <div class="detail-label"><i></i> <span id="detailLabel">FOR ADVERTISERS &amp; PERFORMANCE AGENCIES</span></div>
             <h3 id="detailTitle">Launch it as <em>Campaign Blueprint AI.</em></h3>
             <p id="detailText">Ubah ADSprint menjadi produk strategi iklan yang membantu advertiser menyusun campaign direction, audience angle, creative brief, dan eksperimen testing.</p>
             <div class="detail-line"></div>
             <ul class="detail-list" id="detailList">
               <li>Nama produk rebrand: Campaign Blueprint AI</li>
-              <li>Pembeli akhir: media buyer, affiliate, UMKM, team ads</li>
+              <li>Pembeli akhir: media buyer, affiliate, UMKM, atau team ads</li>
               <li>Model jualan: lifetime tool, bonus mentorship, atau agency client portal</li>
             </ul>
-            <div class="detail-footer" id="detailFooter">“Jual outcome yang dicari advertiser: arah campaign yang lebih jelas sebelum budget iklan dibakar.”</div>
-            <div class="detail-mobile-hint">↑ Preview ini berubah saat Anda mengetuk icon aplikasi di atas.</div>
-          </aside>
+            <div class="detail-footer" id="detailFooter">"Jual outcome yang dicari advertiser: arah campaign yang lebih jelas sebelum budget iklan dibakar."</div>
+            <button class="btn ghost" id="detailCta" data-open-form-from-detail style="margin-top:14px">Saya ingin meluncurkan produk seperti ini →</button>
+            <div class="detail-mobile-hint">Ketuk ikon aplikasi lain untuk melihat detail yang berbeda.</div>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="included">
+      <!-- INCLUDED -->
+      <section class="section" id="included" aria-labelledby="included-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">More than access</div>
-            <h2>Anda tidak hanya menerima aplikasi. Anda menerima <em>paket untuk meluncurkannya.</em></h2>
+            <div class="section-kicker">MORE THAN ACCESS</div>
+            <h2 id="included-title">Bukan hanya akses aplikasi. Anda mendapatkan <em>fondasi untuk meluncurkannya.</em></h2>
           </div>
           <span class="section-tag">PRODUCT + POSITIONING + GO-TO-MARKET</span>
         </div>
-
         <div class="included-grid">
           <div class="included-main">
-            <div class="section-kicker" style="color:#e0ff87">WHITE-LABEL LAUNCH KIT</div>
+            <div class="section-kicker" style="color:var(--av-cyan-500)">WHITE-LABEL LAUNCH KIT</div>
             <h3>Dari link aplikasi menjadi <em>produk yang terasa utuh.</em></h3>
-            <p>Setiap aplikasi dirancang untuk dipaketkan. Anda memiliki fondasi untuk menjelaskan produk, menampilkan manfaat, dan mengarahkan pasar agar memahami mengapa mereka perlu membeli aksesnya.</p>
+            <p>Setiap pack memberikan fondasi positioning, arahan rebrand, dan blueprint go-to-market yang dapat langsung Anda adaptasikan ke audiens yang sudah Anda kenali.</p>
             <ul>
               <li>Arah rebranding nama, niche, copy, dan identitas</li>
               <li>Positioning per target market dan use case</li>
@@ -873,124 +352,155 @@
               <li>Contoh bentuk deliverable dan produk akhir</li>
             </ul>
           </div>
-
           <div class="included-side">
-            <article class="small-included">
-              <div class="tiny">LAUNCH WITH CLARITY</div>
-              <h4>Jangan paksa semua app masuk ke satu brand.</h4>
-              <p>Mulai dari 1–3 aplikasi yang paling sesuai dengan market Anda. Beri positioning spesifik, validasi, lalu perluas katalog secara bertahap.</p>
-            </article>
-            <article class="small-included">
-              <div class="tiny">MONETIZE THE RIGHT WAY</div>
-              <h4>Jual akses produk, bukan file mentah.</h4>
-              <p>Gunakan sebagai aplikasi berbayar, bundle bonus, produk komunitas, atau client portal. Struktur ini menjaga persepsi nilai dan kontrol distribusi.</p>
-            </article>
+            <div class="small-included">
+              <div class="tiny">BERGANTUNG PAKET</div>
+              <h4>Jumlah aplikasi.</h4>
+              <p>Setiap pack mencakup 5 aplikasi yang relevan dengan niche Anda. Tidak perlu membeli seluruh 13 aplikasi.</p>
+            </div>
+            <div class="small-included">
+              <div class="tiny">BERGANTUNG PAKET</div>
+              <h4>Metode delivery.</h4>
+              <p>Detail akses dan jalur implementasi akan disesuaikan dengan paket serta model distribusi yang Anda pilih.</p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="section" id="lisensi">
-        <div class="license-note">
-          <div>
-            <div class="section-kicker">White-label reseller license</div>
-            <h3>Produk inti Anda boleh memakai <em>nama dan positioning sendiri.</em></h3>
-            <p>
-              Lisensi dirancang untuk Anda yang ingin menjual aplikasi sebagai produk jadi ke end user.
-              Anda tetap menjaga kualitas dan eksklusivitas dengan menjual akses aplikasi bermerek — bukan membagikan template inti secara bebas.
-            </p>
-          </div>
-          <div class="license-points">
-            <div class="license-point"><i>✓</i><span>Boleh mengubah nama produk, visual identity, niche, copy, dan strategi penawaran.</span></div>
-            <div class="license-point"><i>✓</i><span>Boleh menjual akses aplikasi ke customer, member komunitas, atau client Anda.</span></div>
-            <div class="license-point"><i>✓</i><span>Boleh menggunakan sebagai bonus program, mentorship, atau client portal premium.</span></div>
-            <div class="license-point"><i>×</i><span>Tidak untuk menjual file/template inti atau meneruskan hak white-label tanpa lisensi yang sesuai.</span></div>
-          </div>
-        </div>
-      </section>
-
-      <section class="section" id="faq">
+      <!-- LICENSE -->
+      <section class="section" id="lisensi" aria-labelledby="lisensi-title">
         <div class="section-head">
           <div>
-            <div class="section-kicker">Pertanyaan yang biasanya muncul</div>
-            <h2>Yang perlu Anda pahami sebelum <em>meluncurkan brand aplikasi sendiri.</em></h2>
+            <div class="section-kicker">LISENSI AKSES PRODUK WHITE-LABEL</div>
+            <h2 id="lisensi-title">Jual produk bermerek Anda. <em>Bukan file inti kami.</em></h2>
+          </div>
+          <p class="section-copy">Lisensi white-label memberi Anda hak untuk menjual akses aplikasi dengan brand sendiri.</p>
+        </div>
+        <div class="license-grid">
+          <div class="license-allowed">
+            <h3>Anda boleh</h3>
+            <div class="license-point allowed"><i>✓</i><span>Mengubah nama produk, visual identity, niche, copy, dan strategi penawaran.</span></div>
+            <div class="license-point allowed"><i>✓</i><span>Menjual akses aplikasi ke customer, member komunitas, atau client Anda.</span></div>
+            <div class="license-point allowed"><i>✓</i><span>Menggunakan sebagai bonus program, mentorship, atau client portal premium.</span></div>
+          </div>
+          <div class="license-forbidden">
+            <h3>Tidak termasuk</h3>
+            <div class="license-point forbidden"><i>✗</i><span>Menjual file/template inti atau mengirim file aplikasi inti ke customer sebagai produk mentah.</span></div>
+            <div class="license-point forbidden"><i>✗</i><span>Meneruskan hak white-label atau hak rebrand kepada pihak lain.</span></div>
+            <div class="license-point forbidden"><i>✗</i><span>Mengklaim hak kepemilikan atas framework inti.</span></div>
+          </div>
+        </div>
+        <div class="license-links">
+          <a href="/license">Baca ringkasan lisensi</a> &middot; <a href="/terms">Lihat ketentuan lengkap</a>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section class="section" id="faq" aria-labelledby="faq-title">
+        <div class="section-head">
+          <div>
+            <div class="section-kicker">YANG SERING DITANYAKAN</div>
+            <h2 id="faq-title">Jawaban untuk pertanyaan <em>yang paling sering muncul.</em></h2>
           </div>
           <p class="section-copy">Model ini paling kuat untuk orang yang sudah punya niche, distribusi, atau credibility di pasar tertentu.</p>
         </div>
-
         <div class="faq">
           <details>
             <summary>Siapa target paling ideal untuk White-Label AI Vault?</summary>
-            <p>Advertiser, owner agency, mentor marketing, creator edukasi, operator marketplace, web designer, course creator, dan owner komunitas yang ingin menambah lini produk digital dengan brand sendiri.</p>
+            <p>Orang yang sudah punya audiens, distribusi, atau credibility di pasar tertentu — seperti advertiser, agency, mentor, seller, creator, atau konsultan yang ingin menambah lini produk digital tanpa membangun dari nol.</p>
           </details>
           <details>
             <summary>Apakah saya perlu bisa coding untuk menggunakannya?</summary>
-            <p>Tidak. Fokusnya adalah memilih aplikasi, menyesuaikan identitas dan positioning, lalu mengemas produk tersebut untuk market Anda. Anda tidak perlu membangun aplikasi dari nol.</p>
+            <p>Tidak. Aplikasi sudah siap pakai. Anda fokus pada rebrand — nama, positioning, copy, dan strategi penawaran — bukan pada pengembangan teknis.</p>
           </details>
           <details>
             <summary>Apakah saya harus menjual semua 13 aplikasi?</summary>
-            <p>Tidak. Justru lebih baik memilih 1–3 aplikasi yang paling relevan dengan niche Anda. Misalnya advertiser dapat mulai dari ADSprint, RUPA, dan ADEGAN sebagai satu ekosistem produk.</p>
+            <p>Tidak. Anda dapat memulai dengan satu pack (5 aplikasi) yang paling relevan dengan niche Anda. Tidak perlu membeli seluruh katalog.</p>
           </details>
           <details>
-            <summary>Bagaimana cara memonetisasinya?</summary>
-            <p>Anda dapat menjual akses lifetime per aplikasi, bundle niche, akses sebagai bonus course, membership komunitas, atau tool eksklusif di dalam client portal agency Anda.</p>
+            <summary>Bagaimana produk ini diserahkan dan digunakan?</summary>
+            <p>Detail akses dan jalur implementasi akan disesuaikan dengan paket yang Anda pilih. Anda akan menerima informasi lengkap saat mendaftar.</p>
           </details>
           <details>
-            <summary>Apakah saya boleh menjual ulang file atau hak rebrand ke customer saya?</summary>
-            <p>Tidak dalam lisensi standar. Anda menjual akses produk jadi kepada end user. Hak untuk membagikan template inti atau meneruskan lisensi perlu diatur secara terpisah.</p>
+            <summary>Apakah saya boleh menjualnya ke client saya?</summary>
+            <p>Ya, lisensi standar memperbolehkan Anda menjual akses aplikasi ke customer, member komunitas, atau client Anda — dengan nama dan positioning brand Anda sendiri.</p>
           </details>
           <details>
-            <summary>Apakah ini menjamin penghasilan?</summary>
-            <p>Tidak. Produk ini memberi Anda sistem dan aset untuk meluncurkan aplikasi branded lebih cepat. Hasil penjualan tetap bergantung pada positioning, distribusi, harga, dan eksekusi Anda.</p>
+            <summary>Apa yang perlu saya siapkan sebelum meluncurkan produk pertama?</summary>
+            <p>Anda perlu mengenali audiens dan niche yang akan dilayani. AppVibe menyediakan arahan positioning dan material go-to-market — Anda menyesuaikan dengan market yang sudah Anda kenali.</p>
+          </details>
+          <details>
+            <summary>Apakah harga Rp149K–Rp799K adalah harga lisensi AppVibe?</summary>
+            <p>Bukan. Itu hanya <strong>contoh harga jual ke customer Anda</strong> — bukan harga lisensi AppVibe. Harga lisensi AppVibe ditentukan berdasarkan pack, jumlah aplikasi, dan model penggunaan yang Anda pilih.</p>
+          </details>
+          <details>
+            <summary>Apa yang tidak saya dapatkan dalam lisensi standar?</summary>
+            <p>Lisensi standar tidak mencakup hak menjual file/template inti, meneruskan hak white-label ke pihak lain, atau mengklaim kepemilikan framework inti. <a href="/license">Lihat detail lisensi.</a></p>
+          </details>
+          <details>
+            <summary>Contoh harga jual ke end user — bukan harga lisensi AppVibe.</summary>
+            <p>Contoh model monetisasi: lifetime access, bundle niche, bonus program, atau client portal. Harga aktual ke end user Anda yang menentukan.</p>
           </details>
         </div>
       </section>
 
+      <!-- FINAL CTA -->
       <section class="cta" aria-labelledby="cta-title">
         <div class="cta-copy">
-          <h2 id="cta-title">Jangan hanya mengajari market Anda memakai AI.<br><em>Berikan mereka produk AI</em> yang membawa nama Anda.</h2>
-          <p>Pilih niche Anda. Rebrand aplikasinya. Bangun katalog produk digital yang menambah value untuk audiens, komunitas, dan client Anda.</p>
+          <h2 id="cta-title">Pilih niche Anda. Kami bantu Anda menentukan <em>produk pertama</em> yang paling layak diluncurkan.</h2>
+          <p>Tinggalkan detail singkat. Anda akan menerima informasi paket, batas lisensi, dan jalur yang paling sesuai dengan market Anda.</p>
           <div class="cta-actions">
-            <button class="btn cta-dark" data-open-modal>Ambil akses awal →</button>
+            <button class="btn cta-dark" data-open-modal>Lihat opsi akses saya →</button>
             <a class="btn cta-paper" href="#aplikasi">Eksplor 13 aplikasi</a>
           </div>
-          <div class="cta-note">⚑ Akses awal untuk partner yang ingin meluncurkan produk AI dengan positioning yang lebih serius.</div>
+          <div class="cta-note">Contoh model monetisasi: lifetime access, bundle niche, bonus program, atau client portal.</div>
         </div>
       </section>
+
+      <!-- FOOTER -->
+      <footer>
+        <div><span class="foot-brand">AppVibe</span> &mdash; White-Label AI App Vault</div>
+        <div>&copy; 2026 &middot; <a href="/terms">Ketentuan</a> &middot; <a href="/privacy">Privasi</a> &middot; <a href="/license">Lisensi</a></div>
+      </footer>
     </main>
 
-    <footer>
-      <div><span class="foot-brand">WHITE-LABEL AI VAULT</span> — Build products your audience can buy.</div>
-      <div>&copy; 2026 &middot; <a href="/terms">Ketentuan</a> &middot; <a href="/privacy">Privasi</a> &middot; <a href="/license">Lisensi</a></div>
-    </footer>
-  </div>
+    <!-- Sticky CTA Mobile -->
+    <div class="sticky-cta" id="stickyCta">
+      <button class="btn lime" data-open-modal>Lihat opsi akses <span>→</span></button>
+    </div>
 
-  <!-- Sticky CTA Mobile -->
-  <div class="sticky-cta" id="stickyCta">
-    <button class="btn lime" data-open-modal>Ambil akses awal <span>→</span></button>
-  </div>
-
-  <div class="modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <button class="modal-close" id="modalClose" aria-label="Tutup">&times;</button>
-      <h3 id="modalTitle">Ambil akses awal.</h3>
-      <p>Tinggalkan detail Anda untuk menerima informasi paket, lisensi white-label, dan jalur paling cocok berdasarkan niche bisnis Anda.</p>
-      <form class="modal-form" id="leadForm">
-        <input type="text" id="honeypot" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
-        <input type="text" name="name" placeholder="Nama Anda" required />
-        <input type="email" name="email" placeholder="Email aktif" required />
-        <input type="text" name="niche" placeholder="Niche Anda (mis. advertiser, marketplace, komunitas)" required />
-        <div class="cf-turnstile" data-sitekey="0x4AAAAAAAXxxxxx_REPLACE_ME"></div>
-        <button class="btn lime full" type="submit">Kirim minat akses &rarr;</button>
-      </form>
-      <div class="modal-message" id="modalMessage">Terima kasih. Detail akses akan kami kirimkan melalui email.</div>
+    <!-- Lead Modal -->
+    <div class="modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-card">
+        <button class="modal-close" id="modalClose" aria-label="Tutup">&times;</button>
+        <h3 id="modalTitle">Lihat opsi akses.</h3>
+        <p>Tinggalkan detail Anda untuk menerima informasi paket, lisensi white-label, dan jalur paling cocok berdasarkan niche bisnis Anda.</p>
+        <form class="modal-form" id="leadForm">
+          <input type="hidden" id="honeypot" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
+          <input type="hidden" id="formSelectedPack" name="selected_pack" value="" />
+          <input type="hidden" id="formSelectedApp" name="selected_app" value="" />
+          <input type="hidden" id="formOpenSource" name="form_open_source" value="" />
+          <input type="text" name="name" placeholder="Nama lengkap" required />
+          <input type="email" name="email" placeholder="Email aktif" required />
+          <input type="tel" name="whatsapp" placeholder="WhatsApp (contoh: 0812xxxx)" />
+          <input type="text" name="niche" placeholder="Audiens utama / niche Anda" required />
+          <select name="model_penggunaan" required>
+            <option value="">Model penggunaan yang paling dekat</option>
+            <option value="lifetime_tool">Lifetime tool (jual akses sekali beli)</option>
+            <option value="bundle_creator">Bundle creator (paket konten + tool)</option>
+            <option value="bonus_program">Bonus program / mentorship</option>
+            <option value="client_portal">Agency client portal</option>
+            <option value="community_benefit">Community / member benefit</option>
+          </select>
+          <div class="cf-turnstile" data-sitekey="0x4AAAAAAAXxxxxx_REPLACE_ME"></div>
+          <button class="btn lime full" type="submit">Kirim minat akses →</button>
+          <p class="form-privacy">Dengan mengirim form ini, Anda setuju dihubungi AppVibe terkait informasi akses dan paket yang relevan.</p>
+        </form>
+        <div class="modal-message" id="modalMessage">Minat Anda sudah kami terima. Kami akan mengirim detail opsi yang relevan berdasarkan niche dan produk yang Anda pilih.</div>
+      </div>
     </div>
   </div>
 
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script>
-  // App logic moved to src/main.js
-  // Data moved to src/scripts/data/apps.js
-  </script>
-
 </body>
 </html>

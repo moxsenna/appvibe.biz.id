@@ -1,7 +1,6 @@
 export function initTracking() {
   const params = new URLSearchParams(window.location.search);
 
-  // Parse UTM parameters
   const utm = {
     source: params.get('utm_source') || '',
     medium: params.get('utm_medium') || '',
@@ -10,56 +9,67 @@ export function initTracking() {
     term: params.get('utm_term') || '',
   };
 
-  // Store UTM in sessionStorage for form submission
   try {
     sessionStorage.setItem('utm_params', JSON.stringify(utm));
     sessionStorage.setItem('referrer', document.referrer || '');
     sessionStorage.setItem('landing_url', window.location.href);
-  } catch (e) {
-    // sessionStorage not available
+  } catch (e) { /* ignore */ }
+
+  // Init vault state
+  if (!window.vaultState) {
+    window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null };
   }
 
-  // Expose trackEvent globally
-  window.trackEvent = (eventName, params = {}) => {
-    const payload = {
+  // --- Vault internal events (dataLayer ONLY — GTM forwards to GA4/Meta/TikTok) ---
+  window.trackVaultEvent = (eventName, payload = {}) => {
+    const base = {
       event: eventName,
+      page_type: 'appvibe_vault',
       page: 'white-label-ai-vault',
+      selected_pack: window.vaultState?.selectedPack || null,
+      selected_app: window.vaultState?.selectedApp || null,
       ...utm,
-      ...params,
+      ...payload,
       url: window.location.href,
       referrer: document.referrer,
       device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
       timestamp: new Date().toISOString(),
     };
 
-    // Meta Pixel
-    if (window.fbq) {
-      try { fbq('trackCustom', eventName, payload); } catch(e) {}
-    }
-
-    // Google Tag Manager
     if (window.dataLayer) {
-      try { dataLayer.push({ event: eventName, ...payload }); } catch(e) {}
+      try { dataLayer.push(base); } catch (e) {}
     }
 
-    // Google Analytics 4 via gtag
-    if (window.gtag) {
-      try { gtag('event', eventName, payload); } catch(e) {}
-    }
-
-    // TikTok Pixel
-    if (window.ttq) {
-      try { ttq.track(eventName, payload); } catch(e) {}
-    }
-
-    // Console.debug in dev
     if (import.meta.env.DEV) {
-      console.debug('[Tracking]', eventName, payload);
+      console.debug('[VaultTrack]', eventName, base);
+    }
+  };
+
+  // --- Legacy trackEvent compat (still used by form pre-fill etc) ---
+  window.trackEvent = (eventName, params = {}) => {
+    window.trackVaultEvent(eventName, params);
+  };
+
+  // --- Standard conversion helpers (direct — NOT through dataLayer) ---
+  window.fireStandardConversions = (leadMeta = {}) => {
+    // Meta Pixel — standard Lead event
+    if (window.fbq) {
+      try { fbq('track', 'Lead'); } catch (e) {}
+    }
+    // GA4 — standard generate_lead
+    if (window.gtag) {
+      try {
+        gtag('event', 'generate_lead', {
+          selected_pack: leadMeta.selected_pack || null,
+          selected_app: leadMeta.selected_app || null,
+          model_penggunaan: leadMeta.model_penggunaan || null,
+        });
+      } catch (e) {}
     }
   };
 
   // Fire PageView
-  window.trackEvent('PageView');
+  window.trackVaultEvent('page_view');
 }
 
 export function getUtmParams() {
