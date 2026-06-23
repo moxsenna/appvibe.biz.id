@@ -4,7 +4,7 @@ body{
   margin:0;
   background:var(--paper);
   color:var(--ink);
-  font-family:Manrope,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-family:'Plus Jakarta Sans',system-ui,-apple-system,"Segoe UI",sans-serif;
   min-width:320px;
   overflow-x:hidden;
 }
@@ -14,11 +14,11 @@ body:before{
   position:fixed;
   z-index:-2;
   inset:0;
-  opacity:.52;
+  opacity:.4;
   background-image:
-    linear-gradient(rgba(13,15,19,.055) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(13,15,19,.055) 1px, transparent 1px);
-  background-size:36px 36px;
+    linear-gradient(rgba(5,11,29,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(5,11,29,.045) 1px, transparent 1px);
+  background-size:40px 40px;
   mask-image:linear-gradient(to bottom,black 0%, transparent 70%);
 }
 body:after{
@@ -28,15 +28,15 @@ body:after{
   z-index:-1;
   inset:0;
   background:
-    radial-gradient(circle at 9% 3%,rgba(216,255,66,.20),transparent 19%),
-    radial-gradient(circle at 92% 16%,rgba(112,148,255,.14),transparent 24%),
-    radial-gradient(circle at 85% 92%,rgba(255,94,77,.10),transparent 28%);
+    radial-gradient(circle at 9% 3%,rgba(18,107,255,.12),transparent 22%),
+    radial-gradient(circle at 92% 16%,rgba(16,220,213,.10),transparent 26%),
+    radial-gradient(circle at 85% 92%,rgba(109,53,255,.10),transparent 28%);
 }
 
 button,input,textarea,select{font:inherit}
 button{cursor:pointer}
 a{color:inherit;text-decoration:none}
-::selection{background:var(--lime);color:var(--ink)}
+::selection{background:var(--av-blue-600);color:#fff}
 
 .wrap{max-width:1460px;margin:0 auto;padding:18px}
 
@@ -46,10 +46,10 @@ a{color:inherit;text-decoration:none}
 }
 .btn:hover:not(:disabled){transform:translateY(-2px)}
 .btn:active:not(:disabled){transform:translateY(1px)}
-.btn.lime{background:var(--lime);color:#182008;box-shadow:0 5px 0 var(--lime-deep)}
-.btn.lime:hover{box-shadow:0 7px 0 var(--lime-deep)}
+.btn.lime{background:var(--lime);color:#fff;box-shadow:0 5px 0 #0d5add}
+.btn.lime:hover{box-shadow:0 7px 0 #0d5add}
 .btn.paper{background:var(--white);color:var(--ink);border-color:var(--line);box-shadow:0 2px 7px rgba(0,0,0,.04)}
-.btn.paper:hover{border-color:#abb0a3}
+.btn.paper:hover{border-color:var(--av-slate-300)}
 .btn.ghost{color:#d6d8dd;border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.04)}
 .btn.ghost:hover{background:rgba(255,255,255,.1)}
 .btn.dark{background:var(--ink);color:#fff;box-shadow:0 5px 0 #000}

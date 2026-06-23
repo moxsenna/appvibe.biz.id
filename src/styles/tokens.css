@@ -1,23 +1,44 @@
 :root{
-  --ink:#0d0f13;
-  --ink-2:#171a21;
-  --ink-3:#252936;
-  --paper:#f6f4ee;
-  --paper-2:#ebe8de;
-  --white:#fffdf8;
-  --line:#d8d4c8;
-  --muted:#666a73;
-  --muted-2:#a8abb2;
-  --lime:#d8ff42;
-  --lime-deep:#b7dc20;
-  --red:#ff5e4d;
-  --blue:#7094ff;
-  --gold:#ffc85b;
-  --mint:#7ee1bd;
-  --shadow:0 24px 70px rgba(6,8,13,.17);
-  --soft-shadow:0 10px 32px rgba(14,18,27,.08);
-  --r-xl:34px;
-  --r-lg:24px;
-  --r-md:16px;
+  /* AppVibe Brand Palette */
+  --av-navy-950:#050B1D;
+  --av-navy-900:#07142F;
+  --av-navy-800:#0B2352;
+  --av-ink:#10203F;
+  --av-blue-600:#126BFF;
+  --av-blue-500:#198CFF;
+  --av-cyan-500:#10DCD5;
+  --av-violet-600:#6D35FF;
+  --av-violet-500:#8756FF;
+  --av-white:#FFFFFF;
+  --av-slate-100:#EEF3FA;
+  --av-slate-200:#E2EAF5;
+  --av-slate-300:#C9D4E5;
+  --av-slate-500:#66748D;
+  --gradient-brand:linear-gradient(135deg,#126BFF 0%,#10DCD5 48%,#8756FF 100%);
+  --shadow-soft:0 12px 30px rgba(10,28,66,.08);
+  --shadow-float:0 20px 50px rgba(0,0,0,.28);
+
+  /* Legacy mapped tokens */
+  --ink:#10203F;
+  --ink-2:#0B2352;
+  --ink-3:#07142F;
+  --paper:#EEF3FA;
+  --paper-2:#FFFFFF;
+  --white:#FFFFFF;
+  --line:#C9D4E5;
+  --muted:#66748D;
+  --muted-2:#A8B2C9;
+  --lime:#126BFF;
+  --lime-deep:#198CFF;
+  --red:#FF5E4D;
+  --blue:#10DCD5;
+  --gold:#FFC85B;
+  --mint:#6D35FF;
+  --shadow:0 24px 70px rgba(10,28,66,.17);
+  --soft-shadow:0 12px 30px rgba(10,28,66,.08);
+  --r-xl:28px;
+  --r-lg:20px;
+  --r-md:14px;
+  --r-sm:10px;
   --pill:999px;
 }
