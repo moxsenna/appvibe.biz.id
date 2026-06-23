@@ -24,14 +24,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Pack card selection — single orchestration point
+  // Pack card CTA — redirect to dedicated checkout page
   document.querySelectorAll('[data-sel]').forEach(btn => {
     btn.addEventListener('click', () => {
       const packId = btn.dataset.pack;
       if (!packId) return;
-      if (typeof window.setSelectedPack === 'function') {
-        window.setSelectedPack(packId, 'pack_card');
-      }
+      const params = new URLSearchParams({ plan: 'single-pack', pack: packId });
+
+      // Persist UTM from session
+      const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
+      utmKeys.forEach((key) => {
+        const val = sessionStorage.getItem(key);
+        if (val) params.set(key, val);
+      });
+
+      const entryPoint = sessionStorage.getItem('entry_point') || 'pack_card';
+      params.set('ref', entryPoint);
+
+      window.location.href = `/checkout/?${params.toString()}`;
     });
   });
 });
