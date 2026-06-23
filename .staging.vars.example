@@ -1,0 +1,11 @@
+# Staging environment vars for appvibe.web.id PayCore checkout
+# Set these in Cloudflare Pages dashboard or .staging.vars for wrangler
+PAYCORE_BASE_URL=https://pay-staging.appvibe.biz.id
+PAYCORE_APP_ID=appvibe_vault
+PAYCORE_KEY_ID=pk_staging_appvibe_vault_01
+PAYCORE_APP_SECRET=
+PAYCORE_WEBHOOK_SECRET=
+PAYCORE_RETURN_URL=https://appvibe.web.id/payment/return
+FULFILLMENT_WEBHOOK_URL=
+LEAD_WEBHOOK_URL=
+TURNSTILE_SECRET_KEY=
