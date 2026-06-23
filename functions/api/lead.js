@@ -9,6 +9,14 @@
 
 const VALID_PACKS = ['advertiser', 'commerce', 'creator', 'brand_launch'];
 const VALID_APPS = ['adsprint', 'pikat', 'rupa', 'mula', 'arah', 'cetak', 'adegan', 'suara', 'bukti', 'mimik', 'ritme', 'tayang', 'katalog'];
+
+const PACK_APPS = {
+  advertiser: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula'],
+  commerce: ['katalog', 'rupa', 'bukti', 'pikat', 'adsprint'],
+  creator: ['pikat', 'ritme', 'mimik', 'rupa', 'suara'],
+  brand_launch: ['arah', 'mimik', 'mula', 'tayang', 'cetak'],
+};
+
 const DEDUPE_MAP = new Map();
 
 export async function onRequest(context) {
@@ -54,6 +62,13 @@ export async function onRequest(context) {
     const normalizedWa = whatsapp ? whatsapp.replace(/[^\d+]/g, '').replace(/^0/, '+62') : '';
     const safePack = selected_pack && VALID_PACKS.includes(selected_pack) ? selected_pack : null;
     const safeApp = selected_app && VALID_APPS.includes(selected_app) ? selected_app : null;
+
+    // Pack-app compatibility: if both present, app must be in the pack
+    if (safePack && safeApp) {
+      if (!PACK_APPS[safePack]?.includes(safeApp)) {
+        return jsonErr('Kombinasi pack dan aplikasi tidak cocok', 400, corsHeaders);
+      }
+    }
 
     // --- Turnstile verification (BLOCK 4: reject if secret configured but no valid token) ---
     if (env.TURNSTILE_SECRET_KEY) {

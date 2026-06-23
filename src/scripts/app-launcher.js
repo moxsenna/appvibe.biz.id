@@ -11,6 +11,7 @@ export function initAppLauncher() {
   const detailCta = document.getElementById("detailCta");
 
   const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
+  let activeAppId = null; // displayed app (default display, NOT user selection)
 
   function track(name, params) {
     if (typeof window.trackVaultEvent === 'function') {
@@ -18,7 +19,8 @@ export function initAppLauncher() {
     }
   }
 
-  function setActiveApp(appKey) {
+  // userAction = false: initial/default render, no selection event
+  function setActiveApp(appKey, userAction) {
     const item = vaultApps[appKey];
     if (!item) return;
     launcherButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.app === appKey));
@@ -27,9 +29,13 @@ export function initAppLauncher() {
     detailText.textContent = item.text;
     detailList.innerHTML = item.points.map(point => `<li>${point}</li>`).join("");
     detailFooter.textContent = item.footer;
-    state.selectedApp = appKey;
-    const packContext = item.packs.join(',');
-    track('vault_app_selected', { app_id: appKey, pack_context: packContext });
+    activeAppId = appKey;
+
+    if (userAction) {
+      state.selectedApp = appKey;
+      track('vault_app_selected', { app_id: appKey, pack_context: item.packs.join(',') });
+    }
+
     // Scroll detail ke view (mobile)
     const detail = document.querySelector('.app-detail');
     if (detail && window.innerWidth <= 760) {
@@ -38,7 +44,7 @@ export function initAppLauncher() {
   }
 
   launcherButtons.forEach(button => {
-    button.addEventListener("click", () => setActiveApp(button.dataset.app));
+    button.addEventListener("click", () => setActiveApp(button.dataset.app, true));
   });
 
   // Pack CTAs — delegate to single orchestration point
@@ -52,31 +58,39 @@ export function initAppLauncher() {
     });
   });
 
-  // Detail CTA "Saya ingin meluncurkan produk seperti ini"
-  if (detailCta) {
-    detailCta.addEventListener("click", () => {
-      state.lastFormPlacement = 'app_launcher';
-      if (typeof window.openModal === 'function') {
-        window.openModal('app_launcher', state.selectedPack, state.selectedApp);
+  // Detail CTA — apply pack-app compatibility check
+  function openDetailForm() {
+    state.lastFormPlacement = 'app_launcher';
+    const selPack = state.selectedPack;
+    const selApp = activeAppId;
+
+    // If app is not in the currently selected pack, send selected_pack: null
+    let effectivePack = null;
+    if (selPack && selApp) {
+      const app = vaultApps[selApp];
+      if (app && app.packs && app.packs.includes(selPack)) {
+        effectivePack = selPack;
       }
-    });
-  } else {
-    // Attach via data attribute if element is missing ID
-    const detailCtaBtn = document.querySelector('[data-open-form-from-detail]');
-    if (detailCtaBtn) {
-      detailCtaBtn.addEventListener("click", () => {
-        state.lastFormPlacement = 'app_launcher';
-        if (typeof window.openModal === 'function') {
-          window.openModal('app_launcher', state.selectedPack, state.selectedApp);
-        }
-      });
+    }
+
+    if (typeof window.openModal === 'function') {
+      window.openModal('app_launcher', effectivePack, selApp);
     }
   }
 
-  // First active app
+  if (detailCta) {
+    detailCta.addEventListener("click", openDetailForm);
+  } else {
+    const detailCtaBtn = document.querySelector('[data-open-form-from-detail]');
+    if (detailCtaBtn) {
+      detailCtaBtn.addEventListener("click", openDetailForm);
+    }
+  }
+
+  // First active app (default display only, NOT user selection)
   const firstActive = document.querySelector(".app-card.active");
   if (firstActive) {
-    setActiveApp(firstActive.dataset.app || "adsprint");
+    setActiveApp(firstActive.dataset.app || "adsprint", false);
   }
 }
 
