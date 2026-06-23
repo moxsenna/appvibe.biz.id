@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pikat — Affiliate Content Factory</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --primary: #7c3aed; /* Vibrant Violet */
+      --primary-hover: #6d28d9;
+      --secondary: #ec4899; /* Vibrant Pink */
+      --accent: #0ea5e9; /* Cyan */
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-panel: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+      --shadow-float: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+      --radius: 24px;
+    }
+    * { box-sizing: border-box; } 
+    html { scroll-behavior: smooth; } 
+    body { margin: 0; min-width: 320px; background: var(--bg); color: var(--text); font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; }
+    button, input, textarea, select { font: inherit; } 
+    button { cursor: pointer; } 
+    button:disabled { cursor: not-allowed; opacity: 0.5; }
+    
+    .app { max-width: 1540px; margin: 0 auto; padding: 16px; }
+    .topbar { background: var(--surface); min-height: 80px; border-radius: var(--radius); padding: 14px 24px; display: flex; justify-content: space-between; align-items: center; gap: 16px; box-shadow: var(--shadow-sm); position: sticky; z-index: 20; top: 10px; border: 1px solid var(--border); }
+    .brand { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .brandmark { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-size: 24px; font-weight: 800; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); }
+    .brandname { font-family: 'Space Grotesk', sans-serif; font-size: 26px; font-weight: 700; letter-spacing: -1px; line-height: 1; color: var(--text); }
+    .brandtag { color: var(--primary); font-size: 11px; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; margin-top: 4px; }
+    .topmeta { display: flex; align-items: center; gap: 10px; }
+    .mode-chip { font-size: 12px; font-weight: 700; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--text-muted); display: flex; align-items: center; gap: 8px; background: var(--bg); }
+    .mode-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2); }
+    
+    .layout { margin-top: 16px; display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 20px; }
+    .rail { height: calc(100vh - 124px); position: sticky; top: 106px; border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius); padding: 16px; overflow: auto; box-shadow: var(--shadow-panel); }
+    .rail-overline { font: 600 11px/1 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); padding: 8px 12px 12px; }
+    .nav { display: grid; gap: 6px; }
+    .navbutton { width: 100%; border: 0; background: transparent; color: var(--text-muted); display: flex; align-items: center; gap: 12px; text-align: left; border-radius: 12px; padding: 12px; font-size: 14px; font-weight: 600; transition: all 0.2s; }
+    .navbutton:hover { background: var(--bg); color: var(--primary); transform: translateX(4px); }
+    .navbutton.active { background: var(--primary); color: white; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); }
+    .navicon { width: 24px; text-align: center; font-size: 18px; }
+    .rail-card { margin-top: 24px; border-radius: 16px; padding: 16px; background: linear-gradient(135deg, #f3e8ff, #fce7f3); border: 1px solid #fbcfe8; color: #831843; font-size: 12px; line-height: 1.6; }
+    .rail-card b { display: block; color: #9d174d; margin-bottom: 6px; font-family: 'Space Grotesk', sans-serif; font-size: 14px; }
+    
+    .main { min-width: 0; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: rise 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(12px) scale(0.99); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    
+    .hero { border-radius: var(--radius); min-height: 280px; position: relative; padding: 48px; background: linear-gradient(135deg, #4f46e5 0%, #c026d3 50%, #ec4899 100%); color: white; box-shadow: var(--shadow-float); overflow: hidden; }
+    .hero:before { content: ""; position: absolute; width: 600px; height: 600px; right: -150px; top: -250px; background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 60%); border-radius: 50%; }
+    .hero:after { content: ""; position: absolute; width: 300px; height: 300px; left: -100px; bottom: -150px; background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%); border-radius: 50%; }
+    .eyebrow { display: inline-flex; gap: 8px; align-items: center; color: #fdf2f8; font: 600 12px/1 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; background: rgba(0,0,0,0.15); padding: 8px 14px; border-radius: 999px; backdrop-filter: blur(4px); }
+    .eyedot { width: 8px; height: 8px; background: #fbcfe8; border-radius: 50%; box-shadow: 0 0 8px #fbcfe8; }
+    .hero h1 { position: relative; z-index: 1; max-width: 800px; font-family: 'Space Grotesk', sans-serif; font-size: clamp(36px, 4.5vw, 56px); line-height: 1.1; letter-spacing: -1.5px; margin: 24px 0 16px; }
+    .hero p { position: relative; z-index: 1; max-width: 600px; margin: 0; color: #fbcfe8; line-height: 1.6; font-size: 16px; font-weight: 500; }
+    .hero-actions { position: relative; z-index: 1; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    
+    .button { border: 0; border-radius: 999px; padding: 12px 20px; line-height: 1; font-weight: 700; font-size: 14px; display: inline-flex; justify-content: center; align-items: center; gap: 8px; transition: all 0.2s ease; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .button.primary { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    .button.primary:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.15); }
+    .button.dark { background: var(--text); color: white; }
+    .button.dark:hover { background: #1e293b; transform: translateY(-1px); }
+    .button.outline { background: var(--surface); border: 1px solid var(--border); color: var(--text); box-shadow: var(--shadow-sm); }
+    .button.outline:hover { background: var(--bg); border-color: #cbd5e1; transform: translateY(-1px); }
+    .button.ghost { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; backdrop-filter: blur(4px); }
+    .button.ghost:hover { background: rgba(255,255,255,0.25); transform: translateY(-1px); }
+    .button.small { font-size: 12px; padding: 10px 16px; }
+    .button.coral { background: var(--secondary); color: white; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); }
+    .button.coral:hover { background: #db2777; transform: translateY(-2px); }
+    
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 20px; }
+    .stat { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; box-shadow: var(--shadow-panel); transition: transform 0.2s; }
+    .stat:hover { transform: translateY(-3px); }
+    .stat-label { font: 600 11px/1 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    .stat-value { font-family: 'Space Grotesk', sans-serif; font-size: 36px; font-weight: 700; color: var(--primary); line-height: 1; margin-top: 12px; letter-spacing: -1px; }
+    .stat-note { font-size: 13px; color: var(--text-muted); margin-top: 8px; line-height: 1.5; font-weight: 500; }
+    
+    .home-grid { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 20px; margin-top: 20px; }
+    .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow-panel); min-width: 0; }
+    .panel-title { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+    .panel-title h3 { font-family: 'Space Grotesk', sans-serif; font-size: 24px; letter-spacing: -0.5px; margin: 0; color: var(--text); }
+    .panel-title small { display: block; margin-top: 6px; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+    
+    .workflow { display: grid; gap: 12px; }
+    .workflow-row { display: flex; align-items: center; gap: 16px; padding: 16px; border-radius: 16px; border: 1px solid var(--border); background: var(--bg); transition: all 0.2s; }
+    .workflow-row:hover { border-color: #cbd5e1; background: white; box-shadow: var(--shadow-sm); transform: translateX(2px); }
+    .workflow-number { width: 36px; height: 36px; border-radius: 12px; background: #ede9fe; color: var(--primary); display: grid; place-items: center; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 16px; flex: none; }
+    .workflow-row b { font-size: 15px; color: var(--text); }
+    .workflow-row span { font-size: 13px; color: var(--text-muted); display: block; margin-top: 4px; line-height: 1.5; }
+    
+    .progress-card { padding: 24px; border-radius: 20px; background: #0f172a; color: white; box-shadow: var(--shadow-float); }
+    .progress-card h4 { font-family: 'Space Grotesk', sans-serif; font-size: 28px; letter-spacing: -1px; margin: 0 0 8px; }
+    .progress-card p { margin: 0 0 20px; font-size: 14px; color: #94a3b8; line-height: 1.6; }
+    .progress-bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,0.1); overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #c026d3, #ec4899); border-radius: inherit; transition: width 0.5s ease; }
+    .tip { margin-top: 20px; padding: 16px 20px; border-radius: 16px; background: #f0fdfa !important; border: 1px solid #ccfbf1 !important; color: #0f766e !important; font-size: 13px; line-height: 1.6; }
+    .tip b { color: #115e59 !important; }
+    
+    .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin: 10px 0 24px; }
+    .page-head h1 { font-family: 'Space Grotesk', sans-serif; margin: 0; color: var(--text); font-size: 42px; letter-spacing: -1.5px; }
+    .page-head p { margin: 10px 0 0; color: var(--text-muted); font-size: 15px; line-height: 1.6; max-width: 700px; }
+    .step { flex: none; font: 700 12px/1 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; border: 1px solid #e0e7ff; color: var(--primary); background: #eef2ff; border-radius: 999px; padding: 10px 16px; }
+    
+    .two-col { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; }
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { display: block; margin-bottom: 8px; color: var(--text); font: 600 12px/1 'Space Grotesk', sans-serif; letter-spacing: 0.5px; text-transform: uppercase; }
+    .field input, .field select, .field textarea { display: block; width: 100%; border: 2px solid var(--border); border-radius: 14px; background: var(--surface); color: var(--text); padding: 14px 16px; outline: none; font-size: 14px; transition: all 0.2s; font-family: 'Plus Jakarta Sans', sans-serif; }
+    .field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--primary); background: #f5f3ff; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
+    
+    .form-footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid var(--border); margin-top: 24px; padding-top: 24px; }
+    .hint { font-size: 13px; color: var(--text-muted); line-height: 1.5; max-width: 60%; }
+    .notice { margin-top: 20px; padding: 16px; border-radius: 14px; border: 1px solid #fef08a; background: #fefce8; color: #854d0e; font-size: 13px; line-height: 1.6; }
+    
+    .upload { border: 2px dashed #cbd5e1; border-radius: 16px; min-height: 100px; display: flex; align-items: center; gap: 16px; padding: 20px; cursor: pointer; background: var(--bg); transition: all 0.2s; }
+    .upload:hover { border-color: var(--primary); background: #f5f3ff; transform: translateY(-2px); }
+    .upload-icon { width: 48px; height: 48px; border-radius: 14px; background: white; color: var(--primary); display: grid; place-items: center; font-size: 24px; font-weight: 700; flex: none; box-shadow: var(--shadow-sm); }
+    .upload b { display: block; font-size: 15px; color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+    .upload span:not(.upload-icon):not(.asset-status) { display: block; font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+    .asset-status { margin-left: auto; flex: none; padding: 8px 12px; border-radius: 999px; background: #dcfce7; color: #166534; font: 700 11px/1 'Space Grotesk', sans-serif; text-transform: uppercase; letter-spacing: 0.5px; }
+    
+    .empty { min-height: 360px; display: grid; place-items: center; text-align: center; padding: 40px; color: var(--text-muted); }
+    .empty-inner { max-width: 400px; }
+    .empty-mark { width: 72px; height: 72px; border-radius: 24px; background: var(--bg); border: 2px dashed #cbd5e1; margin: 0 auto 20px; display: grid; place-items: center; color: #94a3b8; font-size: 32px; transform: rotate(-5deg); transition: transform 0.3s ease; }
+    .empty:hover .empty-mark { transform: rotate(0deg) scale(1.05); }
+    .empty b { font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: var(--text); display: block; margin-bottom: 8px; letter-spacing: -0.5px; }
+    .empty span { font-size: 14px; line-height: 1.6; }
+    
+    .loading { min-height: 360px; display: grid; place-items: center; text-align: center; color: var(--primary); }
+    .spinner { width: 48px; height: 48px; border: 4px solid #ede9fe; border-top-color: var(--primary); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg) } }
+    .loading b { display: block; font-family: 'Space Grotesk', sans-serif; font-size: 24px; color: var(--text); margin-bottom: 8px;}
+    .loading span { font-size: 14px; color: var(--text-muted); display: block; }
+    
+    .script-stack, .story-stack { display: grid; gap: 20px; }
+    .script-card { border: 2px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--surface); transition: all 0.2s; }
+    .script-card.active { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); transform: translateY(-2px); }
+    .script-top { padding: 16px 20px; border-bottom: 1px solid var(--border); background: var(--bg); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+    .script-top h4 { margin: 0; color: var(--text); font-size: 16px; font-family: 'Space Grotesk', sans-serif; }
+    .script-top p { margin: 6px 0 0; color: var(--text-muted); font-size: 13px; line-height: 1.5; }
+    .script-body { padding: 20px; }
+    .mini-label { font: 700 11px/1 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--primary); margin-bottom: 8px; }
+    .hook { font-family: 'Space Grotesk', sans-serif; font-size: 22px; line-height: 1.3; color: var(--text); margin: 0 0 16px; font-weight: 700; letter-spacing: -0.5px; }
+    .script-text { white-space: pre-wrap; font-size: 14px; line-height: 1.7; color: #334155; margin: 0; }
+    .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+    .tag { border: 1px solid #e2e8f0; background: white; color: var(--text); border-radius: 999px; padding: 6px 12px; font-size: 12px; font-weight: 600; box-shadow: var(--shadow-sm); }
+    
+    .result-actions { display: flex; gap: 10px; justify-content: flex-end; flex-wrap: wrap; }
+    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 16px; }
+    .result-title { font: 700 13px/1 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); }
+    
+    .scene { border: 2px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--surface); }
+    .scene-header { padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--bg); border-bottom: 1px solid var(--border); }
+    .scene-identity { display: flex; align-items: center; gap: 16px; }
+    .scene-num { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--primary); color: white; font-weight: 700; font-size: 16px; font-family: 'Space Grotesk', sans-serif; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3); }
+    .scene-header b { display: block; color: var(--text); font-size: 15px; font-family: 'Space Grotesk', sans-serif; }
+    .scene-header span { display: block; color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+    .scene-body { padding: 20px; display: grid; gap: 16px; }
+    .scene-block { padding: 16px; border-radius: 16px; background: #f8fafc; border: 1px solid var(--border); }
+    .scene-block p { margin: 6px 0 0; color: #334155; font-size: 14px; line-height: 1.6; white-space: pre-wrap; }
+    .scene-block.dialog { background: #eff6ff; border-color: #bfdbfe; }
+    .scene-block.prompt { background: #fef2f2; border-color: #fecaca; }
+    .scene-block.prompt p { font-family: 'DM Mono', monospace; font-size: 12px; line-height: 1.6; color: #991b1b; }
+    .scene-footer { display: flex; gap: 10px; flex-wrap: wrap; padding-top: 4px; }
+    
+    .frame-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }
+    .frame-card { border: 2px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--surface); }
+    .frame-thumb { min-height: 240px; background: var(--bg); display: grid; place-items: center; position: relative; overflow: hidden; }
+    .frame-thumb img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .frame-status { font: 600 12px/1.5 'Space Grotesk', sans-serif; letter-spacing: 1px; text-transform: uppercase; color: var(--text-muted); text-align: center; padding: 20px; }
+    .frame-meta { padding: 16px; }
+    .frame-meta b { display: block; font-size: 14px; color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+    .frame-meta span { display: block; font-size: 13px; color: var(--text-muted); margin-top: 4px; line-height: 1.5; }
+    .frame-meta .button { margin-top: 16px; width: 100%; }
+    
+    .audio-card { border: 2px solid var(--border); border-radius: 20px; padding: 20px; background: var(--surface); }
+    .audio-card h4 { margin: 0; font-size: 15px; color: var(--text); font-family: 'Space Grotesk', sans-serif; }
+    .audio-card p { font-size: 14px; color: var(--text-muted); line-height: 1.6; margin: 8px 0 16px; }
+    .audio-card audio { width: 100%; height: 40px; border-radius: 99px; }
+    
+    .caption-box { padding: 24px; border: 2px solid #e2e8f0; border-radius: 20px; background: #f8fafc; }
+    .caption-box h4 { margin: 0 0 16px; font-family: 'Space Grotesk', sans-serif; font-size: 26px; color: var(--text); letter-spacing: -0.5px; }
+    .caption-box p { margin: 0; white-space: pre-wrap; font-size: 14px; line-height: 1.7; color: var(--text); }
+    .caption-box .pin { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 13px; line-height: 1.6; color: var(--text-muted); }
+    
+    .export-list { display: grid; gap: 12px; }
+    .export-row { display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--border); padding: 16px 0; }
+    .export-row:last-child { border-bottom: 0; }
+    .check { height: 28px; width: 28px; border-radius: 10px; border: 2px solid var(--primary); color: white; display: grid; place-items: center; font-size: 14px; font-weight: 700; background: var(--primary); flex: none; }
+    .check.incomplete { background: transparent; color: transparent; border-color: #cbd5e1; }
+    .export-row b { font-size: 15px; color: var(--text); display: block; font-family: 'Space Grotesk', sans-serif; }
+    .export-row span { font-size: 13px; color: var(--text-muted); display: block; margin-top: 4px; }
+    .export-actions { display: grid; gap: 12px; margin-top: 24px; }
+    
+    .error-box { padding: 16px; border-radius: 16px; border: 1px solid #fecaca; background: #fef2f2; color: #b91c1c; font-size: 13px; line-height: 1.6; }
+    .toast { position: fixed; right: 24px; top: 24px; z-index: 100; max-width: min(380px, calc(100vw - 48px)); background: var(--text); color: white; padding: 16px 20px; border-radius: 16px; box-shadow: var(--shadow-float); font-size: 14px; font-weight: 500; line-height: 1.5; opacity: 0; transform: translateY(-12px) scale(0.95); pointer-events: none; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+    .toast.error { background: #e11d48; }
+    .toast.success { background: #059669; }
+    .toast.info { background: var(--primary); }
+    
+    @media(max-width:1030px){ .layout { grid-template-columns: 1fr; } .rail { height: auto; position: static; display: flex; gap: 12px; align-items: flex-start; overflow-x: auto; padding: 16px; border-radius: var(--radius); } .rail-overline, .rail-card { display: none; } .nav { display: flex; gap: 10px; } .navbutton { white-space: nowrap; width: auto; padding: 12px 16px; border: 1px solid var(--border); background: var(--surface); } .navbutton.active { border-color: var(--primary); } .navicon { width: auto; } .home-grid, .two-col { grid-template-columns: 1fr; } .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media(max-width:640px){ .app { padding: 12px; } .topbar { border-radius: 20px; padding: 16px; } .topmeta .mode-chip { font-size: 11px; padding: 6px 12px; } .brandname { font-size: 22px; } .hero { min-height: auto; padding: 32px 24px; border-radius: 24px; } .hero h1 { font-size: 32px; letter-spacing: -1px; } .hero p { font-size: 14px; } .stats { gap: 12px; } .stat { border-radius: 16px; padding: 16px; min-height: auto; } .stat-value { font-size: 28px; } .panel { padding: 20px; border-radius: 20px; } .page-head { display: block; } .page-head h1 { font-size: 32px; } .page-head p { font-size: 13px; } .step { display: inline-block; margin-top: 12px; } .field-grid { grid-template-columns: 1fr; } .field.full { grid-column: auto; } .form-footer { align-items: stretch; flex-direction: column; } .hint { max-width: none; } .form-footer .button { width: 100%; } .frame-grid { grid-template-columns: 1fr; } .script-top, .result-top { align-items: flex-start; flex-direction: column; } .result-actions { justify-content: flex-start; } .topmeta { display: none; } }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+/*
+  PIKAT — Affiliate Content Factory
+  Designed for Gemini Canvas. Keep apiKey blank: Canvas supplies the caller context.
+*/
+const apiKey = "";
+const STORAGE_KEY = "pikat_affiliate_factory_v1";
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+const IMAGE_MODELS = ["gemini-2.5-flash-image-preview", "gemini-3.1-flash-image"];
+const TTS_MODELS = ["gemini-2.5-flash-preview-tts"];
+
+const DEFAULT_STATE = {
+  screen: "overview",
+  loading: "",
+  brief: {
+    brandName: "", productName: "", productCategory: "", price: "", offer: "", platform: "TikTok Shop Video",
+    targetAudience: "", keyBenefit: "", productDescription: "", creatorStyle: "UGC jujur & hangat", guardrails: "", notes: "",
+    productImage: "", productImageName: "", creatorImage: "", creatorImageName: ""
+  },
+  scriptOptions: {
+    contentGoal: "Mendorong klik produk", hookStyle: "Problem yang relatable", creatorPersona: "Pengguna pertama kali", videoLength: "25–35 detik",
+    sceneCount: "4", cta: "Cek produk di keranjang kuning", notes: ""
+  },
+  scripts: [],
+  contentStrategy: "",
+  activeScriptIndex: 0,
+  storyboard: null,
+  frames: {},
+  voice: { selectedVoice: "Kore", audioByScene: {} },
+  captions: null,
+  error: ""
+};
+
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+function deepMerge(base, saved){
+  const out = clone(base);
+  if(!saved || typeof saved !== "object") return out;
+  for(const key of Object.keys(saved)){
+    if(saved[key] && typeof saved[key] === "object" && !Array.isArray(saved[key]) && out[key] && typeof out[key] === "object" && !Array.isArray(out[key])) out[key] = deepMerge(out[key], saved[key]);
+    else out[key] = saved[key];
+  }
+  return out;
+}
+function loadState(){
+  try { return deepMerge(DEFAULT_STATE, JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")); }
+  catch { return clone(DEFAULT_STATE); }
+}
+let state = loadState();
+state.loading = "";
+state.error = "";
+state.voice = state.voice || {selectedVoice:"Kore", audioByScene:{}};
+state.voice.audioByScene = {}; // Object URLs cannot survive page refresh.
+
+function persistedState(){
+  const s = clone(state);
+  s.loading = ""; s.error = "";
+  if(s.voice) s.voice.audioByScene = {};
+  return s;
+}
+function saveState(){
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(persistedState())); }
+  catch(err){ console.warn("Local storage save failed", err); }
+}
+function escapeHtml(value){ return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c])); }
+function nl(value){ return escapeHtml(value).replace(/\n/g, "<br>"); }
+function safeImage(url){ return typeof url === "string" && /^data:image\/(png|jpeg|jpg|webp|gif);base64,/i.test(url) ? url : ""; }
+function getPath(obj, path){ return path.split(".").reduce((acc, key) => acc == null ? "" : acc[key], obj); }
+function setPath(obj, path, value){ const keys = path.split("."); let ref = obj; for(let i=0;i<keys.length-1;i++){ if(!ref[keys[i]] || typeof ref[keys[i]] !== "object") ref[keys[i]] = {}; ref = ref[keys[i]]; } ref[keys[keys.length-1]] = value; }
+function toast(message, type="info"){
+  const el = document.getElementById("toast"); if(!el) return;
+  el.textContent = message; el.className = "toast show " + type;
+  clearTimeout(window.__pikatToast); window.__pikatToast = setTimeout(()=>{ el.className = "toast"; }, 3600);
+}
+function setLoading(key){ state.loading = key; state.error = ""; render(); }
+function clearLoading(){ state.loading = ""; saveState(); render(); }
+function isLoading(key){ return state.loading === key; }
+function button(label, action, classes="primary", disabled=false){ return `<button type="button" class="button ${classes}" data-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${label}</button>`; }
+function field(label, path, type="text", placeholder="", options=[]){
+  const value = getPath(state, path) ?? "";
+  const full = type === "textarea" ? " full" : "";
+  if(type === "select") return `<div class="field${full}"><label>${escapeHtml(label)}</label><select data-path="${escapeHtml(path)}">${options.map(opt=>`<option value="${escapeHtml(opt)}" ${String(value)===String(opt)?"selected":""}>${escapeHtml(opt)}</option>`).join("")}</select></div>`;
+  if(type === "textarea") return `<div class="field${full}"><label>${escapeHtml(label)}</label><textarea data-path="${escapeHtml(path)}" placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea></div>`;
+  return `<div class="field"><label>${escapeHtml(label)}</label><input type="${escapeHtml(type)}" data-path="${escapeHtml(path)}" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}"></div>`;
+}
+function empty(icon, title, desc){ return `<div class="empty"><div class="empty-inner"><div class="empty-mark">${icon}</div><b>${escapeHtml(title)}</b><span>${escapeHtml(desc)}</span></div></div>`; }
+function loading(title="Sedang memproses", desc="Jangan tutup halaman. Canvas sedang menyusun output Anda."){ return `<div class="loading"><div><div class="spinner"></div><b>${escapeHtml(title)}</b><span>${escapeHtml(desc)}</span></div></div>`; }
+function productReady(){ return Boolean(state.brief.brandName.trim() && state.brief.productName.trim()); }
+function scriptsReady(){ return Array.isArray(state.scripts) && state.scripts.length > 0; }
+function storyReady(){ return Boolean(state.storyboard && Array.isArray(state.storyboard.scenes) && state.storyboard.scenes.length); }
+function frameCount(){ return Object.values(state.frames || {}).filter(Boolean).length; }
+function outputProgress(){ const items=[productReady(),scriptsReady(),storyReady(),frameCount()>0,Boolean(state.captions)]; return items.filter(Boolean).length; }
+function activeScript(){ return state.scripts?.[state.activeScriptIndex] || state.scripts?.[0] || null; }
+
+async function requestModel(model, payload){
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  let delay = 900; let last;
+  for(let attempt=0;attempt<5;attempt++){
+    try{
+      const res = await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      if(res.ok) return await res.json();
+      const text = await res.text();
+      last = new Error(`HTTP ${res.status}: ${text.slice(0,280)}`);
+      if(res.status !== 429 && res.status < 500) throw last;
+    }catch(err){ last = err; if(attempt === 4) break; }
+    await new Promise(resolve=>setTimeout(resolve,delay)); delay *= 2;
+  }
+  throw last || new Error("Permintaan Gemini tidak berhasil.");
+}
+async function requestWithFallback(models,payload){
+  let last;
+  for(const model of models){
+    try { return await requestModel(model,payload); }
+    catch(err){ last = err; console.warn("Gemini model failed", model, err); }
+  }
+  throw last || new Error("Model Gemini tidak dapat dihubungi.");
+}
+function firstText(data){
+  const parts = data?.candidates?.[0]?.content?.parts || [];
+  return parts.map(part=>part.text).find(Boolean) || "";
+}
+async function generateJson(prompt, schema){
+  const data = await requestWithFallback(TEXT_MODELS,{contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:schema}});
+  const raw = firstText(data);
+  try { return JSON.parse(raw); }
+  catch { throw new Error("Model menghasilkan format yang tidak bisa dibaca. Silakan coba ulang."); }
+}
+function inlinePart(dataUrl){
+  if(!safeImage(dataUrl)) return null;
+  const [meta, data] = dataUrl.split(",");
+  const mimeType = (meta.match(/^data:([^;]+)/i)||[])[1] || "image/png";
+  return {inlineData:{data,mimeType}};
+}
+async function generateImage(prompt, refs=[]){
+  const parts = [{text:prompt}];
+  refs.map(inlinePart).filter(Boolean).forEach(part=>parts.push(part));
+  const data = await requestWithFallback(IMAGE_MODELS,{contents:[{parts}],generationConfig:{responseModalities:["TEXT","IMAGE"]}});
+  const part = (data?.candidates?.[0]?.content?.parts || []).find(x=>x.inlineData?.data);
+  if(!part?.inlineData?.data) throw new Error("Tidak ada gambar yang dikembalikan model. Coba ubah arahan visual atau coba lagi.");
+  const mime = part.inlineData.mimeType || "image/png";
+  return `data:${mime};base64,${part.inlineData.data}`;
+}
+function decodeBase64(base64){ const raw = atob(base64); const bytes = new Uint8Array(raw.length); for(let i=0;i<raw.length;i++) bytes[i] = raw.charCodeAt(i); return bytes; }
+function wavBlob(audioBuffer){
+  const channelCount = audioBuffer.numberOfChannels; const length = audioBuffer.length * channelCount * 2 + 44; const buffer = new ArrayBuffer(length); const view = new DataView(buffer); let pos=0;
+  const u16=v=>{view.setUint16(pos,v,true);pos+=2;}; const u32=v=>{view.setUint32(pos,v,true);pos+=4;};
+  u32(0x46464952);u32(length-8);u32(0x45564157);u32(0x20746d66);u32(16);u16(1);u16(channelCount);u32(audioBuffer.sampleRate);u32(audioBuffer.sampleRate*channelCount*2);u16(channelCount*2);u16(16);u32(0x61746164);u32(length-pos-4);
+  const channels = Array.from({length:channelCount},(_,i)=>audioBuffer.getChannelData(i));
+  for(let i=0;i<audioBuffer.length;i++){ for(let c=0;c<channelCount;c++){ const s=Math.max(-1,Math.min(1,channels[c][i])); view.setInt16(pos, s<0?s*0x8000:s*0x7fff, true); pos+=2; } }
+  return new Blob([buffer],{type:"audio/wav"});
+}
+async function pcmToAudio(bytes, sampleRate=24000, channels=1){
+  const ctx = new (window.AudioContext || window.webkitAudioContext)({sampleRate});
+  const int16 = new Int16Array(bytes.buffer, bytes.byteOffset, Math.floor(bytes.byteLength/2)); const frames = Math.floor(int16.length/channels); const buffer = ctx.createBuffer(channels,frames,sampleRate);
+  for(let c=0;c<channels;c++){ const out=buffer.getChannelData(c); for(let i=0;i<frames;i++) out[i] = int16[i*channels+c]/32768; }
+  return buffer;
+}
+async function generateVoice(text, voiceName){
+  const prompt = `Bacakan naskah berikut dalam Bahasa Indonesia yang terdengar natural untuk video affiliate. Gaya penyampaian hangat, jelas, dan tidak berlebihan. ${text}`;
+  const data = await requestWithFallback(TTS_MODELS,{contents:[{parts:[{text:prompt}]}],generationConfig:{responseModalities:["AUDIO"],speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName}}}}});
+  const part=(data?.candidates?.[0]?.content?.parts||[]).find(x=>x.inlineData?.data);
+  if(!part?.inlineData?.data) throw new Error("Audio tidak dikembalikan oleh model.");
+  const rate = Number(((part.inlineData.mimeType||"").match(/rate=(\d+)/)||[])[1] || 24000);
+  const audioBuffer = await pcmToAudio(decodeBase64(part.inlineData.data),rate,1);
+  return URL.createObjectURL(wavBlob(audioBuffer));
+}
+function briefContext(){
+  const b = state.brief;
+  return `Brand: ${b.brandName}\nProduk: ${b.productName}\nKategori: ${b.productCategory}\nHarga: ${b.price}\nOffer: ${b.offer}\nPlatform: ${b.platform}\nTarget: ${b.targetAudience}\nManfaat/bukti utama: ${b.keyBenefit}\nDeskripsi: ${b.productDescription}\nGaya creator: ${b.creatorStyle}\nLarangan klaim: ${b.guardrails}\nCatatan: ${b.notes}`;
+}
+function scriptContext(){ const s=state.scriptOptions; return `Tujuan konten: ${s.contentGoal}\nGaya hook: ${s.hookStyle}\nPersona creator: ${s.creatorPersona}\nDurasi: ${s.videoLength}\nTarget jumlah scene: ${s.sceneCount}\nCTA: ${s.cta}\nCatatan: ${s.notes}`; }
+
+const SCRIPTS_SCHEMA = {
+  type:"OBJECT",
+  properties:{
+    contentStrategy:{type:"STRING"},
+    scripts:{
+      type:"ARRAY",
+      items:{
+        type:"OBJECT",
+        properties:{
+          title:{type:"STRING"}, contentAngle:{type:"STRING"}, testIntent:{type:"STRING"}, hook:{type:"STRING"},
+          spokenScript:{type:"STRING"}, caption:{type:"STRING"}, cta:{type:"STRING"}, hashtags:{type:"STRING"}, visualDirection:{type:"STRING"}
+        },
+        required:["title","contentAngle","testIntent","hook","spokenScript","caption","cta","hashtags","visualDirection"]
+      }
+    }
+  },
+  required:["contentStrategy","scripts"]
+};
+const STORY_SCHEMA = {
+  type:"OBJECT",
+  properties:{
+    masterDirection:{type:"STRING"},
+    editingNotes:{type:"ARRAY",items:{type:"STRING"}},
+    scenes:{
+      type:"ARRAY",
+      items:{
+        type:"OBJECT",
+        properties:{
+          sceneNumber:{type:"INTEGER"}, durationSeconds:{type:"INTEGER"}, purpose:{type:"STRING"}, action:{type:"STRING"}, dialog:{type:"STRING"},
+          onScreenText:{type:"STRING"}, visualPrompt:{type:"STRING"}, editNote:{type:"STRING"}
+        },
+        required:["sceneNumber","durationSeconds","purpose","action","dialog","onScreenText","visualPrompt","editNote"]
+      }
+    }
+  },
+  required:["masterDirection","editingNotes","scenes"]
+};
+const CAPTION_SCHEMA = {
+  type:"OBJECT",
+  properties:{
+    caption:{type:"STRING"}, shortCaption:{type:"STRING"}, pinnedComment:{type:"STRING"}, hashtags:{type:"STRING"}, coverText:{type:"STRING"},
+    postChecklist:{type:"ARRAY",items:{type:"STRING"}}
+  },
+  required:["caption","shortCaption","pinnedComment","hashtags","coverText","postChecklist"]
+};
+
+async function makeScripts(){
+  if(!productReady()) throw new Error("Isi minimal Nama brand dan Produk terlebih dahulu.");
+  const prompt = `Anda adalah Creative Strategist khusus affiliate video di Indonesia. Buat tiga konsep konten affiliate yang berbeda, realistis, dan siap diproduksi untuk produk berikut.\n\n${briefContext()}\n\nParameter produksi:\n${scriptContext()}\n\nKetentuan: Gunakan Bahasa Indonesia natural. Jangan membuat testimoni atau hasil pemakaian palsu. Jangan menjanjikan pendapatan, kesehatan, atau hasil instan. Gunakan klaim yang berasal dari brief atau pertanyaan yang mendorong pengguna memeriksa detail produk. Setiap konsep harus berbeda secara strategi: misalnya relatable problem, demonstrasi manfaat, atau objection handling. spokenScript harus menjadi naskah pendek satu video yang mudah dibaca creator. caption harus siap unggah. Return JSON sesuai schema.`;
+  const result = await generateJson(prompt,SCRIPTS_SCHEMA);
+  if(!Array.isArray(result.scripts) || !result.scripts.length) throw new Error("Konsep konten tidak terbentuk. Coba perjelas brief.");
+  state.scripts=result.scripts.slice(0,3); state.contentStrategy=result.contentStrategy || ""; state.activeScriptIndex=0; state.storyboard=null; state.frames={}; state.captions=null;
+}
+async function makeStoryboard(){
+  if(!scriptsReady()) throw new Error("Buat konsep di Script Lab terlebih dahulu.");
+  const script = activeScript();
+  const prompt = `Anda adalah Creative Director UGC dan affiliate video Indonesia. Ubah konsep konten berikut menjadi storyboard produksi yang sangat operasional.\n\nBRIEF PRODUK:\n${briefContext()}\n\nKONSEP TERPILIH:\nJudul: ${script.title}\nAngle: ${script.contentAngle}\nHook: ${script.hook}\nNaskah: ${script.spokenScript}\nArahan visual: ${script.visualDirection}\n\nBuat ${state.scriptOptions.sceneCount} scene dengan total durasi mengikuti ${state.scriptOptions.videoLength}. Setiap visualPrompt harus berbahasa Inggris, detail, photo/video-friendly, dan menyebutkan produk secara deskriptif. Bila ada gambar produk atau creator, gunakan sebagai referensi visual tanpa menyebut identitas orang. Jangan mengarang endorsement, rating, hasil pemakaian, atau klaim yang tidak diberikan. onScreenText harus singkat dan dapat diedit manual di CapCut. Return JSON sesuai schema.`;
+  const result = await generateJson(prompt,STORY_SCHEMA);
+  if(!Array.isArray(result.scenes) || !result.scenes.length) throw new Error("Storyboard tidak terbentuk. Coba ulangi.");
+  state.storyboard=result; state.frames={}; state.captions=null; state.voice.audioByScene={};
+}
+async function makeFrame(scene,index){
+  if(!scene) throw new Error("Scene tidak ditemukan.");
+  const b=state.brief;
+  const prompt = `Create a polished vertical affiliate content keyframe for Indonesian social commerce. Brand: ${b.brandName}. Product: ${b.productName}. Product details: ${b.productDescription}. Product proof/benefit: ${b.keyBenefit}. Scene purpose: ${scene.purpose}. Action: ${scene.action}. Visual direction: ${scene.visualPrompt}. Creator style: ${b.creatorStyle}. Preserve the product packaging faithfully if a product reference image is attached. If a creator reference is attached, preserve only general visual continuity while keeping the scene natural. No brand watermark, no unreadable text overlay, no fake reviews, no before-after claims. Product should be clearly visible. Aspect ratio 9:16, premium but authentic UGC lighting, crisp commercial quality.`;
+  const refs=[b.productImage,b.creatorImage].filter(Boolean); const img=await generateImage(prompt,refs); state.frames[index]=img;
+}
+async function makeCaptionPack(){
+  if(!scriptsReady()) throw new Error("Buat Script Lab terlebih dahulu.");
+  const s=activeScript();
+  const prompt=`Anda adalah Social Commerce Copywriter Indonesia. Buat paket publikasi untuk konsep affiliate berikut.\n\n${briefContext()}\n\nKONSEP:\n${JSON.stringify(s)}\n\nAturan: Gunakan Bahasa Indonesia. Jangan membuat klaim hasil, review, angka stok, atau diskon yang tidak ada pada brief. Caption harus ringkas, tidak mengulang naskah video secara persis, dan CTA harus mengarahkan sesuai brief. Return JSON sesuai schema.`;
+  state.captions=await generateJson(prompt,CAPTION_SCHEMA);
+}
+
+function nav(){
+  const items=[
+    ["overview","◫","Beranda"],["brief","◌","Produk & Creator"],["scripts","✦","Script Lab"],["storyboard","▤","Shotboard"],["frames","▧","Frame Studio"],["voice","◉","Voice & Caption"],["export","⇩","Publishing Pack"]
+  ];
+  return `<aside class="rail"><div class="rail-overline">Workflow</div><nav class="nav">${items.map(([id,icon,label])=>`<button type="button" data-action="nav:${id}" class="navbutton ${state.screen===id?"active":""}"><span class="navicon">${icon}</span><span>${label}</span></button>`).join("")}</nav><div class="rail-card"><b>Built for Canvas</b>Setiap pengguna menjalankan generasi AI dari konteks Canvas mereka sendiri. Jangan menyimpan data sensitif dalam brief atau aset referensi.</div></aside>`;
+}
+function overview(){
+  const progress=Math.round((outputProgress()/5)*100);
+  return `<section class="screen active"><div class="hero"><div class="eyebrow"><span class="eyedot"></span>Affiliate production workspace</div><h1>Ubah brief produk menjadi konten affiliate yang siap direkam.</h1><p>Buat angle, naskah, shot list, keyframe, voice-over, dan caption dalam satu alur. Pikat dirancang supaya Anda tidak terus berpindah antara prompt yang terpisah.</p><div class="hero-actions">${button("Mulai dari produk","nav:brief","primary")}${button("Lihat Script Lab","nav:scripts","ghost")}</div></div><div class="stats"><div class="stat"><div class="stat-label">Product brief</div><div class="stat-value">${productReady()?"01":"—"}</div><div class="stat-note">${productReady()?"Brief siap dipakai":"Mulai dari produk dan audiens"}</div></div><div class="stat"><div class="stat-label">Content concepts</div><div class="stat-value">${state.scripts.length}</div><div class="stat-note">Tiga angle untuk diuji</div></div><div class="stat"><div class="stat-label">Shotboard</div><div class="stat-value">${storyReady()?state.storyboard.scenes.length:"—"}</div><div class="stat-note">Scene produksi terarah</div></div><div class="stat"><div class="stat-label">Rendered frames</div><div class="stat-value">${frameCount()}</div><div class="stat-note">Keyframe visual yang tersedia</div></div></div><div class="home-grid"><div class="panel"><div class="panel-title"><div><h3>Alur kerja cepat</h3><small>Fokus pada satu keputusan per tahap agar output tidak saling bertabrakan.</small></div></div><div class="workflow"><div class="workflow-row"><div class="workflow-number">1</div><div><b>Isi konteks produk</b><span>Produk, benefit, target, offer, gaya creator, dan batas klaim.</span></div>${button("Buka","nav:brief","outline small")}</div><div class="workflow-row"><div class="workflow-number">2</div><div><b>Pilih angle yang layak diuji</b><span>Tiga naskah dengan pesan dan intensi tes yang berbeda.</span></div>${button("Buka","nav:scripts","outline small")}</div><div class="workflow-row"><div class="workflow-number">3</div><div><b>Rakit asset produksi</b><span>Storyboard, frame visual, voice-over, caption, lalu export publishing pack.</span></div>${button("Buka","nav:storyboard","outline small")}</div></div></div><div class="panel"><div class="progress-card"><h4>${progress}% siap produksi</h4><p>${outputProgress()} dari 5 milestone inti telah tersedia di workspace ini.</p><div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div></div><div class="tip"><b>Prinsip uji konten:</b> jangan hanya mengganti visual. Uji hook, objection, dan CTA secara terpisah supaya Anda tahu mengapa satu video lebih menarik klik daripada yang lain.</div></div></div></section>`;
+}
+function briefScreen(){
+  const b=state.brief;
+  const productStatus=b.productImage?`✓ ${escapeHtml(b.productImageName||"Asset siap")}`:"Opsional";
+  const creatorStatus=b.creatorImage?`✓ ${escapeHtml(b.creatorImageName||"Asset siap")}`:"Opsional";
+  return `<section class="screen active"><div class="page-head"><div><h1>Produk & creator</h1><p>Brief ini menjadi memori kerja untuk seluruh generator. Isi yang spesifik menghasilkan naskah dan shot list yang tidak generik.</p></div><span class="step">Step 1 · Context</span></div><div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Product brief</h3><small>Data inti untuk seluruh konten</small></div></div><div class="field-grid">${field("Nama brand","brief.brandName","text","Contoh: Tumbuh Skin")}${field("Produk","brief.productName","text","Contoh: Sunscreen Daily Shield")}${field("Kategori","brief.productCategory","text","Contoh: Beauty & skincare")}${field("Harga / range harga","brief.price","text","Contoh: Rp89.000")}${field("Penawaran aktif","brief.offer","text","Contoh: Bundle 2 hemat 15%")}${field("Platform prioritas","brief.platform","select","",["TikTok Shop Video","Shopee Video","Instagram Reels","TikTok Organik","Multi-platform"])}${field("Target pembeli","brief.targetAudience","textarea","Contoh: perempuan 20–34 tahun yang baru mulai rutin memakai sunscreen")}${field("Manfaat / bukti utama","brief.keyBenefit","textarea","Contoh: tekstur ringan, SPF 50 PA++++, terdaftar BPOM. Hindari klaim yang belum dapat dibuktikan.")}${field("Deskripsi produk","brief.productDescription","textarea","Jelaskan bentuk produk, cara pakai, konteks pemakaian, pembeda, dan pertanyaan yang sering muncul.")}${field("Gaya creator","brief.creatorStyle","select","",["UGC jujur & hangat","Reviewer cepat dan direct","Aesthetic daily vlog","Edukasi ringan","Premium aspirational"])}${field("Batas klaim / kata yang dihindari","brief.guardrails","textarea","Contoh: jangan menyebut menyembuhkan, memutihkan instan, stok tinggal sedikit, atau testimoni yang tidak ada.")}${field("Catatan tambahan","brief.notes","textarea","Contoh: fokus untuk first-time buyer; tampilkan pemakaian di luar ruangan.")}</div><div class="form-footer"><span class="hint">Brief tersimpan lokal pada browser ini. Jangan masukkan nomor pelanggan, alamat, atau data sensitif.</span>${button("Lanjut ke Script Lab","nav:scripts","primary")}</div></section><section class="panel"><div class="panel-title"><div><h3>Asset reference</h3><small>Opsional — membantu konteks visual</small></div></div><label class="upload" for="product-file"><span class="upload-icon">↥</span><span><b>Foto produk</b><span>Gunakan foto kemasan atau produk yang jelas. File dipakai secara lokal pada browser dan saat Anda men-trigger generator visual.</span></span><span class="asset-status">${productStatus}</span></label><input id="product-file" type="file" accept="image/*" hidden data-file="brief.productImage"><div style="height:12px"></div><label class="upload" for="creator-file"><span class="upload-icon">◌</span><span><b>Referensi creator (opsional)</b><span>Gunakan bila Anda ingin continuity umum pada keyframe. Pastikan Anda memiliki izin menggunakan referensi tersebut.</span></span><span class="asset-status">${creatorStatus}</span></label><input id="creator-file" type="file" accept="image/*" hidden data-file="brief.creatorImage"><div class="notice">Pikat tidak membuat klaim atau testimoni palsu. Asset referensi digunakan untuk mendukung arahan visual, bukan untuk mengatasnamakan orang atau brand lain.</div>${(b.productImage||b.creatorImage)?`<div class="frame-grid" style="margin-top:14px">${b.productImage?`<div class="frame-card"><div class="frame-thumb"><img src="${safeImage(b.productImage)}" alt="Product reference"></div><div class="frame-meta"><b>Produk</b><span>${escapeHtml(b.productImageName||"reference")}</span></div></div>`:""}${b.creatorImage?`<div class="frame-card"><div class="frame-thumb"><img src="${safeImage(b.creatorImage)}" alt="Creator reference"></div><div class="frame-meta"><b>Creator</b><span>${escapeHtml(b.creatorImageName||"reference")}</span></div></div>`:""}</div>`:empty("◌","Asset reference belum ditambahkan","Anda tetap dapat membuat script dan storyboard tanpa upload gambar.")}</section></div></section>`;
+}
+function scriptsScreen(){
+  const output=isLoading("scripts")?loading("Mencari 3 angle yang berbeda","Gemini sedang merangkai hook, naskah, caption, serta arah visual."):scriptsReady()?`<div class="script-stack"><div class="result-top"><span class="result-title">${escapeHtml(state.contentStrategy || "3 concept directions")}</span><div class="result-actions">${button("Salin semua","copy:scripts","outline small")}${button("Unduh .md","download:scripts","dark small")}</div></div>${state.scripts.map((s,i)=>`<article class="script-card ${i===state.activeScriptIndex?"active":""}"><div class="script-top"><div><h4>${escapeHtml(s.title||`Konsep ${i+1}`)}</h4><p>${escapeHtml(s.contentAngle||"")} · ${escapeHtml(s.testIntent||"")}</p></div><div class="result-actions">${button(i===state.activeScriptIndex?"Terpilih":"Pilih","select-script:"+i,"outline small")}${button("Salin","copy:script:"+i,"outline small")}</div></div><div class="script-body"><div class="mini-label">Hook</div><p class="hook">“${escapeHtml(s.hook||"")}”</p><div class="mini-label">Naskah creator</div><p class="script-text">${nl(s.spokenScript||"")}</p><div class="tag-row"><span class="tag">CTA · ${escapeHtml(s.cta||"")}</span><span class="tag">${escapeHtml(s.hashtags||"")}</span></div><div class="mini-label" style="margin-top:13px">Visual direction</div><p class="script-text">${escapeHtml(s.visualDirection||"")}</p></div></article>`).join("")}</div>`:empty("✦","Script Lab masih kosong","Isi Produk & Creator, pilih parameter produksi, lalu buat tiga angle konten yang bisa benar-benar diuji.");
+  return `<section class="screen active"><div class="page-head"><div><h1>Script lab</h1><p>Buat tiga konsep yang berbeda secara pesan. Pilih satu konsep untuk dikembangkan menjadi shotboard produksi.</p></div><span class="step">Step 2 · Message</span></div><div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Parameter produksi</h3><small>Gunakan brief yang sudah Anda isi</small></div></div><div class="field-grid">${field("Tujuan konten","scriptOptions.contentGoal","select","",["Mendorong klik produk","Memperkenalkan produk","Menjawab keraguan pembeli","Mendorong add to cart","Menguatkan trust"])}${field("Gaya hook","scriptOptions.hookStyle","select","",["Problem yang relatable","Observasi mengejutkan","Honest review","Demonstrasi singkat","Objection handling"])}${field("Persona creator","scriptOptions.creatorPersona","select","",["Pengguna pertama kali","Teman yang merekomendasikan","Reviewer objektif","Beauty/lifestyle creator","Seller yang menjelaskan"])}${field("Durasi video","scriptOptions.videoLength","select","",["15–20 detik","25–35 detik","40–50 detik","60 detik edukatif"])}${field("Jumlah scene","scriptOptions.sceneCount","select","",["3","4","5","6"])}${field("CTA utama","scriptOptions.cta","text","Contoh: Cek produk di keranjang kuning")}${field("Arahan tambahan","scriptOptions.notes","textarea","Contoh: gunakan tone santai, jangan fokus pada diskon, hook harus cocok untuk audience pertama kali.")}</div><div class="notice">Setiap konsep akan berbeda menurut angle, bukan hanya mengganti satu-dua kata. Pastikan benefit dan klaim yang Anda masukkan memang dapat dipertanggungjawabkan.</div><div class="form-footer"><span class="hint">${productReady()?"Brief produk terdeteksi dan akan digunakan.":"Lengkapi Nama brand dan Produk dulu agar output tidak generik."}</span>${button(isLoading("scripts")?"Menyusun angle...":"✦ Buat 3 konsep","generate:scripts","primary",isLoading("scripts"))}</div></section><section class="panel"><div class="panel-title"><div><h3>Concept queue</h3><small>Pilih satu untuk masuk produksi</small></div></div>${output}</section></div></section>`;
+}
+function storyboardScreen(){
+  const output=isLoading("storyboard")?loading("Menyusun scene produksi","Gemini sedang membagi hook, aksi, dialog, prompt visual, dan catatan editing."):storyReady()?`<div class="story-stack"><div class="result-top"><span class="result-title">${escapeHtml(state.storyboard.masterDirection||"Production shotboard")}</span><div class="result-actions">${button("Salin","copy:storyboard","outline small")}${button("Unduh .md","download:storyboard","dark small")}</div></div>${state.storyboard.scenes.map((scene,i)=>sceneCard(scene,i)).join("")}</div>`:empty("▤","Shotboard belum dibuat","Pilih konsep di Script Lab, lalu buat storyboard agar Anda punya daftar shot yang jelas sebelum merekam atau merender visual.");
+  const chosen=activeScript();
+  return `<section class="screen active"><div class="page-head"><div><h1>Shotboard</h1><p>Turunkan naskah menjadi langkah produksi: scene, aksi, dialog, on-screen text, prompt visual, dan catatan edit.</p></div><span class="step">Step 3 · Production</span></div><div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Storyboard control</h3><small>Berbasis konsep yang dipilih</small></div></div>${chosen?`<div class="caption-box"><div class="mini-label">Konsep terpilih</div><h4>${escapeHtml(chosen.title||"Konsep affiliate")}</h4><p><b>Hook:</b> ${escapeHtml(chosen.hook||"")}</p><p style="margin-top:8px">${escapeHtml(chosen.testIntent||"")}</p></div>`:empty("!","Belum ada konsep aktif","Masuk ke Script Lab, buat konsep, lalu pilih salah satunya.")}<div class="notice">Bila Anda mengubah konsep pilihan atau brief secara signifikan, buat ulang shotboard agar setiap scene tetap sinkron.</div><div class="form-footer"><span class="hint">Scene yang sudah dibuat dapat dipakai untuk Frame Studio dan Voice & Caption.</span>${button(isLoading("storyboard")?"Membangun shotboard...":"▤ Buat shotboard","generate:storyboard","primary",isLoading("storyboard") || !chosen)}</div></section><section class="panel"><div class="panel-title"><div><h3>Production board</h3><small>Daftar scene siap kerja</small></div></div>${output}</section></div></section>`;
+}
+function sceneCard(scene,index){ return `<article class="scene"><div class="scene-header"><div class="scene-identity"><span class="scene-num">${escapeHtml(scene.sceneNumber||index+1)}</span><div><b>${escapeHtml(scene.purpose||`Scene ${index+1}`)}</b><span>${escapeHtml(scene.durationSeconds||"?")} detik · ${escapeHtml(scene.editNote||"Cut natural")}</span></div></div>${button("Copy prompt","copy:prompt:"+index,"outline small")}</div><div class="scene-body"><div class="scene-block"><div class="mini-label">Aksi / shot</div><p>${escapeHtml(scene.action||"")}</p></div><div class="scene-block dialog"><div class="mini-label">Dialog / voice-over</div><p>${escapeHtml(scene.dialog||"")}</p></div><div class="scene-block"><div class="mini-label">On-screen text</div><p>${escapeHtml(scene.onScreenText||"—")}</p></div><div class="scene-block prompt"><div class="mini-label">Visual prompt</div><p>${escapeHtml(scene.visualPrompt||"")}</p></div><div class="scene-footer">${button("Render frame","generate:frame:"+index,"coral small",isLoading("frame:"+index))}${button("Buat voice","generate:voice:"+index,"outline small",isLoading("voice:"+index))}</div></div></article>`; }
+function framesScreen(){
+  const scenes=state.storyboard?.scenes||[];
+  const content=storyReady()?`<div class="frame-grid">${scenes.map((scene,i)=>{ const src=safeImage(state.frames[i]); const running=isLoading("frame:"+i); return `<article class="frame-card"><div class="frame-thumb">${src?`<img src="${src}" alt="Frame scene ${i+1}">`:(running?`<div class="loading"><div><div class="spinner"></div><span>Merender keyframe…</span></div></div>`:`<div class="frame-status">Keyframe belum dibuat<br>Scene ${i+1}</div>`)}</div><div class="frame-meta"><b>Scene ${escapeHtml(scene.sceneNumber||i+1)} · ${escapeHtml(scene.purpose||"Frame")}</b><span>${escapeHtml(scene.action||"")}</span>${src?`${button("Unduh frame","download:frame:"+i,"dark small")}${button("Render ulang","generate:frame:"+i,"outline small",running)}`:`${button(running?"Sedang merender…":"Render frame","generate:frame:"+i,"coral small",running)}`}</div></article>`; }).join("")}</div>`:empty("▧","Frame Studio menunggu shotboard","Buat dulu Shotboard agar Pikat tahu scene mana yang perlu divisualisasikan.");
+  return `<section class="screen active"><div class="page-head"><div><h1>Frame studio</h1><p>Render keyframe referensi untuk setiap scene. Gunakan sebagai visual guide, thumbnail, atau bahan produksi video di tool pilihan Anda.</p></div><span class="step">Step 4 · Visuals</span></div><div class="panel"><div class="panel-title"><div><h3>Scene keyframes</h3><small>${state.brief.productImage?"Foto produk akan dipakai sebagai referensi bila sesuai.":"Anda dapat menambahkan foto produk di Produk & Creator agar konteks visual lebih konsisten."}</small></div><div class="result-actions">${storyReady()?button("Hapus semua frame","clear:frames","outline small"):""}</div></div><div class="notice">Visual AI dapat menghasilkan teks yang tidak presisi. Tambahkan text overlay final secara manual di Canva, CapCut, atau editor video Anda.</div><div style="height:13px"></div>${content}</div></section>`;
+}
+function voiceScreen(){
+  const scenes=state.storyboard?.scenes||[]; const a=state.voice.audioByScene||{}; const voices=["Kore","Zephyr","Puck","Charon","Fenrir"];
+  const sceneAudio=storyReady()?`<div class="script-stack">${scenes.map((scene,i)=>`<article class="audio-card"><h4>Scene ${escapeHtml(scene.sceneNumber||i+1)} · ${escapeHtml(scene.purpose||"Voice-over")}</h4><p>${escapeHtml(scene.dialog||"")}</p>${a[i]?`<audio controls src="${escapeHtml(a[i])}"></audio><div class="result-actions" style="margin-top:9px">${button("Unduh WAV","download:voice:"+i,"dark small")}${button("Buat ulang","generate:voice:"+i,"outline small",isLoading("voice:"+i))}</div>`:`${button(isLoading("voice:"+i)?"Mensintesis…":"Buat voice-over","generate:voice:"+i,"coral small",isLoading("voice:"+i))}`}</article>`).join("")}</div>`:empty("◉","Voice-over menunggu shotboard","Setelah shotboard dibuat, Anda dapat menghasilkan satu file suara untuk setiap dialog scene.");
+  const c=state.captions;
+  const captionOutput=isLoading("captions")?loading("Menulis paket publikasi","Menyiapkan caption, cover text, pinned comment, hashtag, dan checklist upload."):c?`<div class="caption-box"><div class="result-top"><span class="result-title">Publishing copy</span><div class="result-actions">${button("Salin","copy:captions","outline small")}${button("Unduh .md","download:captions","dark small")}</div></div><div class="mini-label">Caption</div><p>${nl(c.caption||"")}</p><div class="mini-label" style="margin-top:12px">Short caption</div><p>${escapeHtml(c.shortCaption||"")}</p><div class="pin"><b>Pinned comment:</b> ${escapeHtml(c.pinnedComment||"")}<br><br><b>Cover text:</b> ${escapeHtml(c.coverText||"")}<br><br><b>Hashtags:</b> ${escapeHtml(c.hashtags||"")}</div><div class="mini-label" style="margin-top:12px">Checklist upload</div><ul class="script-text" style="padding-left:16px">${(c.postChecklist||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul></div>`:empty("✎","Caption pack belum dibuat","Buat caption setelah memilih konsep agar CTA dan bahasa publikasi konsisten dengan video.");
+  return `<section class="screen active"><div class="page-head"><div><h1>Voice & caption</h1><p>Rakit asset audio dan copy publikasi dari storyline yang sudah dipilih.</p></div><span class="step">Step 5 · Publish</span></div><div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Voice-over studio</h3><small>Pilih karakter suara lalu render dialog per scene</small></div></div><div class="field-grid"><div class="field"><label>Voice model</label><select data-path="voice.selectedVoice">${voices.map(v=>`<option value="${v}" ${state.voice.selectedVoice===v?"selected":""}>${v}</option>`).join("")}</select></div><div class="field"><label>Catatan</label><input value="Bahasa Indonesia natural" disabled></div></div><div style="height:14px"></div>${sceneAudio}</section><section class="panel"><div class="panel-title"><div><h3>Caption & publishing pack</h3><small>Disusun dari konsep yang aktif</small></div></div>${captionOutput}<div class="form-footer"><span class="hint">Paket publikasi tidak akan mengarang diskon, stok, review, atau klaim hasil yang tidak diberikan pada brief.</span>${button(isLoading("captions")?"Menulis caption…":"✎ Buat caption pack","generate:captions","primary",isLoading("captions") || !scriptsReady())}</div></section></div></section>`;
+}
+function exportScreen(){
+  const items=[
+    [productReady(),"Product brief","Brand, produk, audience, dan guardrail"],
+    [scriptsReady(),"Content concepts",`${state.scripts.length} concept direction siap diuji`],
+    [storyReady(),"Shotboard",`${state.storyboard?.scenes?.length||0} scene produksi`],
+    [frameCount()>0,"Frame visuals",`${frameCount()} keyframe sudah dirender`],
+    [Boolean(state.captions),"Publishing copy","Caption, pinned comment, dan checklist"]
+  ];
+  return `<section class="screen active"><div class="page-head"><div><h1>Publishing pack</h1><p>Ekspor materi kerja Anda menjadi satu dokumen markdown untuk diteruskan ke creator, editor, atau tim konten.</p></div><span class="step">Final · Export</span></div><div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Output checklist</h3><small>Hanya item yang sudah tersedia akan masuk ke dokumen.</small></div></div><div class="export-list">${items.map(([done,title,sub])=>`<div class="export-row"><span class="check ${done?"":"incomplete"}">${done?"✓":"·"}</span><div><b>${escapeHtml(title)}</b><span>${escapeHtml(sub)}</span></div></div>`).join("")}</div><div class="export-actions">${button("⇩ Unduh publishing-pack.md","download:export","primary")}${button("Salin seluruh pack","copy:export","outline")}${button("Reset workspace","reset:workspace","outline")}</div></section><section class="panel"><div class="panel-title"><div><h3>Catatan handoff</h3><small>Supaya output AI tetap bisa dieksekusi dengan aman</small></div></div><div class="tip"><b>Review sebelum publish:</b> cek ulang harga, promo, nama produk, kata-kata klaim, dan teks overlay. Model AI membantu penyusunan draft, tetapi verifikasi akhir tetap ada pada owner brand atau affiliate.</div><div class="tip" style="background:#edf3e6;border-color:#d9e8c8;color:#566d51"><b>Untuk editor video:</b> bagikan Shotboard dan frame visual bersama output ini. Naskah scene dan on-screen text bisa dipakai sebagai panduan timeline CapCut, Canva, Flow, atau tool video lain.</div>${state.error?`<div class="error-box" style="margin-top:14px">${escapeHtml(state.error)}</div>`:""}</section></div></section>`;
+}
+function renderScreen(){ if(state.screen==="overview") return overview(); if(state.screen==="brief") return briefScreen(); if(state.screen==="scripts") return scriptsScreen(); if(state.screen==="storyboard") return storyboardScreen(); if(state.screen==="frames") return framesScreen(); if(state.screen==="voice") return voiceScreen(); if(state.screen==="export") return exportScreen(); return overview(); }
+function render(){ const root=document.getElementById("app"); root.innerHTML=`<div class="app"><header class="topbar"><div class="brand"><div class="brandmark">✦</div><div><div class="brandname">Pikat</div><div class="brandtag">Affiliate Content Factory</div></div></div><div class="topmeta"><div class="mode-chip"><span class="mode-dot"></span>Canvas-ready workspace</div></div></header><div class="layout">${nav()}<main class="main">${renderScreen()}</main></div></div>`; }
+
+function markdown(){
+  const b=state.brief; const s=activeScript(); const sb=state.storyboard; const c=state.captions;
+  const lines=[`# PIKAT — Affiliate Publishing Pack`,"",`_Dibuat: ${new Date().toLocaleString("id-ID")}_`,"",`## Product Brief`,`- Brand: ${b.brandName||"—"}`,`- Produk: ${b.productName||"—"}`,`- Kategori: ${b.productCategory||"—"}`,`- Harga: ${b.price||"—"}`,`- Offer: ${b.offer||"—"}`,`- Platform: ${b.platform||"—"}`,`- Target: ${b.targetAudience||"—"}`,`- Benefit/Bukti: ${b.keyBenefit||"—"}`,`- Guardrail: ${b.guardrails||"—"}`,"",`## Active Content Concept`];
+  if(s){ lines.push(`### ${s.title||"Konsep"}`,`- Angle: ${s.contentAngle||"—"}`,`- Test intent: ${s.testIntent||"—"}`,`- Hook: ${s.hook||"—"}`,"",`### Naskah`,s.spokenScript||"—","",`### Caption awal`,s.caption||"—",`- CTA: ${s.cta||"—"}`,`- Hashtags: ${s.hashtags||"—"}`,`- Visual direction: ${s.visualDirection||"—"}`); } else lines.push("Belum ada konsep.");
+  lines.push("",`## Shotboard`);
+  if(sb?.scenes?.length){ lines.push(`Master direction: ${sb.masterDirection||"—"}`,""); sb.scenes.forEach((scene,i)=>{ lines.push(`### Scene ${scene.sceneNumber||i+1} (${scene.durationSeconds||"?"} detik)`,`- Purpose: ${scene.purpose||"—"}`,`- Action: ${scene.action||"—"}`,`- Dialog: ${scene.dialog||"—"}`,`- On-screen text: ${scene.onScreenText||"—"}`,`- Edit note: ${scene.editNote||"—"}`,`- Visual prompt: ${scene.visualPrompt||"—"}`,""); }); } else lines.push("Belum ada shotboard.");
+  lines.push("",`## Publishing Copy`);
+  if(c){ lines.push(`### Caption`,c.caption||"—","",`### Short caption`,c.shortCaption||"—","",`- Pinned comment: ${c.pinnedComment||"—"}`,`- Cover text: ${c.coverText||"—"}`,`- Hashtags: ${c.hashtags||"—"}`,"",`### Checklist`,...(c.postChecklist||[]).map(x=>`- ${x}`)); } else lines.push("Belum ada caption pack.");
+  lines.push("",`## Verification Note`,`Review ulang semua fakta produk, harga, promo, izin penggunaan asset, dan klaim sebelum dipublikasikan.`); return lines.join("\n");
+}
+function scriptsMarkdown(){ return state.scripts.map((s,i)=>`# Konsep ${i+1} — ${s.title||"Affiliate"}\n\n- Angle: ${s.contentAngle||"—"}\n- Test intent: ${s.testIntent||"—"}\n\n## Hook\n${s.hook||"—"}\n\n## Naskah\n${s.spokenScript||"—"}\n\n## Caption\n${s.caption||"—"}\n\nCTA: ${s.cta||"—"}\nHashtags: ${s.hashtags||"—"}\n\nVisual direction: ${s.visualDirection||"—"}`).join("\n\n---\n\n"); }
+function storyboardMarkdown(){ const sb=state.storyboard; if(!sb?.scenes) return ""; return `# Shotboard — ${state.brief.brandName||"Brand"}\n\nMaster direction: ${sb.masterDirection||"—"}\n\n${sb.scenes.map((x,i)=>`## Scene ${x.sceneNumber||i+1} · ${x.durationSeconds||"?"} detik\nPurpose: ${x.purpose||"—"}\nAction: ${x.action||"—"}\nDialog: ${x.dialog||"—"}\nOn-screen text: ${x.onScreenText||"—"}\nVisual prompt: ${x.visualPrompt||"—"}\nEdit note: ${x.editNote||"—"}`).join("\n\n")}`; }
+function captionsMarkdown(){ const c=state.captions; if(!c) return ""; return `# Publishing Copy\n\n## Caption\n${c.caption||"—"}\n\n## Short caption\n${c.shortCaption||"—"}\n\nPinned comment: ${c.pinnedComment||"—"}\nCover text: ${c.coverText||"—"}\nHashtags: ${c.hashtags||"—"}\n\n## Checklist\n${(c.postChecklist||[]).map(x=>`- ${x}`).join("\n")}`; }
+function downloadText(filename,text){ const blob=new Blob([text],{type:"text/markdown;charset=utf-8"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),600); }
+function downloadImage(filename,dataUrl){ const a=document.createElement("a");a.href=dataUrl;a.download=filename;document.body.appendChild(a);a.click();a.remove(); }
+async function copyText(text){ try{ await navigator.clipboard.writeText(text); toast("Berhasil disalin ke clipboard.","success"); }catch{ const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();document.execCommand("copy");t.remove();toast("Berhasil disalin ke clipboard.","success"); } }
+async function fileToDataUrl(file){ return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error("File tidak bisa dibaca."));reader.readAsDataURL(file);}); }
+
+async function handleAction(action){
+  if(!action) return;
+  if(action.startsWith("nav:")){ state.screen=action.split(":")[1]; saveState(); render(); return; }
+  if(action.startsWith("select-script:")){ state.activeScriptIndex=Number(action.split(":")[1]); state.storyboard=null; state.frames={}; state.captions=null; state.voice.audioByScene={}; saveState(); render(); toast("Konsep aktif diganti. Buat ulang shotboard untuk konsep ini.","info"); return; }
+  if(action==="generate:scripts"){
+    try{setLoading("scripts");await makeScripts();toast("Tiga konsep affiliate siap dipilih.","success");}catch(err){state.error=err.message||"Gagal membuat konsep.";toast(state.error,"error");}finally{clearLoading();}return;
+  }
+  if(action==="generate:storyboard"){
+    try{setLoading("storyboard");await makeStoryboard();toast("Shotboard produksi berhasil dibuat.","success");}catch(err){state.error=err.message||"Gagal membuat shotboard.";toast(state.error,"error");}finally{clearLoading();}return;
+  }
+  if(action.startsWith("generate:frame:")){
+    const i=Number(action.split(":")[2]); const scene=state.storyboard?.scenes?.[i];
+    try{setLoading("frame:"+i);await makeFrame(scene,i);toast(`Keyframe scene ${i+1} siap digunakan.`,"success");}catch(err){state.error=err.message||"Gagal merender frame.";toast(state.error,"error");}finally{clearLoading();}return;
+  }
+  if(action.startsWith("generate:voice:")){
+    const i=Number(action.split(":")[2]); const scene=state.storyboard?.scenes?.[i];
+    try{ if(!scene?.dialog) throw new Error("Dialog scene belum tersedia."); setLoading("voice:"+i); const url=await generateVoice(scene.dialog,state.voice.selectedVoice); state.voice.audioByScene[i]=url; toast(`Voice-over scene ${i+1} selesai dibuat.`,"success"); }catch(err){state.error=err.message||"Gagal membuat audio.";toast(state.error,"error");}finally{clearLoading();}return;
+  }
+  if(action==="generate:captions"){
+    try{setLoading("captions");await makeCaptionPack();toast("Caption pack siap untuk review.","success");}catch(err){state.error=err.message||"Gagal membuat caption pack.";toast(state.error,"error");}finally{clearLoading();}return;
+  }
+  if(action==="clear:frames"){ state.frames={}; saveState(); render(); toast("Semua keyframe lokal dihapus.","info"); return; }
+  if(action==="reset:workspace"){ if(confirm("Reset seluruh brief dan output lokal workspace ini?")){ Object.assign(state,clone(DEFAULT_STATE));state.voice.audioByScene={};saveState();render();toast("Workspace sudah direset.","info"); } return; }
+  if(action==="copy:export"){return copyText(markdown());}
+  if(action==="copy:scripts"){return copyText(scriptsMarkdown());}
+  if(action==="copy:storyboard"){return copyText(storyboardMarkdown());}
+  if(action==="copy:captions"){return copyText(captionsMarkdown());}
+  if(action.startsWith("copy:script:")){ const i=Number(action.split(":")[2]); return copyText(scriptsMarkdown().split("\n\n---\n\n")[i] || ""); }
+  if(action.startsWith("copy:prompt:")){ const i=Number(action.split(":")[2]); return copyText(state.storyboard?.scenes?.[i]?.visualPrompt||""); }
+  if(action==="download:export"){return downloadText("pikat-publishing-pack.md",markdown());}
+  if(action==="download:scripts"){return downloadText("pikat-affiliate-concepts.md",scriptsMarkdown());}
+  if(action==="download:storyboard"){return downloadText("pikat-shotboard.md",storyboardMarkdown());}
+  if(action==="download:captions"){return downloadText("pikat-caption-pack.md",captionsMarkdown());}
+  if(action.startsWith("download:frame:")){const i=Number(action.split(":")[2]);const img=state.frames?.[i];if(img) downloadImage(`pikat-frame-scene-${i+1}.png`,img);return;}
+  if(action.startsWith("download:voice:")){const i=Number(action.split(":")[2]);const url=state.voice.audioByScene?.[i];if(url){const a=document.createElement("a");a.href=url;a.download=`pikat-voice-scene-${i+1}.wav`;document.body.appendChild(a);a.click();a.remove();}return;}
+}
+
+document.addEventListener("click",event=>{ const node=event.target.closest("[data-action]"); if(node){ event.preventDefault(); handleAction(node.dataset.action); } });
+document.addEventListener("input",event=>{ const el=event.target; if(el.dataset.path){ setPath(state,el.dataset.path,el.value); saveState(); } });
+document.addEventListener("change", async event => {
+  const el = event.target;
+  if(el.dataset.path){
+    setPath(state, el.dataset.path, el.value);
+    saveState();
+    return;
+  }
+  if(!el.dataset.file) return;
+  const file = el.files?.[0];
+  if(!file) return;
+  if(!/^image\//.test(file.type)){
+    toast("Pilih file gambar PNG, JPG, WEBP, atau GIF.", "error");
+    return;
+  }
+  if(file.size > 8 * 1024 * 1024){
+    toast("Ukuran gambar maksimal 8 MB.", "error");
+    return;
+  }
+  try{
+    const data = await fileToDataUrl(file);
+    const path = el.dataset.file;
+    setPath(state, path, data);
+    setPath(state, path + "Name", file.name);
+    saveState();
+    render();
+    toast("Asset reference tersimpan di browser ini.", "success");
+  }catch(err){
+    toast(err.message || "File tidak bisa diproses.", "error");
+  }
+});
+render();
+</script>
+</body>
+</html>

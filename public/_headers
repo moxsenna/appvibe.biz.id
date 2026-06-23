@@ -1,0 +1,9 @@
+/*
+  Security headers
+  These are served for static assets by Cloudflare Pages.
+  Response headers from Pages Functions are set in the Function itself.
+*/
+/
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin

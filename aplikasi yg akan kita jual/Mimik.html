@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MIMIK — Persona Continuity Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#17213a; --ink2:#263452; --paper:#f4f0e8; --paper2:#e9e1d4; --white:#fffdf8;
+      --line:#d7cdbd; --muted:#756f68; --blue:#3156c9; --blue-soft:#dce5ff; --red:#c44b3a;
+      --gold:#c99d54; --olive:#6d806c; --charcoal:#202734; --soft-shadow:0 16px 38px rgba(40,32,24,.09);
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:320px;color:var(--ink);background:var(--paper);font-family:"DM Sans",system-ui,-apple-system,sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.38;background-image:linear-gradient(rgba(87,73,58,.11) 1px,transparent 1px),linear-gradient(90deg,rgba(87,73,58,.11) 1px,transparent 1px);background-size:28px 28px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 85% 10%,rgba(49,86,201,.10),transparent 24%),radial-gradient(circle at 8% 90%,rgba(196,75,58,.07),transparent 27%),linear-gradient(rgba(255,255,255,.28),rgba(255,255,255,.28))}
+    button,input,textarea,select{font:inherit} button{cursor:pointer} button:disabled{cursor:not-allowed;opacity:.52}
+    .shell{max-width:1500px;margin:0 auto;padding:18px}
+    .mast{position:sticky;top:12px;z-index:50;padding:12px 14px 12px 20px;border:1px solid rgba(215,205,189,.88);border-radius:999px;background:rgba(255,253,248,.93);backdrop-filter:blur(18px);box-shadow:var(--soft-shadow);display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;border:4px double var(--gold);font:600 21px/1 "Playfair Display",serif;box-shadow:0 5px 0 rgba(23,33,58,.17)}
+    .brand-copy b{display:block;font:700 25px/1 "Playfair Display",serif;letter-spacing:-.9px}.brand-copy span{display:block;margin-top:5px;color:#777067;font:500 9px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:1.25px}
+    .mast-actions{display:flex;align-items:center;gap:9px}.pulse{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid var(--line);border-radius:999px;color:#667064;background:#fffdf9;font:500 10px/1 "DM Mono",monospace;white-space:nowrap}.pulse i{width:7px;height:7px;border-radius:50%;background:var(--olive);box-shadow:0 0 0 4px rgba(109,128,108,.15)}
+    .button{border:1px solid transparent;border-radius:999px;padding:12px 16px;background:#fff;color:var(--ink);font-size:12px;font-weight:800;line-height:1;display:inline-flex;align-items:center;justify-content:center;gap:7px;transition:.2s ease;box-shadow:0 3px 8px rgba(36,29,21,.04)}
+    .button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 9px 18px rgba(36,29,21,.09)}.button:active:not(:disabled){transform:translateY(0);box-shadow:none}.button.primary{background:var(--blue);color:#fff;box-shadow:0 6px 0 #203d9c}.button.primary:hover:not(:disabled){background:#3d64da;box-shadow:0 8px 0 #203d9c}.button.dark{background:var(--ink);color:#fff;box-shadow:0 6px 0 #0d1322}.button.paper{background:#fffdf8;border-color:var(--line)}.button.red{background:var(--red);color:#fff;box-shadow:0 6px 0 #96392e}.button.ghost{background:transparent;color:#686156;box-shadow:none}.button.ghost:hover:not(:disabled){background:rgba(255,255,255,.58);color:var(--ink)}.button.small{padding:9px 12px;font-size:10px}.button.full{width:100%}
+    .folio{margin-top:15px;position:sticky;top:89px;z-index:40;display:flex;align-items:center;gap:4px;padding:6px;background:rgba(231,222,211,.72);border:1px solid rgba(215,205,189,.9);border-radius:999px;backdrop-filter:blur(14px);overflow:auto}.folio::-webkit-scrollbar{height:0}.folio-btn{border:0;background:transparent;border-radius:999px;padding:10px 15px;color:#7e7468;font:500 10px/1 "DM Mono",monospace;letter-spacing:.15px;white-space:nowrap}.folio-btn span{opacity:.65;margin-right:6px}.folio-btn:hover{background:rgba(255,255,255,.62);color:var(--ink)}.folio-btn.active{background:var(--ink);color:#fff;box-shadow:0 4px 11px rgba(23,33,58,.16)}.folio-meta{margin-left:auto;padding:0 10px;color:#908679;font:500 9px/1 "DM Mono",monospace;white-space:nowrap}
+    .screen{display:none;padding:25px 0 58px}.screen.active{display:block;animation:up .32s ease both}@keyframes up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .hero{min-height:420px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(310px,.88fr);gap:24px;position:relative;overflow:hidden;padding:42px;border:1px solid var(--line);border-radius:34px;background:linear-gradient(135deg,#fffdf8,#ebe2d7);box-shadow:var(--soft-shadow)}.hero:before{content:"";position:absolute;width:430px;height:430px;right:-128px;top:-168px;border:1px dashed rgba(49,86,201,.32);border-radius:50%}.hero:after{content:"";position:absolute;width:235px;height:235px;right:90px;bottom:-135px;border-radius:50%;background:rgba(196,75,58,.14);filter:blur(2px)}.hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;max-width:740px}.eyebrow{font:500 10px/1.2 "DM Mono",monospace;text-transform:uppercase;letter-spacing:1.2px;color:var(--blue)}.hero h1{margin:16px 0 17px;font:700 clamp(46px,5.8vw,80px)/.93 "Playfair Display",serif;letter-spacing:-3px}.hero h1 em{font-style:italic;color:var(--red)}.hero p{margin:0;color:#615c56;max-width:595px;line-height:1.74;font-size:15px}.hero-actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:28px}.hero-note{display:flex;gap:12px;align-items:flex-start;margin-top:27px;max-width:600px;color:#6f675e;font-size:11px;line-height:1.58}.seal{width:31px;height:31px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--blue-soft);color:var(--blue);font-weight:900}
+    .passport{position:relative;z-index:1;align-self:center;padding:19px;background:var(--ink);color:#fff;border:1px solid #263653;box-shadow:18px 22px 0 rgba(49,86,201,.14);transform:rotate(1.3deg)}.passport:before{content:"";position:absolute;inset:10px;border:1px solid rgba(255,255,255,.13);pointer-events:none}.pass-top{display:flex;align-items:center;justify-content:space-between;color:#aeb9d4;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.passport b{color:#fff}.pass-card{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:stretch;margin:18px 0}.pass-photo{min-height:164px;background:linear-gradient(145deg,#d6dffb,#f1d9d2);border:1px solid rgba(255,255,255,.4);display:grid;place-items:center;color:var(--ink);font:700 48px/1 "Playfair Display",serif}.pass-info{display:grid;gap:10px}.pass-info div{padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.13)}.pass-info span{display:block;color:#8e9bb8;font:500 8px/1 "DM Mono",monospace;letter-spacing:.9px;text-transform:uppercase}.pass-info strong{display:block;margin-top:5px;font-size:12px;line-height:1.3}.pass-code{padding:10px;border:1px dashed rgba(201,157,84,.68);color:#f0dcb7;font:500 10px/1.45 "DM Mono",monospace}
+    .metric-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:22px}.metric{padding:18px;border:1px solid var(--line);background:rgba(255,253,248,.76);border-radius:20px;box-shadow:0 5px 14px rgba(37,29,21,.035)}.metric b{display:block;color:var(--red);font:600 29px/1 "Playfair Display",serif}.metric span{display:block;margin-top:6px;color:#756f66;font-size:10px;line-height:1.45}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:29px 0 16px}.section-head h2{margin:7px 0 0;font:700 39px/1 "Playfair Display",serif;letter-spacing:-1.5px}.section-head p{max-width:525px;margin:0;color:#6c665e;font-size:12px;line-height:1.6}.stage-tag{padding:9px 12px;border-radius:999px;background:var(--blue-soft);color:var(--blue);font:500 9px/1 "DM Mono",monospace;letter-spacing:.5px;white-space:nowrap}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.panel{min-width:0;padding:22px;border:1px solid var(--line);border-radius:24px;background:rgba(255,253,248,.84);box-shadow:0 8px 20px rgba(37,29,21,.045)}.panel.tint-blue{background:linear-gradient(145deg,#e8edff,#dce5ff)}.panel.tint-red{background:linear-gradient(145deg,#fff2ee,#f1d6ce)}.panel.tint-gold{background:linear-gradient(145deg,#fff7e7,#eedeb9)}.panel-icon{width:42px;height:42px;border-radius:14px;background:#fffdf8;border:1px solid var(--line);display:grid;place-items:center;font-size:20px;margin-bottom:15px}.panel h3{margin:0;font-size:16px;letter-spacing:-.25px}.panel p{margin:9px 0 0;color:#6b655e;font-size:12px;line-height:1.62}.panel .button{margin-top:17px}
+    .form-layout{display:grid;grid-template-columns:minmax(0,1fr) 350px;gap:16px;align-items:start}.form-stack{display:grid;gap:16px}.form-panel{padding:24px;border:1px solid var(--line);border-radius:28px;background:rgba(255,253,248,.87);box-shadow:0 8px 20px rgba(37,29,21,.045)}.form-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:20px}.form-head h3{margin:4px 0 0;font:700 29px/1 "Playfair Display",serif;letter-spacing:-.8px}.form-head p{margin:8px 0 0;max-width:560px;color:#716b62;font-size:11px;line-height:1.6}.form-index{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font:500 10px/1 "DM Mono",monospace;flex:none}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.field{min-width:0}.field.full{grid-column:1/-1}.field label{display:flex;align-items:center;gap:8px;margin-bottom:7px;color:#5c5e68;font:500 9px/1 "DM Mono",monospace;letter-spacing:.7px;text-transform:uppercase}.field label i{font-style:normal;color:var(--red);font-size:13px}.field input,.field textarea,.field select{width:100%;border:1px solid #d7cdbd;border-radius:15px;padding:12px 13px;background:#fffdf9;color:var(--ink);outline:none;font-size:12px;font-weight:600;line-height:1.45;transition:.2s ease}.field textarea{min-height:96px;resize:vertical}.field input::placeholder,.field textarea::placeholder{color:#a49a8d;font-weight:500}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--blue);background:#fff;box-shadow:0 0 0 4px rgba(49,86,201,.11)}
+    .choice-row{display:flex;flex-wrap:wrap;gap:8px}.choice{position:relative}.choice input{position:absolute;opacity:0;pointer-events:none}.choice label{margin:0;display:flex;align-items:center;min-height:38px;padding:9px 12px;border:1px solid #d7cdbd;border-radius:13px;background:#fffdf9;color:#68645d;font:700 10px/1 "DM Sans",sans-serif;text-transform:none;letter-spacing:0;cursor:pointer;transition:.18s ease}.choice input:checked+label{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 6px 12px rgba(23,33,58,.14)}
+    .upload{display:flex;gap:14px;align-items:center;padding:15px;border:1px dashed #a99a86;border-radius:20px;background:rgba(255,255,255,.52)}.upload-preview{width:58px;height:58px;border-radius:14px;background:var(--paper2);border:1px solid rgba(180,158,130,.35);display:grid;place-items:center;overflow:hidden;flex:none;color:#887d70;font-size:22px}.upload-preview img{width:100%;height:100%;object-fit:cover}.upload b{display:block;font-size:12px}.upload span{display:block;margin-top:4px;color:#81776a;font-size:10px;line-height:1.5}.upload input{display:none}.upload .button{margin-left:auto;flex:none}
+    .side-dossier{position:sticky;top:141px;overflow:hidden}.dossier-head{padding:20px;background:var(--ink);color:#fff}.dossier-head span{color:#aeb9d4;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.dossier-head h3{margin:7px 0 0;font:700 27px/1 "Playfair Display",serif;letter-spacing:-.7px}.dossier-body{padding:18px;background:#f7f1e6;border:1px solid var(--line);border-top:0}.dossier-row{display:flex;align-items:flex-start;justify-content:space-between;gap:11px;padding:12px 0;border-bottom:1px solid #e0d7c8}.dossier-row:last-child{border-bottom:0}.dossier-row span{color:#827669;font:500 8px/1.4 "DM Mono",monospace;letter-spacing:.7px;text-transform:uppercase}.dossier-row b{max-width:170px;text-align:right;font-size:11px;line-height:1.38}.dossier-note{margin-top:14px;padding:12px;border:1px dashed #b8a58b;border-radius:13px;color:#6f6252;font:500 10px/1.52 "DM Mono",monospace}
+    .submit-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:16px;margin-top:16px;border-top:1px solid #e6ddd0}.submit-row small{color:#797267;font-size:10px;line-height:1.48;max-width:430px}
+    .empty{display:grid;place-items:center;min-height:410px;text-align:center;padding:32px}.empty-mark{width:66px;height:66px;border-radius:50%;display:grid;place-items:center;margin:0 auto 17px;background:var(--blue-soft);border:1px solid rgba(49,86,201,.22);color:var(--blue);font:700 29px/1 "Playfair Display",serif}.empty h3{margin:0;font:700 29px/1 "Playfair Display",serif}.empty p{max-width:395px;margin:10px auto 0;color:#736d64;font-size:12px;line-height:1.63}
+    .bible-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(310px,.85fr);gap:16px}.bible{padding:25px;border:1px solid var(--line);background:rgba(255,253,248,.88);border-radius:28px;box-shadow:0 8px 20px rgba(37,29,21,.045)}.bible-top{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding-bottom:17px;border-bottom:1px solid #e3d9cb}.bible-top h2{margin:5px 0 0;font:700 35px/1 "Playfair Display",serif;letter-spacing:-1.2px}.bible-top p{margin:8px 0 0;color:#746e65;font-size:12px;line-height:1.55;max-width:650px}.bible-note{margin-top:16px;padding:14px;border-left:3px solid var(--red);background:#fff1ec;color:#73473e;font-size:12px;line-height:1.6}.dna-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin-top:17px}.dna{padding:14px;border:1px solid #e0d7c9;border-radius:16px;background:#fffdf9}.dna span{display:block;color:#80776d;font:500 8px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.8px}.dna b{display:block;margin-top:8px;font-size:12px;line-height:1.46}.chapter{padding:17px 0;border-bottom:1px solid #e8dfd1}.chapter:last-child{border-bottom:0}.chapter h3{margin:0 0 8px;font:700 22px/1 "Playfair Display",serif;letter-spacing:-.45px}.chapter p{margin:0;color:#655f57;font-size:12px;line-height:1.65;white-space:pre-wrap}.chapter ul{padding-left:18px;margin:9px 0 0;color:#655f57;font-size:12px;line-height:1.65}.mini-card{padding:20px;border:1px solid var(--line);background:linear-gradient(155deg,#e8edff,#f8f2e9);border-radius:26px}.mini-card h3{margin:5px 0 13px;font:700 28px/1 "Playfair Display",serif}.mini-card p{margin:0;color:#5f6170;font-size:11px;line-height:1.62}.lock-list{display:grid;gap:8px;margin-top:15px}.lock{padding:11px;border:1px solid rgba(49,86,201,.18);border-radius:13px;background:rgba(255,255,255,.62);font-size:11px;line-height:1.48}.lock b{color:var(--blue)}
+    .look-layout{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(350px,.9fr);gap:16px}.lookbook{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.look{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:23px;background:#fffdf8;box-shadow:0 8px 18px rgba(37,29,21,.04);transition:.2s}.look.active{border-color:var(--blue);box-shadow:0 0 0 4px rgba(49,86,201,.10),0 8px 18px rgba(37,29,21,.04)}.look-cover{aspect-ratio:4/3;display:grid;place-items:center;overflow:hidden;position:relative;background:linear-gradient(135deg,#dbe4ff,#f2d9d1)}.look-cover:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(23,33,58,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(23,33,58,.12) 1px,transparent 1px);background-size:24px 24px;opacity:.38}.look-cover img{position:relative;z-index:1;width:100%;height:100%;object-fit:cover}.look-placeholder{position:relative;z-index:1;text-align:center;color:#253555}.look-placeholder b{display:block;font:700 38px/1 "Playfair Display",serif}.look-placeholder span{display:block;margin-top:7px;font:500 8px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.look-number{position:absolute;top:10px;left:10px;z-index:2;padding:6px 7px;background:var(--ink);color:#fff;font:500 9px/1 "DM Mono",monospace}.look-body{padding:14px}.look-body h3{margin:0;font-size:14px;letter-spacing:-.25px}.look-body p{margin:5px 0 0;color:#756f67;font-size:10px;line-height:1.45}.look-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.render-panel{padding:20px;min-height:555px;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:28px;background:#1a2338;color:#fff;box-shadow:12px 14px 0 rgba(49,86,201,.10)}.render-label{color:#b7c3e3;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.render-panel h2{margin:10px 0 7px;font:700 30px/1 "Playfair Display",serif}.render-panel p{margin:0;color:#c3ccdc;font-size:11px;line-height:1.58}.render-zone{margin-top:18px;min-height:315px;display:grid;place-items:center;overflow:hidden;position:relative;background:#111827;border:1px solid rgba(255,255,255,.15)}.render-zone:before{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.5}.render-zone img{position:relative;z-index:1;width:100%;height:100%;max-height:390px;object-fit:contain}.render-empty{position:relative;z-index:1;text-align:center;max-width:265px;color:#9ba8c3}.render-empty b{display:block;margin-top:10px;color:#fff;font:700 23px/1 "Playfair Display",serif}.render-empty p{margin-top:7px;font-size:10px}.render-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:auto;padding-top:17px}.render-actions .button{flex:1}
+    .handover{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.handover-card{padding:24px;border:1px solid var(--line);border-radius:26px;background:rgba(255,253,248,.87);box-shadow:0 8px 20px rgba(37,29,21,.045)}.handover-card.dark{background:var(--ink);border-color:var(--ink);color:#fff}.handover-card h3{margin:5px 0 9px;font:700 29px/1 "Playfair Display",serif}.handover-card p{margin:0;color:#716b62;font-size:12px;line-height:1.62}.handover-card.dark p{color:#b9c4d8}.codebox{margin-top:16px;padding:13px;max-height:280px;overflow:auto;border:1px solid #d6cbbb;background:#f7f1e7;border-radius:15px;color:#3c3b44;font:500 10px/1.58 "DM Mono",monospace;white-space:pre-wrap}.dark .codebox{border-color:rgba(255,255,255,.12);background:#111827;color:#d5def1}.handover-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:16px}
+    .toast{position:fixed;z-index:200;right:22px;bottom:22px;display:none;max-width:360px;padding:13px 15px;border:1px solid var(--line);border-radius:15px;background:#fffdf8;color:var(--ink);box-shadow:0 14px 34px rgba(25,19,14,.18);font-size:12px;font-weight:700}.toast.show{display:block;animation:toast .25s ease both}@keyframes toast{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .modal{display:none;position:fixed;inset:0;z-index:180;background:rgba(15,18,29,.86);backdrop-filter:blur(10px);padding:18px;align-items:center;justify-content:center}.modal.show{display:flex}.modal-card{max-width:min(1000px,95vw);max-height:90vh;display:flex;flex-direction:column;gap:10px}.modal-card img{display:block;max-width:100%;max-height:78vh;object-fit:contain;background:#0e1525;border:1px solid rgba(255,255,255,.18)}.modal-tools{display:flex;justify-content:flex-end;gap:8px}
+    @media(max-width:1050px){.hero,.form-layout,.bible-layout,.look-layout{grid-template-columns:1fr}.passport{max-width:460px;width:100%;margin:0 auto}.side-dossier{position:static}.render-panel{min-height:0}.lookbook{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:760px){.shell{padding:12px}.mast{top:8px;padding:10px 12px}.brand-copy b{font-size:22px}.brand-copy span{display:none}.pulse{display:none}.folio{top:75px;margin-top:12px}.folio-meta{display:none}.screen{padding-top:18px}.hero{padding:28px 20px;border-radius:26px;min-height:auto}.hero h1{font-size:47px;letter-spacing:-2px}.hero p{font-size:13px}.metric-grid{grid-template-columns:repeat(2,1fr)}.section-head{align-items:flex-start;flex-direction:column;gap:9px;margin-top:23px}.section-head h2{font-size:33px}.grid-3,.handover{grid-template-columns:1fr}.field-grid,.field-grid.three{grid-template-columns:1fr}.field.full{grid-column:auto}.form-panel{padding:19px;border-radius:23px}.form-head h3{font-size:27px}.bible,.render-panel{padding:18px;border-radius:23px}.dna-grid{grid-template-columns:1fr}.lookbook{grid-template-columns:1fr}.pass-card{grid-template-columns:92px 1fr}.pass-photo{min-height:125px}.mast-actions .button.paper{display:none}.button{padding:11px 13px}.modal{padding:10px}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="mast">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div class="brand-copy"><b>MIMIK</b><span>Persona Continuity Studio</span></div>
+      </div>
+      <div class="mast-actions">
+        <div class="pulse"><i></i> Sesi lokal</div>
+        <button class="button paper small" data-action="demo">Muat demo</button>
+        <button class="button ghost small" data-action="clear">Reset</button>
+      </div>
+    </header>
+    <nav class="folio" id="folio"></nav>
+    <main id="app"></main>
+  </div>
+  <div id="toast" class="toast"></div>
+  <div id="modal" class="modal" data-action="close-modal"><div class="modal-card" onclick="event.stopPropagation()"><img id="modalImage" alt="Pratinjau persona"/><div class="modal-tools"><button class="button paper small" data-action="download-modal">Unduh PNG</button><button class="button dark small" data-action="close-modal">Tutup</button></div></div></div>
+<script>
+const apiKey = "";
+const TEXT_MODELS = ["gemini-2.5-flash", "gemini-2.0-flash"];
+const IMAGE_MODELS = ["gemini-2.5-flash-image-preview"];
+const STORE_KEY = "mimik-persona-continuity-v1";
+const routes = [
+  ["studio","01","Studio"], 
+  ["identity","02","File Identitas"], 
+  ["bible","03","Persona Bible"], 
+  ["lookbook","04","Lookbook"], 
+  ["handover","05","Handover"]
+];
+const defaultBrief = {
+  personaName:"", track:"Talent brand fiktif", brand:"", role:"", audience:"", visualGoal:"",
+  description:"", personality:"", facialAnchors:"", hairFeatures:"", wardrobe:"", environment:"", style:"Potret editorial", ratio:"4:5", guardrails:"", transfer:""
+};
+const defaultState = { route:"studio", brief:{...defaultBrief}, blueprint:null, selectedLook:0, files:{portrait:null, wardrobe:null}, images:{}, loading:{} };
+let state = loadState();
+let activeModalImage = null;
+
+function loadState(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(STORE_KEY) || "null");
+    if(!raw) return structuredClone(defaultState);
+    return {...structuredClone(defaultState), ...raw, brief:{...defaultBrief,...(raw.brief||{})}, files:{portrait:null,wardrobe:null},images:{},loading:{}};
+  }catch(e){ return structuredClone(defaultState); }
+}
+
+function persist(){
+  const safe = {route:state.route,brief:state.brief,blueprint:state.blueprint,selectedLook:state.selectedLook};
+  localStorage.setItem(STORE_KEY, JSON.stringify(safe));
+}
+
+function resetAll(){ 
+  localStorage.removeItem(STORE_KEY); 
+  state=structuredClone(defaultState); 
+  render(); 
+  toast("Workspace direset."); 
+}
+
+function esc(v){
+  return String(v??"").replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
+}
+
+function slug(v){
+  return String(v||"mimik").toLowerCase().trim().replace(/[^a-z0-9]+/gi,"-").replace(/^-|-$/g,"")||"mimik";
+}
+
+function val(v,fallback="—"){
+  return v&&String(v).trim()?String(v).trim():fallback;
+}
+
+function toast(message){
+  const el=document.getElementById("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  clearTimeout(toast.timer);
+  toast.timer=setTimeout(()=>el.classList.remove("show"),3300);
+}
+
+function isLoading(k){return !!state.loading[k];}
+function setLoading(k,v){state.loading[k]=v;render();}
+function go(route){state.route=route;persist();render();window.scrollTo({top:0,behavior:"smooth"});}
+
+function nav(){
+  const idx=Math.max(0,routes.findIndex(r=>r[0]===state.route));
+  return routes.map(([id,no,label])=>`<button class="folio-btn ${state.route===id?"active":""}" data-route="${id}"><span>${no}</span>${label}</button>`).join("")+`<div class="folio-meta">Folio ${String(idx+1).padStart(2,"0")}/05</div>`;
+}
+
+function button(label, action, variant="paper", disabled=false, small=false){
+  return `<button class="button ${variant} ${small?"small":""}" data-action="${action}" ${disabled?"disabled":""}>${label}</button>`;
+}
+
+function render(){
+  document.getElementById("folio").innerHTML=nav();
+  const app=document.getElementById("app");
+  app.innerHTML=state.route==="studio"?studio():state.route==="identity"?identity():state.route==="bible"?bible():state.route==="lookbook"?lookbook():handover();
+}
+
+function studio(){
+ const bp=state.blueprint; 
+ const looks=bp?.lookbook?.length||0; 
+ const assets=Object.keys(state.images).length;
+ return `
+ <section class="screen active">
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="eyebrow">File kasting untuk konsistensi visual</div>
+      <h1>Wajah yang <em>konsisten.</em><br>Persona yang hidup.</h1>
+      <p>Bangun visual persona yang bisa dipakai berulang untuk campaign, katalog, social media, dan arahan kreatif—tanpa menjadikan studio ini sebagai alat meniru figur publik atau orang tanpa izin.</p>
+      <div class="hero-actions">
+        ${button("Buka file identitas →","go:identity","primary")}
+        ${button("Muat contoh studio","demo","paper")}
+      </div>
+      <div class="hero-note">
+        <div class="seal">✓</div>
+        <div><b>Alur kerja visual mengutamakan persetujuan.</b><br>Gunakan hanya foto diri sendiri, model yang memiliki izin, atau karakter fiktif/lisensi. MIMIK menyusun arahan visual dan aset prompt, bukan klaim identitas nyata.</div>
+      </div>
+    </div>
+    <aside class="passport">
+      <div class="pass-top"><span>Catatan identitas visual</span><b>File M-01</b></div>
+      <div class="pass-card">
+        <div class="pass-photo">${esc((state.brief.personaName||"M").slice(0,1).toUpperCase())}</div>
+        <div class="pass-info">
+          <div><span>Persona</span><strong>${esc(val(state.brief.personaName,"Menunggu brief"))}</strong></div>
+          <div><span>Jalur</span><strong>${esc(val(state.brief.track))}</strong></div>
+          <div><span>Peran visual</span><strong>${esc(val(state.brief.role,"Talent kampanye"))}</strong></div>
+          <div><span>Status sistem</span><strong>${bp?"Blueprint diterbitkan":"Brief tertunda"}</strong></div>
+        </div>
+      </div>
+      <div class="pass-code">${bp?`LOOKBOOK / ${String(looks).padStart(2,"0")} LOOK / ${String(assets).padStart(2,"0")} RENDER` : "BUAT FILE KONSISTENSI UNTUK MEMBUKA LOOKBOOK"}</div>
+    </aside>
+  </div>
+  <div class="metric-grid">
+    <div class="metric"><b>${bp?"01":"00"}</b><span>Persona Bible<br>diterbitkan</span></div>
+    <div class="metric"><b>${String(looks).padStart(2,"0")}</b><span>Arahan<br>Lookbook</span></div>
+    <div class="metric"><b>${String(assets).padStart(2,"0")}</b><span>Render<br>hanya-sesi</span></div>
+    <div class="metric"><b>1×</b><span>Transfer Pack<br>untuk aplikasi lain</span></div>
+  </div>
+  <div class="section-head">
+    <div>
+      <div class="eyebrow">Apa yang Anda dapatkan di workspace ini</div>
+      <h2>Dari brief persona menjadi sistem yang dapat digunakan kembali.</h2>
+    </div>
+    <p>MIMIK secara sengaja bukan pembuat avatar generik. MIMIK mengunci DNA visual persona, aturan lookbook, dan aset prompt agar persona terasa koheren di berbagai karya kreatif masa depan.</p>
+  </div>
+  <div class="grid-3">
+    <article class="panel tint-blue">
+      <div class="panel-icon">◌</div>
+      <h3>File Identitas</h3>
+      <p>Rekam referensi yang diizinkan, peran visual, kepribadian, ciri khas pembeda, gaya pakaian, dan batasan.</p>
+      ${button("Buka file","go:identity","paper",false,true)}
+    </article>
+    <article class="panel tint-gold">
+      <div class="panel-icon">✦</div>
+      <h3>Persona Bible</h3>
+      <p>Terima DNA visual praktis, kunci konsistensi, arahan ekspresi, dan catatan keamanan.</p>
+      ${button(bp?"Tinjau bible":"Buat bible","go:bible","paper",false,true)}
+    </article>
+    <article class="panel tint-red">
+      <div class="panel-icon">▣</div>
+      <h3>Lab Lookbook</h3>
+      <p>Ubah blueprint yang disetujui menjadi contact sheet editorial dan render visual terpilih.</p>
+      ${button(bp?"Buka lookbook":"Menunggu blueprint","go:lookbook","paper",!bp,true)}
+    </article>
+  </div>
+ </section>`;
+}
+
+function inputField(label,key,placeholder,opts={}){
+  const t=opts.type||"text";
+  const v=esc(state.brief[key]||"");
+  return `<div class="field ${opts.full?"full":""}"><label>${label}${opts.required?" <i>*</i>":""}</label>${t==="textarea"?`<textarea data-field="${key}" placeholder="${esc(placeholder)}">${v}</textarea>`:`<input data-field="${key}" type="${t}" value="${v}" placeholder="${esc(placeholder)}"/>`}${opts.note?`<small>${opts.note}</small>`:""}</div>`;
+}
+
+function selectField(label,key,items,opts={}){
+  return `<div class="field ${opts.full?"full":""}"><label>${label}${opts.required?" <i>*</i>":""}</label><select data-field="${key}">${items.map(x=>`<option ${state.brief[key]===x?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`;
+}
+
+function upload(label,key,description){
+  const img=state.files[key];
+  return `<div class="upload"><div class="upload-preview">${img?`<img src="${img}" alt="Referensi"/>`:key==="portrait"?"◉":"▧"}</div><div><b>${label}</b><span>${description}</span></div><label class="button paper small">${img?"Ganti":"Pilih foto"}<input type="file" accept="image/png,image/jpeg,image/webp" data-upload="${key}"/></label></div>`;
+}
+
+function identity(){
+  const b=state.brief;
+  return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 02 · asupan berbasis persetujuan</div><h2>Bangun file identitas.</h2></div>
+      <div class="stage-tag">SUMBER → KONSISTENSI</div>
+    </div>
+    <div class="form-layout">
+      <div class="form-stack">
+        <section class="form-panel">
+          <div class="form-head">
+            <div>
+              <div class="eyebrow">Catatan dasar</div>
+              <h3>Siapa persona ini?</h3>
+              <p>Gunakan orang nyata hanya jika Anda memiliki izin yang jelas. Untuk persona fiktif, deskripsikan karakter tanpa mengaitkannya dengan figur publik tertentu.</p>
+            </div>
+            <div class="form-index">01</div>
+          </div>
+          <div class="field-grid">
+            ${inputField("Nama persona / model","personaName","Contoh: Naya Arunika",{required:true})}
+            ${selectField("Jalur persona","track",["Talent brand fiktif","Diri sendiri / orang yang setuju","Stock berlisensi / model brand","Karakter ilustrasi"],{required:true})}
+            ${inputField("Brand atau kreator","brand","Contoh: Luma Skincare")}
+            ${inputField("Peran visual","role","Contoh: Everyday beauty host")}
+            ${inputField("Audiens inti","audience","Contoh: Perempuan urban 23–34",{full:true})}
+            ${inputField("Tujuan visual","visualGoal","Contoh: Tutorial produk, aset gaya hidup, talent kampanye",{full:true})}
+          </div>
+        </section>
+        <section class="form-panel">
+          <div class="form-head">
+            <div>
+              <div class="eyebrow">DNA Visual</div>
+              <h3>Kunci elemen yang penting.</h3>
+              <p>Semakin konkret dan nyata elemen patokannya, semakin mudah membuat gambar di masa depan terasa berkaitan tanpa harus membuat klaim identitas.</p>
+            </div>
+            <div class="form-index">02</div>
+          </div>
+          <div class="field-grid">
+            ${inputField("Deskripsi persona","description","Deskripsikan presentasi usia, energi, kehadiran, dan detail relevan.",{type:"textarea",required:true,full:true})}
+            ${inputField("Isyarat kepribadian","personality","Contoh: Tenang, witty, warm, observant",{type:"textarea"})}
+            ${inputField("Patokan wajah / identitas","facialAnchors","Contoh: Soft oval face, freckles, clean brows, expressive eyes",{type:"textarea"})}
+            ${inputField("Fitur rambut / grooming","hairFeatures","Contoh: Shoulder-length dark waves, natural makeup",{type:"textarea"})}
+            ${inputField("Pakaian & penataan gaya","wardrobe","Contoh: Linen, neutral tailoring, cobalt accessories",{type:"textarea"})}
+            ${inputField("Lingkungan / dunia","environment","Contoh: Daylight apartment, modern atelier, city cafe",{type:"textarea"})}
+          </div>
+        </section>
+        <section class="form-panel">
+          <div class="form-head">
+            <div>
+              <div class="eyebrow">Meja referensi</div>
+              <h3>Referensi visual opsional.</h3>
+              <p>Gambar referensi hanya bertahan di sesi browser aktif ini. Gambar tidak disimpan ke localStorage atau disematkan dalam ekspor.</p>
+            </div>
+            <div class="form-index">03</div>
+          </div>
+          <div class="field-grid">
+            <div class="field full">${upload("Referensi potret utama","portrait","Gunakan hanya foto diri sendiri, orang yang memberikan izin, model berlisensi, atau karakter yang berhak Anda gunakan.")}</div>
+            <div class="field full">${upload("Referensi pakaian / gaya","wardrobe","Opsional. Gambar mood, fashion, atau gaya yang menginformasikan pakaian—bukan identitas seseorang.")}</div>
+          </div>
+        </section>
+        <section class="form-panel">
+          <div class="form-head">
+            <div>
+              <div class="eyebrow">Batasan penggunaan</div>
+              <h3>Atur suasana, lalu tetapkan batasannya.</h3>
+            </div>
+            <div class="form-index">04</div>
+          </div>
+          <div class="field-grid">
+            ${selectField("Bahasa visual","style",["Potret editorial","Kampanye studio lembut","Dokumenter gaya jalanan","Kecantikan mewah","Kreator ceria","Gaya hidup sinematik","Editorial ilustrasi"])}
+            ${selectField("Rasio output default","ratio",["4:5","1:1","9:16","16:9"])}
+            ${inputField("Batasan spesifik","guardrails","Contoh: tidak ada klaim medis, tidak ada representasi anak, tidak mengubah logo brand",{type:"textarea",full:true})}
+            ${inputField("Canvas Transfer Pack","transfer","Paste transfer pack dari ARAH, MULA, RUPA, etc.",{type:"textarea",full:true})}
+          </div>
+          <div class="submit-row">
+            <small>Setelah membuat blueprint, Anda dapat meninjau Persona Bible sebelum merender look apa pun. Setiap gambar yang dihasilkan harus ditinjau sebelum digunakan.</small>
+            ${button(isLoading("blueprint")?"Menyusun persona...":"Buat Persona Bible →","generate-blueprint","primary",isLoading("blueprint"))}
+          </div>
+        </section>
+      </div>
+      <aside class="side-dossier">${identityDossier()}</aside>
+    </div>
+  </section>`;
+}
+
+function identityDossier(){
+  const b=state.brief;
+  return `
+  <section class="side-dossier">
+    <div class="dossier-head">
+      <span>Buku besar identitas</span>
+      <h3>${esc(val(b.personaName,"Persona tanpa nama"))}</h3>
+    </div>
+    <div class="dossier-body">
+      <div class="dossier-row"><span>Jalur</span><b>${esc(val(b.track))}</b></div>
+      <div class="dossier-row"><span>Brand</span><b>${esc(val(b.brand,"Belum diatur"))}</b></div>
+      <div class="dossier-row"><span>Peran</span><b>${esc(val(b.role,"Belum diatur"))}</b></div>
+      <div class="dossier-row"><span>Ref potret</span><b>${state.files.portrait?"Terlampir di sesi":"Tidak terlampir"}</b></div>
+      <div class="dossier-row"><span>Ref pakaian</span><b>${state.files.wardrobe?"Terlampir di sesi":"Tidak terlampir"}</b></div>
+      <div class="dossier-note">Unggahan referensi hanya tersimpan di tab perangkat ini. Gambar orang nyata wajib digunakan dengan izin.</div>
+    </div>
+  </section>`;
+}
+
+function bible(){
+  if(!state.blueprint) return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 03 · sistem visual disetujui</div><h2>Persona Bible.</h2></div>
+      <div class="stage-tag">BLUEPRINT TERTUNDA</div>
+    </div>
+    <div class="panel empty">
+      <div>
+        <div class="empty-mark">M</div>
+        <h3>Belum ada file persona.</h3>
+        <p>Selesaikan file identitas terlebih dahulu. MIMIK akan mengubah brief menjadi aturan kontinuitas visual dan lookbook editorial.</p>
+        <div style="margin-top:18px">${button("Buat file identitas","go:identity","primary")}</div>
+      </div>
+    </div>
+  </section>`;
+
+  const bp=state.blueprint;
+  const dna=bp.visualDNA||{};
+  const lock=bp.consistencyLock||{};
+
+  return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 03 · sistem persona diterbitkan</div><h2>Baca identitasnya, lalu arahkan gambarnya.</h2></div>
+      <div class="stage-tag">${esc(bp.documentCode||"MIMIK / FILE")}</div>
+    </div>
+    <div class="bible-layout">
+      <article class="bible">
+        <div class="bible-top">
+          <div>
+            <div class="eyebrow">${esc(bp.title||"Persona Bible")}</div>
+            <h2>${esc(bp.personaName||state.brief.personaName)}</h2>
+            <p>${esc(bp.oneSentence||"")}</p>
+          </div>
+          ${button("Salin ringkasan","copy-summary","paper",false,true)}
+        </div>
+        <div class="bible-note"><b>Catatan penggunaan:</b> ${esc(bp.safetyNote||"Gunakan sistem ini hanya untuk persona fiktif atau berizin. Tinjau setiap hasil render sebelum dipublikasikan.")}</div>
+        <div class="dna-grid">
+          ${dnaBlock("Kehadiran",dna.presence)}
+          ${dnaBlock("Presentasi usia",dna.agePresentation)}
+          ${dnaBlock("Patokan wajah",dna.facialAnchors)}
+          ${dnaBlock("Rambut & grooming",dna.hairFeatures)}
+          ${dnaBlock("Penataan gaya",dna.styling)}
+          ${dnaBlock("Dunia",dna.environment)}
+        </div>
+        <div class="chapter">
+          <h3>Kepribadian dalam bingkai</h3>
+          <p>${esc(bp.personalityDirection||"")}</p>
+        </div>
+        <div class="chapter">
+          <h3>Tata bahasa ekspresi</h3>
+          <p>${esc(bp.expressionDirection||"")}</p>
+        </div>
+        <div class="chapter">
+          <h3>Jangan menyimpang</h3>
+          <ul>${(bp.doNotDrift||[]).map(x=>`<li>${esc(x)}</li>`).join("")||"<li>Jaga fitur inti, peran, dan batasan keamanan tetap konsisten.</li>"}</ul>
+        </div>
+      </article>
+      <aside class="mini-card">
+        <div class="eyebrow">Kunci kontinuitas</div>
+        <h3>Apa yang harus tetap dapat dikenali.</h3>
+        <p>Ini adalah isyarat kontinuitas yang akan diperkuat lookbook dari satu jepretan ke jepretan lainnya. Ini adalah batasan kreatif deskriptif—bukan verifikasi identitas.</p>
+        <div class="lock-list">
+          ${Object.entries(lock).map(([k,v])=>`<div class="lock"><b>${esc(formatKey(k))}</b><br>${esc(v)}</div>`).join("")}
+        </div>
+        <div style="margin-top:17px">${button("Buka Lookbook →","go:lookbook","dark")}</div>
+      </aside>
+    </div>
+  </section>`;
+}
+
+function dnaBlock(label,text){
+  return `<div class="dna"><span>${esc(label)}</span><b>${esc(text||"Belum diatur")}</b></div>`;
+}
+
+function formatKey(key){
+  return String(key).replace(/([A-Z])/g," $1").replace(/^./,x=>x.toUpperCase());
+}
+
+function looks(){
+  return Array.isArray(state.blueprint?.lookbook)?state.blueprint.lookbook:[];
+}
+
+function lookbook(){
+  if(!state.blueprint) return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 04 · tes kontinuitas visual</div><h2>Lab Lookbook.</h2></div>
+      <div class="stage-tag">BLUEPRINT TERTUNDA</div>
+    </div>
+    <div class="panel empty">
+      <div>
+        <div class="empty-mark">▣</div>
+        <h3>Buat Persona Bible terlebih dahulu.</h3>
+        <p>Lookbook membutuhkan identitas visual yang disetujui sebelum dapat menghasilkan arahan yang koheren.</p>
+        <div style="margin-top:18px">${button("Buka File Identitas","go:identity","primary")}</div>
+      </div>
+    </div>
+  </section>`;
+
+  const all=looks();
+  if(!all.length) return `
+  <section class="screen active">
+    <div class="panel empty">
+      <div>
+        <div class="empty-mark">▣</div>
+        <h3>Arahan lookbook tidak ditemukan.</h3>
+        <p>Buat ulang Persona Bible dari File Identitas.</p>
+      </div>
+    </div>
+  </section>`;
+
+  state.selectedLook=Math.min(Math.max(0,state.selectedLook),all.length-1);
+  const selected=all[state.selectedLook];
+  const image=state.images[selected.id];
+
+  return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 04 · tes kontinuitas editorial</div><h2>Arahkan persona melintasi berbagai dunia yang berbeda.</h2></div>
+      <div class="stage-tag">${all.length} LOOK · ${state.brief.ratio}</div>
+    </div>
+    <div class="look-layout">
+      <section>
+        <div class="lookbook">
+          ${all.map((look,i)=>lookCard(look,i)).join("")}
+        </div>
+      </section>
+      <aside class="render-panel">
+        <div class="render-label">Look terpilih ${String(state.selectedLook+1).padStart(2,"0")}</div>
+        <h2>${esc(selected.title||`Look ${state.selectedLook+1}`)}</h2>
+        <p>${esc(selected.objective||"")}</p>
+        <div class="render-zone">
+          ${image?`<img src="${image}" alt="${esc(selected.title)}"/>`:`<div class="render-empty"><div style="font-size:31px">◉</div><b>Bingkai menunggu arahan.</b><p>Pilih render untuk membuat gambar referensi khusus-sesi dari prompt persona yang disetujui.</p></div>`}
+        </div>
+        <div class="render-actions">
+          ${button(isLoading(`render:${selected.id}`)?"Merender...":"Render bingkai",`render:${selected.id}`,"primary",isLoading(`render:${selected.id}`))}
+          ${button("Salin prompt",`copy-look:${selected.id}`,"paper")}
+          ${image?button("Buka",`view:${selected.id}`,"paper"):""}
+          ${image?button("Unduh",`download:${selected.id}`,"paper"):""}
+        </div>
+      </aside>
+    </div>
+  </section>`;
+}
+
+function lookCard(look,i){
+  const img=state.images[look.id];
+  const active=i===state.selectedLook;
+  return `
+  <article class="look ${active?"active":""}">
+    <div class="look-cover">
+      ${img?`<img src="${img}" alt="${esc(look.title)}"/>`:`<div class="look-placeholder"><b>${String(i+1).padStart(2,"0")}</b><span>${esc(look.mood||"Arahan visual")}</span></div>`}
+      <span class="look-number">${String(i+1).padStart(2,"0")}</span>
+    </div>
+    <div class="look-body">
+      <h3>${esc(look.title||`Look ${i+1}`)}</h3>
+      <p>${esc(look.objective||"")}</p>
+      <div class="look-actions">
+        ${button(active?"Terpilih":"Pilih",`select-look:${i}`,active?"dark":"paper",false,true)}
+        ${button(img?"Render ulang":"Render",`render:${look.id}`,"paper",isLoading(`render:${look.id}`),true)}
+      </div>
+    </div>
+  </article>`;
+}
+
+function handover(){
+  const bp=state.blueprint;
+  const transfer=transferPack();
+  const prompt=bp?productionPrompt():"Buat Persona Bible terlebih dahulu untuk mengisi Prompt Produksi yang dapat digunakan kembali.";
+  
+  return `
+  <section class="screen active">
+    <div class="section-head">
+      <div><div class="eyebrow">Langkah 05 · bagikan sistem</div><h2>Kemas kontinuitasnya, bukan sekadar gambarnya.</h2></div>
+      <div class="stage-tag">EKSPOR LOKAL</div>
+    </div>
+    <div class="handover">
+      <article class="handover-card">
+        <div class="eyebrow">Canvas Transfer Pack</div>
+        <h3>Bawa persona ini ke aplikasi lain.</h3>
+        <p>Salin teks ini ke Adsprint, Pikat, RUPA, MULA, Tayang, Cetak, Adegan, atau Suara untuk memberikan konteks visual yang lebih konsisten pada aplikasi tersebut.</p>
+        <div class="codebox">${esc(transfer)}</div>
+        <div class="handover-actions">
+          ${button("Salin Transfer Pack","copy-transfer","primary")}
+          ${button("Unduh .md","download-pack","paper")}
+        </div>
+      </article>
+      <article class="handover-card dark">
+        <div class="eyebrow" style="color:#aeb9d4">Prompt Produksi</div>
+        <h3>Gunakan di alur kerja visual mana pun.</h3>
+        <p>Prompt ini secara sengaja memperlakukan persona sebagai arahan kreatif. Ia tidak meminta alat apa pun untuk meniru atau mengidentifikasi orang nyata.</p>
+        <div class="codebox">${esc(prompt)}</div>
+        <div class="handover-actions">
+          ${button("Salin Prompt Produksi","copy-production","paper")}
+          ${button("Ekspor dossier lengkap","export-dossier","paper")}
+        </div>
+      </article>
+    </div>
+    <div class="section-head" style="margin-top:25px">
+      <div><div class="eyebrow">Daftar periksa penggunaan</div><h2>Kontinuitas visual yang bertanggung jawab.</h2></div>
+    </div>
+    <div class="grid-3">
+      <article class="panel tint-blue">
+        <div class="panel-icon">01</div>
+        <h3>Verifikasi izin</h3>
+        <p>Hanya gunakan foto referensi yang Anda miliki, lisensikan, atau berhak digunakan. Hindari figur publik atau siapa pun yang tidak memberikan izin.</p>
+      </article>
+      <article class="panel tint-gold">
+        <div class="panel-icon">02</div>
+        <h3>Pertahankan kebenaran produk</h3>
+        <p>Saat MIMIK dipasangkan dengan alat konten produk, jaga agar kemasan, klaim, aset brand, dan bukti nyata tetap jujur.</p>
+      </article>
+      <article class="panel tint-red">
+        <div class="panel-icon">03</div>
+        <h3>Tinjau sebelum publikasi</h3>
+        <p>Gambar yang dihasilkan dapat menyimpang. Tinjau kemiripan, konteks, keamanan, klaim, dan semua detail visual sebelum digunakan secara eksternal.</p>
+      </article>
+    </div>
+  </section>`;
+}
+
+function transferPack(){
+  const b=state.brief,bp=state.blueprint||{};
+  const d=bp.visualDNA||{};
+  return `[CANVAS-PERSONA v1]\nPersona: ${val(bp.personaName||b.personaName)}\nTrack: ${val(b.track)}\nBrand: ${val(b.brand)}\nRole: ${val(b.role)}\nAudience: ${val(b.audience)}\nVisual goal: ${val(b.visualGoal)}\nOne-line system: ${val(bp.oneSentence)}\nPresence: ${val(d.presence)}\nFacial anchors: ${val(d.facialAnchors||b.facialAnchors)}\nHair/grooming: ${val(d.hairFeatures||b.hairFeatures)}\nStyling: ${val(d.styling||b.wardrobe)}\nWorld: ${val(d.environment||b.environment)}\nOutput ratio: ${val(b.ratio)}\nGuardrails: ${val(b.guardrails)}\nSafety: ${val(bp.safetyNote,"Gunakan hanya untuk persona fiktif atau berizin; jangan mengidentifikasi atau meniru figur publik yang nyata.")}`;
+}
+
+function productionPrompt(){
+  const bp=state.blueprint||{},b=state.brief,d=bp.visualDNA||{};
+  return `Create an editorial visual asset for the following approved creative persona. Treat this as a fictional or consented talent direction; do not claim identity, do not imitate a public figure, and do not add watermark, unrelated readable text, fake testimonials, ratings, certifications, or claims.\n\nPersona: ${val(bp.personaName||b.personaName)}\nRole: ${val(b.role)}\nPresence: ${val(d.presence)}\nFacial anchors: ${val(d.facialAnchors||b.facialAnchors)}\nHair/grooming: ${val(d.hairFeatures||b.hairFeatures)}\nWardrobe: ${val(d.styling||b.wardrobe)}\nVisual world: ${val(d.environment||b.environment)}\nExpression direction: ${val(bp.expressionDirection)}\nOutput ratio: ${val(b.ratio)}\nGuardrails: ${val(b.guardrails)}\n\nMaintain a coherent editorial treatment and truthful product/brand details when supplied.`;
+}
+
+function readFormField(el){if(!el?.dataset?.field)return;state.brief[el.dataset.field]=el.value;persist();}
+
+function loadDemo(){
+  state.brief={
+    ...defaultBrief,
+    personaName:"Naya Arunika",
+    track:"Talent brand fiktif",
+    brand:"Sora Rituals",
+    role:"Storyteller perawatan kulit harian",
+    audience:"Perempuan urban Indonesia usia 23–34 yang menyukai ritual perawatan sederhana",
+    visualGoal:"Editorial product stories, creator assets, and lifestyle campaign frames",
+    description:"Seorang perempuan fiktif berusia akhir dua puluhan asal Indonesia dengan kehadiran yang membumi, mudah didekati, dan penuh perhatian. Ia terlihat kontemporer tetapi tidak mengejar tren.",
+    personality:"Hangat, percaya diri secara tenang, penuh pemikiran, dengan selera humor yang natural",
+    facialAnchors:"Wajah oval lembut, bintik-bintik alami yang ringan, alis lurus yang tegas, mata gelap ekspresif, senyum santai",
+    hairFeatures:"Rambut gelap bergelombang sebahu, belah tengah, riasan natural minimalis",
+    wardrobe:"Linen warna krem, rajutan kobalt redup, aksesori emas halus, siluet bersih",
+    environment:"Apartemen dengan cahaya alami, studio yang dipenuhi tanaman, sudut kafe kota",
+    style:"Potret editorial",
+    ratio:"4:5",
+    guardrails:"Tidak ada klaim medis. Tidak ada kemiripan selebriti. Tidak ada review palsu, rating, diskon, atau hasil sebelum/sesudah.",
+    transfer:"[CANVAS-BRAND v1]\nBrand: Sora Rituals\nTone: calm, intentional, warm\nVisual direction: tactile ritual, daylight, mineral blue"
+  };
+  state.blueprint=null;
+  state.files={portrait:null,wardrobe:null};
+  state.images={};
+  state.selectedLook=0;
+  persist();
+  render();
+  toast("Demo persona dimuat.");
+}
+
+function fileToData(file){
+  return new Promise((resolve,reject)=>{
+    const r=new FileReader();
+    r.onload=()=>resolve(r.result);
+    r.onerror=reject;
+    r.readAsDataURL(file);
+  });
+}
+
+async function handleUpload(input){
+  const key=input.dataset.upload,file=input.files?.[0];
+  if(!file)return;
+  if(file.size>8*1024*1024){toast("Gunakan gambar di bawah 8 MB.");return;}
+  try{
+    state.files[key]=await fileToData(file);
+    render();
+    toast("Referensi dilampirkan untuk sesi ini.");
+  }catch(e){toast("Gagal membaca file.");}
+}
+
+function cleanJson(raw) {
+  let text = String(raw || "").trim();
+  text = text.replace(/^\x60{3}(?:json)?/i, "").replace(/\x60{3}$/i, "").trim();
+  const start = text.indexOf("{");
+  const end = text.lastIndexOf("}");
+  return (start >= 0 && end >= start) ? text.slice(start, end + 1) : text;
+}
+
+function getText(data){
+  return (data?.candidates?.[0]?.content?.parts||[]).map(p=>p.text||"").join("\n").trim();
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+async function gemini(model,payload){
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  let last;
+  for(let attempt=0;attempt<3;attempt++){
+    try{
+      const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      const data=await res.json();
+      if(!res.ok)throw new Error(data?.error?.message||`Request failed (${res.status})`);
+      return data;
+    }catch(err){
+      last=err;
+      await sleep(650*(attempt+1));
+    }
+  }
+  throw last||new Error("Permintaan Gemini API gagal");
+}
+
+async function generateJson(prompt){
+  let last;
+  for(const model of TEXT_MODELS){
+    try{
+      const data=await gemini(model,{contents:[{role:"user",parts:[{text:prompt}]}],generationConfig:{temperature:.72,responseMimeType:"application/json"}});
+      const raw=getText(data);
+      return JSON.parse(cleanJson(raw));
+    }catch(e){last=e;}
+  }
+  throw last||new Error("Tidak dapat menghasilkan respons terstruktur");
+}
+
+function dataUrlPart(dataUrl){
+  if(!dataUrl||!dataUrl.startsWith("data:image"))return null;
+  const [meta,data]=dataUrl.split(",");
+  const mime=(meta.match(/^data:([^;]+)/)||[])[1]||"image/png";
+  return {inlineData:{mimeType:mime,data}};
+}
+
+async function generateImage(prompt){
+  let last;
+  for(const model of IMAGE_MODELS){
+    try{
+      const parts=[{text:prompt}];
+      const portrait=dataUrlPart(state.files.portrait),wardrobe=dataUrlPart(state.files.wardrobe);
+      if(portrait)parts.push(portrait);
+      if(wardrobe)parts.push(wardrobe);
+      const data=await gemini(model,{contents:[{role:"user",parts}],generationConfig:{responseModalities:["TEXT","IMAGE"]}});
+      const part=(data?.candidates?.[0]?.content?.parts||[]).find(p=>p.inlineData?.data);
+      if(!part?.inlineData?.data)throw new Error("Model gambar tidak mengembalikan gambar.");
+      return `data:${part.inlineData.mimeType||"image/png"};base64,${part.inlineData.data}`;
+    }catch(e){last=e;}
+  }
+  throw last||new Error("Render gambar gagal");
+}
+
+async function createBible(){
+  const b=state.brief;
+  if(!b.personaName.trim()||!b.description.trim()){toast("Isi nama persona dan deskripsi dasar terlebih dahulu.");return;}
+  setLoading("blueprint",true);
+  try{
+    const prompt=`You are a senior creative director and casting editor for brand visual systems. Build a safe, practical Persona Bible in Indonesian from the following brief. The user may be using a fictional persona, a licensed talent, or a person with consent. Never identify a person, never describe a public figure, never suggest impersonation, and never make factual claims not supplied. This is creative direction only.
+
+BRIEF
+${transferPack()}
+
+Return JSON only with this exact high-level schema:
+{
+  "documentCode":"MIMIK-...",
+  "title":"...",
+  "personaName":"...",
+  "oneSentence":"...",
+  "safetyNote":"...",
+  "visualDNA":{"presence":"...","agePresentation":"...","facialAnchors":"...","hairFeatures":"...","styling":"...","environment":"..."},
+  "personalityDirection":"...",
+  "expressionDirection":"...",
+  "consistencyLock":{"coreAnchors":"...","wardrobeSystem":"...","lightingLanguage":"...","cameraLanguage":"...","avoidDrift":"..."},
+  "doNotDrift":["...","...","..."],
+  "lookbook":[
+    {"id":"look-1","title":"...","objective":"...","mood":"...","wardrobe":"...","environment":"...","poseExpression":"...","framing":"...","palette":"...","renderPrompt":"..."}
+  ]
+}
+Generate exactly 6 distinct but coherent lookbook concepts. renderPrompt must be complete, standalone, English, and should describe a tasteful editorial image. It must include: fictional/consented talent direction, expression, wardrobe, environment, camera framing, lighting, ratio ${b.ratio}, and the words "no watermark, no unrelated readable text". Do not bake ad copy or fake claims into images.`;
+    
+    const out=await generateJson(prompt);
+    if(!Array.isArray(out.lookbook))out.lookbook=[];
+    out.lookbook=out.lookbook.slice(0,6).map((x,i)=>({...x,id:x.id||`look-${i+1}`}));
+    state.blueprint=out;
+    state.selectedLook=0;
+    persist();
+    toast("Persona Bible selesai dibuat.");
+    go("bible");
+  }catch(e){
+    console.error(e);
+    toast(`Gagal membuat Persona Bible: ${e.message||"coba lagi"}`);
+  }finally{
+    state.loading["blueprint"]=false;
+  }
+}
+
+async function renderLook(id){
+  const look=looks().find(x=>x.id===id);
+  if(!look||isLoading(`render:${id}`))return;
+  state.loading[`render:${id}`]=true;
+  render();
+  try{
+    const b=state.brief,bp=state.blueprint||{},d=bp.visualDNA||{};
+    const prompt=`Create a single premium editorial image for a fictional or consented visual persona. Do not identify this person as a real individual, do not imitate or reference public figures, and do not add watermark, logos, ratings, fake testimonials, false claims, coupons, or small readable promotional text.
+
+Persona direction:
+Name: ${bp.personaName||b.personaName}
+Role: ${b.role}
+Presence: ${d.presence||b.description}
+Facial anchors: ${d.facialAnchors||b.facialAnchors}
+Hair/grooming: ${d.hairFeatures||b.hairFeatures}
+Styling system: ${d.styling||b.wardrobe}
+Visual world: ${d.environment||b.environment}
+Expression grammar: ${bp.expressionDirection||b.personality}
+Consistency lock: ${JSON.stringify(bp.consistencyLock||{})}
+
+Selected look:
+Title: ${look.title}
+Objective: ${look.objective}
+Wardrobe: ${look.wardrobe}
+Environment: ${look.environment}
+Pose and expression: ${look.poseExpression}
+Framing: ${look.framing}
+Palette: ${look.palette}
+Creative direction: ${look.renderPrompt}
+
+Use any supplied portrait reference only when the user has permission. Treat the reference as a creative continuity guide, not an identity to reproduce exactly. Use supplied wardrobe reference for styling only. Output ratio ${b.ratio}.`;
+    
+    const image=await generateImage(prompt);
+    state.images[id]=image;
+    toast(`${look.title||"Look"} berhasil dirender.`);
+  }catch(e){
+    console.error(e);
+    toast(`Render gagal: ${e.message||"coba lagi"}`);
+  }finally{
+    state.loading[`render:${id}`]=false;
+    render();
+  }
+}
+
+function copy(text,msg="Tersalin ke clipboard."){
+  navigator.clipboard?.writeText(text).then(()=>toast(msg)).catch(()=>{
+    const ta=document.createElement("textarea");
+    ta.value=text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand("copy");
+    ta.remove();
+    toast(msg);
+  });
+}
+
+function download(filename,content,mime="text/markdown;charset=utf-8"){
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(new Blob([content],{type:mime}));
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),250);
+}
+
+function downloadImage(filename,data){
+  const a=document.createElement("a");
+  a.href=data;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+}
+
+function dossier(){
+  const bp=state.blueprint||{};
+  return `# MIMIK — Persona Continuity Dossier\n\n${transferPack()}\n\n## Persona Bible\n${JSON.stringify(bp,null,2)}\n\n## Prompt Produksi\n${productionPrompt()}\n\n## Keamanan\nGunakan hanya untuk persona fiktif atau berizin. Tinjau semua output sebelum publikasi.\n`;
+}
+
+function action(action){
+  if(!action)return;
+  if(action.startsWith("go:"))return go(action.slice(3));
+  if(action==="demo")return loadDemo();
+  if(action==="clear")return resetAll();
+  if(action==="generate-blueprint")return createBible();
+  if(action==="copy-summary")return copy(`${state.blueprint?.oneSentence||""}\n\n${JSON.stringify(state.blueprint?.visualDNA||{},null,2)}`,"Ringkasan persona tersalin.");
+  if(action.startsWith("select-look:")){state.selectedLook=Number(action.split(":")[1])||0;persist();return render();}
+  if(action.startsWith("render:"))return renderLook(action.slice(7));
+  if(action.startsWith("copy-look:")){const look=looks().find(x=>x.id===action.slice(10));return copy(look?.renderPrompt||"","Prompt look tersalin.");}
+  if(action.startsWith("download:")){
+    const id=action.slice(9);
+    const image=state.images[id];
+    const look=looks().find(x=>x.id===id);
+    return image?downloadImage(`${slug(state.brief.personaName)}-${slug(look?.title)}.png`,image):null;
+  }
+  if(action.startsWith("view:")){
+    const id=action.slice(5);
+    activeModalImage=state.images[id];
+    if(activeModalImage){
+      document.getElementById("modalImage").src=activeModalImage;
+      document.getElementById("modal").classList.add("show");
+    }
+    return;
+  }
+  if(action==="close-modal"){document.getElementById("modal").classList.remove("show");return;}
+  if(action==="download-modal"&&activeModalImage)return downloadImage(`${slug(state.brief.personaName)}-mimik-frame.png`,activeModalImage);
+  if(action==="copy-transfer")return copy(transferPack(),"Canvas Transfer Pack tersalin.");
+  if(action==="copy-production")return copy(productionPrompt(),"Prompt Produksi tersalin.");
+  if(action==="download-pack")return download(`${slug(state.brief.personaName)}-canvas-transfer-pack.md`,transferPack());
+  if(action==="export-dossier")return download(`${slug(state.brief.personaName)}-mimik-persona-dossier.md`,dossier());
+}
+
+document.addEventListener("click",e=>{
+  const route=e.target.closest("[data-route]");
+  if(route){go(route.dataset.route);return;}
+  const el=e.target.closest("[data-action]");
+  if(el)action(el.dataset.action);
+});
+
+document.addEventListener("input",e=>readFormField(e.target));
+document.addEventListener("change",e=>{
+  if(e.target.dataset.field)readFormField(e.target);
+  if(e.target.dataset.upload)handleUpload(e.target);
+});
+
+render();
+</script>
+</body>
+</html>

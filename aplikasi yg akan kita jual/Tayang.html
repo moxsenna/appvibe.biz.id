@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tayang — Website Blueprint Lab</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --navy:#102a43; --navy-2:#183b56; --ink:#172f45; --paper:#f4f8fb; --paper-2:#e9f1f6;
+      --white:#ffffff; --line:#c9dae5; --line-2:#dce7ee; --cyan:#21a6d6; --cyan-2:#dff5fc;
+      --orange:#ef7f4d; --orange-soft:#ffe9df; --green:#26765f; --green-soft:#e2f2ec; --muted:#64798c;
+      --shadow:0 18px 40px rgba(26,63,88,.11); --shadow-soft:0 7px 19px rgba(26,63,88,.07);
+      --radius-xl:26px; --radius-lg:18px; --radius-md:13px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:"IBM Plex Sans",system-ui,sans-serif;}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.6;background-image:linear-gradient(rgba(33,166,214,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(33,166,214,.08) 1px,transparent 1px);background-size:24px 24px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 4% 0%,rgba(33,166,214,.1),transparent 30%),radial-gradient(circle at 100% 0%,rgba(239,127,77,.1),transparent 30%)}
+    button,input,textarea,select{font:inherit} button{cursor:pointer} button:disabled{opacity:.52;cursor:not-allowed}
+    .app{max-width:1480px;margin:0 auto;padding:16px 16px 48px}.topline{height:5px;background:linear-gradient(90deg,var(--cyan),var(--cyan) 62%,var(--orange) 62%,var(--orange));border-radius:99px 99px 0 0}
+    .topbar{position:sticky;top:10px;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;background:rgba(255,255,255,.94);backdrop-filter:blur(18px);border:1px solid rgba(201,218,229,.95);box-shadow:var(--shadow-soft);border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+    .brand{display:flex;align-items:center;gap:13px;min-width:0}.brand-symbol{width:44px;height:44px;background:var(--navy);display:grid;place-items:center;border-radius:12px;color:#fff;position:relative;overflow:hidden;font-family:"IBM Plex Serif",serif;font-size:25px;font-style:italic}.brand-symbol:after{content:"";position:absolute;width:60px;height:60px;border:1px solid rgba(255,255,255,.38);border-radius:50%;right:-29px;bottom:-31px}.brand-name{font-family:"IBM Plex Serif",Georgia,serif;font-size:26px;line-height:1;letter-spacing:-.7px}.brand-caption{margin-top:4px;color:#74889a;font:500 9px/1 "DM Mono",monospace;letter-spacing:1.35px;text-transform:uppercase}
+    .top-meta{display:flex;align-items:center;gap:9px}.status{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--paper);padding:9px 11px;border-radius:99px;color:#557083;font:500 10px/1 "DM Mono",monospace;white-space:nowrap}.status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(38,118,95,.12)}
+    .button{border:1px solid transparent;border-radius:11px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:800;line-height:1;transition:all .16s ease}.button:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 16px rgba(18,42,67,.11)}.button.primary{background:var(--navy);color:#fff;box-shadow:0 5px 0 #0a1f31}.button.primary:active:not(:disabled){transform:translateY(3px);box-shadow:0 2px 0 #0a1f31}.button.cyan{background:var(--cyan);color:#062b3c;box-shadow:0 5px 0 #13769e}.button.orange{background:var(--orange);color:#fff;box-shadow:0 5px 0 #bb5733}.button.paper{background:#fff;color:var(--ink);border-color:var(--line);box-shadow:0 2px 7px rgba(26,63,88,.04)}.button.ghost{background:transparent;color:#5f7587;border-color:transparent;box-shadow:none}.button.ghost:hover:not(:disabled){background:var(--paper-2);color:var(--navy)}.button.small{padding:9px 10px;font-size:10px;border-radius:9px}.button.full{width:100%}
+    .stages{position:sticky;top:84px;z-index:40;display:flex;gap:4px;align-items:center;padding:7px;margin-top:14px;background:rgba(232,241,247,.9);backdrop-filter:blur(12px);border:1px solid var(--line);border-radius:14px;overflow:auto}.stages::-webkit-scrollbar{height:0}.stage{border:0;background:transparent;min-width:max-content;padding:10px 13px;border-radius:9px;color:#718496;font:500 10px/1 "DM Mono",monospace;letter-spacing:.15px}.stage:hover{background:rgba(255,255,255,.7);color:var(--navy)}.stage.active{background:#fff;color:var(--navy);box-shadow:0 3px 9px rgba(26,63,88,.08)}.stage b{color:var(--orange);margin-right:6px}.stage-meter{margin-left:auto;white-space:nowrap;padding:0 8px;color:#72889a;font:500 9px/1 "DM Mono",monospace}
+    .screen{display:none;padding:22px 0 4px}.screen.active{display:block;animation:fade .26s ease both}@keyframes fade{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    .hero{position:relative;display:grid;grid-template-columns:minmax(0,1.15fr) minmax(310px,.85fr);overflow:hidden;min-height:390px;border:1px solid var(--line);border-radius:var(--radius-xl);background:rgba(255,255,255,.86);box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;left:0;right:0;top:58%;height:1px;background:rgba(33,166,214,.22)}.hero-copy{position:relative;padding:42px;z-index:1;display:flex;flex-direction:column;justify-content:center}.kicker{color:#177eaa;font:500 10px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:1.4px}.kicker:before{content:"";display:inline-block;width:8px;height:8px;background:var(--orange);border-radius:2px;margin-right:8px;vertical-align:-1px}.hero h1{font-family:"IBM Plex Serif",Georgia,serif;font-weight:600;font-size:clamp(45px,5.5vw,75px);letter-spacing:-2.4px;line-height:.93;margin:16px 0;color:var(--navy);max-width:770px}.hero h1 em{font-style:italic;color:var(--orange)}.hero p{max-width:590px;margin:0;color:#5a7182;font-size:15px;line-height:1.72}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:25px}.hero-footnote{display:flex;gap:9px;align-items:flex-start;max-width:560px;margin-top:28px;color:#708595;font-size:11px;line-height:1.55}.hero-footnote span{width:25px;height:25px;display:grid;place-items:center;flex:none;border-radius:8px;background:var(--cyan-2);color:#197ca5}
+    .hero-sheet{position:relative;padding:30px;display:flex;align-items:center;justify-content:center;min-height:300px;background:var(--navy);border-left:1px solid var(--line);overflow:hidden}.hero-sheet:before{content:"";position:absolute;inset:0;opacity:.25;background-image:linear-gradient(rgba(255,255,255,.22) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.22) 1px,transparent 1px);background-size:22px 22px}.sheet-card{position:relative;width:min(335px,100%);padding:20px;border:1px solid rgba(255,255,255,.5);background:rgba(10,32,49,.76);box-shadow:12px 13px 0 rgba(33,166,214,.48);color:#fff}.sheet-kicker{color:#84d8f4;font:500 9px/1 "DM Mono",monospace;letter-spacing:1.4px;text-transform:uppercase}.sheet-card h3{font-family:"IBM Plex Serif",serif;font-size:31px;line-height:1.03;letter-spacing:-.8px;margin:20px 0 22px}.sheet-row{display:flex;gap:9px;padding:10px 0;border-top:1px solid rgba(255,255,255,.16);font:400 10px/1.4 "DM Mono",monospace;color:#d4eaf2}.sheet-row b{min-width:54px;color:#84d8f4;font-weight:500}.sheet-stamp{margin-top:18px;display:inline-flex;padding:7px 9px;border:1px dashed rgba(239,127,77,.75);color:#ffc4ad;font:500 9px/1 "DM Mono",monospace;letter-spacing:.8px}
+    .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:14px}.metric{padding:16px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}.metric b{font-family:"IBM Plex Serif",serif;font-size:30px;line-height:1;color:var(--navy);font-weight:600}.metric span{display:block;margin-top:6px;color:#718496;font-size:11px;line-height:1.45}
+    .section-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-end;margin:28px 0 14px}.section-head h2{font-family:"IBM Plex Serif",Georgia,serif;font-size:39px;font-weight:600;letter-spacing:-1.2px;line-height:1;margin:0;color:var(--navy)}.section-head p{margin:0;max-width:520px;color:#657d90;font-size:12px;line-height:1.6}.smalltag{padding:9px 10px;background:var(--cyan-2);border:1px solid #b8e6f5;color:#177fa8;border-radius:99px;font:500 9px/1 "DM Mono",monospace;letter-spacing:.5px;white-space:nowrap}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.panel{min-width:0;padding:22px;background:rgba(255,255,255,.9);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow-soft)}.panel.blue{background:linear-gradient(145deg,#ecf9fd,#dff2f9)}.panel.orange{background:linear-gradient(145deg,#fff7f2,#ffe8dc)}.panel.navy{background:var(--navy);border-color:var(--navy);color:#fff}.panel-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:#fff;border:1px solid var(--line);font-size:19px;margin-bottom:15px}.panel h3{margin:0;color:inherit;font-size:16px;letter-spacing:-.3px}.panel p{margin:9px 0 0;color:#677f90;font-size:12px;line-height:1.6}.panel.navy p{color:#c6dce6}.panel .button{margin-top:17px}
+    .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin:5px 0 15px}.page-head h1{margin:0;color:var(--navy);font-family:"IBM Plex Serif",Georgia,serif;font-size:40px;font-weight:600;letter-spacing:-1.2px;line-height:1}.page-head p{margin:9px 0 0;color:#637b8d;font-size:13px;line-height:1.65;max-width:720px}.page-no{padding:9px 11px;color:#147da7;border:1px solid #b9e7f4;background:#eaf8fd;border-radius:9px;font:500 10px/1 "DM Mono",monospace;white-space:nowrap}
+    .build-layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:14px;align-items:start}.form-stack{display:grid;gap:14px}.form-panel{padding:23px;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:var(--radius-xl);box-shadow:var(--shadow-soft)}.form-head{display:flex;gap:13px;align-items:flex-start;margin-bottom:18px}.form-number{width:36px;height:36px;display:grid;place-items:center;border-radius:11px;flex:none;background:var(--navy);color:#fff;font:500 11px/1 "DM Mono",monospace}.form-head h3{margin:3px 0 0;font-family:"IBM Plex Serif",serif;font-size:27px;letter-spacing:-.7px;line-height:1;font-weight:600}.form-head p{margin:8px 0 0;color:#6d8291;font-size:11px;line-height:1.55}.field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}.field{min-width:0}.field.full{grid-column:1/-1}.field label{display:flex;align-items:center;gap:7px;margin-bottom:7px;color:#536c7e;font:500 9px/1 "DM Mono",monospace;letter-spacing:.65px;text-transform:uppercase}.field label i{color:var(--orange);font-size:13px;font-style:normal}.field input,.field select,.field textarea{width:100%;outline:none;border:1px solid #cbdce6;border-radius:11px;background:#fbfdfe;color:#183b56;padding:11px 12px;font-size:12px;line-height:1.45;transition:all .16s ease}.field textarea{min-height:100px;resize:vertical}.field input::placeholder,.field textarea::placeholder{color:#9aabba}.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cyan);box-shadow:0 0 0 3px rgba(33,166,214,.12);background:#fff}.chip-row{display:flex;flex-wrap:wrap;gap:7px}.chip{position:relative}.chip input{position:absolute;opacity:0;pointer-events:none}.chip label{display:flex;align-items:center;margin:0;padding:9px 11px;border:1px solid #cbdce6;border-radius:9px;background:#fbfdfe;color:#6a8294;font-size:11px;font-weight:700;letter-spacing:0;text-transform:none;cursor:pointer;transition:.15s}.chip input:checked+label{background:var(--navy);border-color:var(--navy);color:#fff;box-shadow:0 4px 10px rgba(16,42,67,.16)}.upload-box{padding:14px;border:1px dashed #8fb8cd;border-radius:14px;background:#f4fbfe;display:flex;gap:12px;align-items:center}.upload-mark{width:42px;height:42px;border-radius:10px;background:#dff4fc;color:#147fa8;display:grid;place-items:center;flex:none;font-size:19px}.upload-copy{min-width:0;flex:1}.upload-copy b{display:block;font-size:12px}.upload-copy span{display:block;margin-top:4px;color:#7190a1;font-size:10px;line-height:1.4}.input-file{display:none}.form-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;border-top:1px solid var(--line-2);margin-top:18px;padding-top:17px}.hint{color:#6c8393;font-size:10px;line-height:1.45;max-width:340px}
+    .blueprint{position:sticky;top:137px;padding:16px;background:#fff;border:1px solid #a9c4d2;box-shadow:8px 8px 0 rgba(33,166,214,.18),var(--shadow-soft);min-height:490px;overflow:hidden}.blueprint:before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.72;background-image:linear-gradient(rgba(33,166,214,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(33,166,214,.12) 1px,transparent 1px);background-size:19px 19px}.blueprint>*{position:relative}.blueprint-label{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #b7d3df;padding-bottom:12px;color:#286078;font:500 9px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.9px}.blueprint h3{margin:20px 0 7px;font-family:"IBM Plex Serif",serif;font-size:31px;letter-spacing:-.7px;line-height:1;color:var(--navy)}.blueprint p{margin:0;color:#5e788a;font-size:12px;line-height:1.55}.draft-frame{margin-top:19px;border:1px solid #91b9ca;background:rgba(255,255,255,.85);padding:10px}.draft-bar{height:18px;background:#193b55;margin-bottom:10px}.draft-hero{height:92px;border:1px solid #a6c7d5;padding:12px}.draft-line{height:7px;margin:5px 0;background:#b3dce9}.draft-line.short{width:58%}.draft-cta{width:78px;height:21px;background:var(--orange);margin-top:11px}.draft-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:10px}.draft-card{height:58px;border:1px solid #a6c7d5;background:#eaf7fb}.draft-footer{height:38px;background:#d9edf5;margin-top:10px}.draft-notes{margin-top:17px;display:grid;gap:8px}.draft-note{display:flex;gap:8px;align-items:flex-start;padding:8px;border-left:3px solid var(--cyan);background:rgba(223,245,252,.83);color:#4f7182;font-size:10px;line-height:1.45}.draft-note b{color:#1c5872}
+    .result-layout{display:grid;grid-template-columns:255px minmax(0,1fr);gap:14px}.result-rail{position:sticky;top:137px;background:#fff;border:1px solid var(--line);border-radius:var(--radius-lg);padding:12px;box-shadow:var(--shadow-soft)}.result-rail label{display:block;padding:8px 10px 11px;color:#728797;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.result-tab{border:0;width:100%;background:transparent;color:#5e7687;text-align:left;padding:12px;border-radius:10px;display:flex;gap:10px;align-items:center;font-size:12px;font-weight:800}.result-tab:hover{background:#f0f7fa;color:var(--navy)}.result-tab.active{background:var(--navy);color:#fff}.result-num{width:22px;height:22px;border-radius:7px;background:rgba(255,255,255,.14);display:grid;place-items:center;font:500 9px/1 "DM Mono",monospace}.result-tip{margin-top:16px;padding:12px;background:#f2fbfe;border:1px solid #d5edf6;border-radius:12px;color:#548096;font-size:10px;line-height:1.5}.result-tip b{display:block;color:#1c617e;margin-bottom:3px}.output-panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow-soft);min-width:0}.output-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:17px;border-bottom:1px solid var(--line-2)}.output-top h2{margin:0;font-family:"IBM Plex Serif",serif;color:var(--navy);font-size:30px;letter-spacing:-.7px}.output-top p{margin:8px 0 0;color:#698092;font-size:11px;line-height:1.5}.output-actions{display:flex;gap:7px;flex-wrap:wrap}.output-body{padding-top:16px}.empty{min-height:450px;display:grid;place-items:center;text-align:center;padding:28px}.empty-icon{width:62px;height:62px;margin:0 auto 14px;display:grid;place-items:center;border-radius:18px;background:var(--cyan-2);border:1px solid #c3e9f4;font-size:28px}.empty h3{margin:0;color:var(--navy);font-family:"IBM Plex Serif",serif;font-size:27px}.empty p{max-width:330px;margin:9px auto 0;color:#71899a;font-size:12px;line-height:1.6}
+    .subsection{padding:17px 0;border-bottom:1px solid #e1edf2}.subsection:last-child{border-bottom:0}.subsection h3{margin:0 0 10px;font-size:14px;color:#174c67}.subsection p{margin:0;color:#597384;font-size:12px;line-height:1.65}.callout{padding:14px;border:1px solid #bce6f3;background:#effaff;border-radius:13px;color:#245e78;font-size:12px;line-height:1.6}.callout b{display:block;color:#164f69;font-family:"IBM Plex Serif",serif;font-size:19px;margin-bottom:4px}.tagrow{display:flex;gap:7px;flex-wrap:wrap}.tag{padding:6px 8px;border-radius:99px;border:1px solid #d5e6ed;color:#567082;background:#f9fcfd;font-size:10px;font-weight:800}.tag.orange{border-color:#f6c9b7;background:#fff2ec;color:#ad5737}.flow{display:grid;gap:8px}.flow-item{display:grid;grid-template-columns:34px minmax(0,1fr);gap:11px;padding:12px;border:1px solid #d9e8ef;background:#fbfdfe;border-radius:12px}.flow-index{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:var(--navy);color:#fff;font:500 10px/1 "DM Mono",monospace}.flow-item b{display:block;color:#17455f;font-size:12px}.flow-item span{display:block;color:#678090;font-size:11px;line-height:1.5;margin-top:4px}.copy-card{padding:14px;border:1px solid #d9e8ef;background:#fbfdfe;border-radius:13px;margin-bottom:10px}.copy-card h4{margin:0 0 8px;color:#17455f;font-size:13px}.copy-card .eyeline{font:500 9px/1 "DM Mono",monospace;letter-spacing:.8px;color:#1780a9;text-transform:uppercase}.copy-card .headline{font-family:"IBM Plex Serif",serif;color:var(--navy);font-size:24px;line-height:1.05;letter-spacing:-.65px;margin:7px 0}.copy-card p{font-size:12px;color:#617b8d;line-height:1.6;margin:0}.copy-card ul{margin:8px 0 0 17px;padding:0;color:#60798a;font-size:11px;line-height:1.6}.codebox{position:relative;background:#0e2638;color:#dceaf0;border-radius:13px;padding:15px;font:400 11px/1.65 "DM Mono",monospace;white-space:pre-wrap;overflow:auto}.copy-code{position:absolute;right:10px;top:10px}.risk{padding:11px;border-radius:11px;margin:8px 0;background:#fff5f0;border:1px solid #f6d5c6;color:#8f5136;font-size:11px;line-height:1.5}.check{display:flex;gap:9px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #e2edf2;color:#5d7687;font-size:11px;line-height:1.5}.check:last-child{border-bottom:0}.check:before{content:"✓";width:19px;height:19px;display:grid;place-items:center;flex:none;border-radius:50%;background:var(--green-soft);color:var(--green);font-weight:900}
+    .toast{position:fixed;right:20px;bottom:20px;z-index:100;padding:12px 14px;max-width:350px;border:1px solid #9fcbdb;border-radius:12px;background:#fff;color:#285c75;box-shadow:var(--shadow);font-size:12px;font-weight:700;display:none}.toast.show{display:block;animation:toastin .2s ease both}@keyframes toastin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:1050px){.hero,.build-layout{grid-template-columns:1fr}.hero-sheet{border-left:0;border-top:1px solid var(--line)}.blueprint{position:relative;top:auto}.result-layout{grid-template-columns:1fr}.result-rail{position:relative;top:auto;display:flex;gap:6px;overflow:auto}.result-rail label,.result-tip{display:none}.result-tab{width:auto;min-width:max-content}.metrics{grid-template-columns:repeat(2,1fr)}}
+    @media(max-width:720px){.app{padding:10px 10px 35px}.topbar{padding:12px}.top-meta .status{display:none}.brand-name{font-size:23px}.stages{top:76px}.stage-meter{display:none}.hero-copy{padding:28px 23px}.hero h1{font-size:48px}.hero-sheet{padding:25px 20px}.metrics,.grid-3,.field-grid{grid-template-columns:1fr}.section-head,.page-head,.output-top,.form-footer{align-items:flex-start;flex-direction:column}.page-no{align-self:flex-start}.form-panel,.output-panel{padding:18px}.draft-grid{grid-template-columns:1fr 1fr}.button{padding:10px 12px}}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <div class="topline"></div>
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-symbol">T</div>
+        <div>
+          <div class="brand-name">Tayang</div>
+          <div class="brand-caption">Website Blueprint Lab</div>
+        </div>
+      </div>
+      <div class="top-meta">
+        <div class="status"><span class="status-dot"></span>Canvas runtime ready</div>
+        <button class="button paper small" onclick="newProject()">＋ Proyek baru</button>
+      </div>
+    </header>
+
+    <nav class="stages" id="stageNav">
+      <button class="stage active" data-screen="home" onclick="go('home')"><b>00</b>Workbench</button>
+      <button class="stage" data-screen="build" onclick="go('build')"><b>01</b>Site Brief</button>
+      <button class="stage" data-screen="blueprint" onclick="go('blueprint')"><b>02</b>Blueprint</button>
+      <button class="stage" data-screen="handover" onclick="go('handover')"><b>03</b>Handover</button>
+      <span class="stage-meter" id="stageMeter">Blueprint belum dibuat</span>
+    </nav>
+
+    <main>
+      <section class="screen active" id="screen-home">
+        <div class="hero">
+          <div class="hero-copy">
+            <div class="kicker">Conversion architecture, not just a pretty page</div>
+            <h1>Rancang website yang <em>mengarahkan</em> pengunjung.</h1>
+            <p>Tayang mengubah penawaran mentah menjadi struktur halaman, urutan pesan, copy konversi, arahan visual, dan handover yang siap dibawa ke Gemini Canvas, developer, atau website builder.</p>
+            <div class="hero-actions">
+              <button class="button cyan" onclick="go('build')">Mulai Site Brief →</button>
+              <button class="button paper" onclick="loadDemo()">Lihat contoh blueprint</button>
+            </div>
+            <div class="hero-footnote"><span>⌁</span><div><b>Dirancang untuk alur kerja bundle Anda.</b><br>Masukkan Transfer Pack dari ARAH, lalu bawa hasil Tayang ke MULA, RUPA, dan Adsprint.</div></div>
+          </div>
+          <div class="hero-sheet">
+            <div class="sheet-card">
+              <div class="sheet-kicker">conversion page / sheet 01</div>
+              <h3>Dari pesan brand menjadi jalur keputusan.</h3>
+              <div class="sheet-row"><b>GOAL</b><span>Lead / purchase / booking</span></div>
+              <div class="sheet-row"><b>FLOW</b><span>Hook → proof → offer → CTA</span></div>
+              <div class="sheet-row"><b>OUTPUT</b><span>Wireframe + copy + build prompt</span></div>
+              <div class="sheet-stamp">DRAWN FOR GEMINI CANVAS</div>
+            </div>
+          </div>
+        </div>
+        <div class="metrics">
+          <div class="metric"><b>01</b><span>Site strategy dan conversion goal yang tegas.</span></div>
+          <div class="metric"><b>02</b><span>Arsitektur section dan wireframe urut.</span></div>
+          <div class="metric"><b>03</b><span>Copy inti untuk setiap bagian halaman.</span></div>
+          <div class="metric"><b>04</b><span>Prompt handover untuk build langsung di Canvas.</span></div>
+        </div>
+        <div class="section-head"><div><h2>Mulai dari hasil akhir.</h2><p>Pilih aktivitas berdasarkan artefak yang ingin Anda hasilkan, bukan sekadar jenis AI yang ingin dipakai.</p></div><span class="smalltag">01 WEBSITE SYSTEM</span></div>
+        <div class="grid-3">
+          <article class="panel blue"><div class="panel-icon">⌗</div><h3>Landing Page Blueprint</h3><p>Susun halaman penjualan, lead magnet, booking page, atau halaman webinar dari strategi sampai CTA.</p><button class="button paper small" onclick="go('build')">Buka brief</button></article>
+          <article class="panel orange"><div class="panel-icon">▤</div><h3>Section Copy System</h3><p>Dapatkan headline, subheadline, objection handling, FAQ, proof, dan CTA dengan logika halaman yang utuh.</p><button class="button paper small" onclick="loadDemo()">Lihat demo</button></article>
+          <article class="panel navy"><div class="panel-icon">↗</div><h3>Build Handover</h3><p>Ekspor prompt implementasi agar Gemini Canvas atau developer memahami layout, copy, dan visual system-nya.</p><button class="button paper small" onclick="go('handover')">Buka handover</button></article>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-build">
+        <div class="page-head">
+          <div><h1>Site Brief</h1><p>Masukkan konteks yang benar. AI akan memakai data ini untuk menentukan message hierarchy, struktur halaman, dan arah implementasi.</p></div>
+          <span class="page-no">SHEET 01 / 03</span>
+        </div>
+        <div class="build-layout">
+          <div class="form-stack">
+            <div class="form-panel">
+              <div class="form-head"><div class="form-number">01</div><div><h3>Inti penawaran</h3><p>Jelaskan apa yang Anda jual dan keputusan apa yang harus dibuat pengunjung setelah membaca halaman.</p></div></div>
+              <div class="field-grid">
+                <div class="field"><label>Nama brand <i>*</i></label><input id="brand" placeholder="Contoh: Pendar Studio" /></div>
+                <div class="field"><label>Jenis halaman <i>*</i></label><select id="pageType"><option value="Landing page penjualan">Landing page penjualan</option><option value="Lead magnet / opt-in">Lead magnet / opt-in</option><option value="Webinar registration">Webinar registration</option><option value="Booking / consultation">Booking / consultation</option><option value="Product launch">Product launch</option><option value="Company / service profile">Company / service profile</option></select></div>
+                <div class="field full"><label>Produk, jasa, atau penawaran <i>*</i></label><textarea id="offer" placeholder="Apa yang dijual? Sertakan harga, format, bonus, atau detail penawaran yang relevan."></textarea></div>
+                <div class="field"><label>Target audiens <i>*</i></label><textarea id="audience" placeholder="Siapa mereka, situasi mereka sekarang, dan apa yang mereka inginkan?"></textarea></div>
+                <div class="field"><label>Target aksi utama <i>*</i></label><select id="goal"><option value="Klik checkout / beli">Klik checkout / beli</option><option value="Isi form lead">Isi form lead</option><option value="Daftar webinar">Daftar webinar</option><option value="Booking konsultasi">Booking konsultasi</option><option value="Hubungi WhatsApp">Hubungi WhatsApp</option><option value="Download lead magnet">Download lead magnet</option></select></div>
+                <div class="field full"><label>Masalah dan hasil yang dijanjikan <i>*</i></label><textarea id="outcome" placeholder="Masalah paling mendesak mereka apa? Setelah membeli atau mendaftar, perubahan apa yang realistis mereka dapatkan?"></textarea></div>
+              </div>
+            </div>
+            <div class="form-panel">
+              <div class="form-head"><div class="form-number">02</div><div><h3>Proof & persuasion</h3><p>Berikan bukti asli dan keberatan yang harus dijawab halaman. Jangan mengarang testimoni atau klaim.</p></div></div>
+              <div class="field-grid">
+                <div class="field full"><label>Bukti yang benar-benar tersedia</label><textarea id="proof" placeholder="Contoh: jumlah pelanggan, hasil studi kasus, sertifikasi, screenshot review asli, portofolio, media mention, proses kerja."></textarea></div>
+                <div class="field"><label>Keberatan utama</label><textarea id="objections" placeholder="Contoh: takut mahal, belum yakin hasilnya, tidak punya waktu, pernah gagal sebelumnya."></textarea></div>
+                <div class="field"><label>CTA & mekanisme</label><textarea id="cta" placeholder="Contoh: Daftar melalui form, klik WhatsApp, bayar via checkout. Jelaskan apa yang terjadi setelah CTA diklik."></textarea></div>
+                <div class="field full"><label>Referensi / catatan tambahan</label><textarea id="references" placeholder="URL pesaing, gaya website, larangan brand, kata-kata yang wajib/hindari, atau konteks lain."></textarea></div>
+              </div>
+            </div>
+            <div class="form-panel">
+              <div class="form-head"><div class="form-number">03</div><div><h3>Direction input</h3><p>Gunakan Transfer Pack ARAH bila Anda ingin seluruh output mengikuti positioning dan voice brand yang sudah dibuat sebelumnya.</p></div></div>
+              <div class="field-grid">
+                <div class="field full"><label>Transfer Pack dari aplikasi lain</label><textarea id="transfer" placeholder="Paste [CANVAS-BRIEF v1] atau Brand Atlas Transfer Pack di sini (opsional)."></textarea></div>
+                <div class="field full"><label>Karakter visual</label><div class="chip-row" id="visualChips">
+                  <div class="chip"><input type="checkbox" id="v1" value="Clean editorial" checked><label for="v1">Clean editorial</label></div>
+                  <div class="chip"><input type="checkbox" id="v2" value="Trustworthy corporate"><label for="v2">Trustworthy corporate</label></div>
+                  <div class="chip"><input type="checkbox" id="v3" value="Warm human"><label for="v3">Warm human</label></div>
+                  <div class="chip"><input type="checkbox" id="v4" value="Premium minimal"><label for="v4">Premium minimal</label></div>
+                  <div class="chip"><input type="checkbox" id="v5" value="Bold conversion"><label for="v5">Bold conversion</label></div>
+                  <div class="chip"><input type="checkbox" id="v6" value="Playful creator"><label for="v6">Playful creator</label></div>
+                </div></div>
+                <div class="field full"><label>Optional reference upload</label><div class="upload-box"><div class="upload-mark">⌑</div><div class="upload-copy"><b id="fileLabel">Upload screenshot referensi website</b><span>Dipakai sebagai konteks visual untuk brief. Tidak wajib.</span></div><label class="button paper small" for="referenceImage">Pilih file</label><input class="input-file" id="referenceImage" type="file" accept="image/*" onchange="readReference(event)"></div></div>
+              </div>
+              <div class="form-footer"><div class="hint">Blueprint akan menghasilkan strategi, wireframe, section copy, visual system, dan build prompt. Semua data disimpan hanya di browser Anda.</div><button class="button cyan" id="generateBtn" onclick="generateBlueprint()">Generate Blueprint →</button></div>
+            </div>
+          </div>
+          <aside class="blueprint">
+            <div class="blueprint-label"><span>Live drafting board</span><span id="briefStatus">READY</span></div>
+            <h3 id="draftBrand">Your conversion page</h3><p id="draftSubtitle">Isi brief di kiri. Di sini Anda akan melihat gambaran halaman dan fokusnya sebelum AI merancang detailnya.</p>
+            <div class="draft-frame"><div class="draft-bar"></div><div class="draft-hero"><div class="draft-line short"></div><div class="draft-line"></div><div class="draft-line"></div><div class="draft-cta"></div></div><div class="draft-grid"><div class="draft-card"></div><div class="draft-card"></div><div class="draft-card"></div></div><div class="draft-footer"></div></div>
+            <div class="draft-notes"><div class="draft-note"><b>GOAL</b><span id="draftGoal">Pilih target aksi utama.</span></div><div class="draft-note"><b>FLOW</b><span>Value → proof → offer → action.</span></div><div class="draft-note"><b>HANDOVER</b><span>Siap diekspor menjadi prompt Canvas atau spec developer.</span></div></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-blueprint">
+        <div class="page-head"><div><h1>Blueprint</h1><p>Setiap sheet mengikuti data brief Anda. Gunakan hasilnya untuk memperbaiki keputusan strategis sebelum mulai membangun halaman.</p></div><span class="page-no">SHEET 02 / 03</span></div>
+        <div class="result-layout">
+          <aside class="result-rail"><label>Blueprint sheets</label><button class="result-tab active" data-view="strategy" onclick="showResult('strategy')"><span class="result-num">01</span>Strategy map</button><button class="result-tab" data-view="architecture" onclick="showResult('architecture')"><span class="result-num">02</span>Section architecture</button><button class="result-tab" data-view="copy" onclick="showResult('copy')"><span class="result-num">03</span>Copy system</button><button class="result-tab" data-view="visual" onclick="showResult('visual')"><span class="result-num">04</span>Visual system</button><button class="result-tab" data-view="quality" onclick="showResult('quality')"><span class="result-num">05</span>Conversion QA</button><div class="result-tip"><b>Tip kerja</b>Jangan langsung membuat desain. Baca Strategy Map dan Architecture dulu, lalu iterasi brief bila urutan pesan belum tepat.</div></aside>
+          <section class="output-panel"><div class="output-top"><div><h2 id="outputTitle">Strategy map</h2><p id="outputSub">Arah strategis sebelum halaman dibangun.</p></div><div class="output-actions"><button class="button paper small" onclick="copyCurrentView()">Salin sheet</button><button class="button primary small" onclick="go('handover')">Ke handover →</button></div></div><div class="output-body" id="resultBody"><div class="empty"><div><div class="empty-icon">⌗</div><h3>Blueprint belum tersedia.</h3><p>Lengkapi Site Brief, lalu jalankan Generate Blueprint. Semua section hasil akan muncul di sini.</p><button class="button cyan" style="margin-top:16px" onclick="go('build')">Isi Site Brief</button></div></div></div></section>
+        </div>
+      </section>
+
+      <section class="screen" id="screen-handover">
+        <div class="page-head"><div><h1>Handover</h1><p>Bawa blueprint Anda ke tahap implementasi. Gunakan prompt Canvas untuk membangun landing page, atau export spec untuk dikerjakan developer.</p></div><span class="page-no">SHEET 03 / 03</span></div>
+        <div class="grid-3" id="handoverGrid">
+          <section class="panel blue"><div class="panel-icon">⇥</div><h3>Canvas build prompt</h3><p>Prompt lengkap agar Gemini Canvas membangun halaman berdasarkan blueprint yang sudah dihasilkan.</p><button class="button primary small" onclick="copyBuilderPrompt()">Salin prompt</button></section>
+          <section class="panel orange"><div class="panel-icon">↓</div><h3>Blueprint markdown</h3><p>Download seluruh strategi, architecture, copy, visual system, dan QA dalam satu file `.md`.</p><button class="button orange small" onclick="downloadMarkdown()">Download .md</button></section>
+          <section class="panel navy"><div class="panel-icon">⇄</div><h3>Canvas Transfer Pack</h3><p>Copy brief ringkas untuk dipakai lagi di MULA, RUPA, Adsprint, atau aplikasi Canvas lain.</p><button class="button paper small" onclick="copyTransferPack()">Salin transfer pack</button></section>
+        </div>
+        <div class="section-head"><div><h2>Implementation sheet</h2><p>Preview handover di bawah akan terisi ketika blueprint sudah dibuat.</p></div><span class="smalltag">BUILD WITH CONTEXT</span></div>
+        <section class="output-panel"><div class="output-top"><div><h2>Builder instruction</h2><p>Direstruktur sebagai instruksi implementasi, bukan sekadar kumpulan copy.</p></div><div class="output-actions"><button class="button paper small" onclick="copyBuilderPrompt()">Salin</button></div></div><div class="output-body"><div class="codebox" id="builderPrompt">Buat Site Brief dan Generate Blueprint terlebih dahulu untuk menghasilkan prompt implementasi.</div></div></section>
+      </section>
+    </main>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+/* Gemini Canvas pattern: leave this blank. Canvas handles the signed-in recipient's runtime context/key. */
+const apiKey = "";
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+
+let referenceImage = null;
+let blueprint = null;
+let activeView = 'strategy';
+
+const $ = id => document.getElementById(id);
+function esc(v){return String(v ?? '').replace(/[&<>"]/g,m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.classList.remove('show'),3200)}
+function go(name){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));$('screen-'+name).classList.add('active');document.querySelectorAll('.stage').forEach(x=>x.classList.toggle('active',x.dataset.screen===name));if(name==='blueprint')renderResult();if(name==='handover')renderHandover();window.scrollTo({top:0,behavior:'smooth'});}
+
+function updateDraft(){
+  const brand=$('brand').value.trim();
+  const offer=$('offer').value.trim();
+  $('draftBrand').textContent=brand ? brand+' — landing page' : 'Your conversion page';
+  $('draftSubtitle').textContent=offer ? offer.slice(0,120)+(offer.length>120?'…':'') : 'Isi brief di kiri. Di sini Anda akan melihat gambaran halaman dan fokusnya sebelum AI merancang detailnya.';
+  $('draftGoal').textContent=$('goal').value||'Pilih target aksi utama.';
+}
+
+['brand','offer','goal'].forEach(id=>$(id).addEventListener('input',updateDraft));
+
+function selectedVisuals(){return [...document.querySelectorAll('#visualChips input:checked')].map(x=>x.value)}
+
+function readReference(e){
+  const f=e.target.files?.[0];
+  if(!f)return;
+  $('fileLabel').textContent=f.name;
+  const r=new FileReader();
+  r.onload=()=>{
+    referenceImage={mimeType:f.type,data:String(r.result).split(',')[1]};
+    toast('Referensi visual siap dipakai.');
+  };
+  r.readAsDataURL(f);
+}
+
+function getBrief(){
+  return {
+    brand:$('brand').value.trim(),
+    pageType:$('pageType').value,
+    offer:$('offer').value.trim(),
+    audience:$('audience').value.trim(),
+    goal:$('goal').value,
+    outcome:$('outcome').value.trim(),
+    proof:$('proof').value.trim(),
+    objections:$('objections').value.trim(),
+    cta:$('cta').value.trim(),
+    references:$('references').value.trim(),
+    transfer:$('transfer').value.trim(),
+    visuals:selectedVisuals()
+  }
+}
+
+function validate(b){
+  const required=[['brand','Nama brand'],['offer','Produk/jasa/penawaran'],['audience','Target audiens'],['outcome','Masalah dan hasil yang dijanjikan']];
+  for(const [key,label] of required){
+    if(!b[key]){toast('Lengkapi: '+label);return false}
+  }
+  return true
+}
+
+const BLUEPRINT_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    strategy: {
+      type: "OBJECT",
+      properties: {
+        pagePromise: { type: "STRING" },
+        primaryAction: { type: "STRING" },
+        visitorJob: { type: "STRING" },
+        audienceInsight: { type: "STRING" },
+        messageHierarchy: { type: "ARRAY", items: { type: "STRING" } },
+        conversionPrinciples: { type: "ARRAY", items: { type: "STRING" } }
+      },
+      required: ["pagePromise", "primaryAction", "visitorJob", "audienceInsight", "messageHierarchy", "conversionPrinciples"]
+    },
+    architecture: {
+      type: "OBJECT",
+      properties: {
+        nav: { type: "ARRAY", items: { type: "STRING" } },
+        sections: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              id: { type: "STRING" },
+              name: { type: "STRING" },
+              job: { type: "STRING" },
+              headlineIdea: { type: "STRING" },
+              contentBlocks: { type: "ARRAY", items: { type: "STRING" } },
+              cta: { type: "STRING" },
+              proofNeeded: { type: "STRING" }
+            },
+            required: ["id", "name", "job", "headlineIdea", "contentBlocks", "cta", "proofNeeded"]
+          }
+        },
+        mobileNotes: { type: "ARRAY", items: { type: "STRING" } },
+        frictionRisks: { type: "ARRAY", items: { type: "STRING" } }
+      },
+      required: ["nav", "sections", "mobileNotes", "frictionRisks"]
+    },
+    copy: {
+      type: "OBJECT",
+      properties: {
+        hero: {
+          type: "OBJECT",
+          properties: {
+            eyebrow: { type: "STRING" },
+            headline: { type: "STRING" },
+            subheadline: { type: "STRING" },
+            primaryCta: { type: "STRING" },
+            secondaryCta: { type: "STRING" }
+          },
+          required: ["eyebrow", "headline", "subheadline", "primaryCta", "secondaryCta"]
+        },
+        sections: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              section: { type: "STRING" },
+              title: { type: "STRING" },
+              body: { type: "STRING" },
+              bullets: { type: "ARRAY", items: { type: "STRING" } },
+              cta: { type: "STRING" }
+            },
+            required: ["section", "title", "body", "bullets", "cta"]
+          }
+        },
+        faq: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              q: { type: "STRING" },
+              a: { type: "STRING" }
+            },
+            required: ["q", "a"]
+          }
+        }
+      },
+      required: ["hero", "sections", "faq"]
+    },
+    visual: {
+      type: "OBJECT",
+      properties: {
+        designDirection: { type: "STRING" },
+        palette: {
+          type: "ARRAY",
+          items: {
+            type: "OBJECT",
+            properties: {
+              name: { type: "STRING" },
+              hex: { type: "STRING" },
+              use: { type: "STRING" }
+            },
+            required: ["name", "hex", "use"]
+          }
+        },
+        typography: {
+          type: "OBJECT",
+          properties: {
+            heading: { type: "STRING" },
+            body: { type: "STRING" },
+            rules: { type: "ARRAY", items: { type: "STRING" } }
+          },
+          required: ["heading", "body", "rules"]
+        },
+        imagery: { type: "ARRAY", items: { type: "STRING" } },
+        uiRules: { type: "ARRAY", items: { type: "STRING" } }
+      },
+      required: ["designDirection", "palette", "typography", "imagery", "uiRules"]
+    },
+    quality: {
+      type: "OBJECT",
+      properties: {
+        checklist: { type: "ARRAY", items: { type: "STRING" } },
+        experiments: { type: "ARRAY", items: { type: "STRING" } },
+        mustAvoid: { type: "ARRAY", items: { type: "STRING" } }
+      },
+      required: ["checklist", "experiments", "mustAvoid"]
+    },
+    handover: {
+      type: "OBJECT",
+      properties: {
+        builderPrompt: { type: "STRING" },
+        developerNotes: { type: "ARRAY", items: { type: "STRING" } },
+        transferPack: { type: "STRING" }
+      },
+      required: ["builderPrompt", "developerNotes", "transferPack"]
+    }
+  },
+  required: ["strategy", "architecture", "copy", "visual", "quality", "handover"]
+};
+
+async function callModel(payload){
+  let lastError;
+  for(const model of TEXT_MODELS){
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+    let delay = 1000;
+    
+    for(let attempt=0; attempt<5; attempt++){
+      try{
+        const res = await fetch(url,{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify(payload)
+        });
+        
+        if(!res.ok){
+          const body = await res.text();
+          const err = new Error(`HTTP ${res.status}: ${body}`);
+          err.status = res.status;
+          if(res.status !== 429 && res.status < 500) throw err;
+          throw err;
+        }
+        
+        const data = await res.json();
+        const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        if(!text) throw new Error('Model tidak mengembalikan teks.');
+        return text;
+      }catch(err){
+        lastError = err;
+        if(err.status && err.status !== 429 && err.status < 500) break;
+        await new Promise(r => setTimeout(r, delay));
+        delay *= 2;
+      }
+    }
+  }
+  throw lastError || new Error('Tidak dapat menghubungi model Gemini.');
+}
+
+function buildPrompt(b){
+  return `Anda adalah conversion strategist, information architect, UX writer, dan web art director senior untuk pasar Indonesia. Buat BLUEPRINT WEBSITE yang tajam, etis, spesifik, dan dapat langsung diimplementasikan. Jangan membuat klaim/testimoni/data yang tidak tersedia. Jangan menjanjikan hasil pasti. Prioritaskan kejelasan, mobile-first, dan konversi.
+
+BRIEF:
+Brand: ${b.brand}
+Jenis halaman: ${b.pageType}
+Penawaran: ${b.offer}
+Target audiens: ${b.audience}
+Aksi utama: ${b.goal}
+Masalah + hasil yang dijanjikan: ${b.outcome}
+Bukti yang tersedia: ${b.proof||'Belum ada bukti spesifik; sarankan proof yang perlu dikumpulkan tanpa mengarang.'}
+Keberatan: ${b.objections||'Belum disebutkan'}
+CTA/mekanisme: ${b.cta||'Belum disebutkan'}
+Referensi/catatan: ${b.references||'Tidak ada'}
+Arah visual: ${b.visuals.join(', ')||'Clean editorial'}
+Transfer Pack dari aplikasi lain: ${b.transfer||'Tidak ada'}
+
+Aturan isi: sections antara 7 sampai 11; copy.sections selaras dengan architecture.sections dan tidak perlu mengulang hero; builderPrompt ditulis dalam bahasa Indonesia, instruktif, menyebut layout, urutan section, visual system, mobile, CTA, serta batasan klaim. transferPack ringkas dan dimulai dengan [CANVAS-BRIEF v1]. Kembalikan data dalam JSON yang di-struktur dengan baik.`;
+}
+
+async function generateBlueprint(){
+  const b=getBrief();
+  if(!validate(b)) return;
+  const btn=$('generateBtn');
+  btn.disabled=true;
+  btn.textContent='Menyusun blueprint…';
+  $('briefStatus').textContent='DRAWING';
+  
+  try{
+    const parts=[{text:buildPrompt(b)}];
+    if(referenceImage) parts.push({inlineData:referenceImage});
+    
+    const text = await callModel({
+      contents:[{role:'user',parts}],
+      generationConfig:{
+        temperature:.65,
+        responseMimeType:'application/json',
+        responseSchema: BLUEPRINT_SCHEMA
+      }
+    });
+    
+    blueprint = JSON.parse(text);
+    localStorage.setItem('tayang_blueprint_v1',JSON.stringify({brief:b,blueprint,createdAt:new Date().toISOString()}));
+    
+    $('stageMeter').textContent='Blueprint siap dievaluasi';
+    $('briefStatus').textContent='READY';
+    activeView='strategy';
+    go('blueprint');
+    toast('Blueprint selesai dibuat.');
+  }catch(err){
+    console.error(err);
+    $('briefStatus').textContent='ERROR';
+    toast('Gagal membuat blueprint. Coba lagi atau sederhanakan brief.');
+  }finally{
+    btn.disabled=false;
+    btn.textContent='Generate Blueprint →';
+  }
+}
+
+function safeArray(v){return Array.isArray(v)?v:[]}
+
+function strategyHTML(){const s=blueprint.strategy||{};return `<div class="callout"><b>${esc(s.pagePromise||'Janji halaman')}</b>${esc(s.audienceInsight||'')}</div><div class="subsection"><h3>Primary conversion</h3><p>${esc(s.primaryAction||'')}</p></div><div class="subsection"><h3>Visitor job</h3><p>${esc(s.visitorJob||'')}</p></div><div class="subsection"><h3>Message hierarchy</h3><div class="flow">${safeArray(s.messageHierarchy).map((x,i)=>`<div class="flow-item"><span class="flow-index">${i+1}</span><div><b>Message layer ${i+1}</b><span>${esc(x)}</span></div></div>`).join('')}</div></div><div class="subsection"><h3>Conversion principles</h3><div class="tagrow">${safeArray(s.conversionPrinciples).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div></div>`}
+
+function architectureHTML(){const a=blueprint.architecture||{};return `<div class="subsection"><h3>Navigation / anchor map</h3><div class="tagrow">${safeArray(a.nav).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="subsection"><h3>Section architecture</h3><div class="flow">${safeArray(a.sections).map((x,i)=>`<div class="flow-item"><span class="flow-index">${String(i+1).padStart(2,'0')}</span><div><b>${esc(x.name||x.id||'Section')}</b><span><strong>Job:</strong> ${esc(x.job||'')}<br><strong>Headline:</strong> ${esc(x.headlineIdea||'')}<br><strong>Blocks:</strong> ${safeArray(x.contentBlocks).map(esc).join(' · ')}<br><strong>CTA:</strong> ${esc(x.cta||'')}<br><strong>Proof:</strong> ${esc(x.proofNeeded||'')}</span></div></div>`).join('')}</div></div><div class="subsection"><h3>Mobile notes</h3>${safeArray(a.mobileNotes).map(x=>`<div class="check">${esc(x)}</div>`).join('')}</div><div class="subsection"><h3>Friction risks</h3>${safeArray(a.frictionRisks).map(x=>`<div class="risk">${esc(x)}</div>`).join('')}</div>`}
+
+function copyHTML(){const c=blueprint.copy||{},h=c.hero||{};return `<div class="copy-card"><div class="eyeline">${esc(h.eyebrow||'Hero eyebrow')}</div><div class="headline">${esc(h.headline||'Hero headline')}</div><p>${esc(h.subheadline||'')}</p><div class="tagrow" style="margin-top:11px"><span class="tag orange">Primary CTA: ${esc(h.primaryCta||'')}</span><span class="tag">Secondary CTA: ${esc(h.secondaryCta||'')}</span></div></div>${safeArray(c.sections).map(x=>`<div class="copy-card"><h4>${esc(x.section||'Section')}</h4><div class="headline" style="font-size:20px">${esc(x.title||'')}</div><p>${esc(x.body||'')}</p>${safeArray(x.bullets).length?`<ul>${safeArray(x.bullets).map(b=>`<li>${esc(b)}</li>`).join('')}</ul>`:''}${x.cta?`<div class="tag orange" style="margin-top:10px;display:inline-flex">CTA: ${esc(x.cta)}</div>`:''}</div>`).join('')}<div class="subsection"><h3>FAQ / objection handling</h3>${safeArray(c.faq).map(x=>`<div class="copy-card"><h4>${esc(x.q||'')}</h4><p>${esc(x.a||'')}</p></div>`).join('')}</div>`}
+
+function visualHTML(){const v=blueprint.visual||{};return `<div class="callout"><b>${esc(v.designDirection||'Visual direction')}</b>Gunakan arah ini sebagai batas sistem visual agar halaman tidak berubah menjadi kumpulan komponen acak.</div><div class="subsection"><h3>Palette</h3><div class="tagrow">${safeArray(v.palette).map(x=>`<span class="tag" title="${esc(x.use||'')}">${esc(x.name||'Color')} · ${esc(x.hex||'')}</span>`).join('')}</div></div><div class="subsection"><h3>Typography</h3><p><b>Heading:</b> ${esc(v.typography?.heading||'')}<br><b>Body:</b> ${esc(v.typography?.body||'')}</p><div class="tagrow" style="margin-top:10px">${safeArray(v.typography?.rules).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div></div><div class="subsection"><h3>Imagery direction</h3>${safeArray(v.imagery).map(x=>`<div class="check">${esc(x)}</div>`).join('')}</div><div class="subsection"><h3>UI rules</h3>${safeArray(v.uiRules).map(x=>`<div class="check">${esc(x)}</div>`).join('')}</div>`}
+
+function qualityHTML(){const q=blueprint.quality||{};return `<div class="subsection"><h3>Pre-launch checklist</h3>${safeArray(q.checklist).map(x=>`<div class="check">${esc(x)}</div>`).join('')}</div><div class="subsection"><h3>Experiments to test</h3>${safeArray(q.experiments).map(x=>`<div class="flow-item"><span class="flow-index">↗</span><div><b>Experiment</b><span>${esc(x)}</span></div></div>`).join('')}</div><div class="subsection"><h3>Must avoid</h3>${safeArray(q.mustAvoid).map(x=>`<div class="risk">${esc(x)}</div>`).join('')}</div>`}
+
+function currentHTML(){if(!blueprint)return '';return ({strategy:strategyHTML,architecture:architectureHTML,copy:copyHTML,visual:visualHTML,quality:qualityHTML}[activeView]||strategyHTML)()}
+
+function renderResult(){if(!blueprint)return;const map={strategy:['Strategy map','Arah strategis sebelum halaman dibangun.'],architecture:['Section architecture','Urutan section, jobs-to-be-done, dan risiko friction.'],copy:['Copy system','Hero dan section copy yang selaras dengan struktur halaman.'],visual:['Visual system','Aturan desain agar implementasi konsisten.'],quality:['Conversion QA','Checklist dan eksperimen setelah halaman siap.']};$('outputTitle').textContent=map[activeView][0];$('outputSub').textContent=map[activeView][1];$('resultBody').innerHTML=currentHTML();document.querySelectorAll('.result-tab').forEach(x=>x.classList.toggle('active',x.dataset.view===activeView));}
+
+function showResult(view){activeView=view;renderResult()}
+
+function textOfCurrent(){const div=document.createElement('div');div.innerHTML=currentHTML();return div.innerText}
+
+async function copyText(txt,success='Tersalin ke clipboard.') {
+  try{
+    await navigator.clipboard.writeText(txt);
+    toast(success);
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=txt;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    ta.remove();
+    toast(success);
+  }
+}
+
+function copyCurrentView(){
+  if(!blueprint){toast('Buat blueprint terlebih dahulu.');return}
+  copyText(textOfCurrent(),'Sheet berhasil disalin.')
+}
+
+function builderText(){return blueprint?.handover?.builderPrompt||'Buat Site Brief dan Generate Blueprint terlebih dahulu.'}
+function transferText(){return blueprint?.handover?.transferPack||'[CANVAS-BRIEF v1]\nBuat Site Brief dan Generate Blueprint terlebih dahulu.'}
+function renderHandover(){$('builderPrompt').textContent=builderText()}
+function copyBuilderPrompt(){copyText(builderText(),'Canvas build prompt tersalin.')}
+function copyTransferPack(){copyText(transferText(),'Transfer Pack tersalin.')}
+
+function markdown(){
+  if(!blueprint) return '# Tayang Blueprint\n\nBlueprint belum dibuat.';
+  const b=getBrief();
+  return `# Tayang — Website Blueprint\n\n## Site Brief\n- Brand: ${b.brand}\n- Page type: ${b.pageType}\n- Goal: ${b.goal}\n- Offer: ${b.offer}\n- Audience: ${b.audience}\n- Outcome: ${b.outcome}\n\n## Strategy\n${JSON.stringify(blueprint.strategy,null,2)}\n\n## Architecture\n${JSON.stringify(blueprint.architecture,null,2)}\n\n## Copy\n${JSON.stringify(blueprint.copy,null,2)}\n\n## Visual System\n${JSON.stringify(blueprint.visual,null,2)}\n\n## Conversion QA\n${JSON.stringify(blueprint.quality,null,2)}\n\n## Builder Prompt\n${builderText()}\n\n## Transfer Pack\n${transferText()}\n`
+}
+
+function downloadMarkdown(){
+  if(!blueprint){toast('Buat blueprint terlebih dahulu.');return}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([markdown()],{type:'text/markdown'}));
+  a.download=`tayang-${(getBrief().brand||'website-blueprint').toLowerCase().replace(/[^a-z0-9]+/gi,'-')}.md`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  toast('Blueprint .md diunduh.');
+}
+
+function loadDemo(){
+  const demo={
+    brand:'KelasKerja',
+    pageType:'Landing page penjualan',
+    offer:'Program pendampingan 30 hari untuk fresh graduate yang ingin membangun portofolio digital dan strategi mencari kerja.',
+    audience:'Fresh graduate Indonesia yang bingung memulai karier digital dan belum punya portofolio kuat.',
+    goal:'Klik checkout / beli',
+    outcome:'Dari bingung memilih langkah menjadi punya portofolio awal, target mingguan, dan strategi melamar kerja yang realistis.',
+    proof:'Contoh portofolio alumni, mentor berpengalaman, modul dan roadmap program.',
+    objections:'Takut belum punya skill, tidak punya waktu, khawatir program terlalu umum.',
+    cta:'Checkout untuk mendapat akses program dan onboarding.',
+    references:'Tone tenang, jelas, profesional, tidak hiperbolik.',
+    transfer:'[CANVAS-BRIEF v1]\nBrand: KelasKerja\nTone: helpful, practical, calm\nGuardrails: jangan membuat janji penempatan kerja',
+    visuals:['Clean editorial','Warm human']
+  };
+  Object.entries(demo).forEach(([k,v])=>{if($(k)&&typeof v==='string')$(k).value=v});
+  document.querySelectorAll('#visualChips input').forEach(x=>x.checked=demo.visuals.includes(x.value));
+  updateDraft();
+  blueprint={
+    strategy:{
+      pagePromise:'Buat langkah pertama karier digital terasa lebih terarah dalam 30 hari.',
+      primaryAction:'Klik checkout untuk bergabung ke program.',
+      visitorJob:'Memahami apakah program ini relevan, aman diikuti, dan cukup praktis untuk kondisi mereka.',
+      audienceInsight:'Mereka tidak hanya butuh materi; mereka butuh struktur, contoh, dan keyakinan bahwa langkah kecil mereka cukup berarti.',
+      messageHierarchy:['Validasi kebingungan tanpa menghakimi','Tunjukkan hasil terukur dari proses 30 hari','Terangkan sistem pendampingan dan contoh output','Tampilkan proof yang tersedia','Ajukan CTA berisiko rendah dan jelas'],
+      conversionPrinciples:['Satu CTA primer di atas fold','Proof dekat dengan klaim','Objection handling sebelum checkout','Mobile-first, section pendek dan mudah dipindai']
+    },
+    architecture:{
+      nav:['Program','Yang didapat','Bukti','FAQ','Daftar'],
+      sections:[
+        {id:'hero',name:'Hero',job:'Membuat pengunjung merasa halaman ini untuk mereka.',headlineIdea:'Mulai membangun arah karier digital tanpa harus tahu semuanya dari awal.',contentBlocks:['Audience validation','Outcome 30 hari','CTA primer'],cta:'Mulai program',proofNeeded:'Badge mentor atau jumlah peserta bila valid'},
+        {id:'problem',name:'Problem framing',job:'Mengartikulasikan biaya dari terus bingung.',headlineIdea:'Bukan karena Anda kurang mampu—mungkin karena belum punya sistem.',contentBlocks:['3 pain points','Empathy statement'],cta:'Lihat cara kerja',proofNeeded:'Tidak perlu proof kuantitatif'},
+        {id:'system',name:'Program system',job:'Memperjelas mekanisme dan deliverable.',headlineIdea:'Bukan kelas yang menambah tab di kepala Anda.',contentBlocks:['Roadmap 4 tahap','Template output','Mentor touchpoint'],cta:'Lihat modul',proofNeeded:'Screenshot modul asli'},
+        {id:'proof',name:'Proof',job:'Membuktikan program nyata dan dapat dipercaya.',headlineIdea:'Output yang bisa Anda lihat sebelum Anda mulai.',contentBlocks:['Portfolio examples','Mentor credential','Review asli'],cta:'Baca pengalaman peserta',proofNeeded:'Review dan aset asli'},
+        {id:'offer',name:'Offer & CTA',job:'Menjelaskan nilai, batasan, dan keputusan.',headlineIdea:'Ambil satu langkah terstruktur minggu ini.',contentBlocks:['What included','Price/terms','CTA'],cta:'Gabung program',proofNeeded:'Kebijakan refund bila ada'},
+        {id:'faq',name:'FAQ',job:'Menutup keraguan tanpa menekan.',headlineIdea:'Pertanyaan sebelum Anda mulai.',contentBlocks:['Time concern','Skill concern','Access'],cta:'Mulai sekarang',proofNeeded:'Jawaban operasional yang akurat'}
+      ],
+      mobileNotes:['CTA sticky hanya setelah value cukup jelas','Gunakan accordion untuk FAQ dan detail modul','Jangan menaruh paragraf panjang di hero'],
+      frictionRisks:['Jangan menyebut penempatan kerja bila tidak ada jaminan','Jangan menampilkan testimoni tanpa sumber nyata','Harga harus jelas sebelum CTA checkout']
+    },
+    copy:{
+      hero:{eyebrow:'UNTUK FRESH GRADUATE YANG INGIN MULAI TERARAH',headline:'Bangun langkah karier digital yang bisa Anda tunjukkan, bukan sekadar rencana yang disimpan.',subheadline:'Program pendampingan 30 hari untuk membantu Anda memilih fokus, menyusun portofolio awal, dan bergerak dengan target mingguan yang realistis.',primaryCta:'Mulai program 30 hari',secondaryCta:'Lihat cara kerja'},
+      sections:[
+        {section:'Problem framing',title:'Anda tidak harus tahu seluruh peta untuk mulai melangkah.',body:'Yang sering membuat fresh graduate berhenti bukan kurangnya potensi, melainkan terlalu banyak pilihan tanpa struktur untuk memilih langkah pertama.',bullets:['Tidak yakin skill mana yang perlu dibangun','Belum punya bukti kerja untuk ditunjukkan','Sering berhenti setelah mencoba beberapa hari'],cta:'Lihat roadmap 30 hari'},
+        {section:'Program system',title:'Satu sistem untuk mengubah kebingungan menjadi output mingguan.',body:'Anda mengikuti roadmap ringkas yang memecah tujuan besar menjadi tugas kecil: memilih arah, menyusun aset, lalu mempraktikkan cara memperlihatkan aset tersebut.',bullets:['Roadmap 4 tahap','Template portofolio awal','Panduan prioritas mingguan'],cta:'Pelajari isi program'},
+        {section:'Offer',title:'Mulai dengan langkah yang dapat Anda selesaikan.',body:'Akses program, template, dan arahan pendampingan sesuai detail yang ditampilkan saat checkout. Baca seluruh ketentuan sebelum membeli.',bullets:['Akses materi sesuai periode yang tercantum','Template yang dapat dipakai ulang','Panduan implementasi mandiri'],cta:'Gabung sekarang'}
+      ],
+      faq:[
+        {q:'Apakah saya harus sudah jago desain atau coding?',a:'Tidak. Program harus menjelaskan prasyarat secara jujur dan menyediakan jalur mulai yang sesuai untuk pemula.'},
+        {q:'Berapa waktu yang dibutuhkan?',a:'Tampilkan estimasi realistis per minggu berdasarkan format program yang sebenarnya.'}
+      ]
+    },
+    visual:{
+      designDirection:'Editorial learning page yang hangat, kompeten, dan berorientasi pada bukti output.',
+      palette:[
+        {name:'Ink navy',hex:'#102A43',use:'Heading, CTA utama, anchor visual'},
+        {name:'Sky cyan',hex:'#21A6D6',use:'Progress, icon, focus state'},
+        {name:'Paper',hex:'#F4F8FB',use:'Background dan breathing space'},
+        {name:'Signal orange',hex:'#EF7F4D',use:'Accent dan CTA tertentu'}
+      ],
+      typography:{heading:'IBM Plex Serif atau serif editorial yang ramah',body:'IBM Plex Sans atau sans humanist',rules:['Heading besar namun tidak berlebihan','Body 16–18px pada mobile','Gunakan angka dan outcome sebagai visual hierarchy']},
+      imagery:['Gunakan screenshot output/portofolio asli sebagai proof','Gunakan foto manusia hanya bila relevan dengan cerita','Hindari stock image generik tentang sukses karier'],
+      uiRules:['CTA primer konsisten satu warna','Gunakan cards hanya untuk kelompok informasi yang benar-benar berbeda','Jaga jarak vertikal agar halaman mudah dipindai']
+    },
+    quality:{
+      checklist:['Hero menjawab siapa, hasil apa, dan aksi berikutnya dalam 5 detik','Setiap claim besar punya bukti atau dilunakkan','CTA menjelaskan apa yang terjadi setelah klik','Harga/ketentuan tersedia sebelum checkout','Halaman tetap nyaman dipindai pada layar kecil'],
+      experiments:['Uji dua versi hero: outcome-first vs pain-first','Uji CTA “Lihat roadmap” sebelum CTA checkout','Uji posisi proof setelah system vs sebelum offer'],
+      mustAvoid:['Mengarang jumlah peserta atau hasil alumni','Menggunakan dark pattern urgency','Menumpuk semua informasi di hero']
+    },
+    handover:{
+      builderPrompt:'Buat landing page responsif untuk KelasKerja dengan gaya editorial learning yang hangat dan kompeten. Gunakan layout satu halaman, mobile-first, latar paper sangat terang, ink navy untuk heading/CTA, cyan untuk progress/accent, dan orange sebagai signal. Urutan: sticky top nav sederhana; hero dengan audience validation, headline, outcome 30 hari, CTA primer dan sekunder; problem framing; roadmap 4 tahap; output/portfolio examples memakai placeholder bertanda “gunakan aset asli”; mentor/proof; offer dengan detail yang harus diisi; FAQ accordion; CTA final. Hindari janji penempatan kerja. Gunakan section yang mudah dipindai, card minimal, tombol CTA jelas, dan accessibility baik. Jangan menulis testimoni palsu atau metrik tanpa sumber.',
+      developerNotes:['Bangun mobile-first, max width 1200px','Jaga CTA primer konsisten dan gunakan anchor nav','Sediakan slot asset proof yang diberi label jelas','Pastikan semua FAQ dapat diakses keyboard'],
+      transferPack:'[CANVAS-BRIEF v1]\nBrand: KelasKerja\nOffer: Program pendampingan 30 hari untuk fresh graduate\nAudience: Fresh graduate yang bingung memulai karier digital\nGoal: Checkout\nCore promise: Membuat langkah karier lebih terarah lewat output mingguan\nTone: helpful, practical, calm\nVisual: editorial learning, navy/cyan/paper\nProof: contoh portofolio, mentor, review asli\nGuardrails: jangan menjanjikan penempatan kerja; jangan mengarang proof'
+    }
+  };
+  localStorage.setItem('tayang_blueprint_v1',JSON.stringify({brief:demo,blueprint,createdAt:new Date().toISOString()}));
+  $('stageMeter').textContent='Demo blueprint dimuat';
+  go('blueprint');
+  toast('Contoh blueprint dimuat.');
+}
+
+function newProject(){
+  if(confirm('Mulai proyek baru? Data brief di layar akan dikosongkan.')){
+    localStorage.removeItem('tayang_blueprint_v1');
+    blueprint=null;
+    referenceImage=null;
+    document.querySelectorAll('input,textarea').forEach(x=>{
+      if(x.type==='checkbox') x.checked=false;
+      else if(x.type!=='file') x.value='';
+    });
+    $('v1').checked=true;
+    $('fileLabel').textContent='Upload screenshot referensi website';
+    updateDraft();
+    $('stageMeter').textContent='Blueprint belum dibuat';
+    $('briefStatus').textContent='READY';
+    go('build');
+    toast('Proyek baru siap.');
+  }
+}
+
+(function restore(){
+  try{
+    const saved=JSON.parse(localStorage.getItem('tayang_blueprint_v1'));
+    if(saved?.brief){
+      Object.entries(saved.brief).forEach(([k,v])=>{
+        if($(k)&&typeof v==='string') $(k).value=v;
+      });
+      if(Array.isArray(saved.brief.visuals)){
+        document.querySelectorAll('#visualChips input').forEach(x=>x.checked=saved.brief.visuals.includes(x.value));
+      }
+      blueprint=saved.blueprint||null;
+      if(blueprint) $('stageMeter').textContent='Blueprint tersimpan di browser';
+      updateDraft();
+    }
+  }catch(e){console.warn(e)}
+})();
+</script>
+</body>
+</html>

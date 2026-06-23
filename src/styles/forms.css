@@ -1,0 +1,28 @@
+/* ===== MODAL ===== */
+.modal{
+  position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(6,8,13,.62);backdrop-filter:blur(9px)
+}
+.modal.show{display:grid}
+.modal-card{width:min(560px,100%);padding:25px;border-radius:23px;background:var(--white);box-shadow:var(--shadow);position:relative}
+.modal-card h3{margin:0;font:600 34px/1 "Playfair Display",Georgia,serif;letter-spacing:-.8px}
+.modal-card p{margin:12px 0 0;color:#626a72;font-size:12px;line-height:1.7}
+.modal-form{display:grid;gap:10px;margin-top:20px}
+.modal-form input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;background:#fff;font-size:16px}
+.modal-form input:focus{border-color:#91aa2e;box-shadow:0 0 0 4px rgba(216,255,66,.22)}
+.modal-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:18px;color:#4e535b}
+.modal-message{display:none;margin-top:12px;padding:10px 11px;border-radius:10px;background:#eff8ca;color:#4b5e19;font-size:11px;line-height:1.5}
+.modal-message.show{display:block}
+
+/* ===== STICKY CTA MOBILE ===== */
+.sticky-cta{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:95;
+  padding:12px 12px calc(12px + env(safe-area-inset-bottom, 0px));
+  background:rgba(13,15,19,.95);
+  backdrop-filter:blur(14px);
+  border-top:1px solid rgba(255,255,255,.1);
+  box-shadow:0 -8px 24px rgba(0,0,0,.18);
+}
+.sticky-cta.show{display:block}
+.sticky-cta .btn{width:100%;min-height:52px;font-size:13px}
+.sticky-cta.hidden{display:none}

@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ARAH — Brand Atlas Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#132235;
+      --ink-2:#1e3652;
+      --paper:#f3f0e8;
+      --paper-2:#e7e1d5;
+      --cloud:#fffdf7;
+      --line:#d5ccbe;
+      --muted:#76818b;
+      --cobalt:#2556d9;
+      --vermilion:#df5b42;
+      --moss:#5f765f;
+      --sun:#e8b84b;
+      --sky:#bcd6ef;
+      --lilac:#d9d2ef;
+      --success:#3a7659;
+      --danger:#b84f4f;
+      --shadow:0 18px 46px rgba(30,42,53,.10);
+      --shadow-soft:0 8px 24px rgba(30,42,53,.06);
+      --radius-xl:30px;
+      --radius-lg:22px;
+      --radius-md:16px;
+      --radius-sm:12px;
+      --pill:999px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.35;background-image:linear-gradient(rgba(31,52,75,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(31,52,75,.12) 1px,transparent 1px);background-size:34px 34px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 6% 4%,rgba(37,86,217,.10),transparent 27%),radial-gradient(circle at 96% 0%,rgba(223,91,66,.10),transparent 25%),radial-gradient(circle at 82% 92%,rgba(232,184,75,.11),transparent 27%)}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.56}
+    .shell{max-width:1500px;margin:0 auto;padding:18px}
+
+    /* masthead */
+    .masthead{position:sticky;top:12px;z-index:60;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 16px;background:rgba(255,253,247,.93);backdrop-filter:blur(18px);border:1px solid rgba(213,204,190,.95);border-radius:var(--pill);box-shadow:var(--shadow)}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{width:45px;height:45px;border-radius:14px;background:var(--ink);color:#fff;display:grid;place-items:center;position:relative;overflow:hidden;box-shadow:inset 0 -4px 0 rgba(0,0,0,.20)}
+    .brand-mark:before{content:"";width:20px;height:20px;border-radius:50%;border:1.5px solid var(--sun);position:absolute;top:8px;left:11px}
+    .brand-mark:after{content:"";width:32px;height:16px;border:1.5px solid var(--sky);border-bottom:0;border-radius:28px 28px 0 0;transform:rotate(-22deg);position:absolute;bottom:5px;left:8px}
+    .brand-word{font:400 28px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.8px;color:var(--ink)}
+    .brand-caption{font:600 9px/1.1 "DM Mono",monospace;letter-spacing:1.4px;text-transform:uppercase;color:#85909a;margin-top:4px}
+    .head-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+    .canvas-chip{display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid rgba(213,204,190,.95);border-radius:var(--pill);background:#fff;color:#5f6b75;font:500 10px/1 "DM Mono",monospace;white-space:nowrap}
+    .canvas-dot{width:7px;height:7px;border-radius:50%;background:var(--moss);box-shadow:0 0 0 4px rgba(95,118,95,.14)}
+
+    /* nav */
+    .routebar{position:sticky;z-index:50;top:86px;display:flex;align-items:center;gap:6px;padding:7px;margin-top:14px;border:1px solid rgba(213,204,190,.85);border-radius:var(--pill);background:rgba(231,225,213,.78);backdrop-filter:blur(16px);overflow:auto;box-shadow:inset 0 2px 6px rgba(49,55,56,.04)}
+    .routebar::-webkit-scrollbar{height:0}
+    .route{border:0;background:transparent;color:#78828d;white-space:nowrap;padding:10px 14px;border-radius:var(--pill);font:600 10px/1 "DM Mono",monospace;letter-spacing:.15px;transition:all .18s ease}
+    .route:hover{background:rgba(255,255,255,.72);color:var(--ink)}
+    .route.active{background:var(--ink);color:#fff;box-shadow:0 5px 12px rgba(19,34,53,.17)}
+    .route b{font-weight:500;opacity:.62;margin-right:5px}
+    .route-meter{margin-left:auto;padding:0 9px;color:#858c93;font:500 9px/1 "DM Mono",monospace;white-space:nowrap}
+
+    .screen{display:none;padding:23px 0 52px}
+    .screen.active{display:block;animation:rise .3s ease both}
+    @keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+    .eyebrow{font:600 10px/1.2 "DM Mono",monospace;letter-spacing:1.25px;text-transform:uppercase;color:var(--vermilion)}
+    .button{appearance:none;border:1px solid transparent;border-radius:var(--pill);padding:13px 18px;font-size:12px;font-weight:800;letter-spacing:.1px;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;transition:all .2s ease;background:#fff;color:var(--ink)}
+    .button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 16px rgba(33,44,54,.10)}
+    .button:active:not(:disabled){transform:translateY(0);box-shadow:none}
+    .button.primary{background:var(--cobalt);color:#fff;box-shadow:0 6px 0 #1b3e9d}
+    .button.primary:hover:not(:disabled){background:#3162e9;box-shadow:0 8px 0 #1b3e9d}
+    .button.ink{background:var(--ink);color:#fff;box-shadow:0 6px 0 #0d1825}
+    .button.verm{background:var(--vermilion);color:#fff;box-shadow:0 6px 0 #b94634}
+    .button.paper{background:rgba(255,255,255,.82);border-color:var(--line);color:var(--ink)}
+    .button.ghost{background:transparent;border-color:transparent;color:#64707a;box-shadow:none}
+    .button.ghost:hover:not(:disabled){background:rgba(255,255,255,.66);color:var(--ink)}
+    .button.small{padding:9px 13px;font-size:10px}
+    .button.full{width:100%}
+
+    /* home */
+    .hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(310px,.88fr);gap:28px;min-height:420px;padding:43px;border-radius:var(--radius-xl);border:1px solid var(--line);background:linear-gradient(135deg,#fffdf8 0%,#f4efe4 57%,#eae2d4 100%);box-shadow:var(--shadow)}
+    .hero:before{content:"";width:460px;height:460px;border-radius:50%;position:absolute;right:-195px;top:-230px;border:1px dashed rgba(37,86,217,.3);box-shadow:0 0 0 42px rgba(37,86,217,.035),0 0 0 84px rgba(37,86,217,.025)}
+    .hero:after{content:"";position:absolute;width:270px;height:270px;bottom:-150px;left:44%;background:rgba(223,91,66,.12);border-radius:50%;filter:blur(4px)}
+    .hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;max-width:720px}
+    .hero h1{margin:15px 0 17px;font:400 clamp(48px,5.7vw,80px)/.93 "Instrument Serif",Georgia,serif;letter-spacing:-2.7px;color:var(--ink)}
+    .hero h1 em{font-style:italic;color:var(--cobalt)}
+    .hero p{max-width:610px;margin:0;color:#59656f;font-size:15px;line-height:1.75}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:29px}
+    .hero-note{display:flex;gap:11px;align-items:flex-start;margin-top:28px;color:#68727b;font-size:11px;line-height:1.6;max-width:555px}
+    .seal{width:30px;height:30px;border-radius:50%;background:var(--sky);color:var(--ink);display:grid;place-items:center;flex:none;font-weight:900}
+    .hero-atlas{position:relative;z-index:1;align-self:center;width:100%;max-width:405px;margin:0 auto;padding:19px;background:var(--ink);color:#fff;border-radius:26px;box-shadow:16px 20px 0 rgba(37,86,217,.13);transform:rotate(1.2deg)}
+    .atlas-top{display:flex;align-items:center;justify-content:space-between;color:#aeb9c6;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
+    .atlas-top b{color:#ffe9ae;font-weight:500}
+    .atlas-title{margin:26px 0 16px;font:400 37px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.9px;color:#fff}
+    .atlas-lines{display:grid;gap:9px;margin:18px 0}
+    .atlas-line{height:8px;border-radius:999px;background:rgba(255,255,255,.1)}
+    .atlas-line:nth-child(1){width:78%;background:rgba(188,214,239,.8)}
+    .atlas-line:nth-child(2){width:53%;background:rgba(232,184,75,.76)}
+    .atlas-line:nth-child(3){width:68%;background:rgba(223,91,66,.76)}
+    .atlas-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:17px}
+    .atlas-cell{padding:11px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:rgba(255,255,255,.045)}
+    .atlas-cell span{display:block;color:#9da9b8;font:500 8px/1 "DM Mono",monospace;letter-spacing:.7px;text-transform:uppercase}
+    .atlas-cell b{display:block;color:#fff;font-size:11px;line-height:1.35;margin-top:7px}
+
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:16px}
+    .stat{border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.78);padding:17px;box-shadow:var(--shadow-soft)}
+    .stat b{display:block;font:400 30px/1 "Instrument Serif",Georgia,serif;color:var(--cobalt)}
+    .stat span{display:block;margin-top:6px;color:#707b84;font-size:10px;line-height:1.45}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:27px 0 15px}
+    .section-head h2{margin:7px 0 0;font:400 39px/1 "Instrument Serif",Georgia,serif;letter-spacing:-1px}
+    .section-head p{max-width:540px;margin:0;color:#6d767d;font-size:12px;line-height:1.6}
+    .stage-badge{padding:9px 12px;border:1px solid #aebfdc;border-radius:var(--pill);background:#e8f0ff;color:#23499f;font:600 9px/1 "DM Mono",monospace;letter-spacing:.7px;white-space:nowrap}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+    .card{position:relative;overflow:hidden;padding:20px;border:1px solid var(--line);border-radius:var(--radius-lg);background:rgba(255,255,255,.8);box-shadow:var(--shadow-soft)}
+    .card.tone-blue{background:linear-gradient(145deg,#f2f6fe,#ddeaff)}
+    .card.tone-sun{background:linear-gradient(145deg,#fff8e7,#f8e9b9)}
+    .card.tone-rose{background:linear-gradient(145deg,#fff1ed,#f3d8d0)}
+    .card-index{color:#687683;font:500 10px/1 "DM Mono",monospace;letter-spacing:.8px}
+    .card-icon{width:42px;height:42px;border-radius:15px;display:grid;place-items:center;background:#fff;border:1px solid rgba(213,204,190,.8);font-size:20px;margin:15px 0}
+    .card h3{margin:0;font-size:16px;letter-spacing:-.3px}
+    .card p{margin:9px 0 0;color:#67717a;font-size:12px;line-height:1.62}
+    .card .button{margin-top:18px}
+
+    /* forms */
+    .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin:4px 0 16px}
+    .page-head h1{margin:0;font:400 45px/.98 "Instrument Serif",Georgia,serif;letter-spacing:-1.5px}
+    .page-head p{max-width:735px;margin:9px 0 0;color:#6b747b;font-size:12px;line-height:1.62}
+    .stage-chip{padding:10px 12px;border-radius:var(--pill);background:var(--ink);color:#fff;font:500 9px/1 "DM Mono",monospace;letter-spacing:.9px;text-transform:uppercase;white-space:nowrap}
+    .form-layout{display:grid;grid-template-columns:minmax(0,1fr) 334px;gap:15px;align-items:start}
+    .form-stack{display:grid;gap:15px}
+    .form-panel,.side-card{padding:23px;border:1px solid var(--line);border-radius:26px;background:rgba(255,255,255,.84);box-shadow:var(--shadow-soft)}
+    .form-panel-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:19px}
+    .form-panel-head h3{margin:4px 0 0;font:400 30px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.75px}
+    .form-panel-head p{margin:8px 0 0;max-width:570px;color:#70777c;font-size:11px;line-height:1.62}
+    .form-index{width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:50%;background:var(--cobalt);color:#fff;font:500 11px/1 "DM Mono",monospace;box-shadow:0 5px 0 #17388d}
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+    .field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .field{min-width:0}
+    .field.full{grid-column:1/-1}
+    .field label{display:flex;align-items:center;gap:7px;margin-bottom:7px;color:#59656e;font:600 10px/1.2 "DM Mono",monospace;letter-spacing:.45px;text-transform:uppercase}
+    .field label i{font-style:normal;color:var(--vermilion);font-size:13px}
+    .field input,.field textarea,.field select{width:100%;outline:none;border:1px solid #d8d0c4;background:#fffefb;color:var(--ink);border-radius:15px;padding:12px 13px;font-size:12px;font-weight:600;line-height:1.45;transition:all .18s ease}
+    .field textarea{min-height:96px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:#a7a39b;font-weight:500}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--cobalt);background:#fff;box-shadow:0 0 0 4px rgba(37,86,217,.11)}
+    .field select option{background:#fff;color:var(--ink)}
+    .choice-row{display:flex;gap:8px;flex-wrap:wrap}
+    .choice{position:relative}.choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice label{display:flex;align-items:center;min-height:37px;padding:9px 12px;border:1px solid #d8d0c4;border-radius:13px;background:#fffefb;color:#63707a;font:700 10px/1 Manrope,sans-serif;text-transform:none;letter-spacing:0;cursor:pointer;transition:all .18s ease}
+    .choice input:checked+label{color:#fff;background:var(--ink);border-color:var(--ink);box-shadow:0 5px 12px rgba(19,34,53,.14)}
+    .form-footer{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:17px;padding-top:16px;border-top:1px solid #ebe5dc}
+    .hint{margin:0;color:#7b848a;font-size:10px;line-height:1.5;max-width:550px}
+    .side-stack{display:grid;gap:14px;position:sticky;top:143px}
+    .side-card{padding:19px}.side-card.dark{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:6px 8px 0 rgba(37,86,217,.18)}
+    .side-card h3{margin:5px 0 0;font:400 26px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.6px}
+    .side-card p{margin:9px 0 0;color:#68737c;font-size:11px;line-height:1.62}.side-card.dark p{color:#b4c0ce}
+    .readiness{display:grid;gap:10px;margin-top:18px}.readiness-row{display:flex;align-items:center;justify-content:space-between;gap:9px;font-size:11px;color:#69747d}.side-card.dark .readiness-row{color:#c4ccd4}
+    .ready-dot{width:8px;height:8px;border-radius:50%;background:#d5d8d6;box-shadow:0 0 0 4px rgba(213,216,214,.22)}.ready-dot.done{background:var(--success);box-shadow:0 0 0 4px rgba(58,118,89,.15)}
+    .mini-list{display:grid;gap:11px;margin-top:17px}.mini-list>div{display:flex;gap:10px;align-items:flex-start}.mini-list b{color:var(--sun);font:500 10px/1.5 "DM Mono",monospace}.mini-list span{color:#b6c1cd;font-size:11px;line-height:1.55}
+    .notice{margin-top:16px;padding:13px;border:1px dashed rgba(213,204,190,.88);border-radius:15px;background:rgba(255,255,255,.45);color:#6c747a;font-size:10px;line-height:1.6}.side-card.dark .notice{background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.18);color:#b9c3ce}
+
+    /* outputs */
+    .output-layout{display:grid;grid-template-columns:minmax(0,1fr) 332px;gap:15px;align-items:start}
+    .result-card{padding:24px;border:1px solid var(--line);border-radius:27px;background:rgba(255,255,255,.88);box-shadow:var(--shadow-soft);min-width:0}
+    .result-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px solid #ebe5dc;margin-bottom:17px}
+    .result-top h2{margin:4px 0 0;font:400 34px/1 "Instrument Serif",Georgia,serif;letter-spacing:-.8px}.result-top p{margin:8px 0 0;color:#70777d;font-size:11px;line-height:1.55;max-width:620px}
+    .result-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+    .empty{min-height:380px;display:grid;place-items:center;text-align:center;padding:28px;color:#6e787e}.empty-box{max-width:360px}.empty-mark{width:57px;height:57px;margin:0 auto 16px;border-radius:50%;display:grid;place-items:center;background:#e7efff;color:var(--cobalt);font-size:22px}.empty h3{margin:0;color:var(--ink);font:400 29px/1 "Instrument Serif",Georgia,serif}.empty p{margin:9px 0 0;font-size:12px;line-height:1.6}
+    .result-section{padding:15px 0;border-bottom:1px solid #ebe5dc}.result-section:last-child{border-bottom:0}.result-section h3{margin:0 0 8px;font-size:14px;letter-spacing:-.15px}.result-section p{margin:0;color:#56636d;font-size:12px;line-height:1.7}.result-section ul{margin:9px 0 0 18px;color:#56636d;font-size:12px;line-height:1.68}.result-section li{margin:5px 0}
+    .focus-box{padding:15px;border-radius:16px;background:#eaf0ff;border:1px solid #cbd8fb;color:#203b83;font-size:12px;line-height:1.65}.focus-box b{display:block;margin-bottom:4px;font-size:15px}
+    .quote{padding:15px;border-left:4px solid var(--vermilion);background:#fff5f1;color:#8e4337;font:400 22px/1.35 "Instrument Serif",Georgia,serif}
+    .pill-list{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.pill{display:inline-flex;align-items:center;padding:7px 9px;border:1px solid #d7e2d7;background:#f3faf2;border-radius:var(--pill);font-size:10px;font-weight:800;color:#49684d}
+    .list-card{display:grid;gap:10px}.list-row{display:grid;grid-template-columns:33px minmax(0,1fr);gap:11px;padding:13px;border:1px solid #e1dbcf;border-radius:15px;background:#fffefa}.list-no{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;font:500 10px/1 "DM Mono",monospace}.list-row b{display:block;font-size:12px;color:var(--ink)}.list-row span{display:block;margin-top:4px;color:#66717a;font-size:11px;line-height:1.55}
+    .calendar{display:grid;gap:10px}.calendar-row{display:grid;grid-template-columns:64px minmax(0,1fr) 112px;gap:11px;align-items:start;padding:13px;border:1px solid #e1dbcf;border-radius:15px;background:#fffefa}.calendar-day{font:600 10px/1.4 "DM Mono",monospace;color:var(--cobalt);letter-spacing:.2px}.calendar-row b{display:block;font-size:12px}.calendar-row p{margin:4px 0 0;color:#66717a;font-size:11px;line-height:1.5}.calendar-format{display:inline-flex;justify-content:center;padding:6px 7px;border-radius:9px;background:#f0ede7;color:#66717a;font:600 9px/1 "DM Mono",monospace;text-align:center}
+    .horizon-card{padding:15px;border:1px solid #e1dbcf;border-radius:16px;background:#fffefa}.horizon-card+ .horizon-card{margin-top:10px}.horizon-card .tag{font:600 9px/1 "DM Mono",monospace;letter-spacing:.6px;text-transform:uppercase;color:#20449f;background:#e8f0ff;border:1px solid #c7d6fb;padding:6px 8px;border-radius:var(--pill)}.horizon-card h3{margin:10px 0 5px;font-size:14px}.horizon-card p{margin:0;color:#61707a;font-size:11px;line-height:1.6}.horizon-card ul{margin:8px 0 0 17px;color:#61707a;font-size:11px;line-height:1.58}
+    .atlas-preview{padding:20px;border-radius:23px;background:var(--ink);color:#fff;box-shadow:7px 8px 0 rgba(37,86,217,.22)}.atlas-preview h3{font:400 32px/1 "Instrument Serif",Georgia,serif;margin:4px 0 10px}.atlas-preview .mono{color:#aab8c8;font:500 9px/1.5 "DM Mono",monospace;letter-spacing:.6px;text-transform:uppercase}.atlas-preview .data-line{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.11)}.atlas-preview .data-line:last-child{border-bottom:0}.atlas-preview .data-line span{display:block;color:#9eafbd;font:500 9px/1 "DM Mono",monospace;letter-spacing:.7px;text-transform:uppercase}.atlas-preview .data-line b{display:block;margin-top:7px;color:#fff;font-size:11px;line-height:1.55}
+    .transfer{padding:15px;border-radius:16px;border:1px dashed #9eafe8;background:#f1f5ff;white-space:pre-wrap;font:500 10px/1.6 "DM Mono",monospace;color:#334a8a;overflow:auto;max-height:480px}
+    .export-list{display:grid;gap:10px}.export-row{display:flex;gap:11px;align-items:flex-start;padding:12px;border:1px solid #e1dbcf;border-radius:14px;background:#fffefa}.check{width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;background:#e5f0e6;color:#397052;font-weight:900}.check.incomplete{background:#eeece7;color:#aaa39a}.export-row b{display:block;font-size:12px}.export-row span{display:block;margin-top:3px;color:#6a747a;font-size:10px;line-height:1.45}.export-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+
+    /* toast */
+    #toast{position:fixed;right:22px;bottom:22px;z-index:200;display:none;max-width:min(420px,calc(100vw - 40px));padding:13px 16px;border-radius:16px;background:var(--ink);color:#fff;box-shadow:var(--shadow);font-size:12px;line-height:1.45}
+    #toast.show{display:block;animation:toastIn .25s ease both}@keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .busy{display:inline-flex;align-items:center;gap:8px}.loader{width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;animation:spin .75s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:1040px){.hero{grid-template-columns:1fr}.hero-atlas{max-width:none}.form-layout,.output-layout{grid-template-columns:1fr}.side-stack{position:static;grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:1fr 1fr}.route-meter{display:none}}
+    @media(max-width:680px){.shell{padding:12px}.masthead{top:7px;padding:10px 12px}.brand-mark{width:40px;height:40px}.brand-word{font-size:25px}.canvas-chip{display:none}.routebar{top:75px;margin-top:10px}.route{padding:9px 12px}.hero{min-height:auto;padding:28px 22px}.hero h1{font-size:52px}.hero-atlas{padding:17px}.atlas-title{font-size:33px}.page-head{display:block}.page-head h1{font-size:39px}.stage-chip{display:inline-flex;margin-top:11px}.form-panel,.result-card{padding:18px}.form-panel-head h3{font-size:27px}.field-grid,.field-grid.three{grid-template-columns:1fr}.field.full{grid-column:auto}.form-footer{align-items:flex-start;flex-direction:column}.form-footer .button{width:100%}.side-stack{grid-template-columns:1fr}.stats,.grid-3{grid-template-columns:1fr}.section-head{display:block}.stage-badge{display:inline-flex;margin-top:10px}.result-top{display:block}.result-actions{justify-content:flex-start;margin-top:12px}.calendar-row{grid-template-columns:54px minmax(0,1fr)}.calendar-format{grid-column:2;justify-self:start}.head-actions .button{display:none}}
+  </style>
+</head>
+<body>
+  <div id="toast"></div>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"></div>
+        <div>
+          <div class="brand-word">ARAH</div>
+          <div class="brand-caption">brand atlas studio</div>
+        </div>
+      </div>
+      <div class="head-actions">
+        <div class="canvas-chip"><span class="canvas-dot"></span>Canvas session · local workspace</div>
+        <button class="button paper small" data-action="copy:transfer">Copy Transfer Pack</button>
+      </div>
+    </header>
+
+    <nav class="routebar" id="routebar"></nav>
+    <main id="app"></main>
+  </div>
+
+<script>
+/* ================================================================
+   ARAH — Brand Atlas Studio
+   Gemini Canvas-friendly standalone HTML.
+   Keep apiKey empty: Canvas injects the user context/API runtime.
+================================================================ */
+const apiKey = "";
+const STORAGE_KEY = "arah_brand_atlas_v1";
+const MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.0-flash"];
+
+const DEFAULT_STATE = {
+  route: "home",
+  brief: {
+    track: "Business Brand",
+    brandName: "",
+    category: "",
+    productOffer: "",
+    audience: "",
+    audienceContext: "",
+    problem: "",
+    desiredOutcome: "",
+    differentiation: "",
+    proofInventory: "",
+    competitors: "",
+    guardrails: "",
+    channels: ["Instagram", "TikTok"],
+    horizon: "90 hari"
+  },
+  compass: null,
+  voice: null,
+  rhythm: null,
+  horizon: null,
+  error: ""
+};
+
+let state = loadState();
+const app = document.getElementById("app");
+const routebar = document.getElementById("routebar");
+
+function clone(v){ return JSON.parse(JSON.stringify(v)); }
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return clone(DEFAULT_STATE);
+    const saved = JSON.parse(raw);
+    return {
+      ...clone(DEFAULT_STATE),
+      ...saved,
+      brief: { ...clone(DEFAULT_STATE).brief, ...(saved.brief || {}) }
+    };
+  }catch(e){ return clone(DEFAULT_STATE); }
+}
+function persist(){
+  try{ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }catch(e){ console.warn("Local storage unavailable", e); }
+}
+function esc(value){ return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c])); }
+function compact(v){ return String(v || "").trim() || "—"; }
+function titleCase(v){ return String(v||"").replace(/\b\w/g, x => x.toUpperCase()); }
+function toast(message){
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.className = "show";
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=> el.className = "", 3400);
+}
+function copyText(text, success="Berhasil disalin."){
+  const node = document.createElement("textarea");
+  node.value = text; document.body.appendChild(node); node.select();
+  try{ document.execCommand("copy"); toast(success); }
+  catch(e){ toast("Tidak bisa menyalin otomatis. Pilih teks secara manual."); }
+  node.remove();
+}
+function download(name, content, mime="text/markdown;charset=utf-8"){
+  const blob = new Blob([content], {type:mime});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+function isReady(){
+  const b = state.brief;
+  return Boolean(b.brandName.trim() && b.category.trim() && b.audience.trim() && b.problem.trim() && b.desiredOutcome.trim());
+}
+function outputProgress(){
+  return [isReady(), Boolean(state.compass), Boolean(state.voice), Boolean(state.rhythm), Boolean(state.horizon)].filter(Boolean).length;
+}
+function briefReadiness(){
+  const b=state.brief;
+  return [
+    ["Brand & kategori", Boolean(b.brandName.trim() && b.category.trim())],
+    ["Audiens", Boolean(b.audience.trim())],
+    ["Masalah", Boolean(b.problem.trim())],
+    ["Outcome", Boolean(b.desiredOutcome.trim())],
+    ["Proof / guardrail", Boolean(b.proofInventory.trim() || b.guardrails.trim())]
+  ];
+}
+function briefContext(){
+  const b=state.brief;
+  return `
+TRACK: ${b.track}
+NAMA BRAND: ${b.brandName}
+KATEGORI: ${b.category}
+PRODUK / OFFER: ${b.productOffer || "Belum spesifik"}
+AUDIENS UTAMA: ${b.audience}
+KONTEKS AUDIENS: ${b.audienceContext || "Belum ditulis"}
+MASALAH YANG DIHADAPI: ${b.problem}
+OUTCOME YANG DIINGINKAN: ${b.desiredOutcome}
+PEMBEDA / KEUNGGULAN: ${b.differentiation || "Belum dinyatakan"}
+BUKTI YANG BENAR-BENAR TERSEDIA: ${b.proofInventory || "Belum dinyatakan"}
+KOMPETITOR / ALTERNATIF: ${b.competitors || "Belum dinyatakan"}
+GUARDRAIL: ${b.guardrails || "Tidak ada tambahan"}
+CHANNEL PRIORITAS: ${(b.channels || []).join(", ") || "Belum dipilih"}
+HORIZON PERENCANAAN: ${b.horizon}
+`.trim();
+}
+
+/* ========== Gemini API (same Canvas pattern as source apps) ========== */
+async function postWithRetry(url, payload){
+  let delay = 900; let lastError;
+  for(let attempt=0; attempt<5; attempt++){
+    try{
+      const res = await fetch(url, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(payload)});
+      if(res.ok) return await res.json();
+      const text = await res.text();
+      const err = new Error(`HTTP ${res.status}: ${text.slice(0,260)}`);
+      if(res.status !== 429 && res.status < 500) throw err;
+      lastError = err;
+    }catch(err){
+      lastError = err;
+      if(attempt === 4) break;
+    }
+    await new Promise(resolve => setTimeout(resolve, delay));
+    delay *= 2;
+  }
+  throw lastError || new Error("Permintaan ke Gemini tidak berhasil.");
+}
+async function callModels(payloadBuilder){
+  let finalError;
+  for(const model of MODELS){
+    try{
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      return await postWithRetry(url, payloadBuilder());
+    }catch(err){ finalError = err; console.warn("Model gagal", model, err); }
+  }
+  throw finalError || new Error("Tidak ada model Gemini yang dapat digunakan.");
+}
+function cleanJson(raw){ return String(raw||"").trim().replace(/^`{3}(?:json)?\s*/i, "").replace(/\s*`{3}$/i, "").trim(); }
+function extractText(data){ return (data?.candidates?.[0]?.content?.parts || []).map(p=>p.text).find(Boolean) || ""; }
+async function generateJson(prompt, schema){
+  const data = await callModels(()=>({
+    contents:[{role:"user",parts:[{text:prompt}]}],
+    generationConfig:{responseMimeType:"application/json",responseSchema:schema,temperature:0.65}
+  }));
+  const raw = extractText(data);
+  if(!raw) throw new Error("Gemini tidak mengembalikan output. Coba ulangi.");
+  try{return JSON.parse(cleanJson(raw));}
+  catch(e){ throw new Error("Respons AI tidak terbaca sebagai JSON. Coba ulangi."); }
+}
+
+const COMPASS_SCHEMA = {
+  type:"OBJECT", properties:{
+    oneLiner:{type:"STRING"},
+    positioningStatement:{type:"STRING"},
+    categoryNarrative:{type:"STRING"},
+    audienceInsight:{type:"STRING"},
+    corePromise:{type:"STRING"},
+    differentiation:{type:"ARRAY",items:{type:"STRING"}},
+    proofSlots:{type:"ARRAY",items:{type:"STRING"}},
+    risksToAvoid:{type:"ARRAY",items:{type:"STRING"}},
+    brandEssence:{type:"ARRAY",items:{type:"STRING"}},
+    messagePillars:{type:"ARRAY",items:{type:"OBJECT",properties:{name:{type:"STRING"},role:{type:"STRING"},angles:{type:"ARRAY",items:{type:"STRING"}}},required:["name","role","angles"]}}
+  }, required:["oneLiner","positioningStatement","categoryNarrative","audienceInsight","corePromise","differentiation","proofSlots","risksToAvoid","brandEssence","messagePillars"]
+};
+const VOICE_SCHEMA = {
+  type:"OBJECT", properties:{
+    personality:{type:"ARRAY",items:{type:"STRING"}},
+    toneRange:{type:"OBJECT",properties:{defaultTone:{type:"STRING"},whenEducational:{type:"STRING"},whenSelling:{type:"STRING"},whenResponding:{type:"STRING"}},required:["defaultTone","whenEducational","whenSelling","whenResponding"]},
+    languageRules:{type:"ARRAY",items:{type:"STRING"}},
+    wordsToUse:{type:"ARRAY",items:{type:"STRING"}},
+    wordsToAvoid:{type:"ARRAY",items:{type:"STRING"}},
+    sampleLines:{type:"OBJECT",properties:{bio:{type:"STRING"},hook:{type:"STRING"},cta:{type:"STRING"},reply:{type:"STRING"}},required:["bio","hook","cta","reply"]},
+    visualDirection:{type:"OBJECT",properties:{mood:{type:"STRING"},keywords:{type:"ARRAY",items:{type:"STRING"}},palette:{type:"ARRAY",items:{type:"STRING"}},compositionRules:{type:"ARRAY",items:{type:"STRING"}}},required:["mood","keywords","palette","compositionRules"]}
+  }, required:["personality","toneRange","languageRules","wordsToUse","wordsToAvoid","sampleLines","visualDirection"]
+};
+const RHYTHM_SCHEMA = {
+  type:"OBJECT", properties:{
+    editorialPrinciple:{type:"STRING"},
+    weeklyRhythm:{type:"ARRAY",items:{type:"OBJECT",properties:{week:{type:"STRING"},focus:{type:"STRING"},goal:{type:"STRING"}},required:["week","focus","goal"]}},
+    calendar:{type:"ARRAY",items:{type:"OBJECT",properties:{day:{type:"STRING"},pillar:{type:"STRING"},format:{type:"STRING"},topic:{type:"STRING"},hook:{type:"STRING"},cta:{type:"STRING"}},required:["day","pillar","format","topic","hook","cta"]}},
+    repurposeSystem:{type:"ARRAY",items:{type:"STRING"}},
+    measurementFocus:{type:"ARRAY",items:{type:"STRING"}}
+  }, required:["editorialPrinciple","weeklyRhythm","calendar","repurposeSystem","measurementFocus"]
+};
+const HORIZON_SCHEMA = {
+  type:"OBJECT", properties:{
+    categorySignals:{type:"ARRAY",items:{type:"OBJECT",properties:{signal:{type:"STRING"},whyItMatters:{type:"STRING"},moveNow:{type:"STRING"}},required:["signal","whyItMatters","moveNow"]}},
+    opportunities:{type:"ARRAY",items:{type:"OBJECT",properties:{title:{type:"STRING"},rationale:{type:"STRING"},experiment:{type:"STRING"}},required:["title","rationale","experiment"]}},
+    communicationRisks:{type:"ARRAY",items:{type:"OBJECT",properties:{risk:{type:"STRING"},prevention:{type:"STRING"}},required:["risk","prevention"]}},
+    next90Days:{type:"ARRAY",items:{type:"OBJECT",properties:{phase:{type:"STRING"},priority:{type:"STRING"},actions:{type:"ARRAY",items:{type:"STRING"}}},required:["phase","priority","actions"]}}
+  }, required:["categorySignals","opportunities","communicationRisks","next90Days"]
+};
+
+async function makeCompass(){
+  if(!isReady()) throw new Error("Lengkapi Brand Discovery terlebih dahulu.");
+  const prompt = `Anda adalah Brand Strategist senior untuk bisnis Indonesia. Susun Brand Positioning Compass dari brief berikut. Gunakan Bahasa Indonesia. Berikan pemikiran tajam, praktis, dan spesifik. Jangan membuat klaim, data pasar, pencapaian, diskon, atau bukti yang tidak diberikan. Jika bukti belum tersedia, tulis sebagai proof slot yang perlu dikumpulkan. Hindari jargon kosong dan klaim absolut.\n\n${briefContext()}\n\nAturan tambahan:\n- positioningStatement harus berbentuk "Untuk [audience], [brand] adalah [category] yang [promise], karena [reason to believe]."\n- messagePillars 3 sampai 5 item.\n- Angles harus bisa langsung dipakai sebagai arah konten.\n- risksToAvoid wajib menyebut batas klaim yang perlu diverifikasi.`;
+  state.compass = await generateJson(prompt, COMPASS_SCHEMA);
+}
+async function makeVoice(){
+  if(!state.compass) throw new Error("Susun Positioning Compass terlebih dahulu.");
+  const prompt = `Anda adalah Brand Voice Director. Buat sistem suara dan ekspresi brand yang konsisten dalam Bahasa Indonesia berdasarkan Brand Compass dan brief berikut. Jangan meniru gaya hidup, merek, atau orang tertentu. Jangan menyarankan klaim yang belum punya bukti. Output harus praktis dipakai oleh copywriter, social media manager, dan visual designer.\n\nBRIEF:\n${briefContext()}\n\nBRAND COMPASS:\n${JSON.stringify(state.compass)}\n\nBuat personality maksimal 5 kata sifat yang dapat dioperasionalkan. Untuk wordsToAvoid, masukkan juga kata-kata marketing generik bila tidak sejalan dengan brand. Visual direction harus memberi arah visual tingkat brand, bukan prompt gambar spesifik.`;
+  state.voice = await generateJson(prompt, VOICE_SCHEMA);
+}
+async function makeRhythm(){
+  if(!state.compass || !state.voice) throw new Error("Susun Compass dan Voice System terlebih dahulu.");
+  const b=state.brief;
+  const prompt = `Anda adalah Editorial Strategist. Susun Brand Rhythm berupa sistem konten ${b.horizon} untuk brand Indonesia. Tulis Bahasa Indonesia. Berikan kalender 30 item yang bervariasi dan realistis, bukan 30 variasi promosi. Gunakan channel: ${(b.channels||[]).join(", ")}. Hindari mengarang diskon, review, angka, testimoni, hasil, atau klaim medis/finansial/legal yang tidak tersedia. Pastikan CTA sesuai tahap awareness dan tidak semua mengarah ke beli.\n\nBRIEF:\n${briefContext()}\n\nCOMPASS:\n${JSON.stringify(state.compass)}\n\nVOICE SYSTEM:\n${JSON.stringify(state.voice)}\n\nAturan kalender:\n- day berformat Day 01 sampai Day 30.\n- format contoh: Reel, Carousel, TikTok, Thread, Story, Live outline, Email, LinkedIn post.\n- topik harus spesifik dan layak diproduksi.\n- hook satu kalimat, CTA satu kalimat.\n- Buat empat weeklyRhythm untuk 4 minggu.`;
+  state.rhythm = await generateJson(prompt, RHYTHM_SCHEMA);
+}
+async function makeHorizon(){
+  if(!state.compass) throw new Error("Susun Positioning Compass terlebih dahulu.");
+  const prompt = `Anda adalah Growth & Brand Strategist. Buat Horizon Report dengan rekomendasi 90 hari untuk brand Indonesia berdasarkan brief berikut. Jangan mengaku mengetahui data real-time, tren aktual, atau riset pasar yang tidak diberikan. Framing categorySignals sebagai sinyal/hipotesis yang perlu diuji, bukan fakta pasti. Semua eksperimen harus hemat, dapat dijalankan tim kecil, dan aman terhadap guardrail brand.\n\nBRIEF:\n${briefContext()}\n\nCOMPASS:\n${JSON.stringify(state.compass)}\n\nVOICE SYSTEM (bila ada):\n${JSON.stringify(state.voice||{})}`;
+  state.horizon = await generateJson(prompt, HORIZON_SCHEMA);
+}
+
+/* ========== Rendering helpers ========== */
+function button(label, action, cls="paper", disabled=false, extra=""){
+  return `<button type="button" class="button ${cls} ${extra}" data-action="${esc(action)}" ${disabled?"disabled":""}>${label}</button>`;
+}
+function field(label, path, placeholder, opts={}){
+  const value = getPath(path) || "";
+  const full = opts.full ? " full" : "";
+  if(opts.type === "textarea") return `<div class="field${full}"><label>${label}${opts.required?" <i>*</i>":""}</label><textarea data-path="${path}" placeholder="${esc(placeholder)}">${esc(value)}</textarea></div>`;
+  if(opts.type === "select") return `<div class="field${full}"><label>${label}${opts.required?" <i>*</i>":""}</label><select data-path="${path}">${opts.options.map(x=>`<option value="${esc(x)}" ${value===x?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`;
+  return `<div class="field${full}"><label>${label}${opts.required?" <i>*</i>":""}</label><input data-path="${path}" value="${esc(value)}" placeholder="${esc(placeholder)}" /></div>`;
+}
+function getPath(path){ return path.split(".").reduce((acc,key)=>acc?.[key],state); }
+function setPath(path,value){
+  const keys=path.split("."); let ref=state;
+  keys.slice(0,-1).forEach(k=>{ if(!ref[k] || typeof ref[k]!=="object") ref[k]={}; ref=ref[k]; });
+  ref[keys[keys.length-1]]=value;
+}
+function choiceGroup(label, path, options){
+  const current=getPath(path);
+  return `<div class="field full"><label>${label}</label><div class="choice-row">${options.map((opt,i)=>`<div class="choice"><input type="radio" id="${path.replaceAll(".","-")}-${i}" name="${path}" value="${esc(opt)}" data-path="${path}" ${current===opt?"checked":""}><label for="${path.replaceAll(".","-")}-${i}">${esc(opt)}</label></div>`).join("")}</div></div>`;
+}
+function checkboxGroup(label, values){
+  const cur=state.brief.channels||[];
+  return `<div class="field full"><label>${label}</label><div class="choice-row">${values.map((opt,i)=>`<div class="choice"><input type="checkbox" id="channel-${i}" value="${esc(opt)}" data-channel ${cur.includes(opt)?"checked":""}><label for="channel-${i}">${esc(opt)}</label></div>`).join("")}</div></div>`;
+}
+function renderRoutebar(){
+  const items=[
+    ["home","00","Atlas"],["discovery","01","Discovery"],["compass","02","Compass"],["voice","03","Voice System"],["rhythm","04","Brand Rhythm"],["horizon","05","Horizon"],["export","06","Handoff"]
+  ];
+  const pct=Math.round((outputProgress()/5)*100);
+  routebar.innerHTML=items.map(([id,no,label])=>`<button type="button" class="route ${state.route===id?"active":""}" data-action="nav:${id}"><b>${no}</b>${label}</button>`).join("")+`<span class="route-meter">Atlas ${pct}%</span>`;
+}
+function hero(){
+  const b=state.brief;
+  const prepared=outputProgress();
+  return `<section class="screen active">
+    <div class="hero"><div class="hero-copy"><div class="eyebrow">Brand operating system · Canvas-ready</div><h1>Temukan arah.<br><em>Bukan sekadar gaya.</em></h1><p>ARAH membangun fondasi brand yang dapat dipakai oleh semua eksekusi Anda: positioning, message pillars, voice, visual direction, dan ritme konten. Mulai dari konteks bisnis yang nyata—bukan kumpulan kata sifat kosong.</p><div class="hero-actions">${button("Mulai Brand Discovery →","nav:discovery","primary")}${button("Lihat Brand Compass","nav:compass","paper")}</div><div class="hero-note"><span class="seal">✦</span><span>Semua brief dan output teks disimpan lokal di browser. Saat Anda memakai link Canvas sendiri, generasi AI mengikuti konteks akun Canvas Anda.</span></div></div>
+    <aside class="hero-atlas"><div class="atlas-top"><span>Brand atlas</span><b>v1.0</b></div><div class="atlas-title">${esc(b.brandName || "Your brand, mapped")}</div><div class="atlas-lines"><div class="atlas-line"></div><div class="atlas-line"></div><div class="atlas-line"></div></div><div class="atlas-grid"><div class="atlas-cell"><span>Position</span><b>${state.compass?"Defined":"Waiting"}</b></div><div class="atlas-cell"><span>Voice</span><b>${state.voice?"Mapped":"Waiting"}</b></div><div class="atlas-cell"><span>Rhythm</span><b>${state.rhythm?"Planned":"Waiting"}</b></div><div class="atlas-cell"><span>Horizon</span><b>${state.horizon?"Scoped":"Waiting"}</b></div></div></aside></div>
+    <div class="stats"><div class="stat"><b>${prepared}/5</b><span>Bagian atlas siap digunakan</span></div><div class="stat"><b>${state.compass?.messagePillars?.length||0}</b><span>Message pillar terdefinisi</span></div><div class="stat"><b>${state.rhythm?.calendar?.length||0}</b><span>Ide konten terjadwal</span></div><div class="stat"><b>${state.horizon?.opportunities?.length||0}</b><span>Eksperimen 90 hari</span></div></div>
+    <div class="section-head"><div><div class="eyebrow">Route map</div><h2>Satu fondasi, banyak eksekusi.</h2></div><p>Output ARAH dapat dipindahkan ke Adsprint, Pikat, Rupa, dan Mula melalui Transfer Pack agar tiap aplikasi tetap bekerja dari identitas brand yang sama.</p><span class="stage-badge">Build once · reuse everywhere</span></div>
+    <div class="grid-3"><article class="card tone-blue"><div class="card-index">01 · STRATEGY</div><div class="card-icon">⌖</div><h3>Positioning Compass</h3><p>Terjemahkan brief menjadi posisi brand, core promise, insight audiens, pembeda, proof slot, dan message pillars.</p>${button("Susun compass","nav:compass","paper small")}</article><article class="card tone-sun"><div class="card-index">02 · EXPRESSION</div><div class="card-icon">✳</div><h3>Voice & expression</h3><p>Tentukan cara brand berbicara, kata yang dipakai, kata yang dihindari, contoh bio, hook, CTA, dan visual rules.</p>${button("Buka voice system","nav:voice","paper small")}</article><article class="card tone-rose"><div class="card-index">03 · OPERATING</div><div class="card-icon">◫</div><h3>Brand Rhythm</h3><p>Bangun calendar 30 hari yang tidak hanya berisi promosi: insight, proof, perspective, community, dan conversion.</p>${button("Atur ritme konten","nav:rhythm","paper small")}</article></div>
+  </section>`;
+}
+function discovery(){
+  const ready=briefReadiness();
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 01 · source material</div><h1>Brand Discovery</h1><p>Jelaskan fakta, konteks, dan batas brand Anda. Semakin konkret brief-nya, semakin tajam peta yang dibangun ARAH.</p></div><span class="stage-chip">01 / Foundation</span></div>
+  <div class="form-layout"><div class="form-stack"><section class="form-panel"><div class="form-panel-head"><div><div class="eyebrow">Identitas dasar</div><h3>Siapa yang sedang kita arahkan?</h3><p>Mulai dengan objek yang nyata: brand, kategori, dan offer. ARAH tidak perlu nama yang sudah final untuk mulai bekerja.</p></div><span class="form-index">01</span></div><div class="field-grid">${field("Nama brand","brief.brandName","Contoh: Citra Rasa",{required:true})}${field("Track","brief.track","",{type:"select",options:["Business Brand","Personal Brand","Product Brand","Agency Client"],required:true})}${field("Kategori / industri","brief.category","Contoh: frozen food rumahan",{required:true})}${field("Produk / offer utama","brief.productOffer","Contoh: paket frozen food siap masak")}</div></section>
+  <section class="form-panel"><div class="form-panel-head"><div><div class="eyebrow">Audience map</div><h3>Untuk siapa arah ini dibuat?</h3><p>Jangan hanya tulis demografi. Masukkan konteks hidup, situasi pembelian, dan apa yang sedang mereka coba selesaikan.</p></div><span class="form-index">02</span></div><div class="field-grid">${field("Audiens utama","brief.audience","Contoh: ibu bekerja usia 27–42 tahun di kota besar",{required:true})}${field("Outcome yang mereka inginkan","brief.desiredOutcome","Contoh: makan keluarga tetap praktis tanpa kompromi rasa",{required:true})}${field("Konteks audiens","brief.audienceContext","Contoh: pulang sore, sering kehabisan ide masak, sensitif terhadap kualitas bahan",{type:"textarea",full:true})}${field("Masalah utama","brief.problem","Contoh: makan praktis sering dianggap kurang sehat atau membosankan",{type:"textarea",full:true,required:true})}</div></section>
+  <section class="form-panel"><div class="form-panel-head"><div><div class="eyebrow">Truth & guardrails</div><h3>Apa yang boleh dan tidak boleh dikatakan?</h3><p>Bagian ini menjaga output agar tidak menjadi marketing yang mengarang bukti, data, atau klaim berlebihan.</p></div><span class="form-index">03</span></div><div class="field-grid">${field("Pembeda / keunggulan nyata","brief.differentiation","Contoh: resep keluarga, frozen tanpa pengawet, pengiriman same-day")}${field("Bukti yang benar-benar tersedia","brief.proofInventory","Contoh: review pembeli, sertifikat, data repeat order, proses produksi",{type:"textarea"})}${field("Kompetitor / alternatif pelanggan","brief.competitors","Contoh: masak sendiri, katering, frozen food supermarket",{type:"textarea"})}${field("Guardrail komunikasi","brief.guardrails","Contoh: tidak menggunakan klaim sehat tanpa dasar, tidak hard sell, tidak membandingkan merendahkan",{type:"textarea"})}${checkboxGroup("Channel prioritas",["Instagram","TikTok","WhatsApp","Shopee","LinkedIn","Email","YouTube","Website"])}${field("Horizon perencanaan","brief.horizon","",{type:"select",options:["30 hari","60 hari","90 hari","6 bulan"]})}</div><div class="form-footer"><p class="hint">Brief teks disimpan di localStorage browser ini. Jangan memasukkan data pelanggan, akses akun, atau informasi rahasia perusahaan.</p>${button("Susun Positioning Compass →","generate:compass","primary",!isReady())}</div></section></div>
+  <aside class="side-stack"><section class="side-card"><div class="eyebrow">Brief readiness</div><h3>Sudah punya arah bahan baku?</h3><p>Anda tidak perlu mengisi semuanya sempurna. Namun lima titik ini membuat positioning lebih akurat.</p><div class="readiness">${ready.map(([label,done])=>`<div class="readiness-row"><span>${esc(label)}</span><span class="ready-dot ${done?"done":""}"></span></div>`).join("")}</div></section><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">Apa yang dibuat</div><h3>Compass, bukan slogan acak.</h3><div class="mini-list"><div><b>01</b><span>Positioning statement dan audience insight.</span></div><div><b>02</b><span>Core promise, differentiation, proof slot, dan risk guardrails.</span></div><div><b>03</b><span>3–5 message pillars sebagai kerangka eksekusi konten.</span></div></div><div class="notice"><b>Prinsip:</b> ARAH hanya menggunakan klaim yang memang Anda beri. Bagian bukti yang belum ada akan ditandai sebagai proof slot, bukan dibuat-buat.</div></section></aside></div></section>`;
+}
+function emptyOutput(kind){
+  const map={
+    compass:["⌖","Positioning Compass belum dibuat","Lengkapi Brand Discovery, lalu biarkan ARAH menyusun cara paling jelas untuk menjelaskan siapa brand ini, untuk siapa, dan mengapa perlu dipilih."],
+    voice:["✳","Voice System belum dibuat","Bangun Compass terlebih dahulu. Voice tanpa positioning biasanya hanya berakhir sebagai daftar kata sifat yang tidak membantu tim konten."],
+    rhythm:["◫","Brand Rhythm belum dibuat","Setelah Compass dan Voice System siap, ARAH dapat menyusun ritme konten 30 hari yang mengikuti tujuan brand—bukan hanya jadwal posting."],
+    horizon:["◌","Horizon Report belum dibuat","Horizon menyusun hipotesis dan eksperimen 90 hari. Ia bukan prediksi pasar atau data real-time."],
+  };
+  const [mark,title,copy]=map[kind];
+  return `<div class="empty"><div class="empty-box"><div class="empty-mark">${mark}</div><h3>${title}</h3><p>${copy}</p></div></div>`;
+}
+function compass(){
+  const c=state.compass;
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 02 · strategic coordinates</div><h1>Positioning Compass</h1><p>Ini bukan headline untuk dipajang. Ini koordinat keputusan untuk copy, visual, offer, content, dan campaign yang dibuat setelahnya.</p></div><span class="stage-chip">02 / Position</span></div><div class="output-layout"><section class="result-card">${!c?emptyOutput("compass"):`<div class="result-top"><div><div class="eyebrow">Brand position</div><h2>${esc(state.brief.brandName || "Brand Compass")}</h2><p>Dihasilkan dari Discovery yang ada di workspace ini. Review setiap klaim sebelum dipakai keluar.</p></div><div class="result-actions">${button("Salin","copy:compass","paper small")}${button("Susun ulang","generate:compass","primary small")}</div></div><div class="focus-box"><b>${esc(c.oneLiner)}</b>${esc(c.categoryNarrative)}</div><div class="result-section"><h3>Positioning statement</h3><div class="quote">${esc(c.positioningStatement)}</div></div><div class="result-section"><h3>Audience insight</h3><p>${esc(c.audienceInsight)}</p></div><div class="result-section"><h3>Core promise</h3><p>${esc(c.corePromise)}</p></div><div class="result-section"><h3>Differentiation</h3><ul>${(c.differentiation||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="result-section"><h3>Proof slots yang perlu disiapkan</h3><div class="pill-list">${(c.proofSlots||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</div></div><div class="result-section"><h3>Message pillars</h3><div class="list-card">${(c.messagePillars||[]).map((p,i)=>`<div class="list-row"><span class="list-no">0${i+1}</span><div><b>${esc(p.name)}</b><span>${esc(p.role)}</span><div class="pill-list">${(p.angles||[]).map(a=>`<span class="pill">${esc(a)}</span>`).join("")}</div></div></div>`).join("")}</div></div><div class="result-section"><h3>Risks to avoid</h3><ul>${(c.risksToAvoid||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}</section>
+  <aside class="side-stack"><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">Brand essence</div><h3>${c?esc((c.brandEssence||[]).join(" · ")):"Belum terpetakan"}</h3><p>${c?"Gunakan tiga sampai lima kata ini sebagai filter: apakah copy, visual, dan CTA kita masih terasa seperti brand yang sama?":"Selesaikan Discovery untuk membuat essence brand."}</p><div class="notice"><b>Next:</b> turunkan Compass ini menjadi Voice System sebelum mulai menulis atau mendesain dengan AI lain.</div></section><section class="side-card"><div class="eyebrow">Transfer signal</div><h3>Siap dibawa ke app lain.</h3><p>Gunakan Transfer Pack agar Adsprint, Pikat, Rupa, dan Mula tetap bekerja dari positioning yang sama.</p>${button("Copy Transfer Pack","copy:transfer","ink small full",!c)}</section></aside></div></section>`;
+}
+function voice(){
+  const v=state.voice;
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 03 · expression rules</div><h1>Voice System</h1><p>Pastikan brand terdengar sama, bahkan saat naskah dibuat oleh orang atau AI yang berbeda. Voice adalah aturan keputusan, bukan sekadar tone adjective.</p></div><span class="stage-chip">03 / Expression</span></div><div class="output-layout"><section class="result-card">${!v?emptyOutput("voice"):`<div class="result-top"><div><div class="eyebrow">Brand language</div><h2>${esc(state.brief.brandName || "Voice System")}</h2><p>Gunakan sistem ini sebagai guardrail untuk bio, hook, sales copy, reply, dan brief visual.</p></div><div class="result-actions">${button("Salin","copy:voice","paper small")}${button("Susun ulang","generate:voice","primary small")}</div></div><div class="result-section"><h3>Personality in practice</h3><div class="pill-list">${(v.personality||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</div></div><div class="result-section"><h3>Tone range</h3><div class="list-card"><div class="list-row"><span class="list-no">A</span><div><b>Default</b><span>${esc(v.toneRange?.defaultTone)}</span></div></div><div class="list-row"><span class="list-no">E</span><div><b>When educational</b><span>${esc(v.toneRange?.whenEducational)}</span></div></div><div class="list-row"><span class="list-no">S</span><div><b>When selling</b><span>${esc(v.toneRange?.whenSelling)}</span></div></div><div class="list-row"><span class="list-no">R</span><div><b>When responding</b><span>${esc(v.toneRange?.whenResponding)}</span></div></div></div></div><div class="result-section"><h3>Language rules</h3><ul>${(v.languageRules||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="result-section"><h3>Words to use</h3><div class="pill-list">${(v.wordsToUse||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</div></div><div class="result-section"><h3>Words to avoid</h3><div class="pill-list">${(v.wordsToAvoid||[]).map(x=>`<span class="pill" style="background:#fff0ed;border-color:#f2c7bd;color:#a34838">${esc(x)}</span>`).join("")}</div></div><div class="result-section"><h3>Example lines</h3><div class="list-card"><div class="list-row"><span class="list-no">B</span><div><b>Bio</b><span>${esc(v.sampleLines?.bio)}</span></div></div><div class="list-row"><span class="list-no">H</span><div><b>Hook</b><span>${esc(v.sampleLines?.hook)}</span></div></div><div class="list-row"><span class="list-no">C</span><div><b>CTA</b><span>${esc(v.sampleLines?.cta)}</span></div></div><div class="list-row"><span class="list-no">R</span><div><b>Reply</b><span>${esc(v.sampleLines?.reply)}</span></div></div></div></div><div class="result-section"><h3>Visual direction</h3><div class="focus-box"><b>${esc(v.visualDirection?.mood)}</b>${esc((v.visualDirection?.keywords||[]).join(" · "))}<div class="pill-list">${(v.visualDirection?.palette||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</div></div><ul>${(v.visualDirection?.compositionRules||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`}</section><aside class="side-stack"><section class="side-card"><div class="eyebrow">Dependency</div><h3>Compass dulu, expression kemudian.</h3><p>${state.compass?"Voice System ini diturunkan dari Positioning Compass yang aktif.":"Anda perlu menyusun Positioning Compass terlebih dahulu."}</p>${button(v?"Lanjut ke Brand Rhythm →":"Susun Voice System →",v?"nav:rhythm":"generate:voice",(v?"primary":"ink")+" small full",!state.compass)}</section><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">Visual handoff</div><h3>Untuk Rupa</h3><p>Copy mood, keyword, palette, dan composition rules dari Transfer Pack ketika membuat art direction dan aset commerce.</p></section></aside></div></section>`;
+}
+function rhythm(){
+  const r=state.rhythm;
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 04 · editorial operations</div><h1>Brand Rhythm</h1><p>Jadwalkan alasan orang untuk tetap memperhatikan brand Anda. Konten yang baik tidak selalu meminta beli—ia juga membangun clarity, proof, preference, dan memory.</p></div><span class="stage-chip">04 / Operating</span></div><div class="output-layout"><section class="result-card">${!r?emptyOutput("rhythm"):`<div class="result-top"><div><div class="eyebrow">${esc(state.brief.horizon)} content system</div><h2>Editorial rhythm</h2><p>${esc(r.editorialPrinciple)}</p></div><div class="result-actions">${button("Salin","copy:rhythm","paper small")}${button("Susun ulang","generate:rhythm","primary small")}</div></div><div class="result-section"><h3>Weekly rhythm</h3><div class="list-card">${(r.weeklyRhythm||[]).map((w,i)=>`<div class="list-row"><span class="list-no">W${i+1}</span><div><b>${esc(w.week)} · ${esc(w.focus)}</b><span>${esc(w.goal)}</span></div></div>`).join("")}</div></div><div class="result-section"><h3>30-day calendar</h3><div class="calendar">${(r.calendar||[]).map(item=>`<div class="calendar-row"><span class="calendar-day">${esc(item.day)}</span><div><b>${esc(item.topic)}</b><p><strong>${esc(item.pillar)}</strong> · ${esc(item.hook)}<br><span style="color:#78828a">CTA: ${esc(item.cta)}</span></p></div><span class="calendar-format">${esc(item.format)}</span></div>`).join("")}</div></div><div class="result-section"><h3>Repurpose system</h3><ul>${(r.repurposeSystem||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div><div class="result-section"><h3>Measurement focus</h3><div class="pill-list">${(r.measurementFocus||[]).map(x=>`<span class="pill">${esc(x)}</span>`).join("")}</div></div>`}</section><aside class="side-stack"><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">Editorial rule</div><h3>Jangan ukur semua dari likes.</h3><p>Sesuaikan metric dengan tujuan konten: clarity, saves, replies, clicks, qualified DM, repeat view, atau conversion intent.</p><div class="notice"><b>Gunakan Pikat:</b> ambil topic dan hook dari calendar untuk dijadikan affiliate script, shotboard, caption, dan publishing pack.</div></section><section class="side-card"><div class="eyebrow">Dependency</div><h3>Butuh Compass + Voice</h3><p>${state.compass&&state.voice?"Brand Rhythm siap disusun ulang atau diekspor.":"Lengkapi Compass dan Voice System agar calendar tidak menjadi kumpulan ide acak."}</p>${button(r?"Buka Horizon Report →":"Susun Brand Rhythm →",r?"nav:horizon":"generate:rhythm",(r?"primary":"ink")+" small full",!(state.compass&&state.voice))}</section></aside></div></section>`;
+}
+function horizon(){
+  const h=state.horizon;
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 05 · controlled experimentation</div><h1>Horizon Report</h1><p>ARAH tidak mengklaim meramal pasar. Sebaliknya, ia menyusun sinyal untuk diuji, peluang yang dapat dieksekusi, risiko komunikasi, dan prioritas 90 hari.</p></div><span class="stage-chip">05 / Horizon</span></div><div class="output-layout"><section class="result-card">${!h?emptyOutput("horizon"):`<div class="result-top"><div><div class="eyebrow">90-day planning view</div><h2>Hypotheses, not prophecy.</h2><p>Seluruh sinyal di bawah adalah hipotesis kerja. Validasi dengan respon audiens, data platform, penjualan, dan bukti internal Anda.</p></div><div class="result-actions">${button("Salin","copy:horizon","paper small")}${button("Susun ulang","generate:horizon","primary small")}</div></div><div class="result-section"><h3>Category signals to test</h3>${(h.categorySignals||[]).map((x,i)=>`<div class="horizon-card"><span class="tag">Signal 0${i+1}</span><h3>${esc(x.signal)}</h3><p>${esc(x.whyItMatters)}</p><ul><li><strong>Move now:</strong> ${esc(x.moveNow)}</li></ul></div>`).join("")}</div><div class="result-section"><h3>Opportunity experiments</h3>${(h.opportunities||[]).map((x,i)=>`<div class="horizon-card"><span class="tag" style="color:#8d4334;background:#fff0ec;border-color:#f3c6bd">Experiment 0${i+1}</span><h3>${esc(x.title)}</h3><p>${esc(x.rationale)}</p><ul><li>${esc(x.experiment)}</li></ul></div>`).join("")}</div><div class="result-section"><h3>Communication risks</h3><div class="list-card">${(h.communicationRisks||[]).map((x,i)=>`<div class="list-row"><span class="list-no">R${i+1}</span><div><b>${esc(x.risk)}</b><span>Prevention: ${esc(x.prevention)}</span></div></div>`).join("")}</div></div><div class="result-section"><h3>Next 90 days</h3><div class="list-card">${(h.next90Days||[]).map((x,i)=>`<div class="list-row"><span class="list-no">0${i+1}</span><div><b>${esc(x.phase)} · ${esc(x.priority)}</b><span>${(x.actions||[]).map(a=>`• ${esc(a)}`).join("<br>")}</span></div></div>`).join("")}</div></div>`}</section><aside class="side-stack"><section class="side-card"><div class="eyebrow">Guardrail</div><h3>Gunakan sebagai bahan keputusan.</h3><p>Horizon Report bukan riset pasar aktual. Jangan mempublikasikan sinyal atau forecast ini sebagai fakta eksternal tanpa verifikasi.</p>${button(h?"Lanjut ke Handoff →":"Susun Horizon Report →",h?"nav:export":"generate:horizon",(h?"primary":"ink")+" small full",!state.compass)}</section><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">For Adsprint</div><h3>Test one variable at a time.</h3><p>Pilih satu experiment sebagai input campaign. Jangan mengganti audience, offer, hook, visual, dan channel sekaligus.</p></section></aside></div></section>`;
+}
+function transferPack(){
+  const b=state.brief,c=state.compass,v=state.voice,r=state.rhythm,h=state.horizon;
+  return `[CANVAS-BRIEF v1]
+APP: ARAH — Brand Atlas Studio
+GENERATED: ${new Date().toLocaleDateString("id-ID")}
+
+BRAND:
+Nama: ${compact(b.brandName)}
+Track: ${compact(b.track)}
+Kategori: ${compact(b.category)}
+Produk / Offer: ${compact(b.productOffer)}
+
+AUDIENCE:
+Utama: ${compact(b.audience)}
+Konteks: ${compact(b.audienceContext)}
+Masalah: ${compact(b.problem)}
+Outcome: ${compact(b.desiredOutcome)}
+
+POSITIONING:
+One-liner: ${compact(c?.oneLiner)}
+Statement: ${compact(c?.positioningStatement)}
+Core promise: ${compact(c?.corePromise)}
+Differentiation: ${(c?.differentiation||[]).join(" | ") || "—"}
+Proof available / slots: ${[b.proofInventory,...(c?.proofSlots||[])].filter(Boolean).join(" | ") || "—"}
+Guardrails: ${compact(b.guardrails)}
+
+VOICE:
+Personality: ${(v?.personality||[]).join(" | ") || "—"}
+Default tone: ${compact(v?.toneRange?.defaultTone)}
+Words to use: ${(v?.wordsToUse||[]).join(" | ") || "—"}
+Words to avoid: ${(v?.wordsToAvoid||[]).join(" | ") || "—"}
+
+VISUAL DIRECTION:
+Mood: ${compact(v?.visualDirection?.mood)}
+Keywords: ${(v?.visualDirection?.keywords||[]).join(" | ") || "—"}
+Palette: ${(v?.visualDirection?.palette||[]).join(" | ") || "—"}
+Composition rules: ${(v?.visualDirection?.compositionRules||[]).join(" | ") || "—"}
+
+MESSAGE PILLARS:
+${(c?.messagePillars||[]).map((p,i)=>`${i+1}. ${p.name}: ${p.role}. Angles: ${(p.angles||[]).join("; ")}`).join("\n") || "—"}
+
+CHANNELS:
+${(b.channels||[]).join(", ") || "—"}
+
+CONTENT RHYTHM:
+Principle: ${compact(r?.editorialPrinciple)}
+Top 5 Calendar Ideas:
+${(r?.calendar||[]).slice(0,5).map(x=>`- ${x.day}: ${x.topic} (${x.format}) · Hook: ${x.hook} · CTA: ${x.cta}`).join("\n") || "—"}
+
+90-DAY EXPERIMENTS:
+${(h?.opportunities||[]).map(x=>`- ${x.title}: ${x.experiment}`).join("\n") || "—"}
+
+[END CANVAS-BRIEF v1]`;
+}
+function fullMarkdown(){
+  const b=state.brief,c=state.compass,v=state.voice,r=state.rhythm,h=state.horizon;
+  return `# ARAH — Brand Atlas\n\n## Brand Discovery\n- **Brand:** ${compact(b.brandName)}\n- **Track:** ${compact(b.track)}\n- **Category:** ${compact(b.category)}\n- **Offer:** ${compact(b.productOffer)}\n- **Audience:** ${compact(b.audience)}\n- **Audience Context:** ${compact(b.audienceContext)}\n- **Problem:** ${compact(b.problem)}\n- **Desired Outcome:** ${compact(b.desiredOutcome)}\n- **Differentiation:** ${compact(b.differentiation)}\n- **Proof Inventory:** ${compact(b.proofInventory)}\n- **Competitors / Alternatives:** ${compact(b.competitors)}\n- **Guardrails:** ${compact(b.guardrails)}\n- **Channels:** ${(b.channels||[]).join(", ") || "—"}\n\n## Positioning Compass\n${c?`- **One-liner:** ${c.oneLiner}\n- **Positioning Statement:** ${c.positioningStatement}\n- **Category Narrative:** ${c.categoryNarrative}\n- **Audience Insight:** ${c.audienceInsight}\n- **Core Promise:** ${c.corePromise}\n\n### Differentiation\n${(c.differentiation||[]).map(x=>`- ${x}`).join("\n")}\n\n### Proof Slots\n${(c.proofSlots||[]).map(x=>`- ${x}`).join("\n")}\n\n### Message Pillars\n${(c.messagePillars||[]).map((p,i)=>`#### ${i+1}. ${p.name}\n${p.role}\n${(p.angles||[]).map(a=>`- ${a}`).join("\n")}`).join("\n\n")}\n\n### Risks to Avoid\n${(c.risksToAvoid||[]).map(x=>`- ${x}`).join("\n")}`:"Belum dibuat."}\n\n## Voice System\n${v?`- **Personality:** ${(v.personality||[]).join(", ")}\n- **Default tone:** ${v.toneRange?.defaultTone||"—"}\n- **Educational:** ${v.toneRange?.whenEducational||"—"}\n- **Selling:** ${v.toneRange?.whenSelling||"—"}\n- **Responding:** ${v.toneRange?.whenResponding||"—"}\n\n### Language Rules\n${(v.languageRules||[]).map(x=>`- ${x}`).join("\n")}\n\n### Use / Avoid\n- **Use:** ${(v.wordsToUse||[]).join(", ")}\n- **Avoid:** ${(v.wordsToAvoid||[]).join(", ")}\n\n### Sample Lines\n- **Bio:** ${v.sampleLines?.bio||"—"}\n- **Hook:** ${v.sampleLines?.hook||"—"}\n- **CTA:** ${v.sampleLines?.cta||"—"}\n- **Reply:** ${v.sampleLines?.reply||"—"}\n\n### Visual Direction\n- **Mood:** ${v.visualDirection?.mood||"—"}\n- **Keywords:** ${(v.visualDirection?.keywords||[]).join(", ")}\n- **Palette:** ${(v.visualDirection?.palette||[]).join(", ")}\n- **Composition:** ${(v.visualDirection?.compositionRules||[]).map(x=>`- ${x}`).join("\n")}`:"Belum dibuat."}\n\n## Brand Rhythm\n${r?`**Editorial principle:** ${r.editorialPrinciple}\n\n### Weekly Rhythm\n${(r.weeklyRhythm||[]).map(x=>`- **${x.week}: ${x.focus}** — ${x.goal}`).join("\n")}\n\n### 30-day Calendar\n${(r.calendar||[]).map(x=>`- **${x.day} · ${x.format} · ${x.pillar}:** ${x.topic}\n  - Hook: ${x.hook}\n  - CTA: ${x.cta}`).join("\n")}\n\n### Repurpose System\n${(r.repurposeSystem||[]).map(x=>`- ${x}`).join("\n")}\n\n### Measurement Focus\n${(r.measurementFocus||[]).map(x=>`- ${x}`).join("\n")}`:"Belum dibuat."}\n\n## Horizon Report\n${h?`### Signals to Test\n${(h.categorySignals||[]).map(x=>`- **${x.signal}:** ${x.whyItMatters}\n  - Move now: ${x.moveNow}`).join("\n")}\n\n### Opportunities\n${(h.opportunities||[]).map(x=>`- **${x.title}:** ${x.rationale}\n  - Experiment: ${x.experiment}`).join("\n")}\n\n### Communication Risks\n${(h.communicationRisks||[]).map(x=>`- **${x.risk}:** ${x.prevention}`).join("\n")}\n\n### Next 90 Days\n${(h.next90Days||[]).map(x=>`- **${x.phase}: ${x.priority}**\n${(x.actions||[]).map(a=>`  - ${a}`).join("\n")}`).join("\n")}`:"Belum dibuat."}\n\n---\nGenerated in ARAH — Brand Atlas Studio. Review all business claims, proof, and references before public use.`;
+}
+function exportScreen(){
+  const items=[
+    [isReady(),"Brand Discovery","Identity, audience, problem, outcome, proof, and guardrails"],
+    [Boolean(state.compass),"Positioning Compass","Position, promise, pillar, proof slot, and strategic guardrails"],
+    [Boolean(state.voice),"Voice System","Language, samples, visual direction, and expression rules"],
+    [Boolean(state.rhythm),"Brand Rhythm","Weekly system and 30-day editorial calendar"],
+    [Boolean(state.horizon),"Horizon Report","90-day hypotheses, experiments, and risk controls"]
+  ];
+  return `<section class="screen active"><div class="page-head"><div><div class="eyebrow">Stage 06 · ecosystem handoff</div><h1>Atlas Handoff</h1><p>Ekspor hasil kerja sebagai dokumentasi internal dan Transfer Pack lintas aplikasi. Paste Transfer Pack di app lain agar brief tidak perlu diketik ulang dari nol.</p></div><span class="stage-chip">06 / Handoff</span></div><div class="output-layout"><section class="result-card"><div class="result-top"><div><div class="eyebrow">Transfer protocol</div><h2>Canvas Transfer Pack</h2><p>Format ringkas untuk memberi context yang konsisten pada Adsprint, Pikat, Rupa, Mula, atau aplikasi Canvas lain yang Anda bangun nanti.</p></div><div class="result-actions">${button("Copy Pack","copy:transfer","primary small")}${button("Unduh .md","download:transfer","paper small")}</div></div><div class="transfer">${esc(transferPack())}</div></section><aside class="side-stack"><section class="side-card"><div class="eyebrow">Atlas checklist</div><h3>Yang sudah siap</h3><div class="export-list">${items.map(([done,title,sub])=>`<div class="export-row"><span class="check ${done?"":"incomplete"}">${done?"✓":"·"}</span><div><b>${esc(title)}</b><span>${esc(sub)}</span></div></div>`).join("")}</div><div class="export-actions">${button("Unduh full atlas .md","download:atlas","ink small full")}${button("Salin full atlas","copy:atlas","paper small full")}</div></section><section class="side-card dark"><div class="eyebrow" style="color:#f6d577">Before you use it</div><h3>Review truth before output.</h3><p>Pastikan harga, ketentuan, klaim, data, review, izin visual, dan proof yang Anda gunakan memang nyata dan siap dipertanggungjawabkan.</p><div class="notice"><b>Reset:</b> membersihkan seluruh teks lokal di browser untuk memulai brand baru.</div>${button("Reset workspace","reset:workspace","ghost small full")}</section></aside></div></section>`;
+}
+function render(){
+  renderRoutebar();
+  const views={home:hero,discovery,compass,voice,rhythm,horizon,export:exportScreen};
+  app.innerHTML=(views[state.route]||hero)();
+}
+
+function setBusy(btn,label){
+  const old=btn.innerHTML; btn.disabled=true; btn.innerHTML=`<span class="busy"><span class="loader"></span>${label}</span>`;
+  return ()=>{btn.disabled=false; btn.innerHTML=old;};
+}
+async function handleAction(action,btn){
+  if(action.startsWith("nav:")){ state.route=action.split(":")[1]; state.error=""; persist(); render(); window.scrollTo({top:0,behavior:"smooth"}); return; }
+  if(action==="reset:workspace"){
+    if(confirm("Mulai brand baru? Semua brief dan output ARAH yang tersimpan lokal akan dihapus.")){ state=clone(DEFAULT_STATE); persist(); render(); toast("Workspace dikosongkan."); }
+    return;
+  }
+  if(action==="copy:transfer"){ copyText(transferPack(),"Transfer Pack disalin."); return; }
+  if(action==="download:transfer"){ download("arah-transfer-pack.md",transferPack()); toast("Transfer Pack diunduh."); return; }
+  if(action==="copy:atlas"){ copyText(fullMarkdown(),"Full Brand Atlas disalin."); return; }
+  if(action==="download:atlas"){ download("arah-brand-atlas.md",fullMarkdown()); toast("Brand Atlas diunduh."); return; }
+  if(action==="copy:compass"){ copyText(JSON.stringify(state.compass,null,2),"Positioning Compass disalin."); return; }
+  if(action==="copy:voice"){ copyText(JSON.stringify(state.voice,null,2),"Voice System disalin."); return; }
+  if(action==="copy:rhythm"){ copyText(JSON.stringify(state.rhythm,null,2),"Brand Rhythm disalin."); return; }
+  if(action==="copy:horizon"){ copyText(JSON.stringify(state.horizon,null,2),"Horizon Report disalin."); return; }
+  const generators={
+    "generate:compass":[makeCompass,"Menyusun compass…","Positioning Compass siap."],
+    "generate:voice":[makeVoice,"Memetakan voice…","Voice System siap."],
+    "generate:rhythm":[makeRhythm,"Menyusun ritme…","Brand Rhythm siap."],
+    "generate:horizon":[makeHorizon,"Memetakan horizon…","Horizon Report siap."]
+  };
+  if(generators[action]){
+    const [work,loading,doneText]=generators[action]; const restore=setBusy(btn,loading);
+    try{ await work(); state.error=""; persist(); render(); toast(doneText); }
+    catch(err){ console.error(err); state.error=err?.message||"Permintaan gagal diproses."; persist(); toast(state.error); }
+    finally{ restore(); }
+  }
+}
+
+document.addEventListener("input", event=>{
+  const target=event.target;
+  if(target?.matches("[data-path]")){
+    setPath(target.dataset.path,target.value); persist();
+    if(target.dataset.path.startsWith("brief.")){
+      // Keep the form stable while typing, but unlock the next action once the required brief is complete.
+      document.querySelectorAll('[data-action="generate:compass"]').forEach(button => { button.disabled = !isReady(); });
+    }
+  }
+});
+document.addEventListener("change", event=>{
+  const target=event.target;
+  if(target?.matches("[data-path]")){ setPath(target.dataset.path,target.value); persist(); if(target.type==="radio") render(); }
+  if(target?.matches("[data-channel]")){
+    const vals=[...document.querySelectorAll("[data-channel]:checked")].map(x=>x.value);
+    state.brief.channels=vals; persist();
+  }
+});
+document.addEventListener("click", event=>{
+  const btn=event.target.closest("[data-action]"); if(!btn) return;
+  handleAction(btn.dataset.action,btn);
+});
+
+render();
+</script>
+</body>
+</html>

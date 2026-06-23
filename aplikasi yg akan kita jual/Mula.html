@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MULA — Launch Campaign Atelier</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#1c2126;
+      --ink-soft:#4a5056;
+      --paper:#fcfaf5;
+      --paper-deep:#f0e8dc;
+      --cloud:#ffffff;
+      --line:#e8dfd3;
+      --coral:#e06c59;
+      --wine:#9d475b;
+      --olive:#596a55;
+      --olive-pale:#dbe4d2;
+      --gold:#edae49;
+      --sky:#c6ddeb;
+      --lavender:#dcd6ef;
+      --success:#356f57;
+      --danger:#b14d49;
+      --shadow:0 12px 34px rgba(62,45,28,.06);
+      --soft-shadow:0 8px 24px rgba(62,45,28,.04);
+      --radius-xl:32px;
+      --radius-lg:24px;
+      --radius-md:16px;
+      --radius-pill:999px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;opacity:.6;pointer-events:none;background-image:linear-gradient(rgba(190,170,140,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(190,170,140,.12) 1px,transparent 1px);background-size:28px 28px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 0%,rgba(255,255,255,.8),transparent 35%),radial-gradient(circle at 90% 10%,rgba(237,174,73,.08),transparent 30%),radial-gradient(circle at 85% 90%,rgba(157,71,91,.06),transparent 35%)}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.55}
+    .shell{max-width:1460px;margin:0 auto;padding:24px 18px}
+    .topbar{position:sticky;top:16px;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:12px 14px 12px 20px;background:rgba(255,255,255,.95);backdrop-filter:blur(16px);border:1px solid rgba(232,223,211,.8);border-radius:var(--radius-pill);box-shadow:var(--shadow)}
+    .brand{display:flex;align-items:center;gap:14px;min-width:0}
+    .brand-symbol{width:46px;height:46px;border-radius:14px;background:var(--coral);color:#fff;display:grid;place-items:center;box-shadow:inset 0 -4px 0 rgba(0,0,0,.1);font-family:"DM Serif Display",serif;font-size:26px;line-height:1}
+    .brand-word{font-family:"DM Serif Display",Georgia,serif;font-size:26px;line-height:1;letter-spacing:-.8px;color:var(--ink)}
+    .brand-caption{font:600 9px/1.2 "DM Mono",monospace;letter-spacing:1.5px;color:#8c857b;text-transform:uppercase;margin-top:4px}
+    .topbar-actions{display:flex;align-items:center;gap:10px}
+    .canvas-pulse{display:flex;gap:8px;align-items:center;padding:10px 14px;border:1px solid rgba(220,205,185,.5);border-radius:var(--radius-pill);color:#6b6f68;background:rgba(255,255,255,.8);font:600 10px/1 "DM Mono",monospace;letter-spacing:.2px;white-space:nowrap}
+    .canvas-dot{width:6px;height:6px;border-radius:50%;background:var(--olive);box-shadow:0 0 0 3px rgba(89,106,85,.15)}
+    .button{appearance:none;border:1px solid transparent;border-radius:var(--radius-pill);padding:14px 20px;color:var(--ink);font-size:12px;font-weight:800;letter-spacing:.2px;display:inline-flex;align-items:center;justify-content:center;gap:8px;line-height:1;transition:all .2s ease}
+    .button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 8px 16px rgba(49,39,26,.08)}
+    .button:active:not(:disabled){transform:translateY(0);box-shadow:none}
+    .button.primary{background:var(--coral);color:#fff;box-shadow:0 6px 0 #c75644}
+    .button.primary:hover:not(:disabled){background:#eb7866;box-shadow:0 8px 0 #c75644}
+    .button.dark{background:var(--ink);color:#fff;box-shadow:0 6px 0 #0f1215}
+    .button.olive{background:var(--olive);color:#fff;box-shadow:0 6px 0 #3e4a3c}
+    .button.paper{background:var(--cloud);border-color:rgba(220,205,185,.7);box-shadow:0 2px 6px rgba(0,0,0,.02)}
+    .button.paper:hover:not(:disabled){border-color:#b99d7e;background:#fff}
+    .button.ghost{background:transparent;border-color:transparent;box-shadow:none;color:#6e756f}
+    .button.ghost:hover:not(:disabled){background:rgba(255,255,255,.65);color:var(--ink)}
+    .button.small{padding:10px 16px;font-size:11px}
+    .button.full{width:100%}
+    .journey{position:sticky;top:92px;z-index:40;margin-top:16px;padding:6px;background:rgba(238,225,207,.4);backdrop-filter:blur(12px);border:1px solid rgba(220,205,185,.4);border-radius:var(--radius-pill);display:flex;align-items:center;gap:4px;overflow:auto;box-shadow:inset 0 2px 6px rgba(100,80,60,.04)}
+    .journey::-webkit-scrollbar{height:0}
+    .journey-step{min-width:max-content;border:0;background:transparent;color:#857e74;padding:10px 16px;border-radius:var(--radius-pill);font:600 11px/1 "DM Mono",monospace;letter-spacing:.2px;transition:all .2s ease}
+    .journey-step span{opacity:.6;margin-right:6px}
+    .journey-step:hover{background:rgba(255,255,255,.6);color:var(--ink)}
+    .journey-step.active{background:var(--cloud);color:var(--ink);box-shadow:0 4px 12px rgba(66,50,34,.06)}
+    .journey-meter{margin-left:auto;padding:0 10px;white-space:nowrap;font:500 10px/1 "DM Mono",monospace;color:#948a7d;letter-spacing:.3px}
+    .screen{display:none;padding:24px 0 54px}
+    .screen.active{display:block;animation:rise .3s ease both}
+    @keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .eyebrow{font:600 11px/1.2 "DM Mono",monospace;letter-spacing:1.2px;text-transform:uppercase;color:var(--wine)}
+    .hero{position:relative;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(310px,.9fr);gap:20px;min-height:430px;padding:40px;border:1px solid var(--line);border-radius:var(--radius-xl);background:linear-gradient(135deg,#ffffff,#fdf9f2);box-shadow:var(--shadow)}
+    .hero:before{content:"";position:absolute;width:440px;height:440px;border:1px dashed rgba(157,71,91,.2);border-radius:50%;right:-120px;top:-180px}
+    .hero:after{content:"";position:absolute;width:260px;height:260px;border-radius:50%;background:rgba(237,174,73,.15);right:90px;bottom:-130px;filter:blur(3px)}
+    .hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center;max-width:725px}
+    .hero h1{margin:14px 0 16px;font-family:"DM Serif Display",Georgia,serif;font-size:clamp(46px,5.8vw,80px);letter-spacing:-2.5px;line-height:.95;font-weight:400}
+    .hero h1 em{font-style:italic;color:var(--coral)}
+    .hero p{max-width:592px;color:#5a6064;font-size:15px;line-height:1.75;margin:0}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+    .hero-note{display:flex;gap:12px;align-items:flex-start;margin-top:30px;color:#6b655d;font-size:11px;line-height:1.6;max-width:555px}
+    .hero-note .seal{width:32px;height:32px;flex:none;border-radius:50%;display:grid;place-items:center;background:var(--olive-pale);color:var(--olive);font-weight:900}
+    .hero-dossier{position:relative;z-index:1;align-self:center;max-width:410px;margin:0 auto;width:100%;padding:22px;background:var(--ink);color:#fcfaf5;border-radius:28px;box-shadow:18px 24px 0 rgba(157,71,91,.12)}
+    .dossier-label{display:flex;justify-content:space-between;gap:8px;align-items:center;color:#9da9b8;font:500 10px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
+    .dossier-label b{color:#fff3d9;font-weight:500}
+    .dossier-title{margin:28px 0 16px;color:#fff;font-family:"DM Serif Display",Georgia,serif;font-size:34px;line-height:1.05;letter-spacing:-.8px}
+    .dossier-line{height:1px;background:rgba(255,255,255,.12);margin:20px 0}
+    .dossier-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .dossier-box{padding:12px;border-radius:16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08)}
+    .dossier-box span{display:block;color:#8b99a8;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
+    .dossier-box b{display:block;margin-top:8px;color:#fff;font-size:12px;line-height:1.4}
+    .dossier-stamp{margin-top:18px;padding:12px 14px;border:1px dashed rgba(237,174,73,.5);border-radius:14px;color:#eedfcc;font:500 11px/1.4 "DM Mono",monospace}
+    .micro-progress{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:24px}
+    .progress-card{padding:18px;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.7)}
+    .progress-card b{display:block;font-family:"DM Serif Display",serif;font-size:30px;font-weight:400;line-height:1;color:var(--wine)}
+    .progress-card span{display:block;margin-top:6px;font-size:11px;color:#6b6863;line-height:1.45}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:8px 0 20px}
+    .section-head h2{margin:8px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:40px;font-weight:400;letter-spacing:-1.2px;line-height:1}
+    .section-head p{max-width:480px;margin:0;color:#686863;font-size:12px;line-height:1.6}
+    .stage-badge{padding:10px 14px;border-radius:var(--radius-pill);background:var(--olive-pale);color:var(--olive);font:600 10px/1 "DM Mono",monospace;letter-spacing:.5px;white-space:nowrap}
+    .grid-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    .grid-2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+    .panel{background:rgba(255,255,255,.8);border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;box-shadow:var(--soft-shadow)}
+    .panel.tint-olive{background:linear-gradient(145deg,#f0f4eb,#e4ecdd)}
+    .panel.tint-gold{background:linear-gradient(145deg,#fff6e0,#f8e5b6)}
+    .panel.tint-rose{background:linear-gradient(140deg,#fbebe5,#f3d8d2)}
+    .panel.tint-sky{background:linear-gradient(145deg,#f2f8fc,#e0eff8)}
+    .panel-icon{width:42px;height:42px;border-radius:16px;background:var(--cloud);display:grid;place-items:center;border:1px solid rgba(220,205,185,.7);font-size:20px;margin-bottom:16px}
+    .panel h3{margin:0;font-size:16px;line-height:1.3;letter-spacing:-.3px}
+    .panel p{margin:10px 0 0;color:#686a64;font-size:12px;line-height:1.65}
+    .panel .button{margin-top:18px}
+    .route-prompt{margin-top:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:16px 20px;border-radius:var(--radius-pill);border:1px solid var(--line);background:rgba(255,255,255,.7);color:#606561;font-size:12px;line-height:1.5}
+    .route-prompt b{color:var(--ink)}
+    .form-layout{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;align-items:start}
+    .form-stack{display:grid;gap:16px}
+    .form-panel{background:rgba(255,255,255,.85);border:1px solid var(--line);border-radius:28px;padding:24px;box-shadow:var(--soft-shadow)}
+    .form-panel-head{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;margin-bottom:20px}
+    .form-panel-head h3{margin:4px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:30px;font-weight:400;line-height:1;letter-spacing:-.8px}
+    .form-panel-head p{margin:8px 0 0;color:#686863;font-size:11px;line-height:1.6;max-width:550px}
+    .form-index{width:38px;height:38px;display:grid;place-items:center;flex:none;border-radius:50%;background:var(--ink);color:#fff;font:500 11px/1 "DM Mono",monospace}
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+    .field-grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .field{min-width:0}
+    .field.full{grid-column:1/-1}
+    .field label{display:flex;gap:8px;align-items:center;margin-bottom:8px;color:#5a5f5a;font:600 10px/1.2 "DM Mono",monospace;letter-spacing:.5px;text-transform:uppercase}
+    .field label i{font-style:normal;color:var(--coral);font-size:14px;line-height:1}
+    .field input,.field textarea,.field select{width:100%;outline:none;border:1px solid #dcd1c4;background:#fffdfa;color:var(--ink);border-radius:16px;padding:12px 14px;font-size:12px;font-weight:600;line-height:1.45;transition:all .2s ease}
+    .field textarea{min-height:100px;resize:vertical}
+    .field input::placeholder,.field textarea::placeholder{color:#a49d93;font-weight:500}
+    .field input:focus,.field textarea:focus,.field select:focus{border-color:var(--coral);background:#fff;box-shadow:0 0 0 4px rgba(228,109,90,.12)}
+    .choice-row{display:flex;flex-wrap:wrap;gap:10px}
+    .choice{position:relative}
+    .choice input{position:absolute;opacity:0;pointer-events:none}
+    .choice label{display:flex;align-items:center;min-height:40px;padding:10px 14px;border:1px solid #dcd1c4;border-radius:14px;background:#fffdfa;color:#606560;font-size:11px;font-weight:700;cursor:pointer;transition:all .2s ease}
+    .choice input:checked+label{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:0 6px 14px rgba(32,41,54,.18)}
+    .upload-box{padding:16px;border:1px dashed #c0ab94;border-radius:20px;background:rgba(255,255,255,.6);display:flex;gap:14px;align-items:center}
+    .upload-thumb{width:56px;height:56px;border-radius:16px;flex:none;overflow:hidden;background:var(--paper-deep);display:grid;place-items:center;color:#7d7266;font-size:22px;border:1px solid rgba(190,168,143,.4)}
+    .upload-thumb img{width:100%;height:100%;object-fit:cover}
+    .upload-copy{min-width:0;flex:1}.upload-copy b{display:block;color:var(--ink);font-size:12px;line-height:1.35}.upload-copy span{display:block;margin-top:4px;color:#7a7268;font-size:10px;line-height:1.5}.upload-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .form-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-top:20px;padding-top:18px;border-top:1px solid rgba(220,205,185,.5)}
+    .hint{max-width:500px;color:#767066;font-size:10px;line-height:1.6}
+    .side-note{position:sticky;top:150px;display:grid;gap:14px}
+    .note-card{padding:22px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.8);box-shadow:var(--soft-shadow)}
+    .note-card h3{margin:8px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:28px;font-weight:400;letter-spacing:-.6px}.note-card p{margin:10px 0 0;color:#606461;font-size:11px;line-height:1.65}
+    .mini-list{display:grid;gap:12px;margin-top:16px}.mini-list div{display:flex;gap:10px;align-items:flex-start;font-size:11px;line-height:1.55;color:#5a625c}.mini-list b{display:grid;place-items:center;width:22px;height:22px;flex:none;border-radius:50%;background:var(--olive-pale);color:var(--olive);font:600 10px/1 "DM Mono",monospace}
+    .readiness{display:grid;gap:8px;margin-top:16px}.readiness-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dotted #d2c3b3;font-size:11px;color:#6b6863}.readiness-row:last-child{border-bottom:0}.ready-dot{width:10px;height:10px;border-radius:50%;background:#dcd1c4}.ready-dot.done{background:var(--olive);box-shadow:0 0 0 4px rgba(89,106,85,.15)}
+    .empty-state{min-height:420px;display:grid;place-items:center;text-align:center;padding:34px;border:1px solid var(--line);border-radius:32px;background:rgba(255,255,255,.75);box-shadow:var(--soft-shadow)}
+    .empty-orbit{position:relative;width:106px;height:106px;margin:0 auto 24px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 34% 30%,#fff, #eee3d4)}
+    .empty-orbit:before{content:"";position:absolute;width:136px;height:46px;border:2px solid var(--coral);border-radius:50%;transform:rotate(-25deg)}
+    .empty-orbit:after{content:"✦";font-size:36px;color:var(--wine)}
+    .empty-state h3{margin:0;font-family:"DM Serif Display",Georgia,serif;font-size:36px;font-weight:400;letter-spacing:-.8px}.empty-state p{margin:12px auto 0;max-width:480px;color:#6a6862;font-size:12px;line-height:1.7}.empty-state .button{margin-top:24px}
+    .blueprint-top{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(290px,.8fr);gap:16px}
+    .thesis-card{position:relative;overflow:hidden;padding:30px;border-radius:32px;background:var(--ink);color:#fff;box-shadow:var(--shadow)}
+    .thesis-card:after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;right:-100px;bottom:-150px;background:var(--coral);opacity:.9}.thesis-card>*{position:relative;z-index:1}
+    .thesis-card .eyebrow{color:#ffcdbf}.thesis-card h2{margin:14px 0 12px;font-family:"DM Serif Display",Georgia,serif;font-weight:400;font-size:42px;line-height:1.05;letter-spacing:-1.2px;max-width:680px}.thesis-card p{margin:0;color:#d7dce4;font-size:12px;line-height:1.75;max-width:690px}.thesis-quote{margin-top:24px;padding:14px 16px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);font:400 15px/1.5 "DM Serif Display",Georgia,serif;font-style:italic;max-width:680px;color:#fff5e9}
+    .offer-card{padding:26px;border-radius:32px;background:linear-gradient(150deg,#e2ebd8,#cfdec6);border:1px solid #c2d1b8;box-shadow:var(--soft-shadow)}
+    .offer-card h3{margin:8px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:32px;font-weight:400;letter-spacing:-.8px}.offer-card p{margin:10px 0 0;color:#455541;font-size:12px;line-height:1.6}.offer-price{margin-top:22px;padding-top:18px;border-top:1px solid rgba(89,106,85,.2);display:flex;justify-content:space-between;gap:12px;align-items:flex-end}.offer-price span{font:600 10px/1 "DM Mono",monospace;letter-spacing:.5px;text-transform:uppercase;color:#5a6854}.offer-price b{font-family:"DM Serif Display",Georgia,serif;font-size:28px;font-weight:400;color:#2c3d2d;text-align:right}
+    .dossier-section{margin-top:16px;padding:24px;border-radius:28px;border:1px solid var(--line);background:rgba(255,255,255,.85);box-shadow:var(--soft-shadow)}
+    .dossier-section-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}.dossier-section-head h3{margin:6px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:34px;font-weight:400;letter-spacing:-.8px}.dossier-section-head p{margin:8px 0 0;color:#686a64;font-size:11px;line-height:1.6;max-width:580px}
+    .signal-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.signal{padding:16px;border-radius:20px;background:#fffdfa;border:1px solid #e8dfd3}.signal span{display:block;color:#7a7268;font:600 9px/1 "DM Mono",monospace;letter-spacing:.8px;text-transform:uppercase}.signal b{display:block;margin-top:10px;color:#2e3845;font-size:12px;line-height:1.45}.signal p{margin:8px 0 0;color:#6b6863;font-size:11px;line-height:1.55}
+    .value-stack{display:grid;gap:10px}.stack-row{display:grid;grid-template-columns:34px minmax(0,1fr) auto;gap:12px;align-items:center;padding:14px;border-radius:18px;border:1px solid #e8dfd3;background:#fffdfa}.stack-number{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--lavender);color:#42395f;font:600 10px/1 "DM Mono",monospace}.stack-row b{font-size:12px;line-height:1.4}.stack-row p{margin:4px 0 0;color:#6b6863;font-size:11px;line-height:1.5}.stack-tag{padding:8px 10px;border-radius:var(--radius-pill);background:#f6e4ba;color:#684b16;font:600 9px/1 "DM Mono",monospace;letter-spacing:.5px}
+    .timeline{position:relative;display:grid;gap:12px}.timeline:before{content:"";position:absolute;width:1px;left:21px;top:22px;bottom:22px;background:#dcd1c4}.timeline-item{position:relative;display:grid;grid-template-columns:42px minmax(0,1fr);gap:14px}.timeline-mark{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:var(--ink);color:#fff;z-index:1;font:600 10px/1 "DM Mono",monospace}.timeline-body{padding:16px;border-radius:20px;background:#fffdfa;border:1px solid #e8dfd3}.timeline-body-top{display:flex;justify-content:space-between;gap:12px;align-items:start}.timeline-body h4{margin:0;font-size:14px;line-height:1.35}.timeline-window{padding:6px 10px;border-radius:var(--radius-pill);background:var(--sky);color:#344f60;font:600 9px/1 "DM Mono",monospace;white-space:nowrap}.timeline-body p{margin:8px 0 0;color:#60625c;font-size:11px;line-height:1.6}.task-list{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.task{padding:8px 10px;border-radius:12px;background:#f5efe6;color:#5c564f;font-size:10px;font-weight:700;line-height:1.3}
+    .sales-layout{display:grid;grid-template-columns:280px minmax(0,1fr);gap:16px;align-items:start}.sales-index{position:sticky;top:152px;padding:18px;border:1px solid var(--line);border-radius:24px;background:rgba(255,255,255,.8);box-shadow:var(--soft-shadow)}.sales-index b{font:600 10px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase;color:#7a7268}.sales-index-list{display:grid;gap:6px;margin-top:14px}.sales-index-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:14px;color:#6b6a63;font-size:11px;line-height:1.4;transition:all .2s ease}.sales-index-item span{color:var(--wine);font:600 10px/1 "DM Mono",monospace}.sales-index-item:hover{background:#f8f2eb;color:var(--ink)}
+    .page-canvas{padding:24px;border-radius:28px;border:1px solid var(--line);background:#fffdfa;box-shadow:var(--soft-shadow)}.page-canvas-top{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;padding-bottom:18px;border-bottom:1px dashed #dcd1c4}.page-canvas-top h2{margin:6px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:36px;font-weight:400;letter-spacing:-1px}.page-section{padding:24px 0;border-bottom:1px dashed #e2d6c7}.page-section:last-child{border-bottom:0}.page-section-title{display:flex;align-items:baseline;gap:10px}.page-section-title span{font:600 10px/1 "DM Mono",monospace;color:var(--coral);letter-spacing:.5px}.page-section-title h3{margin:0;font-family:"DM Serif Display",Georgia,serif;font-size:30px;font-weight:400;letter-spacing:-.5px}.page-purpose{margin:8px 0 16px;color:#857e74;font-size:11px;line-height:1.6}.page-copy{padding:16px;border-radius:16px;background:#faf5ee;color:#454b4d;font-size:12px;line-height:1.8;white-space:pre-wrap}.page-proof{margin-top:12px;padding:12px 14px;border-left:4px solid var(--gold);border-radius:0 12px 12px 0;background:#fff8eb;color:#6a573a;font-size:10px;line-height:1.6}.page-cta{display:inline-flex;margin-top:14px;padding:10px 14px;border-radius:14px;background:var(--ink);color:#fff;font-size:11px;font-weight:800}
+    .faq-grid{display:grid;gap:10px}.faq{padding:14px;border:1px solid #e8dfd3;border-radius:16px;background:#fffdfa}.faq b{font-size:12px;line-height:1.45}.faq p{margin:8px 0 0;color:#6b6a63;font-size:11px;line-height:1.6}
+    .creative-layout{display:grid;grid-template-columns:265px minmax(0,1fr);gap:16px;align-items:start}.creative-sidebar{position:sticky;top:152px;display:grid;gap:14px}.creative-note{padding:20px;border-radius:24px;background:var(--ink);color:#fff;box-shadow:var(--soft-shadow)}.creative-note h3{margin:8px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:28px;font-weight:400;letter-spacing:-.6px}.creative-note p{margin:10px 0 0;color:#d7dce4;font-size:11px;line-height:1.65}.creative-note .button{margin-top:18px}
+    .creative-board{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.creative-card{position:relative;overflow:hidden;border:1px solid var(--line);border-radius:28px;background:#fffdfa;box-shadow:var(--soft-shadow)}.creative-art{aspect-ratio:4/3;position:relative;overflow:hidden;background:linear-gradient(145deg,#e8dfd3,#c6ddeb);display:grid;place-items:center}.creative-art:before{content:"";position:absolute;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,.6);top:-30px;right:-20px}.creative-art:after{content:"✦";font-family:"DM Serif Display",serif;font-size:54px;color:rgba(157,71,91,.4);z-index:1}.creative-art img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:2}.creative-badge{position:absolute;z-index:3;top:12px;left:12px;padding:8px 10px;border-radius:var(--radius-pill);background:rgba(255,255,255,.9);backdrop-filter:blur(8px);font:600 9px/1 "DM Mono",monospace;color:#4a463e;letter-spacing:.5px}.creative-body{padding:18px}.creative-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#7a7268;font:600 9px/1 "DM Mono",monospace;letter-spacing:.6px;text-transform:uppercase}.creative-body h3{margin:12px 0 6px;font-size:16px;line-height:1.35;letter-spacing:-.3px}.creative-body p{margin:0;color:#6b6a63;font-size:11px;line-height:1.6}.creative-hook{margin-top:14px;padding:12px 14px;border-radius:16px;background:#f8f2eb;color:#504134;font:400 16px/1.4 "DM Serif Display",Georgia,serif;font-style:italic}.creative-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.creative-text{margin-top:12px;padding:12px;border:1px solid #e8dfd3;border-radius:16px;background:#fffdfa;color:#5a5f5a;font-size:10px;line-height:1.6;white-space:pre-wrap;max-height:120px;overflow:auto}.creative-visual{margin-top:12px;color:#767066;font-size:10px;line-height:1.55}.creative-visual b{color:#4a4f4b}
+    .handover-layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:16px;align-items:start}.export-stack{display:grid;gap:12px}.export-card{display:flex;gap:14px;align-items:center;padding:18px;border-radius:24px;border:1px solid var(--line);background:rgba(255,255,255,.8);box-shadow:var(--soft-shadow)}.export-mark{width:46px;height:46px;flex:none;display:grid;place-items:center;border-radius:16px;background:var(--lavender);color:#3c325c;font-family:"DM Serif Display",serif;font-size:26px}.export-card b{display:block;font-size:13px}.export-card span{display:block;margin-top:6px;color:#6b6a63;font-size:11px;line-height:1.5}.export-card .button{margin-left:auto;flex:none}.handover-brief{padding:24px;border-radius:28px;background:linear-gradient(150deg,#f5eadc,#ead3c7);border:1px solid #dec2b4;box-shadow:var(--soft-shadow)}.handover-brief h3{margin:8px 0 0;font-family:"DM Serif Display",Georgia,serif;font-size:34px;font-weight:400;letter-spacing:-.8px}.handover-brief p{margin:12px 0 0;color:#6b5446;font-size:11px;line-height:1.65}.handover-list{display:grid;gap:10px;margin-top:18px}.handover-list div{display:flex;gap:10px;align-items:flex-start;color:#604f44;font-size:11px;line-height:1.5}.handover-list i{font-style:normal;color:var(--wine);font-weight:900}.notice{margin-top:16px;padding:14px 16px;border-radius:16px;background:#fff8eb;border:1px solid #f2e2c2;color:#6a573a;font-size:11px;line-height:1.6}.notice b{color:#574121}
+    .busy{position:fixed;z-index:90;right:24px;bottom:24px;display:none;align-items:center;gap:12px;padding:14px 18px;border-radius:var(--radius-pill);background:var(--ink);color:#fff;box-shadow:0 16px 40px rgba(32,41,54,.25);font-size:11px;font-weight:800}.busy.show{display:flex}.spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    .toast{position:fixed;z-index:100;right:24px;bottom:24px;max-width:400px;padding:14px 18px;border-radius:var(--radius-pill);background:#202830;color:#fff;box-shadow:0 18px 45px rgba(36,31,24,.2);font-size:11px;font-weight:800;line-height:1.5;transform:translateY(125px);opacity:0;pointer-events:none;transition:all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275)}.toast.show{transform:translateY(0);opacity:1}.toast.success{background:var(--success)}.toast.error{background:var(--danger)}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    @media(max-width:1100px){.hero,.blueprint-top,.form-layout,.sales-layout,.creative-layout,.handover-layout{grid-template-columns:1fr}.hero-dossier{max-width:none}.side-note,.sales-index,.creative-sidebar{position:static}.grid-3{grid-template-columns:1fr 1fr}.signal-grid{grid-template-columns:1fr 1fr}}
+    @media(max-width:720px){.shell{padding:12px}.topbar{top:10px;padding:12px 16px}.brand-symbol{width:40px;height:40px;font-size:22px}.brand-word{font-size:24px}.canvas-pulse{display:none}.topbar-actions .button{display:none}.journey{top:76px;margin-top:12px}.journey-meter{display:none}.screen{padding-top:20px}.hero{padding:28px;min-height:auto;border-radius:28px}.hero h1{font-size:42px;letter-spacing:-1.2px}.hero-actions .button{width:100%}.hero-dossier{padding:20px}.micro-progress,.grid-3,.grid-2,.field-grid,.field-grid.three,.signal-grid,.creative-board{grid-template-columns:1fr}.section-head{align-items:flex-start;flex-direction:column}.section-head h2{font-size:34px}.stage-badge{margin-top:-10px}.form-panel{padding:20px}.form-panel-head h3{font-size:28px}.form-footer{align-items:stretch;flex-direction:column}.form-footer .button{width:100%}.upload-box{align-items:flex-start;flex-direction:column}.upload-actions{justify-content:flex-start}.blueprint-top{gap:12px}.thesis-card{padding:24px}.thesis-card h2{font-size:36px}.dossier-section{padding:20px}.dossier-section-head{align-items:flex-start;flex-direction:column}.dossier-section-head h3{font-size:30px}.sales-layout,.creative-layout{gap:12px}.page-canvas{padding:18px}.page-canvas-top{align-items:flex-start;flex-direction:column}.creative-card{border-radius:24px}.handover-layout{gap:12px}.export-card{align-items:flex-start;flex-wrap:wrap}.export-card .button{margin-left:60px}.route-prompt{align-items:flex-start;flex-direction:column}.route-prompt .button{width:100%}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-symbol">M</div>
+        <div>
+          <div class="brand-word">MULA</div>
+          <div class="brand-caption">Launch campaign atelier</div>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <div class="canvas-pulse"><span class="canvas-dot"></span> Canvas-ready generation</div>
+        <button class="button paper small" data-action="reset-project">Mulai ulang</button>
+      </div>
+    </header>
+    <nav class="journey" id="journey" aria-label="Tahapan kampanye"></nav>
+    <main id="app" aria-live="polite"></main>
+  </div>
+  <div id="busy" class="busy" aria-live="polite"><span class="spinner"></span><span id="busyText">Menyusun campaign dossier…</span></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+const apiKey = "";
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+const IMAGE_MODELS = ["gemini-2.5-flash-image-preview"];
+const STORAGE_KEY = "mula_launch_campaign_atelier_v1";
+
+const DEFAULT_STATE = {
+  route: "home",
+  loading: "",
+  brief: {
+    brandName: "",
+    productName: "",
+    category: "Produk Digital",
+    offerType: "Produk digital / program",
+    audience: "",
+    audienceSituation: "",
+    problem: "",
+    solution: "",
+    keyOutcome: "",
+    differentiator: "",
+    price: "",
+    offerWindow: "Open cart 5 hari",
+    objective: "Penjualan / checkout",
+    launchStyle: "Soft authority",
+    voice: "Hangat, jelas, dan meyakinkan",
+    cta: "Daftar sekarang",
+    proofInventory: "",
+    objections: "",
+    campaignNotes: "",
+    visualMood: "Warm editorial",
+    primaryChannel: "Instagram + WhatsApp",
+    aspectRatio: "4:5"
+  },
+  assets: { product: "", productName: "" },
+  blueprint: null,
+  renders: {},
+  selectedCreative: 0
+};
+
+const app = document.getElementById("app");
+const journey = document.getElementById("journey");
+const toastEl = document.getElementById("toast");
+const busyEl = document.getElementById("busy");
+const busyText = document.getElementById("busyText");
+
+function clone(value){ return JSON.parse(JSON.stringify(value)); }
+function hydrate(saved){
+  const base = clone(DEFAULT_STATE);
+  if(!saved || typeof saved !== "object") return base;
+  return {
+    ...base,
+    ...saved,
+    brief: {...base.brief, ...(saved.brief || {})},
+    assets: {product:"", productName:""},
+    renders: {},
+    loading: ""
+  };
+}
+function readState(){
+  try{return hydrate(JSON.parse(localStorage.getItem(STORAGE_KEY)));}
+  catch{return clone(DEFAULT_STATE);}
+}
+let state = readState();
+function persist(){
+  try{
+    const safe = {
+      route: state.route,
+      brief: clone(state.brief),
+      blueprint: state.blueprint ? clone(state.blueprint) : null,
+      selectedCreative: state.selectedCreative,
+      assets: {product:"",productName:""},
+      renders: {},
+      loading: ""
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safe));
+  }catch{}
+}
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[char]));
+}
+function textHtml(value){ return esc(value).replace(/\n/g,"<br>"); }
+function getPath(path){ return path.split(".").reduce((current,key)=>current == null ? "" : current[key], state); }
+function setPath(path,value){
+  const keys = path.split("."); let node = state;
+  for(let i=0;i<keys.length-1;i++) node=node[keys[i]];
+  node[keys[keys.length-1]] = value;
+  persist();
+}
+function slug(value){ return String(value || "mula-campaign").trim().toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"") || "mula-campaign"; }
+function showToast(message,type="info"){
+  toastEl.textContent=message;
+  toastEl.className=`toast show ${type}`;
+  clearTimeout(window.__mulaToast);
+  window.__mulaToast=setTimeout(()=>toastEl.className="toast",3600);
+}
+function setBusy(message){
+  state.loading=message || "working";
+  busyText.textContent=message || "Menyusun campaign dossier…";
+  busyEl.classList.add("show");
+}
+function clearBusy(){ state.loading=""; busyEl.classList.remove("show"); persist(); }
+function button(label,action,kind="primary",extra="",disabled=false){
+  return `<button type="button" class="button ${kind} ${extra}" data-action="${esc(action)}" ${disabled?"disabled":""}>${label}</button>`;
+}
+function icon(type){
+  const map={
+    compass:"◌", brief:"✦", blueprint:"⌁", page:"▤", creative:"✳", export:"↗", idea:"⟡", proof:"✓", image:"◒", reset:"↺"
+  };
+  return map[type] || "✦";
+}
+function readyFields(){
+  const b=state.brief;
+  return [
+    {label:"Produk & brand", done:!!(b.brandName.trim()&&b.productName.trim())},
+    {label:"Audiens", done:!!b.audience.trim()},
+    {label:"Masalah", done:!!b.problem.trim()},
+    {label:"Hasil utama", done:!!b.keyOutcome.trim()},
+    {label:"Penawaran", done:!!(b.price.trim()||b.offerType.trim())}
+  ];
+}
+function progressCount(){ return readyFields().filter(item=>item.done).length; }
+function launchReady(){
+  const b=state.brief;
+  return !!(b.brandName.trim()&&b.productName.trim()&&b.audience.trim()&&b.problem.trim()&&b.keyOutcome.trim());
+}
+function setRoute(route){
+  state.route=route;
+  persist();
+  render();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function routeButton(route,index,label){
+  return `<button class="journey-step ${state.route===route?"active":""}" data-route="${route}"><span>0${index}</span>${label}</button>`;
+}
+function renderJourney(){
+  const count=progressCount();
+  journey.innerHTML = `
+    ${routeButton("home",1,"Mulai")}
+    ${routeButton("brief",2,"Campaign brief")}
+    ${routeButton("blueprint",3,"Launch map")}
+    ${routeButton("sales",4,"Sales page")}
+    ${routeButton("creative",5,"Creative kit")}
+    ${routeButton("handover",6,"Handover")}
+    <span class="journey-meter">Brief ${count}/5 · ${state.blueprint?"Dossier siap":"menunggu direction"}</span>
+  `;
+}
+function field(label,path,placeholder,opts={}){
+  const value=esc(getPath(path));
+  const required=opts.required?"<i>•</i>":"";
+  const full=opts.full?"full":"";
+  if(opts.type==="textarea"){
+    return `<div class="field ${full}"><label>${required}${esc(label)}</label><textarea data-bind="${esc(path)}" placeholder="${esc(placeholder||"")}">${value}</textarea></div>`;
+  }
+  if(opts.type==="select"){
+    const options=(opts.options||[]).map(option=>`<option value="${esc(option)}" ${String(getPath(path))===String(option)?"selected":""}>${esc(option)}</option>`).join("");
+    return `<div class="field ${full}"><label>${required}${esc(label)}</label><select data-bind="${esc(path)}">${options}</select></div>`;
+  }
+  return `<div class="field ${full}"><label>${required}${esc(label)}</label><input data-bind="${esc(path)}" value="${value}" placeholder="${esc(placeholder||"")}" /></div>`;
+}
+function choiceGroup(label,path,options){
+  const current=String(getPath(path));
+  return `<div class="field full"><label>${esc(label)}</label><div class="choice-row">${options.map((option,i)=>{
+    const id=`${path.replace(/\./g,"-")}-${i}`;
+    return `<div class="choice"><input id="${id}" type="radio" name="${path}" data-bind="${esc(path)}" value="${esc(option)}" ${current===String(option)?"checked":""}/><label for="${id}">${esc(option)}</label></div>`;
+  }).join("")}</div></div>`;
+}
+function renderHome(){
+  const done=progressCount();
+  return `
+    <section class="screen active">
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow">Campaign planning for people who build things</div>
+          <h1>Mulai dengan <em>arah</em>, lalu luncurkan dengan alasan yang jelas.</h1>
+          <p>MULA menyusun campaign dossier untuk produk, jasa, program, atau digital offer: positioning, penawaran, sales page, creative direction, dan runbook yang dapat langsung dipakai tim Anda.</p>
+          <div class="hero-actions">
+            ${button("Mulai campaign brief →","go-brief","primary")}
+            ${state.blueprint?button("Buka launch map","go-blueprint","paper"):button("Lihat cara kerjanya","scroll-process","paper")}
+          </div>
+          <div class="hero-note"><span class="seal">✓</span><span><b>Lebih dari prompt generator.</b> Semua output dirangkai sebagai satu sistem campaign. Gunakan hanya klaim, testimoni, angka, dan bukti yang benar-benar Anda miliki.</span></div>
+        </div>
+        <aside class="hero-dossier">
+          <div class="dossier-label"><span>Launch dossier</span><b>${state.blueprint?"Direction ready":"Draft / 01"}</b></div>
+          <div class="dossier-title">${esc(state.brief.productName || "Satu produk, satu alasan kuat untuk dibeli.")}</div>
+          <div class="dossier-line"></div>
+          <div class="dossier-grid">
+            <div class="dossier-box"><span>Audience</span><b>${esc(state.brief.audience || "Belum didefinisikan")}</b></div>
+            <div class="dossier-box"><span>Goal</span><b>${esc(state.brief.objective || "Penjualan")}</b></div>
+            <div class="dossier-box"><span>Campaign</span><b>${esc(state.brief.offerWindow || "Open cart")}</b></div>
+            <div class="dossier-box"><span>Voice</span><b>${esc(state.brief.launchStyle || "Soft authority")}</b></div>
+          </div>
+          <div class="dossier-stamp">${state.blueprint ? "✦ Campaign direction tersusun. Lanjut ke sales page & creative kit." : "✦ Isi brief inti untuk mengubah ide menjadi launch map."}</div>
+        </aside>
+      </section>
+      <div class="micro-progress" id="process">
+        <div class="progress-card"><b>${done}/5</b><span>fondasi brief sudah terisi</span></div>
+        <div class="progress-card"><b>${state.blueprint?"01":"—"}</b><span>launch map terstruktur</span></div>
+        <div class="progress-card"><b>${state.blueprint?.landingPage?.sections?.length||"—"}</b><span>bagian sales page siap pakai</span></div>
+        <div class="progress-card"><b>${state.blueprint?.creatives?.length||"—"}</b><span>creative concept untuk campaign</span></div>
+      </div>
+      <div class="section-head" style="margin-top:34px">
+        <div><div class="eyebrow">Alur kerja MULA</div><h2>Satu studio. Enam deliverable.</h2></div>
+        <p>Masukkan apa yang benar tentang produk Anda. MULA membantu mengorganisasikan strategi dan bahasa kampanye, bukan mengarang bukti untuk Anda.</p>
+      </div>
+      <div class="grid-3">
+        <article class="panel tint-olive"><div class="panel-icon">01</div><h3>Campaign brief yang membumi</h3><p>Ambil konteks audiens, problem, penawaran, target channel, dan batasan kampanye sebelum berbicara tentang copy atau desain.</p>${button("Isi brief","go-brief","paper small")}</article>
+        <article class="panel tint-gold"><div class="panel-icon">02</div><h3>Launch map yang bisa dijalankan</h3><p>Dapatkan positioning, arsitektur offer, urutan fase campaign, aset yang dibutuhkan, dan sinyal keberhasilan tiap fase.</p>${button("Buat launch map","go-blueprint","paper small","",!launchReady())}</article>
+        <article class="panel tint-sky"><div class="panel-icon">03</div><h3>Sales page & creative kit</h3><p>Terjemahkan strategi menjadi struktur halaman jualan, copy per section, dan konsep creative untuk iklan atau konten launch.</p>${button("Lihat deliverable","go-handover","paper small","",!state.blueprint)}</article>
+      </div>
+      <div class="route-prompt"><span><b>Tip:</b> Anda dapat mulai dari produk digital, jasa, program, batch, produk fisik, atau event. MULA akan menyesuaikan sistem campaign berdasarkan brief.</span>${button("Buka campaign brief","go-brief","dark small")}</div>
+    </section>
+  `;
+}
+function renderBrief(){
+  const readiness=readyFields();
+  const hasAsset=!!state.assets.product;
+  return `
+    <section class="screen active">
+      <div class="section-head"><div><div class="eyebrow">02 / Campaign brief</div><h2>Berikan bahan mentah yang jujur.</h2></div><span class="stage-badge">Autosave lokal · ${progressCount()}/5 fondasi siap</span></div>
+      <div class="form-layout">
+        <div class="form-stack">
+          <section class="form-panel">
+            <div class="form-panel-head"><div><div class="eyebrow">Fondasi</div><h3>Produk dan konteks bisnis</h3><p>Informasi ini menentukan bagaimana MULA menyusun positioning dan kampanye. Lebih spesifik lebih baik.</p></div><span class="form-index">01</span></div>
+            <div class="field-grid">
+              ${field("Nama brand","brief.brandName","Contoh: KelasKerja",{required:true})}
+              ${field("Nama produk / penawaran","brief.productName","Contoh: Career Sprint 21 Hari",{required:true})}
+              ${field("Kategori","brief.category","",{type:"select",options:["Produk Digital","Jasa Profesional","Program / Kelas","Produk Fisik","Event / Workshop","SaaS / Tools"]})}
+              ${field("Tipe penawaran","brief.offerType","",{type:"select",options:["Produk digital / program","Jasa done-for-you","Konsultasi / mentorship","Produk fisik","Event berbayar","Free lead magnet → offer"]})}
+              ${field("Harga / investasi","brief.price","Contoh: Rp499.000 atau mulai dari Rp2.500.000")}
+              ${field("Jendela campaign","brief.offerWindow","Contoh: Early-bird 7 hari")}
+              ${field("Tujuan utama","brief.objective","",{type:"select",options:["Penjualan / checkout","Pendaftaran waitlist","Booking konsultasi","Lead WhatsApp","Registrasi webinar","Validasi ide"]})}
+              ${field("Channel utama","brief.primaryChannel","",{type:"select",options:["Instagram + WhatsApp","Meta Ads + Landing Page","TikTok + WhatsApp","Email + Landing Page","Komunitas + Webinar","Multi-channel launch"]})}
+            </div>
+          </section>
+          <section class="form-panel">
+            <div class="form-panel-head"><div><div class="eyebrow">Orang yang ingin Anda bantu</div><h3>Audiens, masalah, dan perubahan</h3><p>Jangan hanya tulis demografi. Jelaskan situasi yang sedang mereka alami sebelum produk Anda hadir.</p></div><span class="form-index">02</span></div>
+            <div class="field-grid">
+              ${field("Audiens utama","brief.audience","Contoh: owner UMKM fashion yang sudah jualan tetapi belum punya sistem konten",{required:true})}
+              ${field("Situasi mereka saat ini","brief.audienceSituation","Contoh: aktif posting, tetapi sering bingung membuat angle dan penawaran")}
+              ${field("Masalah / friksi utama","brief.problem","Contoh: konten tidak terarah, calon pembeli tidak paham kenapa harus memilih produknya",{type:"textarea",required:true})}
+              ${field("Solusi yang Anda berikan","brief.solution","Contoh: sistem template dan pendampingan untuk membuat campaign yang konsisten",{type:"textarea"})}
+              ${field("Hasil utama yang diinginkan","brief.keyOutcome","Contoh: memiliki launch campaign yang jelas dan siap dijalankan dalam 7 hari",{type:"textarea",required:true})}
+              ${field("Pembeda yang bisa dibuktikan","brief.differentiator","Contoh: disertai template, review langsung, atau proses implementasi tertentu",{type:"textarea"})}
+            </div>
+          </section>
+          <section class="form-panel">
+            <div class="form-panel-head"><div><div class="eyebrow">Penawaran & nada komunikasi</div><h3>Atur rasa campaign Anda</h3><p>Berikan konteks yang realistis. Jangan mengklaim bonus, diskon, sertifikasi, atau hasil yang sebenarnya tidak tersedia.</p></div><span class="form-index">03</span></div>
+            <div class="field-grid">
+              ${choiceGroup("Gaya launch","brief.launchStyle",["Soft authority","Direct response","Warm community","Premium editorial","Educational proof"])}
+              ${choiceGroup("Mood visual","brief.visualMood",["Warm editorial","Clean modern","Bold energetic","Calm premium","Playful colour"])}
+              ${field("Nada bahasa","brief.voice","Contoh: hangat, ringkas, ahli tanpa menggurui")}
+              ${field("CTA utama","brief.cta","Contoh: Amankan seat Anda")}
+              ${field("Bukti yang benar-benar tersedia","brief.proofInventory","Contoh: review peserta, studi kasus, screenshot hasil, proses kerja, data internal",{type:"textarea"})}
+              ${field("Keraguan / keberatan yang sering muncul","brief.objections","Contoh: mahal, tidak punya waktu, takut tidak bisa mengikuti, sudah pernah mencoba tool lain",{type:"textarea"})}
+              ${field("Catatan / constraint campaign","brief.campaignNotes","Contoh: tidak memakai klaim berlebihan, wajib ada CTA WhatsApp, tidak ingin hard selling",{type:"textarea",full:true})}
+            </div>
+          </section>
+          <section class="form-panel">
+            <div class="form-panel-head"><div><div class="eyebrow">Referensi visual</div><h3>Produk reference (opsional)</h3><p>Upload kemasan, produk, cover, atau screenshot yang relevan bila nantinya ingin membuat draft visual creative dari Creative Kit.</p></div><span class="form-index">04</span></div>
+            <div class="upload-box">
+              <div class="upload-thumb">${hasAsset?`<img src="${state.assets.product}" alt="Reference asset">`:icon("image")}</div>
+              <div class="upload-copy"><b>${hasAsset?esc(state.assets.productName || "Reference produk siap"):"Belum ada reference produk"}</b><span>${hasAsset?"Aset tinggal selama tab browser aktif dan tidak masuk ke localStorage.":"Bisa dipakai sebagai reference inlineData saat membuat visual draft."}</span></div>
+              <div class="upload-actions">
+                ${button(hasAsset?"Ganti gambar":"Upload gambar","pick-product","paper small")}
+                ${hasAsset?button("Hapus","clear-product","ghost small"):""}
+              </div>
+              <input id="productInput" class="sr-only" type="file" accept="image/*">
+            </div>
+            <div class="form-footer"><p class="hint">MULA akan menyimpan teks brief secara lokal pada browser Anda. Gambar reference dan visual hasil render tidak disimpan ke localStorage.</p>${button("Susun launch map →","generate-blueprint","primary","",!launchReady())}</div>
+          </section>
+        </div>
+        <aside class="side-note">
+          <section class="note-card"><div class="eyebrow">Checklist brief</div><h3>Sudah cukup untuk mulai?</h3><p>Blueprint yang tajam datang dari masalah dan hasil yang jelas—bukan dari semakin banyak kata sifat.</p><div class="readiness">${readiness.map(item=>`<div class="readiness-row"><span>${esc(item.label)}</span><span class="ready-dot ${item.done?"done":""}"></span></div>`).join("")}</div></section>
+          <section class="note-card"><div class="eyebrow">Apa yang dibuat</div><h3>Campaign dossier</h3><div class="mini-list"><div><b>01</b><span>Positioning, promise, dan customer insight.</span></div><div><b>02</b><span>Arsitektur offer + value stack yang dapat dicek ulang.</span></div><div><b>03</b><span>Fase campaign, sales page blueprint, dan 3–4 creative concept.</span></div></div></section>
+        </aside>
+      </div>
+    </section>
+  `;
+}
+function renderEmpty(route){
+  const copy={
+    blueprint:["Launch map masih kosong","Selesaikan campaign brief lalu minta MULA menyusun positioning, offer architecture, dan urutan campaign yang dapat dijalankan."],
+    sales:["Sales page belum dirangkai","MULA akan menurunkan launch map menjadi struktur halaman, copy per section, area bukti, serta FAQ / objection handling."],
+    creative:["Creative kit menunggu arah","Setelah launch map siap, MULA akan membuat beberapa angle creative lengkap dengan hook, copy, CTA, dan direction visual."],
+    handover:["Belum ada dossier untuk diekspor","Lengkapi campaign brief lalu susun launch map terlebih dahulu. Setelah itu seluruh dokumen dapat diunduh sebagai Markdown."]
+  }[route];
+  const go = route==="blueprint"?"go-brief":"go-blueprint";
+  const label = route==="blueprint"?"Buka campaign brief":"Buka launch map";
+  return `<section class="screen active"><div class="empty-state"><div><div class="empty-orbit"></div><h3>${copy[0]}</h3><p>${copy[1]}</p>${button(label,go,"primary")}</div></div></section>`;
+}
+function valueStackHtml(items){
+  return `<div class="value-stack">${(items||[]).map((item,i)=>`<div class="stack-row"><span class="stack-number">${String(i+1).padStart(2,"0")}</span><div><b>${esc(item.title||item)}</b>${item.description?`<p>${esc(item.description)}</p>`:""}</div><span class="stack-tag">${esc(item.valueHint||"value")}</span></div>`).join("")}</div>`;
+}
+function renderBlueprint(){
+  if(!state.blueprint) return renderEmpty("blueprint");
+  const p=state.blueprint;
+  return `
+    <section class="screen active">
+      <div class="section-head"><div><div class="eyebrow">03 / Launch map</div><h2>Dossier untuk bergerak, bukan sekadar dibaca.</h2></div><div style="display:flex;gap:8px;flex-wrap:wrap">${button("Copy launch map","copy-blueprint","paper small")}${button("Susun ulang","generate-blueprint","dark small")}</div></div>
+      <div class="blueprint-top">
+        <article class="thesis-card"><div class="eyebrow">Campaign thesis · ${esc(p.projectName)}</div><h2>${esc(p.positioning.headline)}</h2><p>${esc(p.positioning.explanation)}</p><div class="thesis-quote">“${esc(p.positioning.corePromise)}”</div></article>
+        <aside class="offer-card"><div class="eyebrow">Offer architecture</div><h3>${esc(p.offer.name)}</h3><p>${esc(p.offer.primaryOutcome)}</p><div class="offer-price"><span>Harga / framing</span><b>${esc(p.offer.pricePresentation)}</b></div></aside>
+      </div>
+      <section class="dossier-section"><div class="dossier-section-head"><div><div class="eyebrow">Signal board</div><h3>Hal yang harus terasa jelas.</h3></div><p>Tiga sinyal ini menjadi pagar saat Anda menulis halaman jualan, brief creative, atau mengarahkan tim konten.</p></div><div class="signal-grid"><article class="signal"><span>Ideal buyer</span><b>${esc(p.positioning.idealBuyer)}</b><p>Jangan mencoba bicara ke semua orang sekaligus.</p></article><article class="signal"><span>Customer tension</span><b>${esc(p.positioning.customerTension)}</b><p>Fokus pada problem yang benar-benar mereka rasakan hari ini.</p></article><article class="signal"><span>Reason to believe</span><b>${esc(p.positioning.reasonToBelieve)}</b><p>Pastikan bukti, mekanisme, atau prosesnya bisa dijelaskan secara jujur.</p></article></div></section>
+      <section class="dossier-section"><div class="dossier-section-head"><div><div class="eyebrow">Value stack</div><h3>Isi penawaran dan alasan nilainya.</h3></div><p>Gunakan komponen ini sebagai daftar cek. Hapus item yang tidak benar-benar diberikan ke pembeli.</p></div>${valueStackHtml(p.offer.valueStack)}</section>
+      <section class="dossier-section"><div class="dossier-section-head"><div><div class="eyebrow">Campaign runbook</div><h3>Urutan fase campaign.</h3></div><p>Ini adalah urutan kerja, bukan tanggal mutlak. Sesuaikan window dan ritmenya dengan kapasitas tim serta durasi penawaran Anda.</p></div><div class="timeline">${(p.launchPlan||[]).map((phase,i)=>`<article class="timeline-item"><span class="timeline-mark">${String(i+1).padStart(2,"0")}</span><div class="timeline-body"><div class="timeline-body-top"><h4>${esc(phase.phase)}</h4><span class="timeline-window">${esc(phase.window)}</span></div><p>${esc(phase.objective)}</p><div class="task-list">${(phase.actions||[]).map(task=>`<span class="task">${esc(task)}</span>`).join("")}</div></div></article>`).join("")}</div></section>
+      <div class="route-prompt"><span><b>Berikutnya:</b> terjemahkan strategi menjadi susunan copy halaman jualan dan creative concept yang membawa pesan yang sama.</span><div style="display:flex;gap:8px;flex-wrap:wrap">${button("Sales page →","go-sales","olive small")}${button("Creative kit →","go-creative","paper small")}</div></div>
+    </section>
+  `;
+}
+function renderSales(){
+  if(!state.blueprint) return renderEmpty("sales");
+  const landing=state.blueprint.landingPage;
+  const sections=landing.sections||[];
+  return `
+    <section class="screen active">
+      <div class="section-head"><div><div class="eyebrow">04 / Sales page</div><h2>Halaman yang membawa orang dari “tertarik” ke “mengerti”.</h2></div><div style="display:flex;gap:8px;flex-wrap:wrap">${button("Copy halaman","copy-sales","paper small")}${button("Export .md","download-sales","dark small")}</div></div>
+      <div class="sales-layout">
+        <aside class="sales-index"><b>Page sections</b><div class="sales-index-list">${sections.map((s,i)=>`<a class="sales-index-item" href="#page-${i}"><span>${String(i+1).padStart(2,"0")}</span>${esc(s.title)}</a>`).join("")}</div><div class="notice"><b>Catatan bukti:</b> area proof di bawah adalah petunjuk bukti yang perlu Anda siapkan. Jangan menggantinya dengan testimoni, angka, atau jaminan palsu.</div></aside>
+        <article class="page-canvas">
+          <div class="page-canvas-top"><div><div class="eyebrow">${esc(state.blueprint.projectName)} · Sales page script</div><h2>${esc(landing.pageTitle)}</h2></div>${button("Copy semua","copy-sales","paper small")}</div>
+          ${sections.map((section,i)=>`<section class="page-section" id="page-${i}"><div class="page-section-title"><span>${String(i+1).padStart(2,"0")}</span><h3>${esc(section.title)}</h3></div><p class="page-purpose">${esc(section.purpose)}</p><div class="page-copy">${textHtml(section.copy)}</div>${section.cta?`<span class="page-cta">${esc(section.cta)}</span>`:""}${section.proofNote?`<div class="page-proof"><b>Bukti yang perlu dipasang:</b> ${esc(section.proofNote)}</div>`:""}</section>`).join("")}
+          <section class="page-section"><div class="page-section-title"><span>FAQ</span><h3>Menjawab keberatan tanpa memaksa.</h3></div><p class="page-purpose">Gunakan jawaban yang sesuai kebijakan dan kondisi penawaran Anda saat ini.</p><div class="faq-grid">${(landing.faq||[]).map(item=>`<article class="faq"><b>${esc(item.question)}</b><p>${esc(item.answer)}</p></article>`).join("")}</div></section>
+        </article>
+      </div>
+    </section>
+  `;
+}
+function renderCreative(){
+  if(!state.blueprint) return renderEmpty("creative");
+  const creatives=state.blueprint.creatives||[];
+  return `
+    <section class="screen active">
+      <div class="section-head"><div><div class="eyebrow">05 / Creative kit</div><h2>Beberapa pintu masuk, satu pesan utama.</h2></div><div style="display:flex;gap:8px;flex-wrap:wrap">${button("Copy creative kit","copy-creatives","paper small")}${button("Export .md","download-creatives","dark small")}</div></div>
+      <div class="creative-layout">
+        <aside class="creative-sidebar"><section class="creative-note"><div class="eyebrow" style="color:#ffc9bd">Creative direction</div><h3>Jangan hanya mengganti warna dan berharap hasilnya berbeda.</h3><p>Setiap concept memakai angle psikologis yang berbeda, tetapi tetap membawa positioning dan offer yang sama.</p>${state.assets.product?`<div class="dossier-stamp" style="margin-top:15px">Reference produk siap dipakai saat render visual draft.</div>`:`<div class="dossier-stamp" style="margin-top:15px">Tambahkan reference produk di Campaign Brief untuk draft visual yang lebih konsisten.</div>`}${button("Buka brief","go-brief","paper small")}</section><section class="note-card"><div class="eyebrow">Format penting</div><h3>Gunakan dengan konteks.</h3><div class="mini-list"><div><b>01</b><span>Hook hanya pembuka. Pastikan landing page / chat follow-up meneruskan pesannya.</span></div><div><b>02</b><span>Draft visual dibuat tanpa copy kecil agar teks final tetap akurat di editor desain Anda.</span></div><div><b>03</b><span>Uji satu variable utama per creative saat memulai eksperimen ads.</span></div></div></section></aside>
+        <div class="creative-board">${creatives.map((creative,i)=>{
+          const render=state.renders[creative.id];
+          return `<article class="creative-card"><div class="creative-art">${render?`<img src="${render}" alt="Visual draft ${i+1}">`:""}<span class="creative-badge">${esc(creative.format)}</span></div><div class="creative-body"><div class="creative-meta"><span>${esc(creative.audienceMoment)}</span><span>${esc(creative.angle)}</span></div><h3>${esc(creative.title)}</h3><p>${esc(creative.summary)}</p><div class="creative-hook">“${esc(creative.hook)}”</div><div class="creative-text">${textHtml(creative.primaryText)}</div><p class="creative-visual"><b>Direction visual:</b> ${esc(creative.visualDirection)}</p><div class="creative-actions">${button(render?"Render ulang":"Draft visual","render-creative:"+i,"olive small")}${button("Copy copy","copy-creative:"+i,"paper small")}${render?button("Download PNG","download-render:"+i,"ghost small"):""}</div></div></article>`;
+        }).join("")}</div>
+      </div>
+    </section>
+  `;
+}
+function renderHandover(){
+  if(!state.blueprint) return renderEmpty("handover");
+  return `
+    <section class="screen active">
+      <div class="section-head"><div><div class="eyebrow">06 / Handover</div><h2>Serahkan dossier yang rapi ke tim atau ke diri Anda minggu depan.</h2></div><span class="stage-badge">${esc(state.blueprint.projectName)} · siap diekspor</span></div>
+      <div class="handover-layout">
+        <div class="export-stack">
+          <article class="export-card"><span class="export-mark">B</span><div><b>Campaign brief</b><span>Ringkasan produk, audiens, penawaran, constraint, dan konteks yang menjadi dasar seluruh campaign.</span></div>${button("Unduh .md","download-brief","paper small")}</article>
+          <article class="export-card"><span class="export-mark">L</span><div><b>Launch map</b><span>Positioning, offer architecture, signal board, dan runbook per fase campaign.</span></div>${button("Unduh .md","download-blueprint","paper small")}</article>
+          <article class="export-card"><span class="export-mark">S</span><div><b>Sales page script</b><span>Struktur halaman, copy per section, proof guidance, FAQ, dan CTA.</span></div>${button("Unduh .md","download-sales","paper small")}</article>
+          <article class="export-card"><span class="export-mark">C</span><div><b>Creative kit</b><span>Angle, hook, primary text, CTA, dan direction visual untuk setiap concept.</span></div>${button("Unduh .md","download-creatives","paper small")}</article>
+          <article class="export-card"><span class="export-mark">M</span><div><b>Master campaign pack</b><span>Semua output digabung menjadi satu dokumen Markdown untuk diserahkan atau diarsipkan.</span></div>${button("Unduh .md","download-master","dark small")}</article>
+        </div>
+        <aside class="handover-brief"><div class="eyebrow">Ready for execution</div><h3>Jaga pesan, bukan sekadar aset.</h3><p>Campaign yang konsisten membuat orang lebih cepat memahami siapa produk ini untuk, masalah apa yang diselesaikan, dan alasan untuk bergerak sekarang.</p><div class="handover-list"><div><i>✦</i><span>Cek ulang seluruh klaim, angka, bonus, dan kebijakan sebelum dipublikasikan.</span></div><div><i>✦</i><span>Tambahkan bukti nyata pada slot proof yang disarankan sales page.</span></div><div><i>✦</i><span>Pilih 1–2 creative untuk test awal, bukan mengubah semuanya sekaligus.</span></div></div><div class="notice"><b>Privasi:</b> teks tersimpan di localStorage browser Anda. Gambar reference dan hasil visual hanya tinggal pada sesi tab aktif.</div></aside>
+      </div>
+    </section>
+  `;
+}
+function render(){
+  renderJourney();
+  const views={home:renderHome,brief:renderBrief,blueprint:renderBlueprint,sales:renderSales,creative:renderCreative,handover:renderHandover};
+  app.innerHTML=(views[state.route]||renderHome)();
+}
+
+async function postWithRetry(url,payload){
+  let delay=850;
+  let lastError=null;
+  for(let attempt=0;attempt<5;attempt++){
+    try{
+      const res=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      if(res.ok) return await res.json();
+      const message=await res.text();
+      if(res.status!==429 && res.status<500){
+        const fatal=new Error(`HTTP ${res.status}: ${message}`);
+        fatal.fatal=true;
+        throw fatal;
+      }
+      lastError=new Error(`HTTP ${res.status}: ${message}`);
+    }catch(error){
+      if(error && error.fatal) throw error;
+      lastError=error;
+      if(attempt===4) break;
+    }
+    await new Promise(resolve=>setTimeout(resolve,delay));
+    delay*=2;
+  }
+  throw lastError || new Error("Gemini request gagal diproses.");
+}
+async function callModels(models,payloadBuilder){
+  let error;
+  for(const model of models){
+    try{
+      const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      return await postWithRetry(url,payloadBuilder());
+    }catch(err){ error=err; }
+  }
+  throw error || new Error("Tidak ada model Gemini yang dapat digunakan.");
+}
+function extractText(data){ return data?.candidates?.[0]?.content?.parts?.find(part=>typeof part.text==="string")?.text || ""; }
+
+function parseJson(raw){
+  const clean=String(raw||"").trim().replace(/^`{3}(?:json)?/i,"").replace(/`{3}$/i,"").trim();
+  return JSON.parse(clean);
+}
+
+function compact(value){ return String(value||"").trim() || "—"; }
+
+function normalizeBlueprint(raw){
+  const b=state.brief;
+  const fallbackName=`${b.brandName || "MULA"} — ${b.productName || "Campaign"}`;
+  const takeArray=(value)=>Array.isArray(value)?value:[];
+  const sections=takeArray(raw?.landingPage?.sections).map((item,i)=>({
+    title:compact(item?.title || ["Hero & promise","Problem yang terasa","Mekanisme / solusi","Offer & value","CTA & next step"][i] || `Section ${i+1}`),
+    purpose:compact(item?.purpose || "Membantu pembaca memahami alasan utama untuk melanjutkan."),
+    copy:compact(item?.copy || "Tulis copy final berdasarkan bukti, detail offer, dan konteks yang benar-benar tersedia."),
+    cta:String(item?.cta||"").trim(),
+    proofNote:String(item?.proofNote||"").trim()
+  }));
+  
+  const defaultSections=[
+    {title:"Hero & promise",purpose:"Buka dengan hasil utama dan konteks siapa yang dibantu.",copy:`${b.productName || "Produk ini"} membantu ${b.audience || "audiens yang tepat"} bergerak dari ${b.problem || "masalah yang menghambat"} menuju ${b.keyOutcome || "hasil yang mereka butuhkan"}.`,cta:b.cta,proofNote:"Tambahkan bukti atau mekanisme yang benar-benar tersedia."},
+    {title:"Problem yang terasa",purpose:"Bantu pembaca merasa dipahami sebelum produk diperkenalkan.",copy:b.problem || "Jelaskan masalah secara konkret dari pengalaman pelanggan yang benar-benar Anda pahami.",cta:"",proofNote:"Pakai language of customer dari survey, chat, atau interview asli bila ada."},
+    {title:"Offer & next step",purpose:"Jelaskan apa yang didapat, untuk siapa, dan apa langkah berikutnya.",copy:`${b.offerType || "Penawaran"} ini dirancang untuk membantu mencapai ${b.keyOutcome || "hasil utama"}.`,cta:b.cta,proofNote:"Cek ulang harga, bonus, kuota, ketentuan, dan deadline sebelum dipublikasikan."}
+  ];
+  
+  const creatives=takeArray(raw?.creatives).map((item,i)=>({
+    id:String(item?.id || `concept-${i+1}`),
+    title:compact(item?.title || `Creative concept ${i+1}`),
+    format:compact(item?.format || b.aspectRatio || "4:5"),
+    audienceMoment:compact(item?.audienceMoment || "Awareness"),
+    angle:compact(item?.angle || "Problem → possibility"),
+    summary:compact(item?.summary || "Sudut komunikasi yang membawa audience menuju promise utama."),
+    hook:compact(item?.hook || b.keyOutcome || "Temukan alasan kuat untuk bergerak."),
+    primaryText:compact(item?.primaryText || `${b.productName || "Produk"}\n${b.keyOutcome || "Hasil utama"}\n${b.cta || "Pelajari lebih lanjut"}`),
+    visualDirection:compact(item?.visualDirection || `${b.visualMood || "Warm editorial"}; tampilkan produk atau outcome secara jelas; no tiny text, no watermark.`),
+    cta:String(item?.cta || b.cta || "Pelajari lebih lanjut").trim()
+  }));
+  
+  const valueStack=takeArray(raw?.offer?.valueStack).map((item,i)=>({title:compact(item?.title || item),description:String(item?.description||"").trim(),valueHint:compact(item?.valueHint||"included")}));
+  const launchPlan=takeArray(raw?.launchPlan).map((item,i)=>({phase:compact(item?.phase || `Phase ${i+1}`),window:compact(item?.window || "Tentukan window"),objective:compact(item?.objective || "Membangun momentum campaign."),actions:takeArray(item?.actions).map(String).filter(Boolean).slice(0,5)}));
+  const faq=takeArray(raw?.landingPage?.faq).map(item=>({question:compact(item?.question),answer:compact(item?.answer)}));
+  
+  return {
+    projectName:compact(raw?.projectName || fallbackName),
+    positioning:{
+      headline:compact(raw?.positioning?.headline || `${b.productName || "Produk"} untuk ${b.audience || "orang yang membutuhkan arah"}`),
+      explanation:compact(raw?.positioning?.explanation || `${b.productName || "Produk"} membantu ${b.audience || "audiens"} menjawab ${b.problem || "problem utama"} dengan fokus pada ${b.keyOutcome || "hasil yang lebih jelas"}.`),
+      corePromise:compact(raw?.positioning?.corePromise || b.keyOutcome || "Hasil utama yang jelas dan dapat dijelaskan."),
+      idealBuyer:compact(raw?.positioning?.idealBuyer || b.audience || "Audiens utama"),
+      customerTension:compact(raw?.positioning?.customerTension || b.problem || "Tentukan friksi utama pelanggan."),
+      reasonToBelieve:compact(raw?.positioning?.reasonToBelieve || b.differentiator || b.solution || "Jelaskan mekanisme, proses, atau bukti yang tersedia.")
+    },
+    offer:{
+      name:compact(raw?.offer?.name || b.productName || "Main offer"),
+      primaryOutcome:compact(raw?.offer?.primaryOutcome || b.keyOutcome || "Hasil utama"),
+      pricePresentation:compact(raw?.offer?.pricePresentation || b.price || "Tentukan framing harga"),
+      valueStack:valueStack.length?valueStack:[
+        {title:compact(b.offerType || "Penawaran inti"),description:compact(b.solution || "Apa yang diberikan kepada pembeli."),valueHint:"core"},
+        {title:"Bukti / mekanisme",description:compact(b.differentiator || "Jelaskan alasan masuk akal mengapa offer dapat membantu."),valueHint:"proof"},
+        {title:"Langkah berikutnya",description:compact(b.cta || "Tentukan CTA campaign."),valueHint:"action"}
+      ]
+    },
+    launchPlan:launchPlan.length?launchPlan:[
+      {phase:"Warm-up",window:"H-7 s.d. H-3",objective:"Membuat problem dan perubahan yang dicari terasa relevan.",actions:["Publikasikan edukasi / problem framing","Kumpulkan pertanyaan dan language of customer","Siapkan bukti yang benar-benar tersedia"]},
+      {phase:"Open launch",window:"H-2 s.d. H+2",objective:"Memperkenalkan offer, mekanisme, dan next step dengan jelas.",actions:["Publikasikan hero offer","Arahkan ke landing page atau WhatsApp","Jawab keberatan yang paling sering muncul"]},
+      {phase:"Close & follow-up",window:"H+3 s.d. H+5",objective:"Membantu orang yang sudah relevan mengambil keputusan tanpa membuat urgency palsu.",actions:["Kirim reminder sesuai deadline sebenarnya","Bagikan proof yang valid","Tutup campaign sesuai ketentuan yang dipublikasikan"]}
+    ],
+    landingPage:{
+        pageTitle:compact(raw?.landingPage?.pageTitle || `${b.productName || "Produk"} — sales page script`),
+        sections:sections.length?sections:defaultSections,
+        faq:faq.length?faq:[
+            {question:"Apakah ini cocok untuk saya?",answer:`Cocok bila Anda adalah ${b.audience || "audiens yang disebutkan di halaman ini"} dan sedang menghadapi ${b.problem || "masalah yang relevan"}.`},
+            {question:"Apa yang akan saya dapatkan?",answer:`Anda akan menerima detail offer yang dijelaskan di atas. Pastikan menyesuaikan bagian ini dengan deliverable sebenarnya.`},
+            {question:"Bagaimana langkah berikutnya?",answer:`Gunakan CTA ${b.cta || "yang telah ditentukan"} dan jelaskan alur pembelian / pendaftaran secara transparan.`}
+        ]
+    },
+    creatives:creatives.length?creatives:[
+      {id:"concept-1",title:"The tension",format:b.aspectRatio||"4:5",audienceMoment:"Awareness",angle:"Problem clarity",summary:"Menamai problem yang sudah terasa tetapi belum bisa diartikulasikan oleh audiens.",hook:b.problem||"Masalah yang terus berulang biasanya bukan karena Anda kurang berusaha.",primaryText:`${b.problem||"Masalah utama"}\n\n${b.productName||"Produk"} membantu menuju ${b.keyOutcome||"hasil utama"}.\n\n${b.cta||"Pelajari lebih lanjut"}`,visualDirection:`${b.visualMood||"Warm editorial"}; one clear subject, generous whitespace, no tiny text, no watermark.`,cta:b.cta||"Pelajari lebih lanjut"},
+      {id:"concept-2",title:"The method",format:b.aspectRatio||"4:5",audienceMoment:"Consideration",angle:"Mechanism",summary:"Menjelaskan alasan masuk akal dan proses yang membedakan offer Anda.",hook:b.differentiator||"Ada cara yang lebih terstruktur untuk mencapai hasil ini.",primaryText:`Bukan sekadar janji.\n\n${b.solution||"Jelaskan mekanisme atau proses yang Anda gunakan."}\n\n${b.cta||"Pelajari lebih lanjut"}`,visualDirection:`${b.visualMood||"Warm editorial"}; show process, tool, or outcome; editorial framing; no tiny text, no watermark.`,cta:b.cta||"Pelajari lebih lanjut"},
+      {id:"concept-3",title:"The invitation",format:b.aspectRatio||"4:5",audienceMoment:"Decision",angle:"Clear invitation",summary:"Mengundang audiens yang tepat untuk mengambil langkah berikutnya dengan informasi yang cukup.",hook:b.keyOutcome||"Mulai dari arah yang lebih jelas.",primaryText:`${b.productName||"Produk"}\n\nUntuk ${b.audience||"audiens yang tepat"}.\n\n${b.cta||"Ambil langkah berikutnya"}`,visualDirection:`${b.visualMood||"Warm editorial"}; product or human outcome at center; confident but calm; no tiny text, no watermark.`,cta:b.cta||"Ambil langkah berikutnya"}
+    ]
+  };
+}
+
+const LAUNCH_SCHEMA={
+  type:"OBJECT",
+  properties:{
+    projectName:{type:"STRING"},
+    positioning:{type:"OBJECT",properties:{headline:{type:"STRING"},explanation:{type:"STRING"},corePromise:{type:"STRING"},idealBuyer:{type:"STRING"},customerTension:{type:"STRING"},reasonToBelieve:{type:"STRING"}},required:["headline","explanation","corePromise","idealBuyer","customerTension","reasonToBelieve"]},
+    offer:{type:"OBJECT",properties:{name:{type:"STRING"},primaryOutcome:{type:"STRING"},pricePresentation:{type:"STRING"},valueStack:{type:"ARRAY",items:{type:"OBJECT",properties:{title:{type:"STRING"},description:{type:"STRING"},valueHint:{type:"STRING"}},required:["title","description","valueHint"]}}},required:["name","primaryOutcome","pricePresentation","valueStack"]},
+    launchPlan:{type:"ARRAY",items:{type:"OBJECT",properties:{phase:{type:"STRING"},window:{type:"STRING"},objective:{type:"STRING"},actions:{type:"ARRAY",items:{type:"STRING"}}},required:["phase","window","objective","actions"]}},
+    landingPage:{type:"OBJECT",properties:{pageTitle:{type:"STRING"},sections:{type:"ARRAY",items:{type:"OBJECT",properties:{title:{type:"STRING"},purpose:{type:"STRING"},copy:{type:"STRING"},cta:{type:"STRING"},proofNote:{type:"STRING"}},required:["title","purpose","copy","cta","proofNote"]}},faq:{type:"ARRAY",items:{type:"OBJECT",properties:{question:{type:"STRING"},answer:{type:"STRING"}},required:["question","answer"]}}},required:["pageTitle","sections","faq"]},
+    creatives:{type:"ARRAY",items:{type:"OBJECT",properties:{id:{type:"STRING"},title:{type:"STRING"},format:{type:"STRING"},audienceMoment:{type:"STRING"},angle:{type:"STRING"},summary:{type:"STRING"},hook:{type:"STRING"},primaryText:{type:"STRING"},visualDirection:{type:"STRING"},cta:{type:"STRING"}},required:["id","title","format","audienceMoment","angle","summary","hook","primaryText","visualDirection","cta"]}}
+  },
+  required:["projectName","positioning","offer","launchPlan","landingPage","creatives"]
+};
+
+async function generateLaunchBlueprint(){
+  const b=state.brief;
+  const prompt=`Kamu adalah launch strategist senior, conversion copywriter, dan campaign planner untuk bisnis Indonesia. Buat SATU campaign dossier yang realistis, spesifik, jujur, dan dapat dieksekusi berdasarkan brief berikut.
+
+BRAND: ${b.brandName}
+PRODUK / OFFER: ${b.productName}
+KATEGORI: ${b.category}
+TIPE OFFER: ${b.offerType}
+AUDIENS: ${b.audience}
+SITUASI AUDIENS: ${b.audienceSituation}
+MASALAH: ${b.problem}
+SOLUSI: ${b.solution}
+HASIL UTAMA: ${b.keyOutcome}
+PEMBEDA / MEKANISME: ${b.differentiator}
+HARGA: ${b.price}
+WINDOW CAMPAIGN: ${b.offerWindow}
+TUJUAN: ${b.objective}
+CHANNEL: ${b.primaryChannel}
+GAYA LAUNCH: ${b.launchStyle}
+NADA BAHASA: ${b.voice}
+CTA: ${b.cta}
+BUKTI YANG TERSEDIA: ${b.proofInventory}
+KEBERATAN: ${b.objections}
+CONSTRAINT: ${b.campaignNotes}
+VISUAL MOOD: ${b.visualMood}
+FORMAT CREATIVE: ${b.aspectRatio}
+
+ATURAN KUALITAS WAJIB:
+- Semua output dalam Bahasa Indonesia natural dan profesional.
+- Jangan mengarang testimoni, angka hasil, sertifikasi, stock limit, diskon, deadline, garansi, bonus, atau klaim medis yang tidak ada di brief.
+- Bila bukti belum tersedia, tulis proofNote sebagai jenis bukti yang perlu dikumpulkan, bukan bukti fiktif.
+- Positioning harus fokus kepada satu ideal buyer dan satu customer tension utama.
+- Value stack harus memuat hanya komponen yang logis dari brief. Gunakan label "perlu divalidasi" bila sesuatu belum jelas.
+- Buat 3 atau 4 fase launch yang realistis. Masing-masing maksimal 5 action.
+- Landing page terdiri dari 5 sampai 7 sections. Setiap bagian punya copy siap edit, CTA bila relevan, serta proofNote.
+- FAQ harus menjawab keberatan secara transparan, tanpa janji yang tidak dapat dibuktikan.
+- Buat 3 sampai 4 creative concepts yang BETUL-BETUL berbeda angle: masing-masing berisi hook, primaryText, CTA, dan visualDirection. PrimaryText boleh memiliki line break. VisualDirection HARUS untuk image generator dalam bahasa Inggris, dan wajib mengakhiri dengan: "no tiny text, no watermark, no unverified claims".
+- Jangan gunakan Markdown. Kembalikan JSON valid sesuai schema.`;
+
+  const data=await callModels(TEXT_MODELS,()=>({contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:LAUNCH_SCHEMA}}));
+  return normalizeBlueprint(parseJson(extractText(data)));
+}
+
+async function generateCreativeImage(index){
+  const creative=state.blueprint?.creatives?.[index];
+  if(!creative) throw new Error("Creative concept tidak ditemukan.");
+  const b=state.brief;
+  const parts=[];
+  let reference="";
+  if(state.assets.product){
+    const mime=state.assets.product.split(";")[0].split(":")[1] || "image/png";
+    const base64=state.assets.product.split(",")[1];
+    if(base64){ parts.push({inlineData:{data:base64,mimeType:mime}}); reference="Use the uploaded image as the truthful product reference. Preserve its main shape, packaging hierarchy, material, and primary colours as closely as possible."; }
+  }
+  
+  parts.unshift({text:`Create one high-quality advertising key visual for a real Indonesian commercial launch.
+Brand: ${b.brandName}
+Product / offer: ${b.productName}
+Audience: ${b.audience}
+Creative angle: ${creative.angle}
+Concept title: ${creative.title}
+Visual direction: ${creative.visualDirection}
+Aspect ratio: ${creative.format || b.aspectRatio}
+${reference}
+Important: make a polished editorial visual with a clear main subject, leave intentional empty space for later text overlay, do not render readable marketing copy inside the image, no watermark, no competitor branding, no unverified claims.`});
+
+  const data=await callModels(IMAGE_MODELS,()=>({contents:[{parts}],generationConfig:{responseModalities:["TEXT","IMAGE"]}}));
+  const inline=data?.candidates?.[0]?.content?.parts?.find(part=>part.inlineData)?.inlineData;
+  if(!inline?.data) throw new Error("Gemini tidak mengembalikan visual. Coba ulangi render.");
+  return `data:${inline.mimeType||"image/png"};base64,${inline.data}`;
+}
+
+function download(filename,content,type="text/markdown;charset=utf-8"){
+  const link=document.createElement("a");
+  link.href=URL.createObjectURL(new Blob([content],{type}));
+  link.download=filename;
+  document.body.appendChild(link);link.click();document.body.removeChild(link);
+  setTimeout(()=>URL.revokeObjectURL(link.href),400);
+}
+
+async function copyText(content){
+  try{await navigator.clipboard.writeText(content);showToast("Berhasil disalin ke papan klip.","success");}
+  catch{
+    const area=document.createElement("textarea");area.value=content;area.style.position="fixed";area.style.opacity="0";document.body.appendChild(area);area.select();document.execCommand("copy");document.body.removeChild(area);showToast("Berhasil disalin ke papan klip.","success");
+  }
+}
+
+function briefMarkdown(){
+  const b=state.brief;
+  return `# ${b.brandName || "MULA"} — Campaign Brief\n\n## Produk\n- Brand: ${b.brandName || "—"}\n- Produk: ${b.productName || "—"}\n- Kategori: ${b.category}\n- Tipe offer: ${b.offerType}\n- Harga: ${b.price || "—"}\n- Window campaign: ${b.offerWindow || "—"}\n- Tujuan: ${b.objective}\n- Channel utama: ${b.primaryChannel}\n\n## Audiens & masalah\n- Audiens: ${b.audience || "—"}\n- Situasi: ${b.audienceSituation || "—"}\n- Masalah: ${b.problem || "—"}\n- Solusi: ${b.solution || "—"}\n- Hasil utama: ${b.keyOutcome || "—"}\n- Pembeda: ${b.differentiator || "—"}\n\n## Komunikasi\n- Gaya launch: ${b.launchStyle}\n- Mood visual: ${b.visualMood}\n- Voice: ${b.voice}\n- CTA: ${b.cta}\n- Bukti tersedia: ${b.proofInventory || "—"}\n- Keberatan: ${b.objections || "—"}\n- Constraints: ${b.campaignNotes || "—"}\n`;
+}
+
+function blueprintMarkdown(){
+  if(!state.blueprint) return "# Launch map belum tersedia\n";
+  const p=state.blueprint;
+  return `# ${p.projectName} — Launch Map\n\n## Campaign thesis\n${p.positioning.headline}\n\n${p.positioning.explanation}\n\n> ${p.positioning.corePromise}\n\n## Signal board\n- Ideal buyer: ${p.positioning.idealBuyer}\n- Customer tension: ${p.positioning.customerTension}\n- Reason to believe: ${p.positioning.reasonToBelieve}\n\n## Offer architecture\n- Offer: ${p.offer.name}\n- Outcome: ${p.offer.primaryOutcome}\n- Price framing: ${p.offer.pricePresentation}\n\n${p.offer.valueStack.map((item,i)=>`${i+1}. **${item.title}** — ${item.description} (${item.valueHint})`).join("\n")}\n\n## Campaign runbook\n${p.launchPlan.map((phase,i)=>`### ${i+1}. ${phase.phase} · ${phase.window}\n**Tujuan:** ${phase.objective}\n${phase.actions.map(action=>`- ${action}`).join("\n")}`).join("\n\n")}\n`;
+}
+
+function salesMarkdown(){
+  if(!state.blueprint) return "# Sales page belum tersedia\n";
+  const l=state.blueprint.landingPage;
+  return `# ${l.pageTitle}\n\n${l.sections.map((section,i)=>`## ${i+1}. ${section.title}\n**Tujuan:** ${section.purpose}\n\n${section.copy}\n\n${section.cta?`CTA: ${section.cta}\n`:""}${section.proofNote?`Bukti yang perlu dipasang: ${section.proofNote}\n`:""}`).join("\n")}\n## FAQ\n${l.faq.map(item=>`### ${item.question}\n${item.answer}`).join("\n\n")}\n`;
+}
+
+function creativeMarkdown(){
+  if(!state.blueprint) return "# Creative kit belum tersedia\n";
+  return `# ${state.blueprint.projectName} — Creative Kit\n\n${state.blueprint.creatives.map((item,i)=>`## ${i+1}. ${item.title}\n- Format: ${item.format}\n- Audience moment: ${item.audienceMoment}\n- Angle: ${item.angle}\n- Summary: ${item.summary}\n- Hook: ${item.hook}\n- CTA: ${item.cta}\n\n### Primary text\n${item.primaryText}\n\n### Visual direction\n${item.visualDirection}`).join("\n\n---\n\n")}\n`;
+}
+
+function masterMarkdown(){ return `${briefMarkdown()}\n---\n\n${blueprintMarkdown()}\n---\n\n${salesMarkdown()}\n---\n\n${creativeMarkdown()}`; }
+
+function renderDownload(index){
+  const creative=state.blueprint?.creatives?.[index]; const data=creative?state.renders[creative.id]:null;
+  if(!data) return showToast("Visual belum tersedia untuk diunduh.","error");
+  const link=document.createElement("a");link.href=data;link.download=`${slug(state.brief.productName)}-creative-${index+1}.png`;document.body.appendChild(link);link.click();document.body.removeChild(link);
+}
+
+async function handleAction(action){
+  if(!action) return;
+  if(action.startsWith("render-creative:")){
+    const index=Number(action.split(":")[1]);
+    try{setBusy("Merender visual draft…");const image=await generateCreativeImage(index);state.renders[state.blueprint.creatives[index].id]=image;render();showToast("Visual draft berhasil dibuat.","success");}
+    catch(err){console.error(err);showToast("Gagal membuat visual draft. Coba ulangi di Canvas.","error");}
+    finally{clearBusy();}
+    return;
+  }
+  if(action.startsWith("copy-creative:")){
+    const index=Number(action.split(":")[1]);const c=state.blueprint?.creatives?.[index];if(c) await copyText(`${c.title}\n\nHook: ${c.hook}\n\n${c.primaryText}\n\nCTA: ${c.cta}\n\nVisual direction: ${c.visualDirection}`);return;
+  }
+  if(action.startsWith("download-render:")){renderDownload(Number(action.split(":")[1]));return;}
+  switch(action){
+    case "go-brief":setRoute("brief");break;
+    case "go-blueprint":setRoute("blueprint");break;
+    case "go-sales":setRoute("sales");break;
+    case "go-creative":setRoute("creative");break;
+    case "go-handover":setRoute("handover");break;
+    case "scroll-process":document.getElementById("process")?.scrollIntoView({behavior:"smooth"});break;
+    case "pick-product":document.getElementById("productInput")?.click();break;
+    case "clear-product":state.assets={product:"",productName:""};render();showToast("Reference produk dihapus dari sesi ini.","success");break;
+    case "generate-blueprint":
+      if(!launchReady()){showToast("Isi brand, produk, audiens, masalah, dan hasil utama terlebih dahulu.","error");setRoute("brief");break;}
+      try{setBusy("MULA sedang menyusun launch map, sales page, dan creative kit…");state.blueprint=await generateLaunchBlueprint();state.renders={};persist();setRoute("blueprint");showToast("Campaign dossier berhasil disusun.","success");}
+      catch(err){console.error(err);showToast("Gagal menyusun campaign dossier. Periksa koneksi atau coba ulangi.","error");}
+      finally{clearBusy();}
+      break;
+    case "copy-blueprint":await copyText(blueprintMarkdown());break;
+    case "copy-sales":await copyText(salesMarkdown());break;
+    case "copy-creatives":await copyText(creativeMarkdown());break;
+    case "download-brief":download(`${slug(state.brief.productName)}-campaign-brief.md`,briefMarkdown());showToast("Campaign brief diunduh.","success");break;
+    case "download-blueprint":download(`${slug(state.brief.productName)}-launch-map.md`,blueprintMarkdown());showToast("Launch map diunduh.","success");break;
+    case "download-sales":download(`${slug(state.brief.productName)}-sales-page-script.md`,salesMarkdown());showToast("Sales page script diunduh.","success");break;
+    case "download-creatives":download(`${slug(state.brief.productName)}-creative-kit.md`,creativeMarkdown());showToast("Creative kit diunduh.","success");break;
+    case "download-master":download(`${slug(state.brief.productName)}-master-campaign-pack.md`,masterMarkdown());showToast("Master campaign pack diunduh.","success");break;
+    case "reset-project":
+      if(confirm("Mulai ulang project? Brief dan dossier lokal saat ini akan dihapus.")){state=clone(DEFAULT_STATE);try{localStorage.removeItem(STORAGE_KEY);}catch{}render();showToast("Project baru sudah siap.","success");}
+      break;
+  }
+}
+
+document.addEventListener("click",event=>{
+  const routeEl=event.target.closest("[data-route]");
+  if(routeEl){setRoute(routeEl.dataset.route);return;}
+  const actionEl=event.target.closest("[data-action]");
+  if(actionEl){handleAction(actionEl.dataset.action);}
+});
+document.addEventListener("input",event=>{
+  const el=event.target;
+  if(!el.dataset.bind) return;
+  setPath(el.dataset.bind,el.value);
+});
+document.addEventListener("change",event=>{
+  const el=event.target;
+  if(el.dataset.bind){setPath(el.dataset.bind,el.value);}
+  if(el.id==="productInput"){
+    const file=el.files?.[0];
+    if(!file) return;
+    if(!file.type.startsWith("image/")){showToast("Pilih file gambar yang valid.","error");return;}
+    const reader=new FileReader();
+    reader.onload=()=>{state.assets={product:reader.result,productName:file.name};render();showToast("Reference produk siap digunakan pada Creative Kit.","success");};
+    reader.onerror=()=>showToast("Gambar tidak dapat dibaca.","error");
+    reader.readAsDataURL(file);
+  }
+});
+render();
+</script>
+</body>
+</html>

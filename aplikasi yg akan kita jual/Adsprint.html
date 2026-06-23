@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Adsprint — Campaign Command Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #10231f; --ink-2: #17352e; --forest: #1d4b3d; --mint: #b9e4cf; --mint-2: #e6f7ed;
+      --paper: #f4f2eb; --paper-2: #ebe8de; --line: #d9d5c9; --muted: #66736c; --orange: #ee7b45;
+      --blue: #3f6fe5; --yellow: #f6cc63; --red: #c95645; --white: #fffef9; --shadow: 0 18px 40px rgba(12,31,26,.11);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font-family: "DM Sans", system-ui, sans-serif; min-width: 320px; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+    
+    .shell { max-width: 1500px; margin: 0 auto; padding: 18px; }
+    .topbar { background: var(--ink); border-radius: 28px; padding: 18px 22px; display: flex; align-items: center; justify-content: space-between; gap: 18px; color: white; box-shadow: var(--shadow); position: sticky; top: 10px; z-index: 20; }
+    .brand { display: flex; align-items: center; gap: 13px; min-width: 0; }
+    .brand-mark { width: 42px; height: 42px; border: 1px solid rgba(246,204,99,.55); border-radius: 14px; display: grid; place-items: center; color: var(--yellow); font-size: 20px; background: rgba(246,204,99,.08); }
+    .brand-name { font-family: Fraunces, serif; font-size: 25px; line-height: 1; letter-spacing: -.7px; }
+    .brand-sub { font-size: 10px; letter-spacing: 1.6px; text-transform: uppercase; color: #a9c2b5; margin-top: 5px; font-weight: 700; }
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+    .plan-chip { display: flex; align-items: center; gap: 8px; border: 1px solid rgba(185,228,207,.22); border-radius: 999px; padding: 9px 12px; color: #cce4d7; font-size: 12px; font-weight: 700; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #77d4a8; box-shadow: 0 0 0 4px rgba(119,212,168,.12); }
+    
+    .workspace { display: grid; grid-template-columns: 240px minmax(0,1fr); gap: 18px; margin-top: 18px; }
+    .rail { background: var(--white); border: 1px solid var(--line); border-radius: 24px; padding: 14px; height: calc(100vh - 126px); position: sticky; top: 96px; overflow: auto; }
+    .rail-label { font: 700 10px/1 "DM Mono", monospace; letter-spacing: 1.4px; text-transform: uppercase; color: #93a198; padding: 10px 10px 8px; }
+    .nav { display: grid; gap: 5px; }
+    .nav-btn { border: 0; background: transparent; color: #607069; text-align: left; border-radius: 13px; padding: 12px 11px; display: flex; align-items: center; gap: 11px; font-size: 13px; font-weight: 700; transition: .18s; }
+    .nav-btn:hover { background: #edf4ef; color: var(--forest); }
+    .nav-btn.active { background: var(--ink); color: #fff; box-shadow: 0 8px 16px rgba(16,35,31,.14); }
+    .nav-icon { width: 23px; text-align: center; font-size: 16px; }
+    .nav-note { margin: 18px 4px 2px; padding: 13px; border-radius: 15px; background: #edf4ef; border: 1px solid #dcebe2; font-size: 11px; color: #4c6157; line-height: 1.55; }
+    .nav-note b { display: block; color: #234537; margin-bottom: 3px; }
+    
+    .main { min-width: 0; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: rise .28s ease both; }
+    @keyframes rise { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .hero { background: linear-gradient(135deg, #214f42 0%, #16342c 50%, #10231f 100%); border-radius: 28px; padding: 34px; color: white; position: relative; overflow: hidden; min-height: 220px; box-shadow: var(--shadow); }
+    .hero:before { content: ""; position: absolute; width: 390px; height: 390px; right: -100px; top: -200px; border-radius: 50%; border: 1px solid rgba(246,204,99,.34); box-shadow: 0 0 0 42px rgba(246,204,99,.055), 0 0 0 86px rgba(246,204,99,.045); }
+    .hero > * { position: relative; }
+    .eyebrow { display: flex; align-items: center; gap: 9px; color: #b9e4cf; text-transform: uppercase; font: 700 10px/1 "DM Mono", monospace; letter-spacing: 1.6px; }
+    .hero h1 { font-family: Fraunces, serif; font-size: clamp(31px, 4vw, 52px); letter-spacing: -1.9px; line-height: 1.03; margin: 12px 0 11px; max-width: 790px; }
+    .hero p { margin: 0; color: #d2e4da; max-width: 650px; font-size: 14px; line-height: 1.65; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 24px; }
+    
+    .btn { border: 0; border-radius: 13px; padding: 12px 15px; font-weight: 800; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; transition: .18s; }
+    .btn:hover { transform: translateY(-1px); }
+    .btn.primary { background: var(--yellow); color: #3a2e0c; box-shadow: 0 7px 0 #b58f34; }
+    .btn.primary:active { transform: translateY(4px); box-shadow: 0 3px 0 #b58f34; }
+    .btn.dark { background: var(--ink); color: white; }
+    .btn.outline { background: transparent; border: 1px solid var(--line); color: var(--ink); }
+    .btn.white { background: #fff; color: #1c382f; }
+    .btn.danger { background: #fff0ed; color: #9e3e32; border: 1px solid #f0c9c2; }
+    .btn.small { padding: 8px 10px; border-radius: 10px; font-size: 11px; }
+    .btn[disabled] { cursor: not-allowed; opacity: .55; transform: none!important; box-shadow: none!important; }
+    
+    .grid { display: grid; gap: 16px; }
+    .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 16px; }
+    .stat { background: var(--white); border: 1px solid var(--line); border-radius: 20px; padding: 18px; min-height: 118px; }
+    .stat-icon { font-size: 17px; }
+    .stat-label { font: 700 10px/1 "DM Mono", monospace; letter-spacing: 1px; text-transform: uppercase; color: #839088; margin-top: 17px; }
+    .stat-value { font-family: Fraunces, serif; font-size: 25px; letter-spacing: -.8px; margin-top: 6px; }
+    .stat-sub { font-size: 11px; color: var(--muted); margin-top: 5px; }
+    
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 28px 0 12px; }
+    .section-head h2 { font-family: Fraunces, serif; font-size: 28px; letter-spacing: -.8px; margin: 0; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .feature-card { background: var(--white); border: 1px solid var(--line); border-radius: 22px; padding: 20px; min-height: 190px; display: flex; flex-direction: column; box-shadow: 0 8px 18px rgba(18,35,29,.035); }
+    .feature-icon { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 13px; background: #eaf4ee; font-size: 18px; }
+    .feature-card h3 { margin: 18px 0 6px; font-size: 16px; letter-spacing: -.2px; }
+    .feature-card p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+    .feature-card .btn { margin-top: auto; align-self: flex-start; margin-top: 18px; }
+    
+    .page-head { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 16px; }
+    .page-head h1 { font-family: Fraunces, serif; font-size: 35px; letter-spacing: -1px; margin: 0; }
+    .page-head p { color: var(--muted); font-size: 13px; margin: 7px 0 0; max-width: 680px; line-height: 1.55; }
+    .step-tag { font: 700 10px/1 "DM Mono", monospace; text-transform: uppercase; letter-spacing: 1px; padding: 9px 10px; border-radius: 999px; background: #e8f2ec; color: #32604d; white-space: nowrap; }
+    
+    .two-col { display: grid; grid-template-columns: minmax(320px, .85fr) minmax(0, 1.15fr); gap: 16px; }
+    .panel { background: var(--white); border: 1px solid var(--line); border-radius: 23px; padding: 20px; box-shadow: 0 8px 18px rgba(18,35,29,.035); }
+    .panel.dark { background: var(--ink); border-color: var(--ink); color: white; }
+    .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 16px; }
+    .panel-title h3 { font-size: 15px; margin: 0; letter-spacing: -.15px; }
+    .panel-title small { font: 500 10px/1.2 "DM Mono", monospace; color: #8d9992; }
+    .panel.dark .panel-title small { color: #a9c2b5; }
+    
+    .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .field { display: grid; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font: 700 10px/1 "DM Mono", monospace; letter-spacing: .9px; text-transform: uppercase; color: #728078; }
+    .field input, .field textarea, .field select { width: 100%; border: 1px solid #d9dfd8; background: #fbfcfa; color: #1b332b; border-radius: 11px; padding: 11px 12px; outline: none; font-size: 13px; transition: .15s; }
+    .field textarea { min-height: 92px; resize: vertical; line-height: 1.45; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: #6caa8b; box-shadow: 0 0 0 3px rgba(108,170,139,.15); }
+    .field small { font-size: 10px; color: #8a958f; line-height: 1.35; }
+    .form-footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: 16px; padding-top: 15px; border-top: 1px solid #ecede9; }
+    .hint { font-size: 11px; color: var(--muted); line-height: 1.4; }
+    
+    .output { min-height: 460px; }
+    .empty { min-height: 400px; display: flex; align-items: center; justify-content: center; text-align: center; padding: 30px; color: #718078; }
+    .empty-box { max-width: 340px; }
+    .empty-mark { margin: auto auto 15px; width: 54px; height: 54px; border-radius: 18px; background: #eaf4ee; display: grid; place-items: center; font-size: 23px; }
+    .empty h4 { font-size: 16px; color: #2f4d40; margin: 0 0 7px; }
+    .empty p { font-size: 12px; line-height: 1.55; margin: 0; }
+    
+    .result-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; border-bottom: 1px solid #e5e6e1; padding-bottom: 13px; margin-bottom: 16px; }
+    .result-title { font: 700 10px/1 "DM Mono", monospace; letter-spacing: 1.1px; text-transform: uppercase; color: #728078; }
+    .result-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    
+    .summary-box { border: 1px solid #d8e6dd; background: #eef6f1; border-radius: 15px; padding: 14px; margin-bottom: 14px; color: #254c3d; line-height: 1.55; font-size: 13px; }
+    .summary-box strong { font-family: Fraunces, serif; font-size: 18px; display: block; margin-bottom: 4px; }
+    .strategy-section { padding: 14px 0; border-bottom: 1px solid #ecece7; }
+    .strategy-section:last-child { border-bottom: 0; }
+    .strategy-section h4 { font-size: 13px; margin: 0 0 9px; color: #305643; }
+    .strategy-section p { font-size: 12px; color: #52645b; line-height: 1.6; margin: 0; }
+    .pill { display: inline-flex; align-items: center; gap: 5px; border: 1px solid #dbe4dd; border-radius: 999px; padding: 5px 8px; font-size: 10px; font-weight: 800; color: #486255; background: #f9fcf9; }
+    
+    .campaign-card { border: 1px solid #dae4dd; border-radius: 15px; padding: 14px; margin-top: 10px; background: #fcfdfb; }
+    .campaign-head { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+    .campaign-head h5 { margin: 0; font-size: 13px; }
+    .campaign-head p { margin: 4px 0 0; color: #6d7c74; font-size: 11px; }
+    .budget { font: 700 11px/1 "DM Mono", monospace; color: #31624e; background: #e4f2e9; padding: 6px 7px; border-radius: 8px; white-space: nowrap; }
+    .mini-list { margin: 9px 0 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+    .mini-list li { font-size: 11px; color: #51645a; line-height: 1.45; padding-left: 15px; position: relative; }
+    .mini-list li:before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #7eb899; position: absolute; left: 1px; top: 5px; }
+    
+    .angle { border: 1px solid #dee5df; border-radius: 13px; padding: 11px; margin-top: 9px; background: #fff; }
+    .angle h6 { font-size: 12px; margin: 0 0 5px; }
+    .angle p { font-size: 11px; margin: 0; line-height: 1.5; color: #66766d; }
+    .angle .pill { margin-top: 8px; }
+    
+    .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin-top: 9px; }
+    .kpi { border-radius: 12px; background: #f3f6f2; padding: 10px; }
+    .kpi b { display: block; font-size: 12px; }
+    .kpi span { display: block; color: #66766d; font-size: 10px; line-height: 1.35; margin-top: 4px; }
+    
+    .copy-stack { display: grid; gap: 12px; }
+    .copy-card { border: 1px solid #dce5de; border-radius: 16px; overflow: hidden; background: #fff; }
+    .copy-card-top { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; background: #f2f7f3; border-bottom: 1px solid #e2e9e2; }
+    .copy-card-top h4 { font-size: 13px; margin: 0; }
+    .copy-card-top p { font-size: 10px; color: #62766b; margin: 4px 0 0; }
+    .copy-card-body { padding: 14px; }
+    .copy-label { font: 700 9px/1 "DM Mono", monospace; letter-spacing: 1px; text-transform: uppercase; color: #89958e; margin-bottom: 5px; }
+    .copy-text { font-size: 12px; line-height: 1.6; color: #40534a; margin: 0 0 12px; }
+    .copy-hook { font-family: Fraunces, serif; font-size: 18px; line-height: 1.2; color: #1c3f32; margin: 0 0 12px; }
+    .copy-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .copy-meta div { border-top: 1px solid #edf0eb; padding-top: 8px; }
+    .copy-meta b { display: block; font-size: 11px; }
+    .copy-meta span { font-size: 10px; color: #68786f; display: block; margin-top: 3px; line-height: 1.45; }
+    
+    .upload { border: 1.5px dashed #b5c9bc; border-radius: 15px; padding: 16px; display: flex; align-items: center; gap: 12px; background: #f7faf7; transition: .15s; }
+    .upload:hover { border-color: #6caa8b; background: #f0f7f2; }
+    .upload input { display: none; }
+    .upload-icon { width: 36px; height: 36px; border-radius: 12px; background: #e4f2e9; display: grid; place-items: center; }
+    .upload b { display: block; font-size: 12px; }
+    .upload span { font-size: 10px; color: #6d7d74; display: block; margin-top: 3px; }
+    .asset-status { font-size: 10px; color: #2c7251; background: #e3f5e9; border-radius: 999px; padding: 5px 8px; font-weight: 800; margin-left: auto; }
+    
+    .creative-preview { border-radius: 18px; overflow: hidden; border: 1px solid #d7dfd7; background: #eff3ee; min-height: 400px; display: flex; align-items: center; justify-content: center; position: relative; }
+    .creative-preview img { display: block; max-width: 100%; max-height: 630px; object-fit: contain; }
+    .creative-preview .placeholder { text-align: center; color: #6d7d74; font-size: 12px; padding: 30px; }
+    .creative-overlay { position: absolute; top: 12px; left: 12px; border-radius: 999px; background: rgba(16,35,31,.78); backdrop-filter: blur(5px); color: #dff2e6; font: 700 9px/1 "DM Mono", monospace; letter-spacing: .8px; text-transform: uppercase; padding: 8px 9px; }
+    
+    .audit-upload { border: 1.5px dashed #b5c9bc; border-radius: 16px; padding: 17px; background: #f7faf7; }
+    .audit-upload p { font-size: 11px; color: #65766d; line-height: 1.5; margin: 8px 0 0; }
+    .tab-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 13px; }
+    .tiny-tab { border: 1px solid #dbe5dc; background: #fff; color: #627269; border-radius: 999px; padding: 7px 9px; font-size: 10px; font-weight: 800; }
+    .tiny-tab.active { background: var(--forest); color: #fff; border-color: var(--forest); }
+    .audit-chat { margin-top: 14px; border-top: 1px solid #eaede9; padding-top: 14px; }
+    .chat-log { height: 180px; overflow: auto; border: 1px solid #e0e6df; background: #fcfdfb; border-radius: 14px; padding: 10px; display: grid; gap: 8px; }
+    .msg { max-width: 88%; padding: 9px 10px; border-radius: 11px; font-size: 11px; line-height: 1.5; }
+    .msg.user { justify-self: end; background: #1d4b3d; color: white; border-bottom-right-radius: 3px; }
+    .msg.ai { background: #eef4ef; color: #385146; border-bottom-left-radius: 3px; }
+    .chat-compose { display: flex; gap: 8px; margin-top: 8px; }
+    .chat-compose input { flex: 1; border: 1px solid #dce3dd; border-radius: 10px; padding: 10px; background: white; outline: none; font-size: 11px; }
+    
+    .decision { border: 1px solid #dfe6df; border-radius: 14px; padding: 13px; margin-top: 9px; background: #fff; }
+    .decision-top { display: flex; justify-content: space-between; gap: 8px; align-items: start; }
+    .decision h4 { font-size: 13px; margin: 0; }
+    .decision p { font-size: 11px; color: #607168; line-height: 1.5; margin: 7px 0; }
+    .badge { font: 800 9px/1 "DM Mono", monospace; letter-spacing: .7px; border-radius: 999px; padding: 6px 7px; white-space: nowrap; }
+    .badge.scale { background: #e1f5e7; color: #227148; }
+    .badge.hold { background: #fff1ca; color: #8b6416; }
+    .badge.kill { background: #fde6e2; color: #a3493c; }
+    .badge.test { background: #e7effd; color: #3f63b0; }
+    .plan { display: grid; gap: 7px; margin-top: 10px; }
+    .plan-row { display: flex; gap: 8px; font-size: 11px; line-height: 1.45; color: #53655b; }
+    .plan-number { width: 20px; height: 20px; border-radius: 6px; background: #e7f2ea; color: #31634f; display: grid; place-items: center; font: 700 10px/1 "DM Mono", monospace; flex: none; }
+    
+    .kit-list { display: grid; gap: 10px; }
+    .kit-item { border: 1px solid #dfe5de; background: #fff; border-radius: 15px; padding: 13px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .kit-item b { display: block; font-size: 13px; }
+    .kit-item span { display: block; margin-top: 4px; color: #6f7e76; font-size: 10px; }
+    
+    .notice { font-size: 11px; color: #61736a; background: #edf5ef; border: 1px solid #d7e7db; border-radius: 13px; padding: 11px; line-height: 1.5; }
+    
+    .toast { position: fixed; right: 20px; bottom: 20px; z-index: 50; background: #10231f; color: #fff; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 16px 35px rgba(0,0,0,.22); border-radius: 13px; padding: 11px 13px; font-size: 12px; max-width: 360px; transform: translateY(15px); opacity: 0; pointer-events: none; transition: .2s; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .loader { width: 15px; height: 15px; border: 2px solid rgba(255,255,255,.45); border-top-color: white; border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .busy { display: inline-flex; align-items: center; gap: 7px; }
+    
+    @media(max-width:1050px) {
+      .workspace { grid-template-columns: 1fr; }
+      .rail { position: static; height: auto; display: flex; gap: 8px; align-items: center; overflow: auto; padding: 9px; }
+      .rail-label, .nav-note { display: none; }
+      .nav { display: flex; gap: 7px; }
+      .nav-btn { white-space: nowrap; padding: 10px; }
+      .nav-icon { width: auto; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .two-col { grid-template-columns: 1fr; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media(max-width:680px) {
+      .shell { padding: 10px; }
+      .topbar { border-radius: 20px; padding: 14px; }
+      .brand-name { font-size: 21px; }
+      .brand-sub { font-size: 8px; }
+      .plan-chip { display: none; }
+      .hero { padding: 25px; border-radius: 21px; }
+      .hero h1 { font-size: 34px; }
+      .stats, .cards, .field-grid, .copy-meta, .kpi-grid { grid-template-columns: 1fr; }
+      .page-head { display: block; }
+      .step-tag { display: inline-flex; margin-top: 10px; }
+      .panel { border-radius: 18px; padding: 15px; }
+      .rail { border-radius: 17px; }
+      .nav-btn { font-size: 11px; padding: 9px; }
+      .nav-btn .nav-icon { font-size: 14px; }
+      .form-footer { align-items: stretch; flex-direction: column; }
+      .form-footer .btn { width: 100%; }
+      .top-actions .btn { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">✦</div>
+        <div>
+          <div class="brand-name">Adsprint</div>
+          <div class="brand-sub">Campaign Command Center</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="plan-chip"><span class="dot"></span> Canvas-ready workspace</div>
+        <button class="btn white small" data-action="reset">Mulai campaign baru</button>
+      </div>
+    </header>
+
+    <div class="workspace">
+      <aside class="rail">
+        <div class="rail-label">Workspace</div>
+        <nav class="nav">
+          <button class="nav-btn active" data-nav="dashboard"><span class="nav-icon">◫</span>Beranda</button>
+          <button class="nav-btn" data-nav="strategy"><span class="nav-icon">◎</span>Strategi ads</button>
+          <button class="nav-btn" data-nav="copy"><span class="nav-icon">✎</span>Copy lab</button>
+          <button class="nav-btn" data-nav="creative"><span class="nav-icon">◈</span>Creative lab</button>
+          <button class="nav-btn" data-nav="audit"><span class="nav-icon">↗</span>Audit performa</button>
+          <button class="nav-btn" data-nav="kit"><span class="nav-icon">▣</span>Campaign kit</button>
+        </nav>
+        <div class="nav-note"><b>Data tetap di browser</b>Brief dan output disimpan lokal pada perangkat ini. Tidak ada database bersama.</div>
+      </aside>
+
+      <main class="main" id="app"></main>
+    </div>
+  </div>
+  <div class="toast" id="toast"></div>
+
+<script>
+// API Key secara natively akan diisi oleh lingkungan eksekusi Canvas.
+const apiKey = "";
+
+const STORAGE_KEY = "adsprint_campaign_center_v1";
+
+const DEFAULT_STATE = {
+  activeScreen: "dashboard",
+  brief: {
+    brandName: "", productName: "", productDescription: "", price: "", offer: "", usp: "",
+    targetAudience: "", market: "Indonesia", objective: "Penjualan", budget: "Rp100.000/hari",
+    platform: "Meta Ads (Facebook + Instagram)", funnelStage: "Cold audience", notes: ""
+  },
+  strategy: null,
+  copies: [],
+  creative: { ratio: "1:1", style: "UGC editorial", overlay: "", direction: "", image: null, mimeType: "", assetName: "", output: null },
+  audit: { source: "upload", raw: "", fileName: "", result: null, chat: [] }
+};
+
+function clone(v) { return JSON.parse(JSON.stringify(v)); }
+function hydrate(saved) {
+  const base = clone(DEFAULT_STATE);
+  if (!saved || typeof saved !== "object") return base;
+  return {
+    ...base, ...saved,
+    brief: { ...base.brief, ...(saved.brief || {}) },
+    creative: { ...base.creative, ...(saved.creative || {}) },
+    audit: { ...base.audit, ...(saved.audit || {}) }
+  };
+}
+function readState() { 
+  try { return hydrate(JSON.parse(localStorage.getItem(STORAGE_KEY))); } 
+  catch { return clone(DEFAULT_STATE); } 
+}
+
+let state = readState();
+const app = document.getElementById("app");
+const toast = document.getElementById("toast");
+
+function persist() { 
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch {} 
+}
+
+function escapeHtml(value) { 
+  return String(value ?? "").replace(/[&<>'"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", "\"": "&quot;"}[c])); 
+}
+function nl(value) { return escapeHtml(value).replace(/\n/g, "<br>"); }
+
+function toastMsg(message) { 
+  toast.textContent = message; 
+  toast.classList.add("show"); 
+  clearTimeout(toastMsg.t); 
+  toastMsg.t = setTimeout(() => toast.classList.remove("show"), 3400); 
+}
+
+function setPath(path, value) {
+  const bits = path.split("."); let ref = state;
+  for (let i = 0; i < bits.length - 1; i++) ref = ref[bits[i]];
+  ref[bits[bits.length - 1]] = value; 
+  persist();
+}
+
+function activeNav() { 
+  document.querySelectorAll("[data-nav]").forEach(b => b.classList.toggle("active", b.dataset.nav === state.activeScreen)); 
+}
+function go(screen) { 
+  state.activeScreen = screen; 
+  persist(); render(); 
+  window.scrollTo({top: 0, behavior: "smooth"}); 
+}
+
+function button(label, action, kind="primary", extra="") { 
+  return `<button class="btn ${kind} ${extra}" data-action="${action}">${label}</button>`; 
+}
+function empty(icon, title, text) { 
+  return `<div class="empty"><div class="empty-box"><div class="empty-mark">${icon}</div><h4>${title}</h4><p>${text}</p></div></div>`; 
+}
+function value(path) { 
+  const b = path.split("."); let r = state; b.forEach(k => r = r?.[k]); return r ?? ""; 
+}
+function optionList(list, selected) { 
+  return list.map(x => `<option ${x === selected ? "selected" : ""}>${escapeHtml(x)}</option>`).join(""); 
+}
+function field(label, path, type="text", placeholder="", options=null, help="") {
+  const current = escapeHtml(value(path));
+  const labelHtml = `<label>${escapeHtml(label)}</label>`;
+  let input = "";
+  if (type === "textarea") input = `<textarea data-field="${path}" placeholder="${escapeHtml(placeholder)}">${current}</textarea>`;
+  else if (type === "select") input = `<select data-field="${path}">${optionList(options||[], value(path))}</select>`;
+  else input = `<input data-field="${path}" type="${type}" value="${current}" placeholder="${escapeHtml(placeholder)}">`;
+  return `<div class="field ${type === "textarea" ? "full" : ""}">${labelHtml}${input}${help ? `<small>${escapeHtml(help)}</small>` : ""}</div>`;
+}
+
+/* --- UI SCREENS --- */
+
+function dashboardScreen() {
+  const b = state.brief;
+  const done = [b.brandName, b.productName, state.strategy, state.copies?.length, state.creative.output, state.audit.result].filter(Boolean).length;
+  return `
+    <section class="screen active">
+      <div class="hero">
+        <div class="eyebrow">✦ campaign system untuk seller dan marketer Indonesia</div>
+        <h1>Rancang, produksi, dan evaluasi iklan tanpa pindah-pindah prompt.</h1>
+        <p>Mulai dari satu brief. Adsprint membentuk strategi, materi copy, creative direction, lalu membantu Anda membaca hasil uji campaign secara sistematis.</p>
+        <div class="hero-actions">
+          ${button("Mulai dari campaign brief →", "nav:strategy", "primary")}
+          ${button("Lihat campaign kit", "nav:kit", "outline")}
+        </div>
+      </div>
+      <div class="grid stats">
+        <article class="stat"><div class="stat-icon">◉</div><div class="stat-label">Campaign brief</div><div class="stat-value">${b.brandName ? escapeHtml(b.brandName) : "Belum diisi"}</div><div class="stat-sub">${b.productName ? escapeHtml(b.productName) : "Masukkan produk pertama Anda"}</div></article>
+        <article class="stat"><div class="stat-icon">◎</div><div class="stat-label">Strategi</div><div class="stat-value">${state.strategy ? "Siap" : "—"}</div><div class="stat-sub">Arsitektur campaign dan angle</div></article>
+        <article class="stat"><div class="stat-icon">✎</div><div class="stat-label">Copy variants</div><div class="stat-value">${state.copies?.length || 0}</div><div class="stat-sub">Materi ads siap diuji</div></article>
+        <article class="stat"><div class="stat-icon">↗</div><div class="stat-label">Progress</div><div class="stat-value">${Math.round((done/6)*100)}%</div><div class="stat-sub">${done}/6 checkpoint campaign</div></article>
+      </div>
+      <div class="section-head"><div><h2>Alur kerja campaign</h2><p>Urutan ini membuat output antar-tool saling menyambung, bukan sekadar kumpulan generator.</p></div></div>
+      <div class="grid cards">
+        <article class="feature-card"><div class="feature-icon">◎</div><h3>1. Buat strategi</h3><p>Terjemahkan produk, target audiens, penawaran, dan budget menjadi blueprint iklan yang bisa dieksekusi.</p>${button("Rancang strategi", "nav:strategy", "outline small")}</article>
+        <article class="feature-card"><div class="feature-icon">✎</div><h3>2. Produksi creative</h3><p>Bangun variasi hook, primary text, headline, CTA, dan arahan visual berdasarkan angle yang sama.</p>${button("Buka creative lab", "nav:copy", "outline small")}</article>
+        <article class="feature-card"><div class="feature-icon">↗</div><h3>3. Audit hasil tes</h3><p>Unggah export CSV atau tempel metrik campaign untuk memperoleh prioritas scale, test, hold, atau kill.</p>${button("Audit performance", "nav:audit", "outline small")}</article>
+      </div>
+    </section>`;
+}
+
+function strategyResult() {
+  const s = state.strategy;
+  if (!s) return empty("◎", "Blueprint belum dibuat", "Isi Campaign Brief, kemudian klik Rancang Strategi. Hasilnya akan disimpan lokal agar bisa dipakai Copy Lab dan Creative Lab.");
+  const campaigns = (s.campaignArchitecture || []).map(c => `
+    <article class="campaign-card">
+      <div class="campaign-head"><div><h5>${escapeHtml(c.campaignName || c.phase || "Campaign")}</h5><p>${escapeHtml(c.objective || "")}</p></div><span class="budget">${escapeHtml(c.dailyBudget || "Budget diuji")}</span></div>
+      <ul class="mini-list">${(c.adSets || []).map(a => `<li><b>${escapeHtml(a.name || "Ad set")}</b> — ${escapeHtml(a.audience || "")} · ${escapeHtml(a.placements || "")}</li>`).join("")}</ul>
+      ${(c.creativeAngles || []).map(a => `<div class="angle"><h6>${escapeHtml(a.title || "Angle creative")}</h6><p><b>Hook:</b> ${escapeHtml(a.hook || "")}</p><p><b>Proof:</b> ${escapeHtml(a.proof || "")}</p><span class="pill">CTA · ${escapeHtml(a.cta || "Pelajari lebih lanjut")}</span></div>`).join("")}
+    </article>`).join("");
+  return `<div class="output">
+    <div class="result-top"><span class="result-title">Strategi campaign</span><div class="result-actions">${button("Salin", "copy:strategy", "outline small")}${button("Unduh .md", "download:strategy", "dark small")}</div></div>
+    <div class="summary-box"><strong>${escapeHtml(s.positioning || "Arah positioning")}</strong>${escapeHtml(s.executiveSummary || "")}</div>
+    <div class="strategy-section"><h4>Customer insight</h4><p>${nl(s.customerInsight || "—")}</p></div>
+    <div class="strategy-section"><h4>Arsitektur campaign</h4>${campaigns || "<p>Belum ada arsitektur yang terbaca.</p>"}</div>
+    <div class="strategy-section"><h4>KPI dan guardrail</h4><div class="kpi-grid">${(s.kpis || []).map(k => `<div class="kpi"><b>${escapeHtml(k.metric || "")}</b><span>${escapeHtml(k.target || "")}</span><span>${escapeHtml(k.why || "")}</span></div>`).join("")}</div></div>
+    <div class="strategy-section"><h4>Eksperimen pertama</h4><ul class="mini-list">${(s.tests || []).map(t => `<li><b>${escapeHtml(t.hypothesis || "")}</b> — ${escapeHtml(t.variable || "")} · Sinyal berhasil: ${escapeHtml(t.successSignal || "")}</li>`).join("")}</ul></div>
+    <div class="strategy-section"><h4>Action plan 72 jam</h4><div class="plan">${(s.first72Hours || []).map((p,i) => `<div class="plan-row"><span class="plan-number">${i+1}</span><span>${escapeHtml(p)}</span></div>`).join("")}</div></div>
+  </div>`;
+}
+
+function strategyScreen() {
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Strategi ads</h1><p>Mulai dari kondisi bisnis, bukan template audience generik. Rekomendasi adalah hipotesis uji, bukan jaminan hasil.</p></div><span class="step-tag">Step 1 · Foundation</span></div>
+    <div class="two-col">
+      <section class="panel"><div class="panel-title"><div><h3>Campaign Brief</h3><small>Input yang dipakai seluruh workspace</small></div></div>
+        <div class="field-grid">
+          ${field("Nama brand", "brief.brandName", "text", "Contoh: Luma Botanics")}
+          ${field("Produk / layanan", "brief.productName", "text", "Contoh: Serum barrier repair")}
+          ${field("Harga jual", "brief.price", "text", "Contoh: Rp129.000")}
+          ${field("Penawaran aktif", "brief.offer", "text", "Contoh: Bundle 2 pcs diskon 15%")}
+          ${field("Tujuan utama", "brief.objective", "select", "", ["Penjualan", "Leads WhatsApp", "Traffic landing page", "Awareness", "Retargeting checkout"])}
+          ${field("Budget awal", "brief.budget", "text", "Contoh: Rp100.000/hari")}
+          ${field("Platform", "brief.platform", "select", "", ["Meta Ads (Facebook + Instagram)", "Instagram Ads", "Facebook Ads", "TikTok Ads", "Multi-platform"])}
+          ${field("Tahap funnel", "brief.funnelStage", "select", "", ["Cold audience", "Warm audience", "Retargeting", "Full funnel"])}
+          ${field("Target audiens", "brief.targetAudience", "textarea", "Contoh: perempuan 24–35 tahun, pekerja urban, skin barrier sensitif...")}
+          ${field("USP / bukti utama", "brief.usp", "textarea", "Contoh: bahan ceramide + panthenol, klaim BPOM, testimoni repeat buyer")}
+          ${field("Deskripsi produk", "brief.productDescription", "textarea", "Jelaskan masalah yang diselesaikan, cara pakai, pembeda, dan konteks pembelian.")}
+          ${field("Catatan tambahan", "brief.notes", "textarea", "Contoh: jangan pakai klaim medis; prioritaskan video UGC; stok 500 unit.")}
+        </div>
+        <div class="form-footer"><span class="hint">Hasil akan menyesuaikan pasar ${escapeHtml(state.brief.market)} dan objective yang dipilih.</span>${button("✦ Rancang strategi", "generate:strategy", "primary")}</div>
+      </section>
+      <section class="panel">${strategyResult()}</section>
+    </div>
+  </section>`;
+}
+
+function copyResult() {
+  if (!state.copies?.length) return empty("✎", "Copy lab menunggu angle", "Buat strategi dulu agar Copy Lab dapat memakai arah campaign. Anda tetap bisa membuat copy tanpa strategi, tetapi hasilnya akan lebih generik.");
+  return `<div class="output"><div class="result-top"><span class="result-title">Variasi iklan siap diuji</span><div class="result-actions">${button("Salin semua", "copy:copies", "outline small")}${button("Unduh .md", "download:copies", "dark small")}</div></div><div class="copy-stack">${state.copies.map((c, i) => `
+    <article class="copy-card"><div class="copy-card-top"><div><h4>Variasi ${i+1} · ${escapeHtml(c.angleName || "Campaign angle")}</h4><p>${escapeHtml(c.testIntent || "Uji pesan, visual, dan CTA secara konsisten")}</p></div>${button("Salin", `copy:copy:${i}`, "outline small")}</div>
+    <div class="copy-card-body"><div class="copy-label">Hook</div><p class="copy-hook">${escapeHtml(c.hook || "")}</p><div class="copy-label">Primary text</div><p class="copy-text">${nl(c.primaryText || "")}</p><div class="copy-meta"><div><b>Headline</b><span>${escapeHtml(c.headline || "")}</span></div><div><b>CTA</b><span>${escapeHtml(c.cta || "")}</span></div><div><b>Description</b><span>${escapeHtml(c.description || "")}</span></div><div><b>Visual direction</b><span>${escapeHtml(c.visualBrief || "")}</span></div></div></div>
+    </article>`).join("")}</div></div>`;
+}
+
+function copyScreen() {
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Copy lab</h1><p>Bangun tiga hipotesis pesan yang berbeda agar Anda tidak menguji creative yang sebenarnya berkata hal yang sama.</p></div><span class="step-tag">Step 2 · Messaging</span></div>
+    <div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Copy parameters</h3><small>Basis: Campaign Brief + Strategy</small></div></div>
+      <div class="field-grid">
+        ${field("Tone", "brief.copyTone", "select", "", ["Direct conversion", "Hangat dan edukatif", "Premium dan aspiratif", "UGC jujur", "Urgent & promo-led"])}
+        ${field("Placement", "brief.copyPlacement", "select", "", ["Meta Feed", "Instagram Reels caption", "Meta Story", "TikTok caption", "Retargeting ad"])}
+        ${field("CTA pilihan", "brief.copyCta", "select", "", ["Belanja sekarang", "Cek penawaran", "Chat WhatsApp", "Pelajari lebih lanjut", "Ambil promo"])}
+        ${field("Larangan klaim", "brief.copyGuardrail", "text", "Contoh: jangan klaim menyembuhkan atau hasil instan")}
+        ${field("Konteks tambahan", "brief.copyNotes", "textarea", "Contoh: gunakan bahasa Indonesia santai; promo hanya sampai Minggu.")}
+      </div>
+      <div class="notice">Copy Lab akan membangun tiga angle berbeda: problem-solution, proof-led, dan offer/urgency. Review semua klaim sebelum dipakai.</div>
+      <div class="form-footer"><span class="hint">${state.strategy ? "Strategi terdeteksi dan akan dipakai sebagai referensi." : "Belum ada strategi. Copy masih bisa dibuat dari brief dasar."}</span>${button("✦ Buat 3 variasi copy", "generate:copy", "primary")}</div>
+    </section><section class="panel">${copyResult()}</section></div>
+  </section>`;
+}
+
+function creativeScreen() {
+  const c = state.creative;
+  const asset = c.image ? `<span class="asset-status">✓ ${escapeHtml(c.assetName || "Referensi siap")}</span>` : "";
+  const preview = c.output 
+    ? `<div class="creative-preview"><span class="creative-overlay">${escapeHtml(c.ratio)} · Generated creative</span><img src="${c.output}" alt="Generated advertising creative"></div><div class="result-actions" style="margin-top:12px">${button("Unduh gambar", "download:image", "dark small")}${button("Hapus hasil", "clear:creative", "outline small")}</div>` 
+    : `<div class="creative-preview"><div class="placeholder"><div class="empty-mark">◈</div><b>Creative canvas siap</b><br><span>Upload referensi produk secara opsional, pilih style, lalu generate satu visual untuk diuji bersama copy Anda.</span></div></div>`;
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Creative lab</h1><p>Buat satu visual ads yang terarah. Gunakan output ini sebagai creative test, lalu iterasikan berdasarkan metrik—not based on taste alone.</p></div><span class="step-tag">Step 3 · Visual test</span></div>
+    <div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Creative brief</h3><small>Referensi produk opsional</small></div></div>
+      <label class="upload" for="product-file"><span class="upload-icon">↥</span><span><b>Upload referensi produk</b><span>PNG, JPG, WEBP. File hanya dipakai pada sesi ini dan disimpan lokal browser.</span></span>${asset}</label><input id="product-file" type="file" accept="image/*" hidden data-file="creative.image">
+      <div class="field-grid" style="margin-top:14px">
+        ${field("Ratio", "creative.ratio", "select", "", ["1:1", "4:5", "9:16", "16:9"])}
+        ${field("Gaya creative", "creative.style", "select", "", ["UGC editorial", "Premium product studio", "Problem-solution close-up", "Marketplace clean catalog", "Lifestyle social proof", "Bold promo graphic"])}
+        ${field("Text overlay", "creative.overlay", "text", "Contoh: Diskon 15% untuk bundle")}
+        ${field("Arahan tambahan", "creative.direction", "text", "Contoh: dominan hijau sage, tangan wanita, look natural")}
+      </div>
+      <div class="notice">Untuk teks promosi yang presisi, tambahkan overlay akhir di editor eksternal jika model keliru mengeja.</div>
+      <div class="form-footer"><span class="hint">Gunakan satu style per creative test. Jangan mengubah angle, offer, dan visual sekaligus.</span>${button("✦ Generate creative", "generate:creative", "primary")}</div>
+    </section><section class="panel"><div class="panel-title"><div><h3>Preview creative</h3><small>Output visual</small></div></div>${preview}</section></div>
+  </section>`;
+}
+
+function auditResult() {
+  const r = state.audit.result;
+  if (!r) return empty("↗", "Belum ada audit", "Unggah CSV export Ads Manager atau tempel data ringkas: campaign, spend, impressions, clicks, CTR, CPC, purchases, CPA, dan revenue bila tersedia.");
+  const decisions = (r.decisions || []).map(d => `<article class="decision"><div class="decision-top"><div><h4>${escapeHtml(d.entity || "Campaign")}</h4><p>${escapeHtml(d.reason || "")}</p></div><span class="badge ${(d.decision || "test").toLowerCase()}">${escapeHtml(d.decision || "TEST")}</span></div><p><b>Next action:</b> ${escapeHtml(d.nextAction || "")}<br><b>Watch:</b> ${escapeHtml(d.metricToWatch || "")}</p></article>`).join("");
+  const chat = (state.audit.chat || []).map(m => `<div class="msg ${m.role}">${nl(m.content)}</div>`).join("");
+  return `<div class="output"><div class="result-top"><span class="result-title">Audit keputusan</span><div class="result-actions">${button("Salin", "copy:audit", "outline small")}${button("Unduh .md", "download:audit", "dark small")}</div></div>
+    <div class="summary-box"><strong>${escapeHtml(r.accountHealth || "Account health")}</strong>${escapeHtml(r.executiveVerdict || "")}</div>
+    <div class="strategy-section"><h4>Prioritas keputusan</h4>${decisions || "<p>Belum ada keputusan.</p>"}</div>
+    <div class="strategy-section"><h4>Anomali / risiko</h4><ul class="mini-list">${(r.anomalies || []).map(x => `<li>${escapeHtml(x)}</li>`).join("")}</ul></div>
+    <div class="strategy-section"><h4>Rencana 7 hari</h4><div class="plan">${(r.sevenDayPlan || []).map((x, i) => `<div class="plan-row"><span class="plan-number">${i+1}</span><span>${escapeHtml(x)}</span></div>`).join("")}</div></div>
+    <div class="audit-chat"><div class="panel-title"><div><h3>Tanya AI analyst</h3><small>Gunakan konteks audit ini</small></div></div><div class="chat-log" id="chat-log">${chat || `<div class="msg ai">Tanyakan contoh: “campaign mana yang harus ditahan dulu?” atau “apa eksperimen paling aman minggu ini?”</div>`}</div><div class="chat-compose"><input id="audit-question" placeholder="Tanyakan tentang hasil audit...">${button("Kirim", "generate:chat", "dark small")}</div></div>
+  </div>`;
+}
+
+function auditScreen() {
+  const a = state.audit;
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Audit performa</h1><p>Ubah export campaign menjadi keputusan yang dapat diambil: scale, test, hold, atau kill. Pastikan kolom data dan periode laporan terbaca benar sebelum bertindak.</p></div><span class="step-tag">Step 4 · Optimisation</span></div>
+    <div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Masukkan data</h3><small>CSV atau data yang ditempel</small></div></div>
+      <div class="tab-row"><button class="tiny-tab ${a.source === "upload" ? "active" : ""}" data-action="audit-source:upload">Upload CSV</button><button class="tiny-tab ${a.source === "paste" ? "active" : ""}" data-action="audit-source:paste">Tempel data</button></div>
+      ${a.source === "upload" ? `<div class="audit-upload"><label class="upload" for="audit-file"><span class="upload-icon">↥</span><span><b>Upload CSV Ads Manager</b><span>Gunakan CSV tanpa data pelanggan. Header yang umum: campaign, spend, impressions, clicks, CTR, CPC, purchases, CPA, revenue.</span></span>${a.fileName ? `<span class="asset-status">✓ ${escapeHtml(a.fileName)}</span>` : ""}</label><input id="audit-file" type="file" accept=".csv,text/csv" hidden data-file="audit.csv"><p>Parser akan mengambil maksimum 120 baris pertama agar audit tidak terlalu berat. Jika export Anda luas, filter periode dan level campaign/ad set terlebih dahulu.</p></div>` : `<div class="field"><label>Data campaign</label><textarea data-field="audit.raw" placeholder="Tempel tabel CSV atau rangkuman metrik di sini...">${escapeHtml(a.raw)}</textarea><small>Contoh: campaign,spend,impressions,clicks,ctr,cpc,purchases,cpa,revenue</small></div>`}
+      <div class="form-footer"><span class="hint">${a.raw ? "Data siap dianalisis." : "Belum ada data terbaca."}</span>${button("✦ Audit campaign", "generate:audit", "primary")}</div>
+    </section><section class="panel">${auditResult()}</section></div>
+  </section>`;
+}
+
+function kitScreen() {
+  const completed = [
+    ["Campaign brief", !!state.brief.brandName, "Detail produk, offer, audience, dan budget"],
+    ["Strategi ads", !!state.strategy, "Arsitektur campaign, target, KPI, dan eksperimen"],
+    ["Copy variants", !!state.copies?.length, "Tiga variasi copy yang siap A/B test"],
+    ["Creative visual", !!state.creative.output, "Satu creative visual untuk diuji"],
+    ["Audit performa", !!state.audit.result, "Keputusan scale, hold, test, atau kill"]
+  ];
+  return `<section class="screen active"><div class="page-head"><div><h1>Campaign kit</h1><p>Kumpulkan seluruh output dalam satu dokumen kerja. Export ini cocok dipakai sebagai brief untuk tim ads, desainer, atau freelancer.</p></div><span class="step-tag">Export · Workspace</span></div>
+    <div class="two-col"><section class="panel"><div class="panel-title"><div><h3>Status isi kit</h3><small>Lengkapi yang relevan saja</small></div></div><div class="kit-list">${completed.map(x => `<div class="kit-item"><div><b>${x[1] ? "✓ " : "○ "}${x[0]}</b><span>${x[2]}</span></div><span class="pill">${x[1] ? "Siap" : "Belum ada"}</span></div>`).join("")}</div></section>
+      <section class="panel dark"><div class="panel-title"><div><h3>Export campaign pack</h3><small>Satu file markdown</small></div></div><p style="font-size:13px;line-height:1.65;color:#c2d9cc;margin:0 0 18px">File berisi brief, strategi, copy, arahan visual, dan audit yang saat ini tersedia. Tidak ada data yang dikirim ke server lain ketika Anda menekan download.</p>${button("↓ Unduh campaign-pack.md", "download:kit", "primary")}<div style="height:11px"></div>${button("Salin seluruh kit", "copy:kit", "white")}<div style="height:18px"></div><div class="notice" style="background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12);color:#c8ddd1">Tips: copy Campaign Kit ke workspace Anda untuk mengembangkan campaign berikutnya. Tetap review klaim, budget, dan kebijakan iklan sebelum peluncuran.</div></section>
+    </div></section>`;
+}
+
+function render() {
+  const map = { dashboard: dashboardScreen, strategy: strategyScreen, copy: copyScreen, creative: creativeScreen, audit: auditScreen, kit: kitScreen };
+  app.innerHTML = (map[state.activeScreen] || dashboardScreen)(); 
+  activeNav();
+}
+
+/* --- LOGIC & PARSING --- */
+
+function csvRows(text) {
+  const rows = []; let row = [], cell = "", quote = false;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i], next = text[i+1];
+    if (ch === '"' && quote && next === '"') { cell += '"'; i++; continue; }
+    if (ch === '"') { quote = !quote; continue; }
+    if (ch === ',' && !quote) { row.push(cell.trim()); cell = ""; continue; }
+    if ((ch === '\n' || ch === '\r') && !quote) { 
+      if (ch === '\r' && next === '\n') i++; 
+      row.push(cell.trim()); 
+      if (row.some(Boolean)) rows.push(row); 
+      row = []; cell = ""; continue; 
+    }
+    cell += ch;
+  }
+  row.push(cell.trim()); 
+  if (row.some(Boolean)) rows.push(row); 
+  return rows;
+}
+
+function parseCsv(text) {
+  const rows = csvRows(text); 
+  if (rows.length < 2) return { headers: [], items: [] };
+  const headers = rows[0].map(h => h.toLowerCase().replace(/[^a-z0-9_ ]/g, "").trim().replace(/\s+/g, "_"));
+  const items = rows.slice(1, 121).map(r => Object.fromEntries(headers.map((h, i) => [h, r[i] ?? ""])));
+  return { headers, items };
+}
+
+function markdownStrategy(s) {
+  if (!s) return "_Belum ada strategi._";
+  let out = `## Strategi Campaign\n\n### Ringkasan\n${s.executiveSummary || ""}\n\n### Positioning\n${s.positioning || ""}\n\n### Customer Insight\n${s.customerInsight || ""}\n`;
+  (s.campaignArchitecture || []).forEach(c => {
+    out += `\n### ${c.campaignName || c.phase || "Campaign"}\n- Objective: ${c.objective || ""}\n- Budget: ${c.dailyBudget || ""}\n`;
+    (c.adSets || []).forEach(a => out += `  - ${a.name || "Ad set"}: ${a.audience || ""} | ${a.placements || ""}\n`);
+    (c.creativeAngles || []).forEach(a => out += `  - Angle ${a.title || ""}: ${a.hook || ""} / CTA: ${a.cta || ""}\n`);
+  });
+  out += `\n### KPI\n${(s.kpis || []).map(k => `- ${k.metric || ""}: ${k.target || ""} (${k.why || ""})`).join("\n")}\n\n### 72 Jam Pertama\n${(s.first72Hours || []).map((x, i) => `${i+1}. ${x}`).join("\n")}`; 
+  return out;
+}
+
+function markdownCopies() { 
+  return state.copies?.length ? state.copies.map((c, i) => `## Variasi ${i+1}: ${c.angleName || ""}\n\nHook: ${c.hook || ""}\n\nPrimary text:\n${c.primaryText || ""}\n\nHeadline: ${c.headline || ""}\nDescription: ${c.description || ""}\nCTA: ${c.cta || ""}\nVisual direction: ${c.visualBrief || ""}`).join("\n\n---\n\n") : "_Belum ada copy._"; 
+}
+
+function markdownAudit(r) { 
+  if (!r) return "_Belum ada audit._"; 
+  return `## Audit Performa\n\n### ${r.accountHealth || ""}\n${r.executiveVerdict || ""}\n\n### Keputusan\n${(r.decisions || []).map(d => `- **${d.entity || ""} — ${d.decision || ""}**\n  - Alasan: ${d.reason || ""}\n  - Aksi: ${d.nextAction || ""}\n  - Watch: ${d.metricToWatch || ""}`).join("\n")}\n\n### Risiko\n${(r.anomalies || []).map(x => `- ${x}`).join("\n")}\n\n### Rencana 7 Hari\n${(r.sevenDayPlan || []).map((x, i) => `${i+1}. ${x}`).join("\n")}`; 
+}
+
+function campaignKit() { 
+  const b = state.brief; 
+  return `# Campaign Pack — ${b.brandName || "Untitled"}\n\n## Campaign Brief\n- Brand: ${b.brandName || ""}\n- Produk: ${b.productName || ""}\n- Harga: ${b.price || ""}\n- Offer: ${b.offer || ""}\n- Objective: ${b.objective || ""}\n- Budget: ${b.budget || ""}\n- Platform: ${b.platform || ""}\n- Funnel: ${b.funnelStage || ""}\n- Target audiens: ${b.targetAudience || ""}\n- USP: ${b.usp || ""}\n- Produk: ${b.productDescription || ""}\n- Catatan: ${b.notes || ""}\n\n---\n\n${markdownStrategy(state.strategy)}\n\n---\n\n# Copy Variants\n\n${markdownCopies()}\n\n---\n\n## Creative Direction\n- Ratio: ${state.creative.ratio}\n- Style: ${state.creative.style}\n- Overlay: ${state.creative.overlay || ""}\n- Direction: ${state.creative.direction || ""}\n\n---\n\n${markdownAudit(state.audit.result)}\n`; 
+}
+
+function download(name, text, type="text/markdown") { 
+  const a = document.createElement("a"); 
+  a.href = URL.createObjectURL(new Blob([text], { type })); 
+  a.download = name; 
+  document.body.appendChild(a); 
+  a.click(); 
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 150); 
+}
+
+async function copyToClipboard(text) { 
+  // Strict adherence: fallback ke document.execCommand() untuk keandalan iFrame
+  const t = document.createElement("textarea"); 
+  t.value = text; 
+  document.body.appendChild(t); 
+  t.select(); 
+  document.execCommand("copy"); 
+  t.remove(); 
+  toastMsg("Berhasil disalin."); 
+}
+
+/* --- API CALLS WITH EXPONENTIAL BACKOFF --- */
+
+async function fetchAPI(url, payload) {
+  let delay = 1000;
+  for (let i = 0; i < 5; i++) {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (res.ok) return await res.json();
+      
+      const errText = await res.text();
+      const error = new Error(`HTTP ${res.status}: ${errText}`);
+      error.status = res.status;
+      
+      if (res.status !== 429 && res.status < 500) throw error;
+      if (i === 4) throw error;
+    } catch (e) {
+      if (i === 4 || (e.status && e.status !== 429 && e.status < 500)) throw e;
+    }
+    await new Promise(r => setTimeout(r, delay));
+    delay *= 2;
+  }
+}
+
+function cleanJson(raw) { 
+  // Perbaikan Regex: Menggunakan format `{3}` untuk menghindari bentrok dengan markdown parser
+  return String(raw || "").replace(/^`{3}(?:json)?\s*/i, "").replace(/\s*`{3}$/, " ").trim(); 
+}
+
+async function jsonText(prompt, schema) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+  const payload = {
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: {
+      responseMimeType: "application/json",
+      responseSchema: schema,
+      temperature: 0.7
+    }
+  };
+  const data = await fetchAPI(url, payload);
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+  try { return JSON.parse(cleanJson(text)); } 
+  catch { throw new Error("Respons AI tidak terbaca sebagai JSON. Silakan coba lagi."); }
+}
+
+async function generateImage(prompt, asset, ratio) {
+  if (asset) {
+    // Image-to-image pipeline
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-image-preview:generateContent?key=${apiKey}`;
+    const payload = {
+      contents: [{
+        role: "user",
+        parts: [
+          { text: `Requirements: ${prompt}. Aspect ratio: ${ratio}. Do not include logos or watermarks. ${state.creative.overlay ? `Text overlay intent: ${state.creative.overlay}. Use only if spelling can be reliable; otherwise leave clean space for an editor.` : "Leave clean negative space for an editor to add text later."}` },
+          { inlineData: { mimeType: asset.mimeType, data: asset.data.split(",")[1] } }
+        ]
+      }],
+      generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+    };
+    const data = await fetchAPI(url, payload);
+    const inline = data?.candidates?.[0]?.content?.parts?.find(p => p.inlineData)?.inlineData;
+    if (!inline?.data) throw new Error("Model tidak mengembalikan gambar dari referensi Anda.");
+    return `data:${inline.mimeType || "image/png"};base64,${inline.data}`;
+  } else {
+    // Text-to-image pipeline (fallback to Imagen)
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/imagen-4.0-generate-001:predict?key=${apiKey}`;
+    let mappedRatio = "1:1";
+    if (ratio === "9:16") mappedRatio = "9:16";
+    else if (ratio === "16:9") mappedRatio = "16:9";
+    else if (ratio === "4:5") mappedRatio = "3:4"; 
+
+    const payload = {
+      instances: { prompt: prompt },
+      parameters: { sampleCount: 1, aspectRatio: mappedRatio }
+    };
+    
+    const data = await fetchAPI(url, payload);
+    if (!data?.predictions?.[0]?.bytesBase64Encoded) throw new Error("Gagal menghasilkan gambar.");
+    return `data:image/png;base64,${data.predictions[0].bytesBase64Encoded}`;
+  }
+}
+
+/* --- WORKFLOW EXECUTIONS --- */
+
+async function buildStrategy() {
+  const b = state.brief;
+  if (!b.brandName.trim() || !b.productName.trim() || !b.targetAudience.trim() || !b.productDescription.trim()) {
+    throw new Error("Lengkapi minimal: nama brand, produk, target audiens, dan deskripsi produk.");
+  }
+  const prompt = `Anda adalah Senior Performance Marketer Indonesia yang konservatif terhadap klaim dan angka. Susun strategi iklan ${b.platform} untuk data berikut.\n\nBrand: ${b.brandName}\nProduk: ${b.productName}\nDeskripsi: ${b.productDescription}\nHarga: ${b.price}\nOffer: ${b.offer}\nUSP/Bukti: ${b.usp}\nTarget audience: ${b.targetAudience}\nTujuan: ${b.objective}\nBudget awal: ${b.budget}\nFunnel: ${b.funnelStage}\nPasar: ${b.market}\nCatatan: ${b.notes}\n\nPrinsip: rekomendasi adalah hipotesis uji. Jangan menjanjikan ROAS, CPA, atau hasil pasti. Jangan menyarankan klaim yang melanggar kebijakan iklan atau klaim medis/keuangan tak berdasar. Berikan ukuran budget sebagai rentang eksperimen. Gunakan Bahasa Indonesia profesional dan praktis.`;
+  
+  const schema = {
+    type: "OBJECT",
+    properties: {
+      executiveSummary: { type: "STRING" },
+      positioning: { type: "STRING" },
+      customerInsight: { type: "STRING" },
+      campaignArchitecture: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            phase: { type: "STRING" },
+            campaignName: { type: "STRING" },
+            objective: { type: "STRING" },
+            dailyBudget: { type: "STRING" },
+            adSets: {
+              type: "ARRAY",
+              items: { type: "OBJECT", properties: { name: { type: "STRING" }, audience: { type: "STRING" }, placements: { type: "STRING" }, optimization: { type: "STRING" } }, required: ["name", "audience", "placements", "optimization"] }
+            },
+            creativeAngles: {
+              type: "ARRAY",
+              items: { type: "OBJECT", properties: { title: { type: "STRING" }, hook: { type: "STRING" }, proof: { type: "STRING" }, visual: { type: "STRING" }, cta: { type: "STRING" } }, required: ["title", "hook", "proof", "visual", "cta"] }
+            }
+          },
+          required: ["phase", "campaignName", "objective", "dailyBudget", "adSets", "creativeAngles"]
+        }
+      },
+      kpis: { type: "ARRAY", items: { type: "OBJECT", properties: { metric: { type: "STRING" }, target: { type: "STRING" }, why: { type: "STRING" } }, required: ["metric", "target", "why"] } },
+      tests: { type: "ARRAY", items: { type: "OBJECT", properties: { hypothesis: { type: "STRING" }, variable: { type: "STRING" }, successSignal: { type: "STRING" } }, required: ["hypothesis", "variable", "successSignal"] } },
+      first72Hours: { type: "ARRAY", items: { type: "STRING" } }
+    },
+    required: ["executiveSummary", "positioning", "customerInsight", "campaignArchitecture", "kpis", "tests", "first72Hours"]
+  };
+  return jsonText(prompt, schema);
+}
+
+async function buildCopies() {
+  const b = state.brief; 
+  if (!b.brandName.trim() || !b.productName.trim() || !b.productDescription.trim()) throw new Error("Isi minimal nama brand, produk, dan deskripsi produk.");
+  
+  const angleContext = state.strategy 
+    ? (state.strategy.campaignArchitecture || []).flatMap(c => c.creativeAngles || []).slice(0, 6).map(a => `- ${a.title}: ${a.hook}; proof: ${a.proof}; CTA: ${a.cta}`).join("\n") 
+    : "Belum ada strategi; buat tiga angle yang benar-benar berbeda.";
+  
+  const prompt = `Anda adalah Direct Response Copywriter untuk ${b.platform || "Meta Ads"} di Indonesia. Buat 3 variasi copy iklan yang jelas berbeda untuk: \nBrand: ${b.brandName}\nProduk: ${b.productName}\nDeskripsi: ${b.productDescription}\nHarga: ${b.price}\nOffer: ${b.offer}\nUSP/Bukti: ${b.usp}\nTarget: ${b.targetAudience}\nTone: ${b.copyTone || "Direct conversion"}\nPlacement: ${b.copyPlacement || "Meta Feed"}\nCTA: ${b.copyCta || "Belanja sekarang"}\nLarangan klaim: ${b.copyGuardrail || "ikuti kebijakan platform"}\nCatatan: ${b.copyNotes || ""}\n\nReferensi angle strategi:\n${angleContext}\n\nJangan membuat klaim hasil atau testimoni palsu. Hindari kata-kata yang mempersonalisasi atribut sensitif pengguna. Jangan gunakan emoji berlebihan.`;
+  
+  const schema = {
+    type: "OBJECT",
+    properties: {
+      variations: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            angleName: { type: "STRING" },
+            testIntent: { type: "STRING" },
+            hook: { type: "STRING" },
+            primaryText: { type: "STRING" },
+            headline: { type: "STRING" },
+            description: { type: "STRING" },
+            cta: { type: "STRING" },
+            visualBrief: { type: "STRING" }
+          },
+          required: ["angleName", "testIntent", "hook", "primaryText", "headline", "description", "cta", "visualBrief"]
+        }
+      }
+    },
+    required: ["variations"]
+  };
+  
+  const res = await jsonText(prompt, schema);
+  return res.variations || [];
+}
+
+async function buildCreative() {
+  const b = state.brief, c = state.creative;
+  if (!b.productName.trim() || !b.productDescription.trim()) throw new Error("Isi nama produk dan deskripsi produk pada Strategi Ads terlebih dahulu.");
+  
+  const firstCopy = state.copies?.[0];
+  const prompt = `Professional advertising creative for ${b.productName}. Product context: ${b.productDescription}. Offer: ${b.offer}. Audience intent: ${b.targetAudience}. Creative style requested: ${c.style}. Theme/Direction: ${c.direction || "conversion-focused, trustworthy"}. Copywriter's visual concept: ${firstCopy?.visualBrief || "show product benefit clearly"}. Maintain realistic aesthetic. Clean hierarchy, high trust, platform-native look.`;
+  
+  return generateImage(prompt, c.image ? { data: c.image, mimeType: c.mimeType } : null, c.ratio);
+}
+
+async function buildAudit() {
+  const raw = state.audit.raw.trim(); 
+  if (!raw) throw new Error("Unggah CSV atau tempel data campaign terlebih dahulu.");
+  
+  const parsed = parseCsv(raw); 
+  const sample = parsed.items.length ? parsed.items : raw.slice(0, 14000);
+  
+  const prompt = `Anda adalah Senior Media Buyer Indonesia. Audit performa iklan berikut. Buat keputusan konservatif berdasarkan data yang ada; jangan mengarang metrik atau menjanjikan hasil. Jika kolom/atribusi tidak lengkap, sebutkan keterbatasannya. Tentukan SCALE, HOLD, KILL, atau TEST untuk setiap entitas yang cukup terbaca.\n\nNama file: ${state.audit.fileName || "data manual"}\nHeader terdeteksi: ${(parsed.headers || []).join(", ")}\nData (maksimum 120 baris):\n${JSON.stringify(sample)}\n\nGunakan Bahasa Indonesia. Prioritaskan tindakan yang dapat dieksekusi dalam tujuh hari ke depan.`;
+  
+  const schema = {
+    type: "OBJECT",
+    properties: {
+      accountHealth: { type: "STRING" },
+      executiveVerdict: { type: "STRING" },
+      decisions: {
+        type: "ARRAY",
+        items: {
+          type: "OBJECT",
+          properties: {
+            entity: { type: "STRING" },
+            decision: { type: "STRING", enum: ["SCALE", "HOLD", "KILL", "TEST"] },
+            reason: { type: "STRING" },
+            nextAction: { type: "STRING" },
+            metricToWatch: { type: "STRING" }
+          },
+          required: ["entity", "decision", "reason", "nextAction", "metricToWatch"]
+        }
+      },
+      anomalies: { type: "ARRAY", items: { type: "STRING" } },
+      sevenDayPlan: { type: "ARRAY", items: { type: "STRING" } }
+    },
+    required: ["accountHealth", "executiveVerdict", "decisions", "anomalies", "sevenDayPlan"]
+  };
+  return jsonText(prompt, schema);
+}
+
+async function askAudit(question) {
+  if (!state.audit.result) throw new Error("Jalankan audit dahulu.");
+  const prompt = `Anda adalah AI analyst ads. Jawab ringkas dan operasional dalam Bahasa Indonesia berdasarkan audit ini. Jangan mengarang angka baru. Jika data tidak cukup, jelaskan data yang diperlukan.\n\nAudit: ${JSON.stringify(state.audit.result)}\n\nRiwayat Chat: ${(state.audit.chat || []).map(x => `${x.role}: ${x.content}`).join("\n")}\n\nPertanyaan user: ${question}`;
+  
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+  const payload = {
+    contents: [{ role: "user", parts: [{ text: prompt }] }],
+    generationConfig: { temperature: 0.4 }
+  };
+  
+  const data = await fetchAPI(url, payload);
+  return data?.candidates?.[0]?.content?.parts?.[0]?.text || "Maaf, saya tidak dapat merespons saat ini.";
+}
+
+function withBusy(btn, label) { 
+  const before = btn.innerHTML; 
+  btn.disabled = true; 
+  btn.innerHTML = `<span class="busy"><span class="loader"></span>${label}</span>`; 
+  return () => { btn.disabled = false; btn.innerHTML = before; }; 
+}
+
+async function handleAction(action, button) {
+  if (action.startsWith("nav:")) { go(action.split(":")[1]); return; }
+  
+  if (action === "reset") {
+    if (confirm("Mulai campaign baru? Brief dan semua output lokal akan dihapus.")) {
+      state = clone(DEFAULT_STATE); persist(); render(); toastMsg("Workspace dikosongkan.");
+    }
+    return;
+  }
+  
+  if (action.startsWith("audit-source:")) { state.audit.source = action.split(":")[1]; persist(); render(); return; }
+  if (action === "clear:creative") { state.creative.output = null; persist(); render(); return; }
+  
+  if (action === "generate:strategy") {
+    const done = withBusy(button, "Menyusun strategi...");
+    try { state.strategy = await buildStrategy(); persist(); render(); toastMsg("Strategi campaign siap."); } 
+    catch (e) { toastMsg(e.message || "Strategi gagal dibuat."); } 
+    finally { done(); } return;
+  }
+  
+  if (action === "generate:copy") {
+    const done = withBusy(button, "Menulis variasi...");
+    try { state.copies = await buildCopies(); persist(); render(); toastMsg("Tiga variasi copy siap."); } 
+    catch (e) { toastMsg(e.message || "Copy gagal dibuat."); } 
+    finally { done(); } return;
+  }
+  
+  if (action === "generate:creative") {
+    const done = withBusy(button, "Merender creative...");
+    try { state.creative.output = await buildCreative(); persist(); render(); toastMsg("Creative visual berhasil dibuat."); } 
+    catch (e) { toastMsg(e.message || "Creative gagal dibuat."); } 
+    finally { done(); } return;
+  }
+  
+  if (action === "generate:audit") {
+    const done = withBusy(button, "Mengaudit data...");
+    try { state.audit.result = await buildAudit(); state.audit.chat = []; persist(); render(); toastMsg("Audit campaign selesai."); } 
+    catch (e) { toastMsg(e.message || "Audit gagal dibuat."); } 
+    finally { done(); } return;
+  }
+  
+  if (action === "generate:chat") {
+    const input = document.getElementById("audit-question");
+    const question = input?.value.trim();
+    if (!question) { toastMsg("Tulis pertanyaan untuk AI analyst."); return; }
+    
+    const done = withBusy(button, "Berpikir...");
+    state.audit.chat.push({ role: "user", content: question });
+    persist(); render();
+    
+    try {
+      const answer = await askAudit(question);
+      state.audit.chat.push({ role: "ai", content: answer });
+      persist(); render();
+      setTimeout(() => { document.getElementById("chat-log")?.scrollTo({ top: 9999, behavior: 'smooth' })}, 50);
+    } catch (e) {
+      state.audit.chat.push({ role: "ai", content: "Maaf, jawaban tidak dapat dibuat: " + (e.message || "error") });
+      persist(); render();
+    } finally { done(); } return;
+  }
+  
+  if (action.startsWith("copy:")) {
+    const target = action.split(":").slice(1).join(":");
+    const texts = { strategy: markdownStrategy(state.strategy), copies: markdownCopies(), audit: markdownAudit(state.audit.result), kit: campaignKit() };
+    if (target.startsWith("copy:")) {
+      const i = Number(target.split(":")[1]); const c = state.copies[i];
+      await copyToClipboard(`Hook: ${c.hook}\n\n${c.primaryText}\n\nHeadline: ${c.headline}\nDescription: ${c.description}\nCTA: ${c.cta}\nVisual: ${c.visualBrief}`);
+    } else {
+      await copyToClipboard(texts[target] || "");
+    }
+    return;
+  }
+  
+  if (action.startsWith("download:")) {
+    const target = action.split(":")[1]; 
+    const safe = (state.brief.brandName || "adsprint").toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    if (target === "strategy") download(`${safe}-strategy.md`, markdownStrategy(state.strategy));
+    if (target === "copies") download(`${safe}-copy-variants.md`, markdownCopies());
+    if (target === "audit") download(`${safe}-audit.md`, markdownAudit(state.audit.result));
+    if (target === "kit") download(`${safe}-campaign-pack.md`, campaignKit());
+    if (target === "image" && state.creative.output) {
+      const a = document.createElement("a"); a.href = state.creative.output; a.download = `${safe}-creative.png`; a.click();
+    }
+    return;
+  }
+}
+
+// Global Event Listeners
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-action]"); if (b) handleAction(b.dataset.action, b);
+  const n = e.target.closest("[data-nav]"); if (n) go(n.dataset.nav);
+});
+
+document.addEventListener("input", e => {
+  const path = e.target.dataset.field; 
+  if (path) setPath(path, e.target.value);
+});
+
+document.addEventListener("change", e => {
+  const filePath = e.target.dataset.file; 
+  if (!filePath) return; 
+  const f = e.target.files?.[0]; 
+  if (!f) return;
+  
+  if (filePath === "audit.csv") {
+    const rd = new FileReader();
+    rd.onload = () => {
+      state.audit.raw = String(rd.result || "");
+      state.audit.fileName = f.name;
+      persist(); render(); toastMsg("CSV siap diaudit.");
+    };
+    rd.readAsText(f);
+  }
+  else if (filePath === "creative.image") {
+    const rd = new FileReader();
+    rd.onload = () => {
+      state.creative.image = String(rd.result || "");
+      state.creative.mimeType = f.type || "image/png";
+      state.creative.assetName = f.name;
+      persist(); render(); toastMsg("Referensi produk siap.");
+    };
+    rd.readAsDataURL(f);
+  }
+});
+
+// Initial Render
+render();
+</script>
+</body>
+</html>

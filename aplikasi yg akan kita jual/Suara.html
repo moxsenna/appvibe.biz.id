@@ -1,0 +1,623 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUARA — Voice Direction Desk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --obsidian:#121416;--graphite:#1b1f22;--panel:#252a2d;--panel-2:#303639;--steel:#d5dbdc;--paper:#f0f1ed;
+      --muted:#8b9698;--line:rgba(224,231,232,.16);--red:#ec473f;--orange:#ff9d47;--cyan:#41d7d7;--lime:#c9ed67;
+      --danger:#ff6d6d;--shadow:0 18px 46px rgba(0,0,0,.28);--radius:20px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-width:320px;background:var(--obsidian);color:#f5f8f7;font-family:"IBM Plex Sans",system-ui,sans-serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;background:
+      radial-gradient(circle at 15% 20%,rgba(65,215,215,.11),transparent 23%),
+      radial-gradient(circle at 82% 8%,rgba(236,71,63,.14),transparent 25%),
+      linear-gradient(125deg,#101214,#171c1e 45%,#101214)}
+    body:after{content:"";position:fixed;inset:0;z-index:-2;opacity:.28;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 1px,transparent 1px,transparent 4px)}
+    button,input,textarea,select{font:inherit}
+    button{cursor:pointer}
+    button:disabled{cursor:not-allowed;opacity:.48}
+    ::selection{background:rgba(65,215,215,.35)}
+    ::-webkit-scrollbar{width:8px;height:8px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#3b4447;border-radius:99px}
+    .shell{max-width:1520px;margin:0 auto;padding:18px}
+    .console-top{position:sticky;top:10px;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 15px 12px 18px;border:1px solid rgba(255,255,255,.12);border-radius:22px;background:linear-gradient(145deg,rgba(50,57,60,.92),rgba(24,28,30,.96));box-shadow:var(--shadow);backdrop-filter:blur(14px)}
+    .brand{display:flex;align-items:center;gap:12px;min-width:0}.brand-mark{width:44px;height:44px;border-radius:14px;background:var(--red);display:grid;place-items:center;color:#fff;font-family:Unbounded,sans-serif;font-size:20px;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 0 5px rgba(236,71,63,.12)}
+    .brand-name{font:600 22px/1 Unbounded,sans-serif;letter-spacing:-1px}.brand-sub{margin-top:5px;color:#aab5b6;font:500 9px/1 "DM Mono",monospace;letter-spacing:1.2px;text-transform:uppercase}
+    .top-actions{display:flex;align-items:center;gap:10px}.status{display:flex;align-items:center;gap:8px;padding:9px 12px;border:1px solid var(--line);border-radius:999px;color:#c9d2d2;font:500 10px/1 "DM Mono",monospace;white-space:nowrap}.status i{width:8px;height:8px;border-radius:50%;background:var(--cyan);box-shadow:0 0 0 4px rgba(65,215,215,.12),0 0 12px rgba(65,215,215,.7)}
+    .btn{border:1px solid transparent;border-radius:12px;padding:11px 14px;display:inline-flex;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:700;line-height:1;transition:.18s;text-decoration:none;box-sizing:border-box}.btn:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.07)}.btn:active:not(:disabled){transform:translateY(0)}.btn.primary{background:var(--red);color:#fff;box-shadow:0 6px 0 #a92e2a}.btn.cyan{background:var(--cyan);color:#0d1c1c;box-shadow:0 6px 0 #1e8f8f}.btn.steel{background:#edf1ef;color:#172021;box-shadow:0 5px 0 #aeb7b7}.btn.dark{background:#161a1c;color:#e9eeee;border-color:rgba(255,255,255,.14)}.btn.ghost{background:transparent;color:#c6cecf;border-color:rgba(255,255,255,.15)}.btn.ghost:hover:not(:disabled){background:rgba(255,255,255,.06)}.btn.small{padding:8px 10px;font-size:10px;border-radius:10px}.btn.full{width:100%}
+    .channel-strip{position:sticky;top:89px;z-index:20;margin-top:12px;display:flex;gap:7px;overflow:auto;padding:7px;background:rgba(27,31,34,.9);border:1px solid rgba(255,255,255,.08);border-radius:16px;backdrop-filter:blur(12px)}.channel-strip::-webkit-scrollbar{height:0}.channel{flex:none;display:flex;align-items:center;gap:8px;padding:10px 13px;border:1px solid transparent;border-radius:11px;background:transparent;color:#95a0a2;font:500 10px/1 "DM Mono",monospace;letter-spacing:.45px;text-transform:uppercase;transition:.18s}.channel:hover{background:rgba(255,255,255,.06);color:#f2f6f5}.channel.active{background:#eef2ef;color:#101718;box-shadow:0 4px 0 #aab4b4}.channel b{font:500 10px/1 "DM Mono",monospace;opacity:.55}.session-note{margin-left:auto;padding:0 7px;align-self:center;color:#7f8b8d;font:400 9px/1 "DM Mono",monospace;white-space:nowrap}
+    main{padding:22px 0 48px}.screen{display:none}.screen.active{display:block;animation:rise .32s cubic-bezier(.16,1,.3,1) both}@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+    .hero{position:relative;overflow:hidden;min-height:374px;display:grid;grid-template-columns:minmax(0,1.12fr) minmax(330px,.88fr);gap:24px;padding:36px;border:1px solid rgba(255,255,255,.12);border-radius:28px;background:linear-gradient(135deg,rgba(39,46,48,.96),rgba(25,29,31,.94));box-shadow:var(--shadow)}.hero:before{content:"";position:absolute;left:0;right:0;bottom:0;height:32%;background:linear-gradient(to top,rgba(0,0,0,.25),transparent);pointer-events:none}.hero-copy{position:relative;z-index:1;display:flex;flex-direction:column;justify-content:center}.eyebrow{display:flex;align-items:center;gap:8px;color:var(--cyan);font:500 10px/1 "DM Mono",monospace;letter-spacing:1.4px;text-transform:uppercase}.eyebrow i{width:9px;height:9px;border-radius:2px;background:var(--red);box-shadow:0 0 0 3px rgba(236,71,63,.12)}.hero h1{margin:18px 0 15px;max-width:820px;font:600 clamp(38px,5vw,72px)/.98 Unbounded,sans-serif;letter-spacing:-3.5px}.hero h1 em{font-style:normal;color:var(--orange)}.hero p{margin:0;max-width:630px;color:#bfc9c8;font-size:15px;line-height:1.75}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:27px}.hero-note{display:flex;align-items:flex-start;gap:11px;margin-top:25px;color:#8e9a9a;font-size:11px;line-height:1.55}.hero-note span{width:28px;height:28px;display:grid;place-items:center;border:1px solid rgba(65,215,215,.35);border-radius:9px;color:var(--cyan);flex:none}
+    .sound-rack{position:relative;z-index:1;align-self:center;min-height:280px;border:1px solid rgba(255,255,255,.12);border-radius:23px;padding:20px;background:linear-gradient(145deg,#30373a,#1b2022);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),12px 14px 0 rgba(0,0,0,.18)}.rack-head{display:flex;align-items:center;justify-content:space-between;color:#c8d3d2;font:500 10px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.rack-head b{color:var(--cyan)}.vu{display:grid;grid-template-columns:repeat(24,1fr);align-items:end;gap:5px;height:112px;margin:25px 0 18px;padding:11px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:#161a1c}.vu span{display:block;border-radius:3px 3px 1px 1px;background:linear-gradient(to top,var(--cyan),var(--lime));opacity:.88;height:10px;transition:height 0.1s ease}.vu span:nth-child(4n){background:linear-gradient(to top,var(--orange),var(--red))}.rack-controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}.knob-card{padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(0,0,0,.12)}.knob-card span{display:block;color:#8f9b9c;font:500 9px/1 "DM Mono",monospace;letter-spacing:.6px;text-transform:uppercase}.knob-line{display:flex;align-items:center;justify-content:space-between;margin-top:10px}.knob{width:40px;height:40px;border-radius:50%;background:#3a4145;border:2px solid #5a6468;position:relative;box-shadow:inset 0 0 0 6px #202729,0 2px 4px rgba(0,0,0,.3);transition:transform 0.15s ease-out;transform:rotate(0deg)}.knob:after{content:"";position:absolute;width:2px;height:11px;left:50%;top:3px;background:#fff;transform:translateX(-50%);transform-origin:center bottom}.knob-value{font:600 16px/1 Unbounded,sans-serif;color:#f6fbf9}.micro{color:#8d9999;font:400 10px/1.6 "DM Mono",monospace}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:15px 0 24px}.metric{padding:17px;border:1px solid rgba(255,255,255,.1);border-radius:17px;background:rgba(39,45,47,.74);box-shadow:0 10px 28px rgba(0,0,0,.13)}.metric-label{color:#8b9698;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.metric-value{margin-top:12px;font:600 28px/1 Unbounded,sans-serif;letter-spacing:-1.7px}.metric-value.cyan{color:var(--cyan)}.metric-value.orange{color:var(--orange)}.metric-sub{margin-top:7px;color:#aab4b4;font-size:11px;line-height:1.45}
+    .section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:14px;margin:28px 0 14px}.section-head h2{margin:0;font:600 30px/1.04 Unbounded,sans-serif;letter-spacing:-1.7px}.section-head p{margin:7px 0 0;color:#a3aeaf;font-size:12px;line-height:1.6;max-width:680px}.rack-tag{padding:9px 10px;border:1px solid rgba(65,215,215,.28);border-radius:999px;color:var(--cyan);font:500 9px/1 "DM Mono",monospace;letter-spacing:.6px;white-space:nowrap}
+    .cards-3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}.feature{min-height:212px;display:flex;flex-direction:column;padding:20px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:linear-gradient(145deg,rgba(47,54,57,.83),rgba(29,34,36,.9));box-shadow:0 10px 26px rgba(0,0,0,.14)}.feature:nth-child(2){background:linear-gradient(145deg,rgba(52,58,56,.92),rgba(33,39,37,.95))}.feature:nth-child(3){background:linear-gradient(145deg,rgba(61,44,41,.88),rgba(34,30,30,.96))}.feature-icon{width:39px;height:39px;border-radius:12px;display:grid;place-items:center;background:#171c1e;border:1px solid rgba(255,255,255,.1);font-size:19px}.feature h3{margin:18px 0 7px;font-size:17px;letter-spacing:-.3px}.feature p{margin:0;color:#abb5b5;font-size:12px;line-height:1.6}.feature .btn{align-self:flex-start;margin-top:auto}
+    .page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin:4px 0 16px}.page-head h1{margin:0;font:600 38px/1 Unbounded,sans-serif;letter-spacing:-2px}.page-head p{max-width:720px;margin:10px 0 0;color:#aab5b5;font-size:13px;line-height:1.65}.stage{padding:10px 12px;background:rgba(65,215,215,.1);border:1px solid rgba(65,215,215,.3);border-radius:999px;color:var(--cyan);font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;white-space:nowrap}
+    .editor-grid{display:grid;grid-template-columns:minmax(0,.92fr) minmax(360px,1.08fr);gap:14px}.panel{min-width:0;padding:20px;border:1px solid rgba(255,255,255,.11);border-radius:22px;background:rgba(38,44,47,.88);box-shadow:0 12px 30px rgba(0,0,0,.14)}.panel.black{background:#15191b}.panel.red{background:linear-gradient(135deg,#431f20,#22191a)}.panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.09);margin-bottom:16px}.panel-head h3{margin:0;font-size:17px;letter-spacing:-.3px}.panel-head p{margin:6px 0 0;color:#94a1a2;font-size:11px;line-height:1.55}.panel-head .mini{font:500 9px/1 "DM Mono",monospace;color:#8fa2a2;letter-spacing:.7px;text-transform:uppercase}
+    .field-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.field{min-width:0}.field.full{grid-column:1/-1}.field label{display:block;margin-bottom:7px;color:#aeb9ba;font:500 9px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.85px}.field label i{font-style:normal;color:var(--red)}.field input,.field select,.field textarea{width:100%;outline:none;border:1px solid rgba(255,255,255,.13);border-radius:12px;padding:11px 12px;color:#eff4f2;background:#171c1e;font-size:12px;font-weight:600;line-height:1.48;transition:.18s}.field textarea{resize:vertical;min-height:90px}.field input::placeholder,.field textarea::placeholder{color:#657174;font-weight:400}.field input:focus,.field select:focus,.field textarea:focus{border-color:rgba(65,215,215,.75);box-shadow:0 0 0 4px rgba(65,215,215,.1)}.field select option{background:#171c1e;color:#e9eeee}.form-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;padding-top:15px;border-top:1px solid rgba(255,255,255,.09)}.hint{max-width:480px;color:#93a0a1;font-size:11px;line-height:1.5}
+    .transfer{padding:12px;border:1px dashed rgba(65,215,215,.38);border-radius:15px;background:rgba(65,215,215,.045)}.transfer-row{display:flex;gap:9px;align-items:center}.transfer label{margin:0;color:#9ecacb;font:500 9px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:.8px;white-space:nowrap}.transfer input{flex:1;min-width:0;background:rgba(0,0,0,.15)}
+    .take-list{display:grid;gap:11px}.take{padding:14px;border:1px solid rgba(255,255,255,.09);border-radius:16px;background:#171b1d;transition:.17s}.take.active{border-color:var(--cyan);background:rgba(65,215,215,.07);box-shadow:0 0 0 3px rgba(65,215,215,.07)}.take-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.take-label{color:var(--cyan);font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.take h4{margin:7px 0 0;font-size:15px}.take p{white-space:pre-wrap;margin:12px 0 0;color:#c4cccc;font-size:12px;line-height:1.68}.take-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.chip{padding:5px 7px;border:1px solid rgba(255,255,255,.09);border-radius:999px;color:#93a0a1;font:500 9px/1 "DM Mono",monospace}.take-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+    .empty{min-height:380px;display:flex;align-items:center;justify-content:center;text-align:center;padding:28px;width:100%}.empty-box{max-width:330px}.empty-mark{margin:0 auto 13px;width:56px;height:56px;display:grid;place-items:center;border-radius:17px;background:rgba(65,215,215,.1);border:1px solid rgba(65,215,215,.24);font-size:25px}.empty h4{margin:0 0 7px;font-size:16px}.empty p{margin:0;color:#9ba7a8;font-size:12px;line-height:1.6}
+    .voice-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.72fr);gap:14px}.voice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.voice-card{position:relative;padding:14px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:#191e20;text-align:left;color:#e9eeee;transition:.18s}.voice-card:hover{border-color:rgba(255,255,255,.3);transform:translateY(-1px)}.voice-card.active{border-color:var(--orange);background:rgba(255,157,71,.1);box-shadow:0 0 0 3px rgba(255,157,71,.08)}.voice-card b{display:block;font-size:13px}.voice-card span{display:block;margin-top:4px;color:#9da8a9;font-size:10px;line-height:1.45}.voice-led{position:absolute;top:13px;right:13px;width:7px;height:7px;border-radius:50%;background:#4d5759}.voice-card.active .voice-led{background:var(--orange);box-shadow:0 0 10px var(--orange)}
+    .option-row{display:flex;flex-wrap:wrap;gap:8px}.choice{padding:9px 10px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:#171c1e;color:#9eaaab;font-size:10px;font-weight:700;transition:.16s}.choice:hover{border-color:rgba(255,255,255,.3);color:#e9eeee}.choice.active{border-color:var(--cyan);background:rgba(65,215,215,.1);color:var(--cyan)}.range-line{display:grid;grid-template-columns:1fr 55px;gap:10px;align-items:center}.range-line input{width:100%;accent-color:var(--red)}.readout{padding:8px;background:#15191b;border:1px solid rgba(255,255,255,.09);border-radius:9px;text-align:center;color:#e7eeee;font:500 10px/1 "DM Mono",monospace}
+    .monitor{position:sticky;top:145px;padding:17px;border-radius:22px;border:1px solid rgba(255,255,255,.12);background:linear-gradient(145deg,#22292b,#14191b);box-shadow:0 16px 38px rgba(0,0,0,.25)}.monitor-label{display:flex;justify-content:space-between;gap:8px;color:#a5b0b1;font:500 9px/1 "DM Mono",monospace;letter-spacing:.8px;text-transform:uppercase}.monitor-label b{color:var(--lime)}.screen-box{min-height:196px;display:flex;align-items:center;justify-content:center;margin-top:13px;padding:18px;border-radius:15px;border:1px solid rgba(255,255,255,.08);background:#111617;position:relative;overflow:hidden}.screen-box:before{content:"";position:absolute;inset:0;opacity:.25;background:linear-gradient(90deg,transparent 0,rgba(65,215,215,.12) 1px,transparent 1px),linear-gradient(0deg,transparent 0,rgba(65,215,215,.08) 1px,transparent 1px);background-size:23px 23px}.screen-box>*{position:relative;z-index:1}.wave{width:100%;height:92px;display:flex;align-items:center;justify-content:center;gap:4px}.wave i{display:block;width:4px;border-radius:3px;background:linear-gradient(to top,var(--red),var(--orange));animation:beat 1.2s ease-in-out infinite;transform-origin:center;height:10px}.wave i:nth-child(3n){background:linear-gradient(to top,var(--cyan),var(--lime));animation-duration:.9s}.wave i:nth-child(4n){animation-delay:.16s}@keyframes beat{0%,100%{height:15px;opacity:.65}50%{height:88px;opacity:1}}
+    .wave.paused i{animation-play-state:paused;height:10px !important}
+    .player{margin-top:14px;padding:13px;border:1px solid rgba(255,255,255,.1);border-radius:13px;background:#111617}.player audio{width:100%;filter:sepia(.1) saturate(.8)}.monitor-details{margin-top:13px;display:grid;gap:8px}.monitor-row{display:flex;align-items:center;justify-content:space-between;gap:10px;color:#a5b1b1;font-size:10px}.monitor-row b{color:#edf4f2;font:500 10px/1 "DM Mono",monospace}
+    .mix-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:10px}.mix-card{padding:15px;border:1px solid rgba(255,255,255,.1);border-radius:15px;background:#171c1e}.mix-card h4{margin:0;font-size:13px}.mix-card p{margin:8px 0 0;color:#9ca8a9;font-size:11px;line-height:1.58}.mix-card ul{margin:10px 0 0;padding-left:17px;color:#c5cece;font-size:11px;line-height:1.65}
+    .delivery-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.8fr);gap:14px}.delivery-card{padding:20px;border:1px solid rgba(255,255,255,.11);border-radius:21px;background:rgba(39,45,47,.86)}.delivery-card h3{margin:0;font:600 20px/1.05 Unbounded,sans-serif;letter-spacing:-.9px}.delivery-card p{margin:9px 0 0;color:#a8b3b3;font-size:12px;line-height:1.65}.delivery-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}.pack-preview{margin-top:16px;max-height:400px;overflow:auto;padding:14px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:#131719;color:#cbd4d3;white-space:pre-wrap;font:400 11px/1.68 "DM Mono",monospace}
+    .busy{display:none;position:fixed;inset:0;z-index:100;align-items:center;justify-content:center;padding:22px;background:rgba(5,7,8,.82);backdrop-filter:blur(12px)}.busy.show{display:flex}.busy-card{width:min(360px,100%);padding:25px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:#202628;box-shadow:var(--shadow);text-align:center}.busy-leds{display:flex;justify-content:center;gap:7px;margin-bottom:16px}.busy-leds i{width:11px;height:11px;border-radius:50%;background:#3c494b;animation:blink 1.2s infinite}.busy-leds i:nth-child(2){animation-delay:.15s;background:var(--cyan)}.busy-leds i:nth-child(3){animation-delay:.3s;background:var(--red)}@keyframes blink{0%,100%{opacity:.22;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}.busy-card b{display:block;font:500 13px/1.4 Unbounded,sans-serif}.busy-card span{display:block;margin-top:9px;color:#9ba7a8;font-size:11px;line-height:1.55}
+    .toast{position:fixed;z-index:120;right:20px;bottom:20px;max-width:min(390px,calc(100vw - 40px));display:none;padding:12px 14px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:#252b2d;color:#f2f7f6;box-shadow:var(--shadow);font-size:12px;line-height:1.45}.toast.show{display:block;animation:toastIn .25s ease both}.toast.error{border-color:rgba(255,109,109,.45);color:#ffd2d2}.toast.success{border-color:rgba(65,215,215,.45);color:#d8ffff}@keyframes toastIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:980px){.hero{grid-template-columns:1fr}.sound-rack{max-width:620px;width:100%}.editor-grid,.voice-layout,.delivery-grid{grid-template-columns:1fr}.monitor{position:relative;top:auto}.cards-3{grid-template-columns:1fr 1fr}.stats{grid-template-columns:1fr 1fr}.session-note{display:none}}
+    @media(max-width:650px){.shell{padding:12px}.console-top{padding:11px 12px}.brand-mark{width:38px;height:38px}.brand-name{font-size:18px}.status{display:none}.top-actions .btn{padding:9px 10px}.channel-strip{top:76px}.channel{padding:9px 10px}.hero{padding:24px;min-height:auto}.hero h1{font-size:38px;letter-spacing:-2.3px}.hero p{font-size:13px}.stats{grid-template-columns:1fr 1fr}.metric{padding:14px}.metric-value{font-size:22px}.section-head{display:block}.section-head h2{font-size:25px}.rack-tag,.stage{display:inline-block;margin-top:12px}.cards-3,.field-grid,.mix-grid,.voice-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.page-head{display:block}.page-head h1{font-size:29px}.form-footer{align-items:stretch;flex-direction:column}.form-footer .btn{width:100%}.transfer-row{align-items:stretch;flex-direction:column}.transfer-row .btn{width:100%}.hero-actions .btn{width:100%}.sound-rack{padding:16px;max-width:none;width:100%}.session-note{display:none}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="console-top">
+      <div class="brand">
+        <div class="brand-mark">S</div>
+        <div>
+          <div class="brand-name">SUARA</div>
+          <div class="brand-sub">Voice Direction Desk</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <div class="status"><i></i> Canvas audio mode</div>
+        <button class="btn ghost small" data-action="reset">Proyek baru</button>
+      </div>
+    </header>
+    <nav class="channel-strip" id="channelStrip" aria-label="Tahapan workspace"></nav>
+    <main id="app" aria-live="polite"></main>
+  </div>
+  <div class="busy" id="busy"><div class="busy-card"><div class="busy-leds"><i></i><i></i><i></i></div><b id="busyTitle">Menyalakan booth suara…</b><span id="busyText">Gemini sedang memproses arahan Anda.</span></div></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+/*
+  SUARA is intentionally a single-file Gemini Canvas app.
+  Keep apiKey blank: the Canvas runtime provides the caller context.
+  It uses direct generateContent calls, retry/backoff, structured JSON, and PCM-to-WAV conversion.
+*/
+const apiKey = "";
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+const TTS_MODELS = ["gemini-2.5-flash-preview-tts"];
+const STORAGE_KEY = "suara_voice_direction_desk_v1";
+
+const DEFAULT_STATE = {
+  route: "console", loading: "", activeTake: 0,
+  brief: {
+    projectTitle: "", brandName: "", sourceType: "Iklan produk", platform: "TikTok / Reels", language: "Bahasa Indonesia",
+    audience: "", topic: "", keyMessage: "", proof: "", cta: "", duration: "20–30 detik", tone: "Hangat dan meyakinkan", purpose: "Mendorong perhatian dan klik", guardrails: "", transferPack: ""
+  },
+  scriptSettings: { angle: "Problem → relief", hook: "Mulai dari situasi yang familiar", style: "Natural spoken Indonesian", sceneEnergy: "Naik perlahan" },
+  takes: [],
+  voice: { name: "Kore", pacing: "Conversational", emphasis: "Natural", energy: 58 },
+  mix: null,
+  audio: { url: "", blob: null, script: "", mime: "", sampleRate: 24000 },
+  error: ""
+};
+
+const app = document.getElementById("app");
+const strip = document.getElementById("channelStrip");
+const busy = document.getElementById("busy");
+const busyTitle = document.getElementById("busyTitle");
+const busyText = document.getElementById("busyText");
+const toast = document.getElementById("toast");
+
+const ROUTES = [
+  ["console", "01", "Console"], ["brief", "02", "Script brief"], ["takes", "03", "Take lab"], ["booth", "04", "Voice booth"], ["delivery", "05", "Delivery"]
+];
+const VOICES = [
+  { name:"Kore", label:"Kore", note:"Jernih, seimbang, dan fleksibel" },
+  { name:"Zephyr", label:"Zephyr", note:"Ringan, cepat, dan modern" },
+  { name:"Puck", label:"Puck", note:"Warm, ekspresif, dan dekat" },
+  { name:"Charon", label:"Charon", note:"Dalam, tenang, dan berwibawa" },
+  { name:"Fenrir", label:"Fenrir", note:"Tegas, kuat, dan penuh energi" }
+];
+
+function clone(x){ return JSON.parse(JSON.stringify(x)); }
+function merge(base, saved){
+  const out = clone(base); if(!saved || typeof saved !== "object") return out;
+  for(const key of Object.keys(saved)){
+    if(saved[key] && typeof saved[key] === "object" && !Array.isArray(saved[key]) && out[key] && typeof out[key] === "object" && !Array.isArray(out[key])) out[key] = merge(out[key], saved[key]);
+    else out[key] = saved[key];
+  } return out;
+}
+function hydrate(saved){ const s=merge(DEFAULT_STATE,saved); s.audio={url:"",blob:null,script:"",mime:"",sampleRate:24000}; s.loading=""; return s; }
+function readState(){ try{return hydrate(JSON.parse(localStorage.getItem(STORAGE_KEY)||"null"));}catch{return clone(DEFAULT_STATE);} }
+let state = readState();
+function persist(){
+  try{
+    const safe=clone(state); safe.audio={url:"",blob:null,script:"",mime:"",sampleRate:24000}; safe.loading="";
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(safe));
+  }catch(e){ console.warn("Tidak dapat menyimpan proyek",e); }
+}
+function setState(next){ state = next; persist(); render(); }
+function update(path,value){
+  const parts=path.split("."); const next=clone(state); let ref=next; for(let i=0;i<parts.length-1;i++) ref=ref[parts[i]]; ref[parts.at(-1)] = value; state=next; persist();
+}
+function esc(s){ return String(s??"").replace(/[&<>'"]/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[m])); }
+function nl(s){ return esc(s).replace(/\n/g,"<br>"); }
+function showToast(msg,type="success"){ toast.textContent=msg; toast.className=`toast show ${type}`; clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.className="toast",3800); }
+function setRoute(route){state.route=route;persist();render();window.scrollTo({top:0,behavior:"smooth"});}
+function updateBrief(key,value){state.brief[key]=value;persist();}
+function pickChoice(key,value){state.brief[key]=value;persist();render();}
+function setSelected(index){state.selected=Number(index)||0;persist();render();}
+function resetProject(){if(confirm("Mulai proyek baru? Brief dan output yang tersimpan lokal akan dihapus.")){state=clone(DEFAULT_STATE);persist();render();showToast("Proyek baru siap.","success");}}
+
+function field(label,key,placeholder,required=false,full=false){
+  const value = state.brief[key] || "";
+  return `<div class="field ${full?"full":""}">
+    <label>${esc(label)}${required?" <i>*</i>":""}</label>
+    <input type="text" data-bind="brief.${key}" placeholder="${esc(placeholder)}" value="${esc(value)}" />
+  </div>`;
+}
+
+function selectField(label,key,items,full=false){
+  const value = state.brief[key] || "";
+  return `<div class="field ${full?"full":""}">
+    <label>${esc(label)}</label>
+    <select data-bind="brief.${key}">
+      ${items.map(x=>`<option value="${esc(x)}" ${value===x?"selected":""}>${esc(x)}</option>`).join("")}
+    </select>
+  </div>`;
+}
+
+function area(label,key,placeholder,help="",full=true){
+  const value = state.brief[key] || "";
+  return `<div class="field ${full?"full":""}">
+    <label>${esc(label)}</label>
+    <textarea data-bind="brief.${key}" placeholder="${esc(placeholder)}">${esc(value)}</textarea>
+    ${help?`<small style="color:var(--muted);font-size:10px;margin-top:4px;display:block;">${esc(help)}</small>`:""}
+  </div>`;
+}
+
+function readyBrief(){const b=state.brief;return Boolean(b.brandName?.trim() && b.topic?.trim() && b.audience?.trim() && b.keyMessage?.trim());}
+function readyTakes(){return Array.isArray(state.takes)&&state.takes.length>0;}
+function activeTake(){return state.takes[state.activeTake]||null;}
+
+function parseJson(text){
+  try{return JSON.parse(text);}catch{}
+  const match=String(text||"").match(/\{[\s\S]*\}/); if(match){try{return JSON.parse(match[0]);}catch{}}
+  throw new Error("AI tidak mengembalikan JSON yang bisa dibaca. Coba ulangi.");
+}
+
+function extractText(data){return (data?.candidates?.[0]?.content?.parts||[]).map(x=>x.text||"").join("\n").trim();}
+
+async function requestModel(model,payload){
+  const url=`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  let delay=1000,last;
+  for(let attempt=0;attempt<5;attempt++){
+    try{
+      const response=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});
+      if(response.ok) return await response.json();
+      const text=await response.text(); last=new Error(`HTTP ${response.status}: ${text.slice(0,280)}`);
+      if(response.status!==429 && response.status<500) throw last;
+    }catch(error){last=error;if(attempt===4)break;}
+    await sleep(delay);delay*=2;
+  }
+  throw last||new Error("Permintaan Gemini tidak berhasil.");
+}
+
+async function requestWithFallback(models,payload){let last;for(const model of models){try{return await requestModel(model,payload);}catch(e){last=e;console.warn("Model gagal",model,e);}}throw last||new Error("Tidak ada model yang dapat merespons.");}
+
+const TAKE_SCHEMA={
+  type:"OBJECT",properties:{
+    creativeDirection:{type:"STRING"},
+    takes:{type:"ARRAY",items:{type:"OBJECT",properties:{
+      title:{type:"STRING"},angle:{type:"STRING"},script:{type:"STRING"},runtime:{type:"STRING"},delivery:{type:"STRING"},pauseNotes:{type:"STRING"},emphasisWords:{type:"ARRAY",items:{type:"STRING"}},safetyNote:{type:"STRING"}
+    },required:["title","angle","script","runtime","delivery","pauseNotes","emphasisWords","safetyNote"]}}
+  },required:["creativeDirection","takes"]
+};
+
+const MIX_SCHEMA={type:"OBJECT",properties:{
+  mood:{type:"STRING"},soundBed:{type:"STRING"},openingCue:{type:"STRING"},transitionCue:{type:"STRING"},closingCue:{type:"STRING"},mixNotes:{type:"ARRAY",items:{type:"STRING"}},avoid:{type:"ARRAY",items:{type:"STRING"}}
+},required:["mood","soundBed","openingCue","transitionCue","closingCue","mixNotes","avoid"]};
+
+function briefContext(){const b=state.brief;return `Brand: ${b.brandName}\nJudul Proyek: ${b.projectTitle||"—"}\nProduk/Layanan: ${b.topic}\nKategori: ${b.sourceType}\nAudiens: ${b.audience}\nTujuan audio: ${b.purpose}\nPesan utama: ${b.keyMessage}\nProof yang tersedia: ${b.proof||"belum ada"}\nCTA: ${b.cta}\nPlatform: ${b.platform}\nDurasi: ${b.duration}\nTone: ${b.tone}\nBahasa: ${b.language}\nGuardrails: ${b.guardrails||"—"}\nTransfer Pack: ${b.transferPack||"—"}`;}
+
+async function withLoading(key,fn){
+  state.loading=key;
+  render();
+  try{
+    await fn();
+    persist();
+    showToast("Berhasil diproses.","success");
+  }catch(err){
+    console.error(err);
+    showToast(err?.message||"Terjadi kendala saat memproses.","error");
+  }finally{
+    state.loading="";
+    render();
+  }
+}
+
+async function makeTakes(){
+  await withLoading("takes",async()=>{
+    if(!readyBrief()) throw new Error("Lengkapi minimal Nama Brand, Produk, Audiens, Pesan Utama, dan CTA.");
+    const prompt=`Anda adalah sutradara suara (voice director) dan copywriter berpengalaman untuk iklan dan konten media sosial di Indonesia. Buat TEPAT tiga naskah alternatif (take) voice-over yang berbeda secara storytelling dan pendekatan dari brief berikut.\n\n${briefContext()}\n\nARAH TAKE: angle=${state.scriptSettings.angle}; hook=${state.scriptSettings.hook}; spoken style=${state.scriptSettings.style}; energy movement=${state.scriptSettings.sceneEnergy}.\n\nGunakan Bahasa Indonesia lisan yang sangat natural, bernada mengalir, mudah diucapkan, dan memiliki irama visual yang terbayang.\n\nJangan memalsukan diskon, testimonial, sertifikasi, angka performa, atau garansi jika tidak tertulis dalam brief. Jika data proof belum ada, tuliskan safetyNote untuk hal yang perlu dikumpulkan oleh pengguna sebelum produksi.\n\nKembalikan output JSON valid sesuai schema, tanpa Markdown.`;
+    const payload={contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:TAKE_SCHEMA}};
+    const data=await requestWithFallback(TEXT_MODELS,payload); 
+    const result=parseJson(extractText(data));
+    state.takes=Array.isArray(result.takes)?result.takes.slice(0,3):[];
+    state.activeTake=0;
+    state.mix=null;
+    state.route="takes";
+  });
+}
+
+async function makeMix(){
+  await withLoading("mix",async()=>{
+    const take=activeTake();if(!take)throw new Error("Pilih take terlebih dahulu di Take Lab.");
+    const prompt=`Anda adalah Penata Suara (Sound Designer) profesional untuk video komersial di Indonesia. Buat arahan teknis sound bed (mixing & sfx) berdasarkan naskah voice-over berikut.\n\n${briefContext()}\n\nNASKAH AKTIF:\n${take.script}\n\nTugas Anda:\n1. Tentukan Mood audio yang pas.\n2. Berikan deskripsi Sound Bed (gaya musik, instrumen, tempo).\n3. Rancang Opening, Transition, dan Closing sound cue.\n4. Tulis 4-5 Mix Notes taktis untuk editor video/audio.\n5. Berikan daftar hal yang mutlak harus dihindari (avoid) agar musik/sfx tidak menenggelamkan suara VO.\n\nJangan pernah mengklaim bahwa musik sudah berlisensi otomatis; ingatkan editor untuk mencari musik komersial berlisensi. Return JSON sesuai schema, tanpa Markdown.`;
+    const payload={contents:[{parts:[{text:prompt}]}],generationConfig:{responseMimeType:"application/json",responseSchema:MIX_SCHEMA}};
+    const data=await requestWithFallback(TEXT_MODELS,payload);
+    state.mix=parseJson(extractText(data));
+  });
+}
+
+function b64Bytes(b64){const raw=atob(b64);const bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes;}
+
+function pcmToWavBlob(bytes,sampleRate=24000,channels=1){
+  const samples=new Int16Array(bytes.buffer,bytes.byteOffset,Math.floor(bytes.byteLength/2)); 
+  const blockAlign=channels*2;
+  const buffer=new ArrayBuffer(44+samples.length*2);
+  const view=new DataView(buffer);
+  let p=0;
+  const u16=v=>{view.setUint16(p,v,true);p+=2;};
+  const u32=v=>{view.setUint32(p,v,true);p+=4;};
+  
+  u32(0x46464952); // "RIFF"
+  u32(36+samples.length*2); // Chunk size
+  u32(0x45564157); // "WAVE"
+  u32(0x20746d66); // "fmt "
+  u32(16); // Subchunk size (16 for PCM)
+  u16(1); // Audio format PCM
+  u16(channels);
+  u32(sampleRate);
+  u32(sampleRate*blockAlign);
+  u16(blockAlign);
+  u16(16); // Bits per sample
+  u32(0x61746164); // "data"
+  u32(samples.length*2); // Subchunk2Size
+  
+  for(let i=0;i<samples.length;i++){view.setInt16(p,samples[i],true);p+=2;}
+  return new Blob([buffer],{type:"audio/wav"});
+}
+
+function speechDirection(){
+  const v=state.voice;
+  const take=activeTake();
+  return `Speak in Indonesian. Read the text naturally and clearly. Voice character: ${v.name}. Pacing: ${v.pacing}. Emphasis: ${v.emphasis}. Energy level: ${v.energy}/100. Delivery direction: ${take?.delivery||state.brief.tone}. Pause notes: ${take?.pauseNotes||"Use light natural pauses."}. Do not imitate any famous person, celebrity, or public figure. Text to speak:\n${take?.script||""}`;
+}
+
+async function synthesize(){
+  const take=activeTake();if(!take)throw new Error("Pilih take terlebih dahulu.");
+  await withLoading("synth",async()=>{
+    const payload={
+      contents:[{parts:[{text:speechDirection()}]}],
+      generationConfig:{
+        responseModalities:["AUDIO"],
+        speechConfig:{voiceConfig:{prebuiltVoiceConfig:{voiceName:state.voice.name}}}
+      }
+    };
+    const data=await requestWithFallback(TTS_MODELS,payload);
+    const inline=(data?.candidates?.[0]?.content?.parts||[]).find(part=>part.inlineData?.data)?.inlineData;
+    if(!inline?.data)throw new Error("Gemini tidak mengembalikan audio. Coba ulangi atau pilih voice lain.");
+    const mime=inline.mimeType||"audio/L16;rate=24000";
+    const rateMatch=mime.match(/rate=(\d+)/i);
+    const sampleRate=rateMatch?Number(rateMatch[1]):24000;
+    const channelMatch=mime.match(/channels=(\d+)/i);
+    const channels=channelMatch?Number(channelMatch[1]):1;
+    const blob=pcmToWavBlob(b64Bytes(inline.data),sampleRate,channels);
+    if(state.audio.url)URL.revokeObjectURL(state.audio.url);
+    const url=URL.createObjectURL(blob);
+    state.audio={url,blob,script:take.script,mime,sampleRate};
+  });
+}
+
+function parseTransferPack(text){
+  const get=(label)=>{const m=String(text||"").match(new RegExp(`^${label}:\\s*(.+)$`,`im`));return m?m[1].trim():"";};
+  const next=clone(state); 
+  next.brief.brandName=get("Brand")||next.brief.brandName;
+  next.brief.topic=get("Produk/Topik")||next.brief.topic;
+  next.brief.audience=get("Audiens")||next.brief.audience;
+  next.brief.keyMessage=get("Manfaat / pesan")||next.brief.keyMessage;
+  next.brief.cta=get("Offer / CTA")||next.brief.cta;
+  next.brief.tone=get("Tone")||next.brief.tone;
+  next.brief.proof=get("Proof Available")||next.brief.proof;
+  next.brief.guardrails=get("Guardrails")||next.brief.guardrails;
+  next.brief.transferPack=String(text||"");
+  state=next;persist();render();
+  showToast("Transfer Pack diterapkan ke Script Brief.");
+}
+
+async function copyText(text){try{await navigator.clipboard.writeText(text);showToast("Berhasil disalin.");}catch{const a=document.createElement("textarea");a.value=text;a.style.position="fixed";a.style.opacity="0";document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();showToast("Berhasil disalin.");}}
+function downloadText(filename,content,type="text/markdown;charset=utf-8"){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([content],{type}));a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),500);}
+function downloadAudio(){if(!state.audio.blob) { showToast("Buat audio terlebih dahulu.","error"); return; } const a=document.createElement("a");a.href=state.audio.url;a.download=`${slug(state.brief.projectTitle||state.brief.brandName||"suara")}-voiceover.wav`;document.body.appendChild(a);a.click();a.remove();}
+function slug(s){return String(s||"suara").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").slice(0,60)||"suara";}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+
+function loadDemo(){
+  const next=clone(state);
+  next.brief = {
+    projectTitle: "Iklan Kopi Susu Aren",
+    brandName: "Kopi Hening",
+    sourceType: "Iklan produk",
+    platform: "TikTok / Reels",
+    language: "Bahasa Indonesia",
+    audience: "Pekerja kreatif urban usia 22-35 tahun yang sering mengantuk di jam sibuk siang",
+    topic: "Kopi susu gula aren botolan praktis dengan double shot espresso gayo pilihan",
+    keyMessage: "Dua tembakan espresso gayo asli yang nikmat untuk membilas kantuk siang harimu dengan rasa creamy dan pas manisnya.",
+    proof: "Menggunakan 100% biji kopi Arabika Gayo, diproses dingin, tanpa pemanis buatan, botol ramah lingkungan mudah digenggam.",
+    cta: "Beli langsung di minimarket terdekat atau klik keranjang kuning untuk promo bundel siang!",
+    duration: "20–30 detik",
+    tone: "Hangat dan meyakinkan",
+    purpose: "Mendorong perhatian dan klik",
+    guardrails: "Jangan sebut kopi terlezat sedunia, jangan sebut menyembuhkan migrain, hindari klaim berlebihan.",
+    transferPack: ""
+  };
+  state=next;persist();render();
+  showToast("Demo brief dimuat!");
+}
+
+function fullMarkdown(){
+  const b=state.brief,t=activeTake(),m=state.mix;
+  return `# ${b.projectTitle||"SUARA Voice-over Pack"}\n\n## Script brief\n- Brand: ${b.brandName||"—"}\n- Project type: ${b.sourceType}\n- Platform: ${b.platform}\n- Audience: ${b.audience||"—"}\n- Topic: ${b.topic||"—"}\n- Key message: ${b.keyMessage||"—"}\n- CTA: ${b.cta||"—"}\n- Proof: ${b.proof||"—"}\n- Guardrails: ${b.guardrails||"—"}\n\n## Voice direction\n- Voice: ${state.voice.name}\n- Pacing: ${state.voice.pacing}\n- Emphasis: ${state.voice.emphasis}\n- Energy: ${state.voice.energy}/100\n\n## Selected take\n### ${t?.title||"Belum dipilih"}\n${t?.script||"—"}\n\nDelivery: ${t?.delivery||"—"}\nPause notes: ${t?.pauseNotes||"—"}\nEmphasis: ${(t?.emphasisWords||[]).join(", ")||"—"}\nSafety note: ${t?.safetyNote||"—"}\n\n## Sound direction (for editor)\n- Mood: ${m?.mood||"—"}\n- Sound bed: ${m?.soundBed||"—"}\n- Opening: ${m?.openingCue||"—"}\n- Transition: ${m?.transitionCue||"—"}\n- Closing: ${m?.closingCue||"—"}\n- Mix notes:\n${(m?.mixNotes||[]).map(x=>`  - ${x}`).join("\n")||"  - —"}\n- Avoid:\n${(m?.avoid||[]).map(x=>`  - ${x}`).join("\n")||"  - —"}\n\n## Canvas Transfer Pack\n${transferPack()}\n`;
+}
+
+function nav(){
+  strip.innerHTML=ROUTES.map(([id,no,label])=>`<button class="channel ${state.route===id?"active" : ""}" data-action="route:${id}"><b>${no}</b>${label}</button>`).join("")+`<span class="session-note">Local save · audio tetap di tab aktif</span>`;
+}
+
+function button(label,action,kind="ghost",disabled=false){
+  return `<button class="btn ${kind}" data-action="${action}" ${disabled?"disabled":""}>${label}</button>`;
+}
+
+function input(label,key,placeholder,value,opts={}){
+  return `<div class="field ${opts.full?"full":""}"><label>${esc(label)}${opts.required?" <i>*</i>":""}</label>${opts.type==="textarea"?`<textarea data-bind="${key}" placeholder="${esc(placeholder)}">${esc(value)}</textarea>`:opts.options?`<select data-bind="${key}">${opts.options.map(o=>`<option value="${esc(o)}" ${String(o)===String(value)?"selected":""}>${esc(o)}</option>`).join("")}</select>`:`<input data-bind="${key}" type="${opts.type||"text"}" placeholder="${esc(placeholder)}" value="${esc(value)}" />`}${opts.note?`<small style="color:var(--muted);font-size:10px;margin-top:4px;display:block;">${esc(opts.note)}</small>`:""}</div>`}
+
+function consoleScreen(){
+  const progress=[readyBrief(),readyTakes(),Boolean(state.audio.blob),Boolean(state.mix)].filter(Boolean).length;
+  return `<section class="screen active"><div class="hero"><div class="hero-copy"><div class="eyebrow"><i></i> Voice & sound direction workspace</div><h1>Buat suara yang <em>terarah,</em> bukan sekadar dibacakan.</h1><p>SUARA mengubah brief menjadi naskah voice-over, arahan delivery, file WAV, dan sound notes yang siap dibawa ke workflow produksi konten Anda.</p><div class="hero-actions">${button("Mulai dari brief","route:brief","primary")}${button("Lihat Take Lab","route:takes","ghost")}</div><div class="hero-note"><span>◉</span><div>Gunakan suara prebuilt dari Gemini. Jangan masukkan data sensitif dan jangan gunakan brief ini untuk meniru suara orang nyata atau figur publik.</div></div></div><aside class="sound-rack"><div class="rack-head"><span>Channel monitor</span><b>LIVE</b></div><div class="vu">${Array.from({length:24},(_,i)=>`<span style="height:10px"></span>`).join("")}</div><div class="rack-controls"><div class="knob-card"><span>Energy</span><div class="knob-line"><div class="knob" id="energyKnob"></div><b class="knob-value">${state.voice.energy}</b></div></div><div class="knob-card"><span>Selected voice</span><div class="knob-line"><div class="knob" style="background:conic-gradient(var(--orange) 0 210deg,#526064 210deg 360deg)"></div><b class="knob-value" style="font-size:12px">${esc(state.voice.name)}</b></div></div></div></aside></div><div class="stats"><div class="metric"><div class="metric-label">Brief</div><div class="metric-value ${readyBrief()?"cyan":""}">${readyBrief()?"Ready":"—"}</div><div class="metric-sub">Konteks voice-over</div></div><div class="metric"><div class="metric-label">Take options</div><div class="metric-value cyan">${state.takes.length||0}</div><div class="metric-sub">Pilihan naskah</div></div><div class="metric"><div class="metric-label">Voice render</div><div class="metric-value orange">${state.audio.blob?"WAV":"—"}</div><div class="metric-sub">Audio sesi ini</div></div><div class="metric"><div class="metric-label">Signal path</div><div class="metric-value">${progress}/4</div><div class="metric-sub">Tahap tersusun</div></div></div><div class="section-head"><div><h2>Rute produksi suara</h2><p>Mulai dari kata yang harus dipercaya, lalu pilih cara kata itu harus terdengar.</p></div><span class="rack-tag">PREBUILT VOICE ONLY</span></div><div class="cards-3"><article class="feature"><div class="feature-icon">✎</div><h3>Script Brief</h3><p>Masukkan konteks brand, audiens, bukti yang tersedia, dan hal yang tidak boleh diucapkan.</p>${button("Isi brief","route:brief","steel small")}</article><article class="feature"><div class="feature-icon">≋</div><h3>Take Lab</h3><p>Bandingkan tiga naskah dengan angle, ritme, jeda, dan kata yang perlu ditegaskan.</p>${button("Buat take","route:takes","cyan small")}</article><article class="feature"><div class="feature-icon">◉</div><h3>Voice Booth</h3><p>Pilih prebuilt voice, mengatur pacing, lalu sintesis WAV untuk playback dan delivery.</p>${button("Buka booth","route:booth","primary small")}</article></div></section>`}
+
+function briefScreen(){
+  const b=state.brief;
+  return `<section class="screen active"><div class="page-head"><div><h1>Script Brief</h1><p>Beri Gemini konteks yang cukup agar naskah terdengar seperti komunikasi brand, bukan hasil generator yang generik.</p></div><span class="stage">STAGE 02 / INPUT</span></div><div class="editor-grid"><section class="panel"><div class="panel-head"><div><h3>Signal source</h3><p>Masukkan fondasi informasi. Field bertanda bintang diperlukan untuk membuat take.</p></div><div class="top-actions">${button("Muat Demo","load-demo","ghost small")}</div></div><div class="field-grid">${input("Judul proyek","brief.projectTitle","Contoh: VO promo Ramadan 2026",b.projectTitle,{full:true})}${input("Nama brand","brief.brandName","Contoh: Tumbuh Studio",b.brandName,{required:true})}${input("Jenis proyek","brief.sourceType","",b.sourceType,{options:["Iklan produk","Brand story","Explainer","Konten affiliate","Video event","Podcast opener","Voice-over edukasi"]})}${input("Platform utama","brief.platform","",b.platform,{options:["TikTok / Reels","YouTube","Meta Ads","Shopee Video","Landing page video","Podcast","Presentasi"]})}${input("Audiens","brief.audience","Contoh: pemilik UMKM yang baru mulai digital marketing",b.audience,{required:true,full:true})}${input("Topik / produk / offer","brief.topic","Jelaskan apa yang dibahas atau dipromosikan",b.topic,{required:true,full:true,type:"textarea"})}${input("Pesan utama","brief.keyMessage","Apa satu hal yang harus diingat setelah mendengar audio?",b.keyMessage,{required:true,full:true,type:"textarea"})}${input("Bukti yang tersedia","brief.proof","Contoh: demo produk, detail bahan, pengalaman founder. Kosongkan bila tidak ada.",b.proof,{full:true,type:"textarea",note:"Tidak akan dibuatkan testimoni, angka, atau klaim jika data tidak tersedia."})}${input("CTA","brief.cta","Contoh: Lihat detail di bio",b.cta)}${input("Durasi target","brief.duration","",b.duration,{options:["10–15 detik","20–30 detik","35–45 detik","50–60 detik","60–90 detik"]})}${input("Tujuan audio","brief.purpose","",b.purpose,{options:["Mendorong perhatian dan klik","Membangun pemahaman","Mengundang registrasi","Membangun kepercayaan","Mengarahkan ke checkout"]})}${input("Tone dasar","brief.tone","",b.tone,{options:["Hangat dan meyakinkan","Tegas dan penuh energi","Tenang dan premium","Ringan dan conversational","Reflektif dan naratif"]})}${input("Guardrails / jangan diucapkan","brief.guardrails","Contoh: jangan menyebut diskon, jangan klaim hasil pasti, hindari kata tertentu",b.guardrails,{full:true,type:"textarea"})}</div><div class="form-footer"><span class="hint">Data brief tersimpan lokal. Audio dan WAV hanya berada di sesi browser aktif.</span>${button("Lanjut ke Take Lab","generate:takes","primary",!readyBrief())}</div></section><aside class="panel black"><div class="panel-head"><div><h3>Transfer port</h3><p>Tempel Canvas Transfer Pack dari ARAH, MULA, PIKAT, atau aplikasi lain untuk menyalin konteks inti.</p></div><span class="mini">Import</span></div><div class="transfer"><div class="transfer-row"><input id="transferInput" value="${esc(b.transferPack)}" placeholder="Tempel [CANVAS-BRIEF v1] di sini"/><button class="btn cyan small" data-action="apply-transfer">Terapkan</button></div></div><div style="height:15px"></div><div class="panel-head"><div><h3>Brief monitor</h3><p>Ringkasan yang akan masuk ke prompt.</p></div><span class="mini">Live</span></div><div class="pack-preview">${esc(briefContext())}</div></aside></div></section>`}
+
+function takesScreen(){
+  const b=state.brief;
+  const content=!readyTakes()?`<div class="empty"><div class="empty-box"><div class="empty-mark">≋</div><h4>Belum ada take</h4><p>Isi Script Brief, lalu minta SUARA menulis tiga naskah dengan pendekatan delivery yang berbeda.</p><div style="height:14px"></div>${button("Kembali ke brief","route:brief","cyan")}</div></div>`:`<div class="take-list">${state.takes.map((t,i)=>`<article class="take ${state.activeTake===i?"active":""}"><div class="take-top"><div><div class="take-label">Take ${String(i+1).padStart(2,"0")} · ${esc(t.angle)}</div><h4>${esc(t.title)}</h4></div>${state.activeTake===i?'<span class="chip" style="color:var(--cyan);border-color:rgba(65,215,215,.35)">ACTIVE</span>':""}</div><p>${nl(t.script)}</p><div class="take-meta"><span class="chip">${esc(t.runtime)}</span><span class="chip">${esc(t.delivery)}</span>${(t.emphasisWords||[]).slice(0,4).map(x=>`<span class="chip">${esc(x)}</span>`).join("")}</div><div class="take-actions">${button(state.activeTake===i?"Dipilih":"Pilih take",`select-take:${i}`,state.activeTake===i?"cyan small":"ghost small")}${button("Salin naskah",`copy-take:${i}`,"ghost small")}</div></article>`).join("")}</div>`;
+  return `<section class="screen active"><div class="page-head"><div><h1>Take Lab</h1><p>Bandingkan tiga versi naskah sebelum suara dibuat. Yang dipilih akan menjadi source untuk Voice Booth.</p></div><span class="stage">STAGE 03 / SCRIPT</span></div><div class="editor-grid"><section class="panel"><div class="panel-head"><div><h3>Direction controls</h3><p>Atur gaya penulisan yang akan membedakan tiap take.</p></div><span class="mini">Generator</span></div><div class="field-grid">${input("Script angle","scriptSettings.angle","",state.scriptSettings.angle,{options:["Problem → relief","Cerita singkat → makna","Bukti → pertimbangan","Kontras situasi → solusi","Founder / human note"]})}${input("Hook","scriptSettings.hook","",state.scriptSettings.hook,{options:["Mulai dari situasi yang familiar","Mulai dari pertanyaan","Mulai dari observasi tajam","Mulai dari benefit yang jelas","Mulai dari momen emosional"]})}${input("Spoken style","scriptSettings.style","",state.scriptSettings.style,{options:["Natural spoken Indonesian","Ringkas dan punchy","Lembut dan reflektif","Jelas dan explanatory","Santai seperti creator"]})}${input("Energy movement","scriptSettings.sceneEnergy","",state.scriptSettings.sceneEnergy,{options:["Naik perlahan","Tinggi sejak awal","Tenang lalu menguat","Berirama dan ringan","Tegas lalu menenangkan"]})}</div><div class="form-footer"><span class="hint">Naskah tidak akan menambahkan social proof, angka performa, diskon, atau klaim baru yang tidak ada di brief.</span>${button("Buat 3 take","generate:takes","primary",!readyBrief())}</div><div style="height:16px"></div><div class="panel-head"><div><h3>Selected take signal</h3><p>${activeTake()?esc(activeTake().title):"Pilih salah satu take setelah hasil muncul."}</p></div><span class="mini">${activeTake()?esc(activeTake().runtime):"—"}</span></div><div class="pack-preview">${activeTake()?esc(activeTake().script):"Take aktif akan tampil di sini."}</div></section><section class="panel black"><div class="panel-head"><div><h3>Take comparison</h3><p>Tentukan satu take yang paling selaras dengan brand dan format audio Anda.</p></div><span class="mini">${state.takes.length}/3</span></div>${content}</section></div></section>`}
+
+function boothScreen(){
+  const take=activeTake();
+  const mix=state.mix;
+  const voiceCards=VOICES.map(v=>`<button class="voice-card ${state.voice.name===v.name?"active":""}" data-action="voice:${v.name}"><span class="voice-led"></span><b>${esc(v.label)}</b><span>${esc(v.note)}</span></button>`).join("");
+  const takeText=take?take.script:"Pilih take terlebih dahulu di Take Lab.";
+  const mixContent=mix?`<div class="mix-grid"><div class="mix-card"><h4>${esc(mix.mood)}</h4><p style="font-size:11px;color:#aeb9ba;margin:5px 0 0;">${esc(mix.soundBed)}</p><ul style="padding-left:14px;margin-top:6px;font-size:10px;"><li>Open: ${esc(mix.openingCue)}</li><li>Transition: ${esc(mix.transitionCue)}</li><li>Close: ${esc(mix.closingCue)}</li></ul></div><div class="mix-card"><h4>Mix notes</h4><ul style="padding-left:14px;margin-top:5px;font-size:10px;">${(mix.mixNotes||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul><p style="margin-top:8px;font-size:10px;"><b style="color:var(--danger)">Avoid:</b> ${(mix.avoid||[]).map(esc).join(" · ")}</p></div></div>`:`<div class="empty" style="min-height:220px"><div class="empty-box"><div class="empty-mark">♫</div><h4>Belum ada mix notes</h4><p>Buat arahan sound bed untuk editor video/audio. Fitur ini tidak menghasilkan musik dan tidak mengklaim lisensi musik.</p><div style="height:13px"></div>${button("Buat mix notes","generate:mix","steel small",!take)}</div></div>`;
+  return `<section class="screen active"><div class="page-head"><div><h1>Voice Booth</h1><p>Pilih suara prebuilt, arahkan pacing dan energy, lalu sintesis WAV dari naskah terpilih.</p></div><span class="stage">STAGE 04 / SYNTHESIS</span></div><div class="voice-layout"><section class="panel"><div class="panel-head"><div><h3>Voice channel</h3><p>Gunakan prebuilt voice. SUARA tidak menyediakan voice cloning atau peniruan suara orang nyata.</p></div><span class="mini">Prebuilt only</span></div><div class="voice-grid">${voiceCards}</div><div style="height:18px"></div><div class="panel-head"><div><h3>Performance controls</h3><p>Parameter ini diterjemahkan ke arahan delivery, bukan pengubahan identitas suara.</p></div><span class="mini">Direction</span></div><div class="field-grid"><div class="field"><label>Pacing</label><div class="option-row">${["Measured","Conversational","Dynamic"].map(x=>`<button class="choice ${state.voice.pacing===x?"active":""}" data-action="pacing:${x}">${x}</button>`).join("")}</div></div><div class="field"><label>Emphasis</label><div class="option-row">${["Natural","Clear key words","Dramatic"].map(x=>`<button class="choice ${state.voice.emphasis===x?"active":""}" data-action="emphasis:${x}">${x}</button>`).join("")}</div></div><div class="field full"><label>Energy</label><div class="range-line"><input id="energyRange" type="range" min="20" max="90" value="${state.voice.energy}"/><span class="readout">${state.voice.energy}/100</span></div></div></div><div style="height:18px"></div><div class="panel-head"><div><h3>Selected script</h3><p>${take?esc(take.title):"Buat dan pilih take terlebih dahulu."}</p></div><span class="mini">${take?esc(take.runtime):"—"}</span></div><div class="pack-preview">${esc(takeText)}</div><div class="form-footer"><span class="hint">Gemini akan mengembalikan raw PCM. App mengonversinya menjadi WAV di browser agar bisa diputar dan diunduh.</span>${button("Sintesis voice-over","generate:audio","primary",!take)}</div></section><aside><div class="monitor"><div class="monitor-label"><span>Booth monitor</span><b id="boothStatusLabel">${state.audio.blob?"WAV READY":"STANDBY"}</b></div><div class="screen-box"><div class="wave paused" id="visualizerWave">${Array.from({length:34},(_,i)=>`<i style="height:10px;"></i>`).join("")}</div></div>${state.audio.url?`<div class="player"><audio id="boothAudioElement" controls src="${state.audio.url}"></audio></div>`:""}<div class="monitor-details"><div class="monitor-row"><span>Voice</span><b>${esc(state.voice.name)}</b></div><div class="monitor-row"><span>Pacing</span><b>${esc(state.voice.pacing)}</b></div><div class="monitor-row"><span>Sample rate</span><b>${state.audio.blob?state.audio.sampleRate+" Hz" : "—"}</b></div></div>${state.audio.blob?`<div style="height:12px"></div>${button("Unduh WAV","download:audio","steel small")}`:""}</div><div style="height:14px"></div><section class="panel red"><div class="panel-head"><div><h3>Sound bed notes</h3><p>Brief untuk editor. Tidak menghasilkan musik otomatis.</p></div><span class="mini">Mix</span></div>${mixContent}</section></aside></div></section>`}
+
+function deliveryScreen(){
+  const take=activeTake();
+  const markdown=fullMarkdown();
+  return `<section class="screen active"><div class="page-head"><div><h1>Delivery</h1><p>Ambil file yang diperlukan untuk melanjutkan produksi video atau audio di tool pilihan Anda.</p></div><span class="stage">STAGE 05 / HANDOVER</span></div><div class="delivery-grid"><section class="delivery-card"><h3>Voice-over Pack</h3><p>Gunakan pack ini sebagai handover ringkas untuk editor, creator, atau workflow aplikasi Canvas Anda yang lain.</p><div class="delivery-actions">${button("Salin Transfer Pack","copy:transfer","cyan small")}${button("Unduh Script Pack .md","download:pack","steel small")}${button("Salin naskah aktif","copy:script","ghost small",!take)}${button("Unduh WAV","download:audio","primary small",!state.audio.blob)}</div><div class="pack-preview">${esc(markdown)}</div></section><aside class="delivery-card"><h3>Checklist sebelum publish</h3><p>Pastikan output suara dipakai dengan konteks yang jujur dan sesuai kebijakan platform Anda.</p><div class="mix-card" style="margin-top:15px"><ul><li>Verifikasi semua klaim yang diucapkan berasal dari brief/proof yang tersedia.</li><li>Dengarkan ulang pengucapan nama brand, harga, angka, dan istilah penting.</li><li>Tambahkan musik/sound effect berlisensi secara terpisah bila diperlukan.</li><li>Jangan menyatakan atau memberi kesan bahwa suara ini adalah suara orang nyata tertentu.</li><li>Sesuaikan level loudness dengan platform tujuan sebelum publish.</li></ul></div><div class="delivery-actions">${button("Kembali ke Voice Booth","route:booth","ghost small")}${button("Mulai proyek baru","reset","dark small")}</div></aside></div></section>`}
+
+let vuInterval=null;
+function startVuAnimation(isActive=false){
+  clearInterval(vuInterval);
+  const spans=document.querySelectorAll(".vu span");
+  if(!spans.length) return;
+  vuInterval=setInterval(()=>{
+    spans.forEach((span)=>{
+      let h;
+      if(isActive){
+        h=Math.floor(Math.random()*85)+15;
+      }else{
+        h=Math.floor(Math.random()*15)+8;
+      }
+      span.style.height=`${h}px`;
+    });
+  },100);
+}
+
+let waveInterval=null;
+function startWaveVisualizer(isPlaying=false){
+  clearInterval(waveInterval);
+  const wave=document.getElementById("visualizerWave");
+  if(!wave) return;
+  const bars=wave.querySelectorAll("i");
+  if(!bars.length) return;
+  if(isPlaying){
+    wave.classList.remove("paused");
+    waveInterval=setInterval(()=>{
+      bars.forEach((bar)=>{
+        const h=Math.floor(Math.random()*80)+10;
+        bar.style.height=`${h}px`;
+      });
+    },100);
+  }else{
+    wave.classList.add("paused");
+    bars.forEach(bar=>bar.style.height="10px");
+  }
+}
+
+function attachAudioListeners(){
+  const audioEl=document.getElementById("boothAudioElement");
+  const boothLabel=document.getElementById("boothStatusLabel");
+  if(audioEl){
+    audioEl.addEventListener("play",()=>{
+      startVuAnimation(true);
+      startWaveVisualizer(true);
+      if(boothLabel) boothLabel.textContent="PLAYING";
+    });
+    audioEl.addEventListener("pause",()=>{
+      startVuAnimation(false);
+      startWaveVisualizer(false);
+      if(boothLabel) boothLabel.textContent="WAV READY";
+    });
+    audioEl.addEventListener("ended",()=>{
+      startVuAnimation(false);
+      startWaveVisualizer(false);
+      if(boothLabel) boothLabel.textContent="WAV READY";
+    });
+  }
+}
+
+function rotateEnergyKnob(){
+  const knob=document.getElementById("energyKnob");
+  if(knob){
+    const angle=(state.voice.energy - 20) * 3; // map 20-90 range to rotation
+    knob.style.transform=`rotate(${angle}deg)`;
+  }
+}
+
+function render(){
+  nav();
+  const view={
+    console:consoleScreen,
+    brief:briefScreen,
+    takes:takesScreen,
+    booth:boothScreen,
+    delivery:deliveryScreen
+  }[state.route]||consoleScreen;
+  
+  app.innerHTML=view();
+  bind();
+  startVuAnimation(state.loading!=="");
+  rotateEnergyKnob();
+  attachAudioListeners();
+}
+
+function bind(){
+  app.querySelectorAll("[data-bind]").forEach(el=>{
+    el.addEventListener("input",()=>{
+      update(el.dataset.bind,el.value);
+      if(el.tagName==="SELECT") render();
+    });
+    el.addEventListener("change",()=>{
+      update(el.dataset.bind,el.value);
+      if(el.tagName==="SELECT") render();
+    });
+  });
+  
+  const energy=document.getElementById("energyRange");
+  if(energy){
+    energy.addEventListener("input",()=>{
+      update("voice.energy",Number(energy.value));
+      const out=energy.parentElement.querySelector(".readout");
+      if(out) out.textContent=`${energy.value}/100`;
+      rotateEnergyKnob();
+    });
+  }
+  
+  // Custom button / tab handlers
+  document.querySelectorAll("[data-action]").forEach(el=>el.addEventListener("click",async(e)=>{
+    e.preventDefault();
+    const a=el.dataset.action;
+    try{
+      await action(a);
+    }catch(err){
+      clearBusy();
+      console.error(err);
+      showToast(err?.message||"Terjadi kesalahan. Coba ulangi.","error");
+    }
+  }));
+}
+
+async function action(a){
+  if(a.startsWith("route:")){
+    state.route=a.split(":")[1];
+    persist();
+    render();
+    return;
+  }
+  if(a==="reset"){
+    if(!confirm("Mulai proyek baru? Semua brief, pilihan, dan naskah tersimpan lokal akan dihapus.")) return;
+    if(state.audio.url) URL.revokeObjectURL(state.audio.url);
+    state=clone(DEFAULT_STATE);
+    persist();
+    render();
+    showToast("Workspace telah diatur ulang.");
+    return;
+  }
+  if(a==="load-demo"){
+    loadDemo();
+    return;
+  }
+  if(a==="apply-transfer"){
+    parseTransferPack(document.getElementById("transferInput")?.value||"");
+    return;
+  }
+  if(a==="generate:takes"){
+    await generateTakes();
+    return;
+  }
+  if(a.startsWith("select-take:")){
+    const idx=Number(a.split(":")[1]);
+    const next=clone(state);
+    next.activeTake=idx;
+    next.mix=null;
+    next.audio={url:"",blob:null,script:"",mime:"",sampleRate:24000};
+    state=next;persist();render();
+    showToast("Take terpilih untuk studio synthesis.");
+    return;
+  }
+  if(a.startsWith("copy-take:")){
+    const idx=Number(a.split(":")[1]);
+    await copyText(state.takes[idx]?.script||"");
+    return;
+  }
+  if(a.startsWith("voice:")){
+    update("voice.name",a.split(":")[1]);
+    render();
+    return;
+  }
+  if(a.startsWith("pacing:")){
+    update("voice.pacing",a.split(":")[1]);
+    render();
+    return;
+  }
+  if(a.startsWith("emphasis:")){
+    update("voice.emphasis",a.split(":")[1]);
+    render();
+    return;
+  }
+  if(a==="generate:mix"){
+    await generateMix();
+    return;
+  }
+  if(a==="generate:audio"){
+    await synthesize();
+    return;
+  }
+  if(a==="download:audio"){
+    downloadAudio();
+    return;
+  }
+  if(a==="copy:transfer"){
+    await copyText(transferPack());
+    return;
+  }
+  if(a==="copy:script"){
+    await copyText(activeTake()?.script||"");
+    return;
+  }
+  if(a==="download:pack"){
+    downloadText(`${slug(state.brief.projectTitle||"suara")}-voiceover-pack.md`,fullMarkdown());
+    return;
+  }
+}
+
+// Initial view routing setup
+render();
+</script>
+</body>
+</html>

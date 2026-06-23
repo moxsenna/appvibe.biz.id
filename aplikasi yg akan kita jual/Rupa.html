@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RUPA — Visual Commerce Studio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #11131b; 
+      --ink-2: #1b1f2c; 
+      --paper: #f8f7f2; 
+      --paper-2: #eeedf1; 
+      --line: #cfd1d9;
+      --electric: #1d43ff; 
+      --acid: #dfff35; 
+      --violet: #d946ef; 
+      --orange: #ff6b3d; 
+      --sky: #98c8ff;
+      --muted: #697080; 
+      --white: #ffffff; 
+      --success: #156d4a; 
+      --danger: #b4342f;
+      --shadow: 0 18px 40px rgba(17,19,27,.12); 
+      --shadow-soft: 0 9px 24px rgba(17,19,27,.07);
+    }
+    
+    * { box-sizing: border-box; } 
+    html { scroll-behavior: smooth; } 
+    body { 
+      margin: 0; 
+      min-width: 320px; 
+      background: var(--paper); 
+      color: var(--ink); 
+      font-family: "Space Grotesk", system-ui, -apple-system, sans-serif; 
+    }
+    
+    button, input, textarea, select { font: inherit; } 
+    button { cursor: pointer; } 
+    button:disabled { cursor: not-allowed; opacity: .5; }
+    
+    body:before { 
+      content: ""; 
+      pointer-events: none; 
+      position: fixed; 
+      inset: 0; 
+      background-image: radial-gradient(rgba(17,19,27,.10) 0.7px, transparent 0.7px); 
+      background-size: 18px 18px; 
+      opacity: 0.18; 
+      z-index: -1; 
+    }
+    
+    .shell { max-width: 1540px; margin: 0 auto; padding: 16px; }
+    
+    .masthead { 
+      display: flex; align-items: center; justify-content: space-between; gap: 14px; 
+      padding: 15px 18px; background: var(--ink); color: #fff; border: 2px solid var(--ink); 
+      box-shadow: 6px 6px 0 var(--electric); position: sticky; top: 10px; z-index: 30; 
+    }
+    .brand { display: flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark { 
+      width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.28); 
+      background: var(--acid); color: var(--ink); display: grid; place-items: center; 
+      font-family: Syne, sans-serif; font-size: 25px; font-weight: 800; transform: rotate(-7deg); 
+    }
+    .brand-name { font-family: Syne, sans-serif; font-size: 24px; letter-spacing: -1.2px; line-height: 1; }
+    .brand-sub { 
+      color: #aeb6cb; font: 500 9px/1 "DM Mono", monospace; letter-spacing: 1.5px; 
+      text-transform: uppercase; margin-top: 6px; 
+    }
+    .head-tools { display: flex; align-items: center; gap: 9px; }
+    .canvas-status { 
+      border: 1px solid rgba(255,255,255,.24); padding: 9px 10px; 
+      font: 500 10px/1 "DM Mono", monospace; letter-spacing: .45px; color: #dbe3ff; 
+      display: flex; align-items: center; gap: 7px; 
+    }
+    .status-dot { 
+      width: 8px; height: 8px; background: var(--acid); border-radius: 50%; 
+      box-shadow: 0 0 0 4px rgba(223,255,53,.15); 
+    }
+    
+    .button { 
+      border: 1.5px solid var(--ink); background: var(--white); color: var(--ink); 
+      padding: 11px 13px; border-radius: 0; font-weight: 800; font-size: 12px; line-height: 1; 
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px; 
+      transition: .16s; box-shadow: 3px 3px 0 var(--ink); text-decoration: none;
+    }
+    .button:hover { transform: translate(-1px, -1px); box-shadow: 5px 5px 0 var(--ink); }
+    .button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+    .button.primary { background: var(--acid); }
+    .button.blue { background: var(--electric); border-color: var(--electric); color: #fff; box-shadow: 3px 3px 0 var(--ink); }
+    .button.dark { background: var(--ink); color: #fff; box-shadow: 3px 3px 0 var(--electric); }
+    .button.ghost { background: transparent; color: var(--ink); box-shadow: none; }
+    .button.ghost:hover { background: rgba(0,0,0,0.05); }
+    .button.subtle { border-color: var(--line); box-shadow: none; background: #f5f4f7; color: #404655; }
+    .button.subtle:hover { border-color: var(--ink); background: #fff; }
+    .button.orange { background: var(--orange); border-color: var(--ink); color: #fff; }
+    .button.small { padding: 8px 9px; font-size: 10px; box-shadow: 2px 2px 0 var(--ink); }
+    .button.small:hover { box-shadow: 3px 3px 0 var(--ink); }
+    
+    .routebar { 
+      display: flex; align-items: center; gap: 8px; overflow: auto; background: var(--white); 
+      border: 1.5px solid var(--ink); border-top: 0; padding: 9px 10px; position: sticky; 
+      top: 82px; z-index: 20; 
+    }
+    .routebar::-webkit-scrollbar { height: 0; }
+    .route { 
+      border: 0; background: transparent; color: #5f6676; padding: 8px 11px; 
+      font: 600 11px/1 "DM Mono", monospace; white-space: nowrap; letter-spacing: .1px; 
+    }
+    .route.active { background: var(--ink); color: #fff; }
+    .route:hover:not(.active) { background: #eceeff; color: var(--ink); }
+    .session-note { margin-left: auto; white-space: nowrap; color: #767d8c; font: 500 9px/1 "DM Mono", monospace; padding: 0 5px; }
+    
+    main { padding-top: 20px; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: enter .25s ease both; }
+    @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    
+    .hero { 
+      min-height: 322px; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, .85fr); 
+      border: 1.5px solid var(--ink); background: var(--electric); box-shadow: var(--shadow); 
+      overflow: hidden; position: relative; 
+    }
+    .hero-copy { padding: 36px; position: relative; z-index: 1; }
+    .kicker { 
+      display: inline-flex; align-items: center; gap: 8px; font: 500 10px/1 "DM Mono", monospace; 
+      letter-spacing: 1.2px; text-transform: uppercase; color: #dce4ff; 
+    }
+    .kicker i { width: 8px; height: 8px; background: var(--acid); display: inline-block; }
+    .hero h1 { 
+      font-family: Syne, sans-serif; letter-spacing: -2.4px; line-height: 0.94; 
+      font-size: clamp(38px, 5vw, 72px); margin: 18px 0 14px; max-width: 790px; color: #fff; 
+    }
+    .hero h1 span { color: var(--acid); }
+    .hero p { max-width: 640px; line-height: 1.62; color: #dce4ff; font-size: 14px; margin: 0; }
+    .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 25px; }
+    
+    .hero-visual { position: relative; background: var(--acid); border-left: 1.5px solid var(--ink); overflow: hidden; min-height: 260px; }
+    .hero-grid { 
+      position: absolute; inset: 0; 
+      background-image: linear-gradient(rgba(17,19,27,.14) 1px, transparent 1px), linear-gradient(90deg, rgba(17,19,27,.14) 1px, transparent 1px); 
+      background-size: 28px 28px; 
+    }
+    .hero-disc { 
+      position: absolute; width: 270px; height: 270px; right: -38px; top: 19px; 
+      border-radius: 50%; background: var(--orange); border: 1.5px solid var(--ink); 
+      box-shadow: -18px 18px 0 var(--violet); 
+    }
+    .hero-card { 
+      position: absolute; left: 27px; bottom: 27px; width: 245px; background: var(--white); 
+      border: 1.5px solid var(--ink); padding: 15px; box-shadow: 8px 8px 0 var(--ink); transform: rotate(-3deg); 
+    }
+    .hero-card strong { display: block; font-family: Syne, sans-serif; font-size: 22px; letter-spacing: -.6px; }
+    .hero-card span { display: block; color: #697080; font: 500 10px/1.5 "DM Mono", monospace; margin-top: 7px; }
+    
+    .quick-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin: 16px 0; }
+    .metric { background: var(--white); border: 1.5px solid var(--ink); padding: 15px; min-height: 112px; box-shadow: var(--shadow-soft); }
+    .metric-label { font: 500 9px/1 "DM Mono", monospace; color: #737a88; letter-spacing: .9px; text-transform: uppercase; }
+    .metric-value { font-family: Syne, sans-serif; letter-spacing: -1px; font-size: 29px; margin-top: 13px; line-height: 1; }
+    .metric-sub { margin-top: 7px; color: var(--muted); font-size: 11px; line-height: 1.42; }
+    
+    .section-head { display: flex; justify-content: space-between; gap: 12px; align-items: flex-end; margin: 26px 0 12px; }
+    .section-head h2 { font-family: Syne, sans-serif; letter-spacing: -1.2px; font-size: 29px; margin: 0; }
+    .section-head p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; max-width: 680px; }
+    .mono-tag { 
+      font: 500 9px/1 "DM Mono", monospace; text-transform: uppercase; letter-spacing: 1px; 
+      color: #2434a1; background: #dce4ff; border: 1px solid #9caeff; padding: 8px 9px; white-space: nowrap; 
+    }
+    
+    .feature-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .feature { 
+      background: var(--white); border: 1.5px solid var(--ink); padding: 19px; 
+      min-height: 205px; display: flex; flex-direction: column; box-shadow: var(--shadow-soft); 
+    }
+    .feature:nth-child(2) { background: var(--acid); }
+    .feature:nth-child(3) { background: #eadfff; }
+    .feature-index { font: 500 10px/1 "DM Mono", monospace; letter-spacing: 1px; }
+    .feature h3 { font-family: Syne, sans-serif; letter-spacing: -.6px; font-size: 21px; margin: 23px 0 8px; }
+    .feature p { margin: 0; color: #565d6c; font-size: 12px; line-height: 1.58; }
+    .feature .button { align-self: flex-start; margin-top: auto; }
+    
+    .page-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 15px; margin: 3px 0 16px; }
+    .page-head h1 { margin: 0; font: 700 38px/1 Syne, sans-serif; letter-spacing: -1.5px; }
+    .page-head p { margin: 8px 0 0; color: var(--muted); font-size: 12px; line-height: 1.58; max-width: 730px; }
+    .stage-chip { 
+      font: 500 9px/1 "DM Mono", monospace; letter-spacing: 1px; text-transform: uppercase; 
+      background: var(--acid); border: 1.5px solid var(--ink); padding: 9px 10px; white-space: nowrap; 
+    }
+    
+    .editor-grid { display: grid; grid-template-columns: minmax(0, 0.97fr) minmax(340px, 1.03fr); gap: 13px; }
+    .panel { background: var(--white); border: 1.5px solid var(--ink); padding: 20px; box-shadow: var(--shadow-soft); min-width: 0; }
+    .panel.dark { background: var(--ink); color: #fff; box-shadow: 5px 5px 0 var(--electric); }
+    .panel.blue { background: #dce4ff; }
+    .panel-title { 
+      display: flex; justify-content: space-between; gap: 9px; align-items: flex-start; 
+      padding-bottom: 14px; border-bottom: 1px solid #dde0e7; margin-bottom: 16px; 
+    }
+    .panel.dark .panel-title { border-color: rgba(255,255,255,.14); }
+    .panel-title h3 { font-family: Syne, sans-serif; font-size: 19px; letter-spacing: -.5px; margin: 0; }
+    .panel-title p { margin: 5px 0 0; font-size: 11px; color: var(--muted); line-height: 1.48; }
+    .panel.dark .panel-title p { color: #b3bbcf; }
+    .panel-title .mini { font: 500 9px/1 "DM Mono", monospace; color: #778092; letter-spacing: .7px; text-transform: uppercase; }
+    .panel.dark .mini { color: #9ea8c5; }
+    
+    .field-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .field { min-width: 0; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { 
+      display: block; margin-bottom: 7px; color: #565e6e; font: 500 9px/1 "DM Mono", monospace; 
+      letter-spacing: .82px; text-transform: uppercase; 
+    }
+    .field input, .field select, .field textarea { 
+      width: 100%; border: 1.5px solid var(--line); background: #fbfbfa; color: var(--ink); 
+      padding: 10px 11px; border-radius: 0; outline: 0; font-size: 12px; line-height: 1.4; transition: .15s; 
+    }
+    .field textarea { resize: vertical; min-height: 88px; }
+    .field input:focus, .field textarea:focus, .field select:focus { 
+      border-color: var(--electric); box-shadow: 3px 3px 0 rgba(29,67,255,.17); 
+    }
+    .field small { display: block; color: #87909c; margin-top: 6px; font-size: 10px; line-height: 1.4; }
+    
+    .label-row { display: flex; justify-content: space-between; gap: 8px; align-items: center; margin: 20px 0 8px; }
+    .label-row span { font: 500 9px/1 "DM Mono", monospace; color: #565e6e; letter-spacing: .82px; text-transform: uppercase; }
+    .label-row b { font: 500 9px/1 "DM Mono", monospace; color: #5962a6; letter-spacing: .2px; }
+    .choice-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+    .choice { 
+      border: 1.5px solid var(--line); background: #fbfbfa; color: #555d6c; 
+      padding: 9px 10px; font-size: 10px; font-weight: 700; line-height: 1; 
+    }
+    .choice:hover { border-color: var(--ink); color: var(--ink); }
+    .choice.selected { background: var(--ink); border-color: var(--ink); color: #fff; box-shadow: 3px 3px 0 var(--acid); }
+    
+    .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .upload { 
+      border: 1.5px dashed #9ca2b2; background: #fbfbfa; padding: 13px; min-height: 112px; 
+      display: flex; gap: 11px; align-items: center; cursor: pointer; transition: .15s; 
+    }
+    .upload:hover { background: #edf0ff; border-color: var(--electric); }
+    .upload img { width: 62px; height: 78px; object-fit: cover; border: 1.5px solid var(--ink); background: #eff0f6; }
+    .upload-icon { 
+      width: 34px; height: 34px; display: grid; place-items: center; background: var(--acid); 
+      border: 1.5px solid var(--ink); font-family: Syne, sans-serif; font-size: 19px; flex: none; 
+    }
+    .upload b { display: block; font-size: 12px; }
+    .upload span { display: block; font-size: 10px; color: var(--muted); line-height: 1.45; margin-top: 4px; }
+    .asset-badge { 
+      font: 500 9px/1 "DM Mono", monospace; letter-spacing: .35px; color: #245a44; 
+      background: #dbf5e6; border: 1px solid #9ed0b0; padding: 5px 6px; display: inline-block; margin-top: 7px; 
+    }
+    
+    .form-footer { 
+      border-top: 1px solid #dde0e7; margin-top: 18px; padding-top: 15px; 
+      display: flex; align-items: center; gap: 10px; justify-content: space-between; 
+    }
+    .hint { color: var(--muted); font-size: 10px; line-height: 1.48; max-width: 55%; }
+    
+    .director-stage { min-height: 530px; display: flex; flex-direction: column; }
+    .checker { 
+      background-image: 
+        linear-gradient(45deg, #eff0f5 25%, transparent 25%), 
+        linear-gradient(-45deg, #eff0f5 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #eff0f5 75%), 
+        linear-gradient(-45deg, transparent 75%, #eff0f5 75%);
+      background-size: 22px 22px; 
+      background-position: 0 0, 0 11px, 11px -11px, -11px 0; 
+    }
+    
+    .director-empty { flex: 1; min-height: 370px; display: grid; place-items: center; text-align: center; padding: 25px; }
+    .director-empty .icon { 
+      width: 66px; height: 66px; display: grid; place-items: center; margin: 0 auto 16px; 
+      background: var(--acid); border: 1.5px solid var(--ink); font: 700 30px/1 Syne, sans-serif; 
+      box-shadow: 5px 5px 0 var(--electric); 
+    }
+    .director-empty h4 { font: 700 23px/1.05 Syne, sans-serif; letter-spacing: -.5px; margin: 0 0 8px; }
+    .director-empty p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.58; max-width: 330px; }
+    
+    .loadbox { flex: 1; min-height: 370px; display: grid; place-items: center; text-align: center; padding: 25px; }
+    .spinner { 
+      width: 42px; height: 42px; border: 3px solid rgba(255,255,255,.22); 
+      border-top-color: var(--acid); border-right-color: var(--violet); border-radius: 50%; 
+      animation: spin .8s linear infinite; margin: 0 auto 14px; 
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loadbox b { display: block; font: 700 21px/1 Syne, sans-serif; }
+    .loadbox span { display: block; color: #aeb6cb; font-size: 11px; max-width: 320px; margin-top: 8px; line-height: 1.5; }
+    
+    .plan-summary { 
+      padding: 14px; background: var(--acid); border: 1.5px solid var(--ink); 
+      box-shadow: 4px 4px 0 var(--ink); margin-bottom: 16px; 
+    }
+    .plan-summary strong { display: block; font: 700 20px/1.1 Syne, sans-serif; letter-spacing: -.5px; }
+    .plan-summary p { margin: 7px 0 0; font-size: 11px; line-height: 1.5; color: #344023; }
+    
+    .shot-list { display: grid; gap: 9px; }
+    .shot { 
+      width: 100%; border: 1.5px solid #d5d8e0; background: #fff; text-align: left; 
+      padding: 12px; display: grid; grid-template-columns: 28px minmax(0, 1fr); gap: 11px; transition: .14s; 
+    }
+    .shot:hover { border-color: var(--ink); transform: translateX(2px); }
+    .shot.active { border-color: var(--ink); background: #e9edff; box-shadow: 4px 4px 0 var(--electric); }
+    .shot-number { 
+      width: 28px; height: 28px; background: var(--ink); color: #fff; 
+      display: grid; place-items: center; font: 500 10px/1 "DM Mono", monospace; 
+    }
+    .shot h4 { margin: 0; font-size: 12px; }
+    .shot p { margin: 4px 0 0; color: #727988; font-size: 10px; line-height: 1.42; }
+    .shot small { display: block; margin-top: 6px; color: #2539a3; font: 500 9px/1 "DM Mono", monospace; letter-spacing: .2px; }
+    
+    .preview-board { min-height: 485px; display: flex; flex-direction: column; }
+    .render-zone { 
+      flex: 1; min-height: 340px; display: grid; place-items: center; background: var(--ink); 
+      border: 1.5px solid var(--ink); position: relative; overflow: hidden; 
+    }
+    .render-zone:before { 
+      content: ""; position: absolute; inset: 0; opacity: .25; 
+      background-image: linear-gradient(rgba(255,255,255,.09) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.09) 1px, transparent 1px); 
+      background-size: 28px 28px; 
+    }
+    .render-zone img { position: relative; z-index: 1; max-width: 100%; max-height: 455px; display: block; }
+    .render-placeholder { position: relative; z-index: 1; padding: 22px; text-align: center; color: #aab4d4; max-width: 310px; }
+    .render-placeholder b { display: block; color: #fff; font: 700 20px/1 Syne, sans-serif; letter-spacing: -.4px; margin: 10px 0 7px; }
+    .render-placeholder p { margin: 0; font-size: 11px; line-height: 1.55; }
+    .render-swatch { 
+      width: 58px; height: 58px; margin: 0 auto; background: var(--acid); 
+      border: 1.5px solid #fff; box-shadow: 5px 5px 0 var(--violet); display: grid; 
+      place-items: center; color: var(--ink); font: 700 27px/1 Syne, sans-serif; 
+    }
+    
+    .shot-detail { padding: 14px; border: 1.5px solid var(--ink); border-top: 0; background: #fff; }
+    .shot-detail-head { display: flex; justify-content: space-between; gap: 8px; align-items: flex-start; }
+    .shot-detail h3 { font: 700 18px/1.15 Syne, sans-serif; letter-spacing: -.45px; margin: 0; }
+    .shot-detail p { margin: 6px 0 0; font-size: 11px; line-height: 1.53; color: #5f6675; }
+    .prompt-box { 
+      margin-top: 12px; border: 1px solid #d8dae2; background: #f5f5f7; padding: 11px; 
+      font: 400 10px/1.55 "DM Mono", monospace; color: #626978; max-height: 112px; overflow: auto; 
+    }
+    .shot-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 13px; }
+    
+    .plan-layout { display: grid; grid-template-columns: 370px minmax(0, 1fr); gap: 13px; }
+    .tone-strip { margin-top: 13px; display: grid; grid-template-columns: repeat(4, 1fr); border: 1.5px solid var(--ink); }
+    .tone-strip span { height: 28px; border-right: 1px solid var(--ink); }
+    .tone-strip span:last-child { border: 0; }
+    .t1 { background: var(--acid); }
+    .t2 { background: var(--electric); }
+    .t3 { background: var(--orange); }
+    .t4 { background: var(--violet); }
+    
+    .gallery-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; margin-bottom: 14px; }
+    .gallery-head b { font: 700 20px/1 Syne, sans-serif; letter-spacing: -.5px; }
+    .gallery-head span { font: 500 9px/1 "DM Mono", monospace; color: #6a7180; letter-spacing: .6px; text-transform: uppercase; }
+    .gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .asset-card { background: #fff; border: 1.5px solid var(--ink); position: relative; min-width: 0; box-shadow: var(--shadow-soft); }
+    .asset-image { aspect-ratio: 4/5; background: var(--ink); display: grid; place-items: center; overflow: hidden; }
+    .asset-image img { width: 100%; height: 100%; object-fit: cover; }
+    .asset-empty { color: #93a0c5; text-align: center; padding: 20px; font: 500 10px/1.5 "DM Mono", monospace; }
+    .asset-meta { padding: 12px; }
+    .asset-meta h3 { margin: 0; font-size: 13px; line-height: 1.2; }
+    .asset-meta p { margin: 5px 0 0; color: #737a89; font-size: 10px; line-height: 1.45; }
+    .asset-actions { display: flex; gap: 7px; flex-wrap: wrap; margin-top: 10px; }
+    .asset-index { 
+      position: absolute; top: 9px; left: 9px; background: var(--acid); border: 1.5px solid var(--ink); 
+      padding: 5px 6px; font: 500 9px/1 "DM Mono", monospace; z-index: 2; 
+    }
+    
+    .empty-wide { 
+      min-height: 395px; border: 1.5px solid var(--ink); background: #fff; display: grid; 
+      place-items: center; text-align: center; padding: 25px; 
+    }
+    .empty-wide .shape { 
+      width: 78px; height: 78px; background: var(--electric); border: 1.5px solid var(--ink); 
+      box-shadow: 9px 9px 0 var(--acid); transform: rotate(9deg); margin: 0 auto 20px; 
+    }
+    .empty-wide h3 { font: 700 26px/1 Syne, sans-serif; letter-spacing: -.7px; margin: 0; }
+    .empty-wide p { color: var(--muted); font-size: 12px; max-width: 370px; line-height: 1.6; margin: 9px auto 0; }
+    
+    .export-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, .8fr); gap: 13px; }
+    .export-list { display: grid; gap: 9px; }
+    .export-item { display: flex; align-items: center; gap: 11px; padding: 13px; border: 1.5px solid var(--ink); background: #fff; }
+    .export-item .mark { 
+      width: 31px; height: 31px; display: grid; place-items: center; background: var(--acid); 
+      border: 1.5px solid var(--ink); font-weight: 800; 
+    }
+    .export-item b { font-size: 12px; }
+    .export-item span { display: block; font-size: 10px; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+    .export-item .button { margin-left: auto; flex: none; }
+    
+    .notice { padding: 13px; border-left: 4px solid var(--electric); background: #e7ebff; color: #394471; font-size: 11px; line-height: 1.58; }
+    .notice b { color: #2039aa; }
+    
+    .toast { 
+      position: fixed; right: 18px; bottom: 18px; z-index: 99; max-width: 390px; background: var(--ink); 
+      color: #fff; padding: 12px 14px; border: 1.5px solid var(--ink); box-shadow: 5px 5px 0 var(--acid); 
+      font-size: 11px; font-weight: 700; line-height: 1.45; transform: translateY(120px); opacity: 0; 
+      pointer-events: none; transition: .22s; 
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.success { box-shadow: 5px 5px 0 #89e0ac; }
+    .toast.error { box-shadow: 5px 5px 0 #ff9a88; }
+    
+    @media(max-width: 1080px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-visual { border-left: 0; border-top: 1.5px solid var(--ink); min-height: 210px; }
+      .editor-grid, .plan-layout, .export-grid { grid-template-columns: 1fr; }
+      .quick-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-copy { padding: 30px; }
+      .plan-layout .panel:first-child { max-height: none; }
+    }
+    @media(max-width: 720px) {
+      .shell { padding: 10px; }
+      .masthead { padding: 13px; border-width: 1.5px; box-shadow: 4px 4px 0 var(--electric); }
+      .brand-name { font-size: 21px; }
+      .canvas-status, .head-tools .button { display: none; }
+      .routebar { top: 72px; }
+      .session-note { display: none; }
+      .hero { min-height: 0; }
+      .hero-copy { padding: 25px; }
+      .hero h1 { font-size: 39px; letter-spacing: -1.7px; }
+      .hero-visual { min-height: 180px; }
+      .hero-card { left: 19px; bottom: 21px; width: 210px; }
+      .quick-grid, .feature-grid, .field-grid, .upload-row, .gallery { grid-template-columns: 1fr; }
+      .page-head { display: block; }
+      .stage-chip { display: inline-block; margin-top: 10px; }
+      .panel { padding: 15px; }
+      .form-footer { align-items: stretch; flex-direction: column; }
+      .hint { max-width: none; }
+      .form-footer .button { width: 100%; }
+      .gallery-head { align-items: flex-start; flex-direction: column; }
+      .hero-actions .button { width: 100%; }
+      .metric { min-height: 90px; }
+      .metric-value { font-size: 25px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="masthead">
+      <div class="brand">
+        <div class="brand-mark">R</div>
+        <div>
+          <div class="brand-name">RUPA</div>
+          <div class="brand-sub">Visual Commerce Studio</div>
+        </div>
+      </div>
+      <div class="head-tools">
+        <div class="canvas-status"><span class="status-dot"></span> Canvas generation mode</div>
+        <button class="button small" data-action="reset">Buat proyek baru</button>
+      </div>
+    </header>
+    
+    <nav class="routebar" aria-label="Navigasi workspace">
+      <button class="route active" data-route="home">01 / Mulai</button>
+      <button class="route" data-route="brief">02 / Brief produk</button>
+      <button class="route" data-route="direction">03 / Art direction</button>
+      <button class="route" data-route="gallery">04 / Asset room</button>
+      <button class="route" data-route="export">05 / Handover</button>
+      <span class="session-note">Sesi tersimpan lokal · asset upload hanya tersimpan selama tab ini terbuka</span>
+    </nav>
+    
+    <main id="app" aria-live="polite"></main>
+  </div>
+  
+  <div id="toast" class="toast"></div>
+
+<script>
+/*
+  RUPA is intentionally a single-file Gemini Canvas app.
+  It follows the API usage pattern from the supplied Canvas SPA:
+  - const apiKey is intentionally blank
+  - direct client-side generateContent calls
+  - retry / fallback helpers
+  - inlineData image references
+*/
+const apiKey = "";
+
+const TEXT_MODELS = ["gemini-2.5-flash-preview-09-2025", "gemini-2.5-flash"];
+const IMAGE_MODELS = ["gemini-2.5-flash-image-preview"];
+const STORAGE_KEY = "rupa_visual_commerce_studio_v1";
+
+const DEFAULT_STATE = {
+  route: "home",
+  brief: {
+    brandName: "", productName: "", category: "Beauty & Personal Care", targetAudience: "", productDescription: "",
+    keyBenefit: "", visualGoal: "Katalog premium", campaignMoment: "Always-on product content", aspectRatio: "4:5",
+    shotCount: "4", visualTrack: "Clean commerce", environment: "Studio colour-block", lighting: "Soft editorial", composition: "Hero product center",
+    notes: "", offer: ""
+  },
+  assets: { product: "", productName: "", talent: "", talentName: "" },
+  direction: null,
+  selectedShot: 0,
+  renders: {},
+  loading: ""
+};
+
+function clone(value) { return JSON.parse(JSON.stringify(value)); }
+function hydrate(saved) {
+  const base = clone(DEFAULT_STATE);
+  if (!saved || typeof saved !== "object") return base;
+  return {
+    ...base,
+    ...saved,
+    brief: { ...base.brief, ...(saved.brief || {}) },
+    // Asset references and renders live in memory only for the session
+    assets: { ...base.assets, product: "", productName: "", talent: "", talentName: "" },
+    renders: {},
+    loading: ""
+  };
+}
+
+function readState() { 
+  try { return hydrate(JSON.parse(localStorage.getItem(STORAGE_KEY))); } 
+  catch { return clone(DEFAULT_STATE); } 
+}
+
+let state = readState();
+const app = document.getElementById("app");
+const toastEl = document.getElementById("toast");
+
+function persist() {
+  try {
+    const safe = {
+      route: state.route,
+      brief: clone(state.brief),
+      assets: { product: "", productName: "", talent: "", talentName: "" },
+      direction: state.direction ? clone(state.direction) : null,
+      selectedShot: state.selectedShot,
+      renders: {},
+      loading: ""
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(safe));
+  } catch(e) { console.error("Could not save to localStorage", e); }
+}
+
+function escapeHtml(value) { 
+  return String(value ?? "").replace(/[&<>"']/g, char => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;" }[char])); 
+}
+function nl(value) { return escapeHtml(value).replace(/\n/g, "<br>"); }
+function getPath(path) { return path.split(".").reduce((acc, key) => acc == null ? "" : acc[key], state); }
+function setPath(path, value) {
+  const keys = path.split("."); let ref = state;
+  for (let i = 0; i < keys.length - 1; i++) ref = ref[keys[i]];
+  ref[keys[keys.length - 1]] = value; persist();
+}
+
+function showToast(message, type="info") {
+  toastEl.textContent = message;
+  toastEl.className = `toast show ${type}`;
+  clearTimeout(window.__rupaToast);
+  window.__rupaToast = setTimeout(() => { toastEl.className = "toast"; }, 3600);
+}
+
+function setLoading(key) { state.loading = key; render(); }
+function clearLoading() { state.loading = ""; persist(); render(); }
+function isLoading(key) { return state.loading === key; }
+
+function setRoute(route) { 
+  state.route = route; persist(); render(); 
+  window.scrollTo({ top: 0, behavior: "smooth" }); 
+}
+
+function button(label, action, kind="primary", disabled=false, extra="") {
+  return `<button type="button" class="button ${kind} ${extra}" data-action="${escapeHtml(action)}" ${disabled ? "disabled" : ""}>${label}</button>`;
+}
+
+function selectOptions(options, selected) { 
+  return options.map(item => `<option value="${escapeHtml(item)}" ${String(item) === String(selected) ? "selected" : ""}>${escapeHtml(item)}</option>`).join(""); 
+}
+
+function field(label, path, type="text", placeholder="", options=[], help="") {
+  const value = getPath(path) ?? "";
+  const full = type === "textarea" ? " full" : "";
+  let control = "";
+  if (type === "select") control = `<select data-field="${escapeHtml(path)}">${selectOptions(options, value)}</select>`;
+  else if (type === "textarea") control = `<textarea data-field="${escapeHtml(path)}" placeholder="${escapeHtml(placeholder)}">${escapeHtml(value)}</textarea>`;
+  else control = `<input type="${escapeHtml(type)}" value="${escapeHtml(value)}" placeholder="${escapeHtml(placeholder)}" data-field="${escapeHtml(path)}">`;
+  
+  return `<div class="field${full}"><label>${escapeHtml(label)}</label>${control}${help ? `<small>${escapeHtml(help)}</small>` : ""}</div>`;
+}
+
+function choice(label, path, options) {
+  const selected = getPath(path);
+  return `<div class="choice-block"><div class="label-row"><span>${escapeHtml(label)}</span><b>${escapeHtml(selected)}</b></div><div class="choice-grid">${options.map(option => `<button type="button" class="choice ${selected === option ? "selected" : ""}" data-choice-path="${escapeHtml(path)}" data-choice-value="${escapeHtml(option)}">${escapeHtml(option)}</button>`).join("")}</div></div>`;
+}
+
+function uploadCard(kind, title, sub) {
+  const isProduct = kind === "product"; 
+  const asset = state.assets[kind]; 
+  const name = state.assets[`${kind}Name`];
+  return `<button type="button" class="upload" data-action="upload:${kind}">
+    ${asset ? `<img src="${asset}" alt="${escapeHtml(title)}">` : `<div class="upload-icon">${isProduct ? "↥" : "◌"}</div>`}
+    <span><b>${escapeHtml(title)}</b><span>${asset ? escapeHtml(name || "Asset siap dipakai") : escapeHtml(sub)}</span>${asset ? `<em class="asset-badge">Reference ready</em>` : ""}</span>
+  </button>`;
+}
+
+function projectReady() { return Boolean(state.brief.brandName.trim() && state.brief.productName.trim()); }
+function shots() { return Array.isArray(state.direction?.shots) ? state.direction.shots : []; }
+function renderedCount() { return Object.values(state.renders || {}).filter(Boolean).length; }
+function assetCount() { return Number(Boolean(state.assets.product)) + Number(Boolean(state.assets.talent)); }
+function activeShot() { return shots()[state.selectedShot] || shots()[0] || null; }
+
+function renderRouteNav() {
+  document.querySelectorAll("[data-route]").forEach(node => node.classList.toggle("active", node.dataset.route === state.route));
+}
+
+// --- Screens ---
+
+function homeScreen() {
+  const done = [projectReady(), Boolean(state.direction), renderedCount() > 0].filter(Boolean).length;
+  return `<section class="screen active">
+    <div class="hero">
+      <div class="hero-copy">
+        <div class="kicker"><i></i> Product image system for storefronts, ads, and social commerce</div>
+        <h1>Jadikan produk Anda <span>objek yang sulit dilewati.</span></h1>
+        <p>RUPA membangun art direction, shot list, dan visual produk siap pakai dari satu brief. Dirancang untuk katalog marketplace, creative iklan, serta aset konten yang tetap terasa satu brand.</p>
+        <div class="hero-actions">
+          ${button("Mulai sesi visual →", "route:brief", "primary")}
+          ${button("Buka asset room", "route:gallery", "ghost")}
+        </div>
+      </div>
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-grid"></div>
+        <div class="hero-disc"></div>
+        <div class="hero-card"><strong>Less prompt-hunting.</strong><span>One product brief → a cohesive visual system, ready to render one shot at a time.</span></div>
+      </div>
+    </div>
+    <div class="quick-grid">
+      <article class="metric"><div class="metric-label">Project brief</div><div class="metric-value">${projectReady() ? escapeHtml(state.brief.brandName) : "—"}</div><div class="metric-sub">${projectReady() ? escapeHtml(state.brief.productName) : "Belum ada produk aktif"}</div></article>
+      <article class="metric"><div class="metric-label">Reference assets</div><div class="metric-value">${assetCount()}/2</div><div class="metric-sub">Produk wajib disarankan, talent opsional</div></article>
+      <article class="metric"><div class="metric-label">Planned frames</div><div class="metric-value">${shots().length || "—"}</div><div class="metric-sub">Shot list dari AI art director</div></article>
+      <article class="metric"><div class="metric-label">Session progress</div><div class="metric-value">${Math.round(done/3*100)}%</div><div class="metric-sub">${done}/3 checkpoint sesi visual</div></article>
+    </div>
+    <div class="section-head"><div><h2>Alur kerja RUPA</h2><p>Fokusnya bukan sekadar “generate gambar”: setiap visual dibangun dari keputusan komersial yang bisa Anda cek sebelum dirender.</p></div><span class="mono-tag">Visual commerce workflow</span></div>
+    <div class="feature-grid">
+      <article class="feature"><div class="feature-index">01 / FOUNDATION</div><h3>Tulis brief yang berguna.</h3><p>Definisikan target, manfaat, konteks kampanye, komposisi, dan referensi produk agar AI tidak menebak-nebak positioning.</p>${button("Isi brief", "route:brief", "subtle small")}</article>
+      <article class="feature"><div class="feature-index">02 / ART DIRECTION</div><h3>Susun set, cahaya, dan shot.</h3><p>Biarkan RUPA merancang visual system dan beberapa frame yang bekerja bersama sebagai satu seri campaign.</p>${button("Buat direction", "route:direction", "dark small")}</article>
+      <article class="feature"><div class="feature-index">03 / OUTPUT</div><h3>Render hanya yang dipilih.</h3><p>Review prompt tiap shot, render satu per satu, unduh output terbaik, kemudian serahkan visual direction ke tim desain.</p>${button("Lihat asset room", "route:gallery", "subtle small")}</article>
+    </div>
+  </section>`;
+}
+
+function briefScreen() {
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Brief produk</h1><p>Masukkan informasi yang benar-benar memengaruhi persepsi visual. RUPA akan memakai brief ini untuk menyusun directing board dan prompt render setiap shot.</p></div><span class="stage-chip">Stage 02 / build</span></div>
+    <div class="editor-grid">
+      <section class="panel">
+        <div class="panel-title"><div><h3>Project essentials</h3><p>Mulai dari identitas produk dan konteks komersialnya.</p></div><span class="mini">Required fields*</span></div>
+        <div class="field-grid">
+          ${field("Nama brand*", "brief.brandName", "text", "Contoh: NUVÉA")}
+          ${field("Nama produk*", "brief.productName", "text", "Contoh: Daily Barrier Serum")}
+          ${field("Kategori", "brief.category", "select", "", ["Beauty & Personal Care","Fashion & Apparel","Food & Beverage","Home & Living","Gadget & Technology","Digital / Service"])}
+          ${field("Target pembeli", "brief.targetAudience", "text", "Contoh: perempuan 22–35 yang aktif bekerja")}
+          ${field("Manfaat / alasan beli utama", "brief.keyBenefit", "text", "Contoh: hidrasi cepat tanpa rasa lengket")}
+          ${field("Momen kampanye", "brief.campaignMoment", "select", "", ["Always-on product content","New product launch","Marketplace listing refresh","Seasonal promotion","Performance ads test"])}
+          ${field("Offer / promo context", "brief.offer", "text", "Contoh: bundle 2 pcs, harga perkenalan, bonus gift")}
+          ${field("Deskripsi produk", "brief.productDescription", "textarea", "Jelaskan material, bentuk, rasa, kandungan, fungsi, atau detail fisik penting.")}
+          ${field("Catatan / batasan", "brief.notes", "textarea", "Contoh: hindari klaim medis, jangan ubah warna kemasan, jangan gunakan teks pada gambar.")}
+        </div>
+        ${choice("Arah visual utama", "brief.visualGoal", ["Katalog premium","Creative iklan","Lifestyle product story","Marketplace clean set"])}
+        ${choice("Jalur visual", "brief.visualTrack", ["Clean commerce","Playful colour-block","Soft lifestyle","Editorial luxury"])}
+        <div class="form-footer"><span class="hint">Anda tetap bisa render tanpa upload foto produk, tetapi referensi asli membantu menjaga bentuk dan kemasan lebih konsisten.</span>${button("Lanjut ke art direction →", "direction:generate", "blue", isLoading("direction"))}</div>
+      </section>
+      <section class="panel blue director-stage checker">
+        <div class="panel-title"><div><h3>Reference desk</h3><p>Upload asset yang ingin dipertahankan selama sesi ini.</p></div><span class="mini">Session only</span></div>
+        <div class="upload-row">
+          ${uploadCard("product", "Foto produk", "Upload kemasan atau produk asli · PNG/JPG/WEBP")}
+          ${uploadCard("talent", "Referensi talent", "Opsional · untuk shot lifestyle atau product-in-hand")}
+        </div>
+        <div class="tone-strip" aria-hidden="true"><span class="t1"></span><span class="t2"></span><span class="t3"></span><span class="t4"></span></div>
+        <div class="label-row"><span>Visual parameters</span><b>Digunakan pada setiap shot</b></div>
+        <div class="field-grid">
+          ${field("Aspek rasio", "brief.aspectRatio", "select", "", ["1:1","4:5","9:16","16:9","3:4"])}
+          ${field("Jumlah shot", "brief.shotCount", "select", "", ["3","4","5"])}
+        </div>
+        ${choice("Environment", "brief.environment", ["Studio colour-block","Clean white cyclorama","Warm home setting","Texture tabletop","Outdoor natural light"])}
+        ${choice("Lighting", "brief.lighting", ["Soft editorial","Crisp e-commerce","Direct flash pop","Golden-hour warmth","Dramatic contrast"])}
+        ${choice("Komposisi", "brief.composition", ["Hero product center","Detail macro","Flat lay graphic","Product in hand","Lifestyle interaction"])}
+        <div class="notice"><b>Catatan:</b> Asset reference tidak disimpan ke localStorage agar browser tidak cepat penuh. Selama tab ini masih terbuka, asset tetap dipakai oleh semua shot render.</div>
+      </section>
+    </div>
+  </section>`;
+}
+
+function directionScreen() {
+  const plan = state.direction; 
+  const list = shots(); 
+  const active = activeShot();
+  
+  const left = !plan ? 
+    `<div class="panel dark loadbox">${isLoading("direction") ? `<div><div class="spinner"></div><b>Menyusun visual system</b><span>RUPA sedang mengurai brief menjadi shot sequence, styling rules, dan arahan komposisi.</span></div>` : `<div class="director-empty"><div><div class="icon">✦</div><h4>Belum ada art direction.</h4><p>Kembali ke Brief produk untuk menyusun direction board. Hasilnya akan menjadi basis untuk shot yang bisa dipilih dan dirender satu per satu.</p><div style="margin-top:18px">${button("Buka brief", "route:brief", "primary")}</div></div></div>`}</div>` 
+    : `<section class="panel">
+    <div class="panel-title"><div><h3>Shot sequence</h3><p>Pilih satu frame untuk dibuka di render board.</p></div><span class="mini">${list.length} planned shots</span></div>
+    <div class="plan-summary"><strong>${escapeHtml(plan.creativeThesis || "Visual direction siap")}</strong><p>${escapeHtml(plan.visualSystem || "")}</p></div>
+    <div class="shot-list">${list.map((shot, index) => `<button type="button" class="shot ${index === state.selectedShot ? "active" : ""}" data-action="select-shot:${index}"><span class="shot-number">${String(index + 1).padStart(2, "0")}</span><span><h4>${escapeHtml(shot.title || `Shot ${index + 1}`)}</h4><p>${escapeHtml(shot.role || shot.composition || "")}</p><small>${escapeHtml(shot.lighting || "")}</small></span></button>`).join("")}</div>
+  </section>`;
+  
+  const right = !plan ? 
+    `<section class="panel checker director-stage"><div class="director-empty"><div><div class="icon">R</div><h4>Render board akan muncul di sini.</h4><p>Setelah direction selesai, Anda bisa mengecek prompt per shot sebelum memanggil image model.</p></div></div></section>` 
+    : renderBoard(active);
+    
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Art direction</h1><p>RUPA menerjemahkan brief menjadi sebuah visual system dan seri shot yang saling menguatkan. Anda tetap memegang kontrol atas shot mana yang dirender.</p></div><span class="stage-chip">Stage 03 / direct</span></div>
+    <div class="plan-layout">${left}${right}</div>
+  </section>`;
+}
+
+function renderBoard(shot) {
+  const render = shot ? state.renders[shot.id] : "";
+  if (!shot) return `<section class="panel"><div class="director-empty"><div><div class="icon">?</div><h4>Shot belum tersedia.</h4><p>Generate direction terlebih dahulu.</p></div></div></section>`;
+  
+  return `<section class="panel preview-board">
+    <div class="panel-title"><div><h3>Render board</h3><p>Visual generator memakai produk, brief, serta reference asset sesi ini.</p></div><span class="mini">${escapeHtml(state.brief.aspectRatio)}</span></div>
+    <div class="render-zone">${isLoading(`render:${shot.id}`) ? `<div class="loadbox"><div><div class="spinner"></div><b>Merender ${escapeHtml(shot.title || "shot")}</b><span>Proses bisa membutuhkan waktu. Jangan pindahkan tab sampai output muncul.</span></div></div>` : render ? `<img src="${render}" alt="${escapeHtml(shot.title || "Visual render")}">` : `<div class="render-placeholder"><div class="render-swatch">✦</div><b>Frame belum dirender.</b><p>Pilih <em>Render shot</em> untuk mengubah direction ini menjadi visual produk.</p></div>`}</div>
+    <div class="shot-detail">
+      <div class="shot-detail-head"><div><h3>${escapeHtml(shot.title || "Selected shot")}</h3><p>${escapeHtml(shot.description || shot.role || "")}</p></div><span class="mono-tag">${escapeHtml(shot.composition || "Frame")}</span></div>
+      <div class="prompt-box">${nl(shot.renderPrompt || "")}</div>
+      <div class="shot-actions">
+        ${button(isLoading(`render:${shot.id}`) ? "Sedang merender…" : "Render shot", `render:${shot.id}`, "blue", isLoading(`render:${shot.id}`))}
+        ${render ? button("Unduh PNG", `download:${shot.id}`, "primary") : ""}
+        ${button("Copy prompt", `copy:${shot.id}`, "subtle")}
+        ${button("Buka asset room", "route:gallery", "subtle")}
+      </div>
+    </div>
+  </section>`;
+}
+
+function galleryScreen() {
+  const list = shots();
+  if (!state.direction) return `<section class="screen active"><div class="page-head"><div><h1>Asset room</h1><p>Render hasil shot akan tersusun sebagai contact sheet di halaman ini.</p></div><span class="stage-chip">Stage 04 / review</span></div><div class="empty-wide"><div><div class="shape"></div><h3>Belum ada direction board.</h3><p>Susun brief lalu generate art direction terlebih dahulu. Setelah itu setiap output akan muncul di asset room sebagai satu series visual.</p><div style="margin-top:18px">${button("Mulai dari brief", "route:brief", "primary")}</div></div></div></section>`;
+  
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Asset room</h1><p>Contact sheet untuk membandingkan setiap frame. Render yang belum jadi tetap disimpan sebagai slot agar Anda bisa memilih prioritas produksi.</p></div><span class="stage-chip">${renderedCount()}/${list.length} rendered</span></div>
+    <section class="panel">
+      <div class="gallery-head"><div><b>${escapeHtml(state.brief.brandName || "Project visual")}</b><span>${escapeHtml(state.brief.visualTrack)} · ${escapeHtml(state.brief.aspectRatio)} · ${escapeHtml(state.brief.environment)}</span></div><div style="display:flex;gap:8px;flex-wrap:wrap">${button("Render semua shot", "render-all", "blue", isLoading("render-all"), "small")}${button("Unduh direction", "download-direction", "subtle", false, "small")}</div></div>
+      <div class="gallery">${list.map((shot, index) => {
+        const image = state.renders[shot.id];
+        return `<article class="asset-card"><span class="asset-index">${String(index + 1).padStart(2, "0")}</span><div class="asset-image">${image ? `<img src="${image}" alt="${escapeHtml(shot.title || `Shot ${index + 1}`)}">` : `<div class="asset-empty">Belum dirender<br>${escapeHtml(shot.composition || "")}</div>`}</div><div class="asset-meta"><h3>${escapeHtml(shot.title || `Shot ${index + 1}`)}</h3><p>${escapeHtml(shot.role || shot.description || "")}</p><div class="asset-actions">${button(image ? "Render ulang" : "Render", `render:${shot.id}`, image ? "subtle" : "blue", isLoading(`render:${shot.id}`), "small")}${image ? button("Unduh", `download:${shot.id}`, "primary", false, "small") : ""}${button("Buka", `open:${index}`, "subtle", false, "small")}</div></div></article>`;
+      }).join("")}</div>
+    </section>
+  </section>`;
+}
+
+function exportScreen() {
+  const ready = state.direction;
+  return `<section class="screen active">
+    <div class="page-head"><div><h1>Handover</h1><p>Kemas brief, direction board, dan prompt render sebagai dokumen kerja yang dapat diteruskan ke desainer, editor, atau tim campaign Anda.</p></div><span class="stage-chip">Stage 05 / export</span></div>
+    <div class="export-grid">
+      <section class="panel">
+        <div class="panel-title"><div><h3>Export package</h3><p>File dibuat di perangkat Anda, tanpa mengunggah brief ke database lain.</p></div><span class="mini">Markdown / PNG</span></div>
+        <div class="export-list">
+          <div class="export-item"><div class="mark">01</div><div><b>Visual brief</b><span>Identitas produk, target, campaign moment, serta parameter visual yang dipilih.</span></div>${button("Unduh .md", "download-brief", "subtle", !projectReady(), "small")}</div>
+          <div class="export-item"><div class="mark">02</div><div><b>Direction board</b><span>Creative thesis, visual system, dan semua prompt per shot.</span></div>${button("Unduh .md", "download-direction", "subtle", !ready, "small")}</div>
+          <div class="export-item"><div class="mark">03</div><div><b>Project pack</b><span>Dokumen lengkap berisi brief + direction + status render shot.</span></div>${button("Unduh pack", "download-project", "primary", !ready, "small")}</div>
+        </div>
+      </section>
+      <aside class="panel dark">
+        <div class="panel-title"><div><h3>What you have</h3><p>Ringkasan sesi saat ini.</p></div><span class="mini">Live</span></div>
+        <div class="plan-summary" style="background:#fff;color:#11131b;box-shadow:4px 4px 0 #dfff35"><strong>${projectReady() ? escapeHtml(state.brief.productName) : "Belum ada produk"}</strong><p>${projectReady() ? escapeHtml(state.brief.brandName) : "Lengkapi brief untuk memulai"}</p></div>
+        <div class="notice"><b>${shots().length} planned shots</b> · ${renderedCount()} visual sudah dirender<br><br>Gunakan output gambar untuk katalog, ads creative, carousel, atau moodboard konten. Ketepatan tulisan kecil di dalam gambar AI tidak selalu stabil; gunakan overlay text terpisah bila membutuhkan copy yang presisi.</div>
+        <div style="margin-top:16px">${button("Kembali ke asset room", "route:gallery", "primary")}</div>
+      </aside>
+    </div>
+  </section>`;
+}
+
+function render() {
+  const maps = { home: homeScreen, brief: briefScreen, direction: directionScreen, gallery: galleryScreen, export: exportScreen };
+  app.innerHTML = (maps[state.route] || homeScreen)();
+  renderRouteNav();
+}
+
+// --- Logic & API calls ---
+
+function fileToDataUrl(file) { 
+  return new Promise((resolve, reject) => { 
+    const reader = new FileReader(); 
+    reader.onload = () => resolve(reader.result); 
+    reader.onerror = reject; 
+    reader.readAsDataURL(file); 
+  }); 
+}
+
+function openFilePicker(kind) {
+  const input = document.createElement("input"); 
+  input.type = "file"; 
+  input.accept = "image/png,image/jpeg,image/webp";
+  input.onchange = async event => {
+    const file = event.target.files?.[0]; if (!file) return;
+    try { 
+      state.assets[kind] = await fileToDataUrl(file); 
+      state.assets[`${kind}Name`] = file.name; 
+      render(); 
+      showToast(`${kind === "product" ? "Foto produk" : "Referensi talent"} siap dipakai untuk sesi ini.`, "success"); 
+    } catch { 
+      showToast("File tidak dapat dibaca. Coba gunakan PNG, JPG, atau WEBP.", "error"); 
+    }
+  };
+  input.click();
+}
+
+async function requestModel(model, payload) {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  let delay = 900; let lastError;
+  for (let attempt = 0; attempt < 5; attempt++) {
+    try {
+      const response = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+      if (response.ok) return await response.json();
+      const text = await response.text();
+      lastError = new Error(`HTTP ${response.status}: ${text.slice(0, 260)}`);
+      if (response.status !== 429 && response.status < 500) throw lastError;
+    } catch (error) { lastError = error; if (attempt === 4) break; }
+    await new Promise(resolve => setTimeout(resolve, delay)); delay *= 2;
+  }
+  throw lastError || new Error("Permintaan ke Gemini tidak berhasil.");
+}
+
+async function requestWithFallback(models, payload) {
+  let lastError;
+  for (const model of models) {
+    try { return await requestModel(model, payload); } 
+    catch (error) { lastError = error; console.warn("Gemini model failed", model, error); }
+  }
+  throw lastError || new Error("Tidak ada model yang bisa merespons.");
+}
+
+function firstText(data) { 
+  return (data?.candidates?.[0]?.content?.parts || []).map(part => part.text).find(Boolean) || ""; 
+}
+
+function inlinePart(dataUrl) {
+  if (typeof dataUrl !== "string" || !/^data:image\/(png|jpe?g|webp);base64,/i.test(dataUrl)) return null;
+  const [meta, data] = dataUrl.split(","); 
+  const mimeType = (meta.match(/^data:([^;]+)/i) || [])[1] || "image/png";
+  return { inlineData: { data, mimeType } };
+}
+
+async function generateStructured(prompt, schema, refs=[]) {
+  const parts = []; 
+  refs.map(inlinePart).filter(Boolean).forEach(part => parts.push(part)); 
+  parts.push({ text: prompt });
+  const data = await requestWithFallback(TEXT_MODELS, {
+    contents: [{ parts }], 
+    generationConfig: { responseMimeType: "application/json", responseSchema: schema }
+  });
+  const raw = firstText(data);
+  try { return JSON.parse(raw); } 
+  catch { throw new Error("Format direction board tidak dapat dibaca. Coba generate ulang."); }
+}
+
+async function generateImage(prompt, refs=[]) {
+  const parts = [{ text: prompt }]; 
+  refs.map(inlinePart).filter(Boolean).forEach(part => parts.push(part));
+  const data = await requestWithFallback(IMAGE_MODELS, {
+    contents: [{ parts }], 
+    generationConfig: { responseModalities: ["TEXT", "IMAGE"] }
+  });
+  const imagePart = (data?.candidates?.[0]?.content?.parts || []).find(part => part.inlineData?.data);
+  if (!imagePart?.inlineData?.data) throw new Error("Model tidak mengembalikan gambar. Ubah brief atau coba kembali.");
+  return `data:${imagePart.inlineData.mimeType || "image/png"};base64,${imagePart.inlineData.data}`;
+}
+
+const DIRECTION_SCHEMA = {
+  type: "OBJECT",
+  properties: {
+    creativeThesis: { type: "STRING" }, 
+    visualSystem: { type: "STRING" }, 
+    artNotes: { type: "ARRAY", items: { type: "STRING" } },
+    shots: { type: "ARRAY", items: { type: "OBJECT", properties: {
+      id: { type: "STRING" }, title: { type: "STRING" }, role: { type: "STRING" }, 
+      description: { type: "STRING" }, composition: { type: "STRING" }, setDesign: { type: "STRING" }, 
+      lighting: { type: "STRING" }, overlaySuggestion: { type: "STRING" }, renderPrompt: { type: "STRING" }
+    }, required: ["id", "title", "role", "description", "composition", "setDesign", "lighting", "overlaySuggestion", "renderPrompt"] } }
+  }, required: ["creativeThesis", "visualSystem", "artNotes", "shots"]
+};
+
+function briefContext() {
+  const b = state.brief;
+  return `Brand: ${b.brandName}\nProduk: ${b.productName}\nKategori: ${b.category}\nTarget pembeli: ${b.targetAudience}\nManfaat / alasan beli: ${b.keyBenefit}\nDeskripsi produk: ${b.productDescription}\nTujuan visual: ${b.visualGoal}\nMomen kampanye: ${b.campaignMoment}\nArah visual: ${b.visualTrack}\nEnvironment: ${b.environment}\nLighting: ${b.lighting}\nKomposisi awal: ${b.composition}\nAspek rasio: ${b.aspectRatio}\nJumlah shot: ${b.shotCount}\nOffer/context: ${b.offer}\nBatasan/catatan: ${b.notes}\nAda foto produk referensi: ${state.assets.product ? "Ya" : "Tidak"}\nAda referensi talent: ${state.assets.talent ? "Ya" : "Tidak"}`;
+}
+
+async function generateDirection() {
+  if (!projectReady()) {
+    state.route = "brief"; render(); showToast("Isi Nama brand dan Nama produk terlebih dahulu.", "error"); return;
+  }
+  state.route = "direction"; setLoading("direction");
+  
+  const prompt = `You are a senior visual commerce art director for Indonesian brands. Build a practical art-direction board in Bahasa Indonesia for this product campaign:\n\n${briefContext()}\n\nCreate exactly ${state.brief.shotCount} distinct but cohesive commercial shots. Each shot must serve a clear role in a visual content system: hero/catalog, texture/detail, use context, scale/benefit, or campaign accent. Prioritize product truth and recognizable packaging when a product reference image is supplied. If a talent reference exists, use it only in appropriate lifestyle or product-in-hand shots. Do not include public figures, competitor brands, watermark, fabricated product claims, or small text baked into the image.\n\nThe renderPrompt for every shot must be written in English, complete and standalone, photorealistic, commercially usable, and explicitly mention: product, scene/set, composition, lighting, mood, camera framing, aspect ratio ${state.brief.aspectRatio}, and "no watermark, no unrelated text". Keep each prompt usable directly by an image model. Return JSON only.`;
+  
+  try {
+    const result = await generateStructured(prompt, DIRECTION_SCHEMA, [state.assets.product, state.assets.talent]);
+    const valid = Array.isArray(result.shots) ? result.shots.slice(0, Number(state.brief.shotCount) || 4) : [];
+    if (!valid.length) throw new Error("Direction board tidak berisi shot.");
+    state.direction = { ...result, shots: valid.map((shot, index) => ({ ...shot, id: shot.id || `shot-${index + 1}` })) };
+    state.selectedShot = 0; state.renders = {}; persist(); clearLoading(); 
+    showToast("Art direction siap. Pilih shot untuk mulai render.", "success");
+  } catch (error) { 
+    clearLoading(); showToast(error?.message || "Art direction gagal dibuat.", "error"); 
+  }
+}
+
+async function renderShotById(id) {
+  const shot = shots().find(item => item.id === id); if (!shot) return;
+  setLoading(`render:${id}`);
+  const b = state.brief;
+  
+  const prompt = `Create one premium visual commerce image for ${b.brandName}, product: ${b.productName}.\n\nShot title: ${shot.title}\nShot role: ${shot.role}\nDirection: ${shot.renderPrompt}\n\nProduct facts: ${b.productDescription}. Key benefit/context: ${b.keyBenefit}. Visual target: ${b.visualGoal}.\n\nUse the supplied product reference image as the primary packaging/product truth when present: retain its main silhouette, label hierarchy, colors, and materials as faithfully as possible. ${state.assets.talent ? "A second reference image may depict a talent; keep them visually consistent only when the selected shot calls for a human presence." : "Do not add a model unless the selected shot naturally requires hands or a human interaction."}\nDo not invent competitor logos, medical claims, coupons, unreadable text overlays, watermarks, or extra products. Keep the product as the dominant focal point. Requested aspect ratio: ${b.aspectRatio}.`;
+  
+  try {
+    const image = await generateImage(prompt, [state.assets.product, state.assets.talent]);
+    state.renders[id] = image; persist(); clearLoading(); 
+    showToast(`${shot.title} berhasil dirender.`, "success");
+  } catch (error) { 
+    clearLoading(); showToast(error?.message || "Render gagal. Coba ulangi shot ini.", "error"); 
+  }
+}
+
+async function renderAll() {
+  const list = shots(); if (!list.length) { showToast("Generate art direction terlebih dahulu.", "error"); return; }
+  state.loading = "render-all"; render();
+  let success = 0;
+  for (const shot of list) {
+    if (state.renders[shot.id]) continue;
+    state.loading = `render:${shot.id}`; render();
+    try {
+      const b = state.brief;
+      const prompt = `Create one premium visual commerce image for ${b.brandName}, product ${b.productName}. ${shot.renderPrompt}\nProduct details: ${b.productDescription}. Maintain the supplied product reference as faithfully as possible. ${state.assets.talent ? "Use the supplied talent reference only if this shot requires it." : ""} No watermark, no unrelated readable text, no competitor brands. Product must be the primary focus. Aspect ratio ${b.aspectRatio}.`;
+      state.renders[shot.id] = await generateImage(prompt, [state.assets.product, state.assets.talent]); 
+      success++;
+    } catch (error) { console.warn("Shot render failed", shot.id, error); }
+  }
+  state.loading = ""; persist(); render();
+  showToast(success ? `${success} shot tambahan berhasil dirender.` : "Tidak ada shot baru yang berhasil dirender.", success ? "success" : "error");
+}
+
+function copyText(text) {
+  const fallback = () => { const area = document.createElement("textarea"); area.value = text; area.style.position = "fixed"; area.style.opacity = "0"; document.body.appendChild(area); area.select(); document.execCommand("copy"); area.remove(); };
+  try { 
+    navigator.clipboard?.writeText ? navigator.clipboard.writeText(text) : fallback(); 
+    showToast("Prompt disalin ke clipboard.", "success"); 
+  } catch { 
+    try { fallback(); showToast("Prompt disalin ke clipboard.", "success"); } 
+    catch { showToast("Clipboard tidak tersedia di browser ini.", "error"); } 
+  }
+}
+
+function downloadText(filename, text) { 
+  const blob = new Blob([text], { type: "text/markdown;charset=utf-8" }); 
+  const url = URL.createObjectURL(blob); 
+  const a = document.createElement("a"); a.href = url; a.download = filename; 
+  document.body.appendChild(a); a.click(); a.remove(); 
+  setTimeout(() => URL.revokeObjectURL(url), 250); 
+}
+
+function downloadImage(filename, dataUrl) { 
+  const a = document.createElement("a"); a.href = dataUrl; a.download = filename; 
+  document.body.appendChild(a); a.click(); a.remove(); 
+}
+
+function slug(value) { 
+  return String(value || "rupa-project").toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || "rupa-project"; 
+}
+
+function briefMarkdown() {
+  const b = state.brief;
+  return `# RUPA Visual Brief\n\n## Project\n- Brand: ${b.brandName}\n- Product: ${b.productName}\n- Category: ${b.category}\n- Target: ${b.targetAudience}\n- Campaign moment: ${b.campaignMoment}\n\n## Product truth\n${b.productDescription}\n\n## Buying reason\n${b.keyBenefit}\n\n## Visual parameters\n- Goal: ${b.visualGoal}\n- Track: ${b.visualTrack}\n- Environment: ${b.environment}\n- Lighting: ${b.lighting}\n- Composition: ${b.composition}\n- Aspect ratio: ${b.aspectRatio}\n- Planned shots: ${b.shotCount}\n\n## Offer / context\n${b.offer || "-"}\n\n## Notes / constraints\n${b.notes || "-"}\n`;
+}
+
+function directionMarkdown() {
+  const d = state.direction;
+  if (!d) return "# RUPA Direction Board\n\nBelum ada direction board.";
+  return `# RUPA Direction Board\n\n## Creative thesis\n${d.creativeThesis}\n\n## Visual system\n${d.visualSystem}\n\n## Art notes\n${(d.artNotes || []).map(item => `- ${item}`).join("\n")}\n\n## Shot list\n${shots().map((shot, index) => `### ${String(index + 1).padStart(2, "0")}. ${shot.title}\n- Role: ${shot.role}\n- Description: ${shot.description}\n- Composition: ${shot.composition}\n- Set: ${shot.setDesign}\n- Lighting: ${shot.lighting}\n- Suggested overlay (add separately): ${shot.overlaySuggestion}\n- Rendered: ${state.renders[shot.id] ? "Yes" : "No"}\n\n**Render prompt**\n\`${shot.renderPrompt}\`\n`).join("\n")}`;
+}
+
+function projectMarkdown() { return `${briefMarkdown()}\n---\n\n${directionMarkdown()}\n`; }
+
+function resetProject() { 
+  if (!confirm("Mulai proyek baru? Brief, direction board, dan output sesi ini akan dihapus dari browser.")) return; 
+  state = clone(DEFAULT_STATE); localStorage.removeItem(STORAGE_KEY); render(); 
+  showToast("Proyek baru siap dimulai.", "success"); 
+}
+
+function handleAction(action) {
+  if (!action) return;
+  if (action === "reset") return resetProject();
+  if (action.startsWith("route:")) return setRoute(action.slice(6));
+  if (action === "direction:generate") return generateDirection();
+  if (action.startsWith("upload:")) return openFilePicker(action.slice(7));
+  if (action.startsWith("select-shot:")) { state.selectedShot = Number(action.slice(12)); persist(); render(); return; }
+  if (action.startsWith("open:")) { state.selectedShot = Number(action.slice(5)); state.route = "direction"; persist(); render(); window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+  if (action.startsWith("render:")) return renderShotById(action.slice(7));
+  if (action === "render-all") return renderAll();
+  if (action.startsWith("copy:")) { const shot = shots().find(item => item.id === action.slice(5)); return shot ? copyText(shot.renderPrompt) : null; }
+  if (action.startsWith("download:")) { const shot = shots().find(item => item.id === action.slice(9)); const image = shot && state.renders[shot.id]; return image ? downloadImage(`${slug(state.brief.brandName)}-${slug(shot.title)}.png`, image) : null; }
+  if (action === "download-brief") return downloadText(`${slug(state.brief.brandName)}-visual-brief.md`, briefMarkdown());
+  if (action === "download-direction") return downloadText(`${slug(state.brief.brandName)}-direction-board.md`, directionMarkdown());
+  if (action === "download-project") return downloadText(`${slug(state.brief.brandName)}-rupa-project-pack.md`, projectMarkdown());
+}
+
+document.addEventListener("click", event => {
+  const route = event.target.closest("[data-route]"); if (route) { setRoute(route.dataset.route); return; }
+  const choiceButton = event.target.closest("[data-choice-path]"); if (choiceButton) { setPath(choiceButton.dataset.choicePath, choiceButton.dataset.choiceValue); render(); return; }
+  const actionButton = event.target.closest("[data-action]"); if (actionButton) { handleAction(actionButton.dataset.action); }
+});
+
+document.addEventListener("input", event => { const field = event.target.closest("[data-field]"); if (field) { setPath(field.dataset.field, field.value); } });
+document.addEventListener("change", event => { const field = event.target.closest("[data-field]"); if (field) { setPath(field.dataset.field, field.value); } });
+
+render();
+</script>
+</body>
+</html>

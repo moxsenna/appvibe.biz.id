@@ -1,0 +1,85 @@
+/* ===== PRODUCT GALLERY MARQUEE ===== */
+.product-gallery{padding:54px 0 0;overflow:hidden}
+.gallery-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:0 0 16px}
+.gallery-intro h2{margin:8px 0 0;font:600 clamp(30px,3.8vw,48px)/.98 "Playfair Display",Georgia,serif;letter-spacing:-1.5px}
+.gallery-intro h2 em{font-style:italic;color:#405cb7}
+.gallery-intro p{max-width:460px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
+.gallery-eyebrow{color:#5f6f34;font:600 10px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}
+.gallery-viewport{position:relative;overflow:hidden;padding:8px 0}
+.gallery-viewport:before,.gallery-viewport:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:92px;pointer-events:none}
+.gallery-viewport:before{left:0;background:linear-gradient(90deg,var(--paper),rgba(246,244,238,0))}
+.gallery-viewport:after{right:0;background:linear-gradient(270deg,var(--paper),rgba(246,244,238,0))}
+.gallery-track{display:flex;width:max-content;gap:12px;will-change:transform}
+.gallery-track.left{animation:gallery-left 62s linear infinite}
+.gallery-track.right{animation:gallery-right 70s linear infinite}
+.gallery-viewport:hover .gallery-track,.gallery-viewport:focus-within .gallery-track{animation-play-state:paused}
+@keyframes gallery-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes gallery-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+.preview-card{
+  --p-bg:#122820;--p-panel:#244a3c;--p-ink:#fffdf8;--p-soft:#b9e4cf;--p-accent:#f6cc63;--p-line:rgba(255,255,255,.18);
+  position:relative;width:246px;flex:none;padding:9px;border:1px solid var(--line);border-radius:19px;background:var(--white);text-align:left;
+  box-shadow:0 8px 18px rgba(13,15,19,.06);transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+}
+.preview-card:hover{transform:translateY(-3px);border-color:#aeb5a7;box-shadow:0 14px 26px rgba(13,15,19,.11)}
+.preview-card:focus-visible{outline:3px solid rgba(112,148,255,.45);outline-offset:3px}
+.preview-window{position:relative;overflow:hidden;height:137px;padding:9px;border-radius:13px;background:var(--p-bg);color:var(--p-ink)}
+.preview-window:before{content:"";position:absolute;inset:0;opacity:.21;background-image:linear-gradient(var(--p-line) 1px,transparent 1px),linear-gradient(90deg,var(--p-line) 1px,transparent 1px);background-size:17px 17px}
+.preview-window > *{position:relative;z-index:1}
+.preview-top{display:flex;justify-content:space-between;align-items:center;font:500 6px/1 "DM Mono",monospace;letter-spacing:.75px;text-transform:uppercase;color:var(--p-soft)}
+.preview-top i{display:block;width:7px;height:7px;border-radius:2px;background:var(--p-accent)}
+.preview-hero{margin-top:18px;display:grid;grid-template-columns:1fr 59px;gap:8px;align-items:end}
+.preview-title{font:700 19px/.9 "Playfair Display",Georgia,serif;letter-spacing:-.8px;color:var(--p-ink)}
+.preview-title em{color:var(--p-accent);font-style:italic}
+.preview-title.small{font-size:16px;line-height:.94}
+.preview-side{height:51px;border:1px solid var(--p-line);border-radius:10px;background:var(--p-panel)}
+.preview-lines{display:grid;gap:5px;margin-top:10px}
+.preview-lines span{display:block;height:4px;border-radius:999px;background:var(--p-soft);opacity:.83}
+.preview-lines span:nth-child(1){width:83%}.preview-lines span:nth-child(2){width:60%;background:var(--p-accent)}.preview-lines span:nth-child(3){width:72%}
+.preview-chips{display:flex;gap:5px;margin-top:12px}.preview-chips span{display:block;width:28px;height:12px;border:1px solid var(--p-line);border-radius:5px;background:rgba(255,255,255,.06)}
+.preview-meta{padding:10px 4px 3px}.preview-meta b{display:block;font-size:12px;letter-spacing:-.25px}.preview-meta span{display:block;margin-top:4px;color:#6d7480;font-size:9px;line-height:1.3}
+.p-adsprint{--p-bg:#10231f;--p-panel:#1d4b3d;--p-ink:#fffef9;--p-soft:#b9e4cf;--p-accent:#f6cc63}
+.p-pikat{--p-bg:#4f46e5;--p-panel:#7c3aed;--p-ink:#fff;--p-soft:#fbcfe8;--p-accent:#f8b7df}
+.p-rupa{--p-bg:#1d43ff;--p-panel:#ff6b3d;--p-ink:#fff;--p-soft:#dfff35;--p-accent:#dfff35}
+.p-mula{--p-bg:#1c2126;--p-panel:#9d475b;--p-ink:#fcfaf5;--p-soft:#dbe4d2;--p-accent:#edae49}
+.p-arah{--p-bg:#132235;--p-panel:#2556d9;--p-ink:#fffdf7;--p-soft:#bcd6ef;--p-accent:#e8b84b}
+.p-cetak{--p-bg:#2855d7;--p-panel:#e84d3d;--p-ink:#fffdf8;--p-soft:#dce6ff;--p-accent:#ffc945}
+.p-adegan{--p-bg:#121212;--p-panel:#282621;--p-ink:#f4efe2;--p-soft:#d9a441;--p-accent:#d95f3d}
+.p-suara{--p-bg:#121416;--p-panel:#303639;--p-ink:#f5f8f7;--p-soft:#41d7d7;--p-accent:#ff9d47}
+.p-bukti{--p-bg:#13242b;--p-panel:#28536b;--p-ink:#fffdf8;--p-soft:#dce9df;--p-accent:#dfb750}
+.p-mimik{--p-bg:#17213a;--p-panel:#3156c9;--p-ink:#fffdf8;--p-soft:#dce5ff;--p-accent:#c99d54}
+.p-ritme{--p-bg:#15212b;--p-panel:#2658d8;--p-ink:#fffef9;--p-soft:#b9d9cf;--p-accent:#f3d46c}
+.p-tayang{--p-bg:#102a43;--p-panel:#21a6d6;--p-ink:#fff;--p-soft:#dff5fc;--p-accent:#ef7f4d}
+.p-katalog{--p-bg:#17211f;--p-panel:#165dff;--p-ink:#fffdf8;--p-soft:#dceee5;--p-accent:#ffd83e}
+
+/* ===== APP LAUNCHER ===== */
+.vault-explorer{
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(340px,.9fr);gap:15px;align-items:stretch
+}
+.app-grid-wrap{min-width:0}
+.app-browser-head{display:none}
+.app-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.app-card{
+  position:relative;text-align:left;padding:15px;border:1px solid var(--line);border-radius:17px;background:rgba(255,253,248,.8);
+  transition:all .17s ease;min-height:135px
+}
+.app-card:hover,.app-card.active{background:var(--ink);border-color:var(--ink);color:#fff;transform:translateY(-2px);box-shadow:0 10px 22px rgba(13,15,19,.14)}
+.app-card .app-symbol{width:35px;height:35px;border-radius:11px;display:grid;place-items:center;background:#eef5ce;border:1px solid #d4e98a;color:#365000;font-weight:900}
+.app-card:hover .app-symbol,.app-card.active .app-symbol{background:var(--lime);border-color:var(--lime);color:var(--ink)}
+.app-card b{display:block;margin-top:17px;font-size:13px;letter-spacing:-.2px}
+.app-card span{display:block;margin-top:5px;color:#757a83;font-size:10px;line-height:1.4}
+.app-card:hover span,.app-card.active span{color:#bcc1cb}
+.app-detail{
+  min-height:530px;padding:26px;border-radius:var(--r-lg);background:var(--ink);color:#fff;
+  box-shadow:15px 15px 0 rgba(112,148,255,.16)
+}
+.detail-label{display:flex;align-items:center;gap:8px;color:#c2cae3;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
+.detail-label i{width:8px;height:8px;background:var(--lime);border-radius:2px}
+.app-detail h3{margin:23px 0 10px;font:600 45px/.93 "Playfair Display",Georgia,serif;letter-spacing:-1.3px}
+.app-detail h3 em{font-style:italic;color:var(--lime)}
+.app-detail p{margin:0;color:#bac0cc;font-size:12px;line-height:1.72}
+.detail-line{height:1px;background:rgba(255,255,255,.13);margin:21px 0}
+.detail-list{margin:0;padding:0;list-style:none;display:grid;gap:10px}
+.detail-list li{display:flex;align-items:flex-start;gap:9px;color:#d6dae3;font-size:11px;line-height:1.5}
+.detail-list li:before{content:"\2713";color:var(--lime);font-weight:900}
+.detail-footer{margin-top:25px;padding:13px;border:1px dashed rgba(216,255,66,.42);border-radius:14px;color:#e8ff99;font:500 10px/1.55 "DM Mono",monospace}
+.detail-mobile-hint{display:none}
