@@ -171,7 +171,9 @@
 .pack-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .pack-code{font:600 9px/1 "DM Mono",monospace;color:#617086;letter-spacing:1px;text-transform:uppercase}
 .pack-icon{width:42px;height:42px;border-radius:14px;background:var(--av-white);display:grid;place-items:center;border:1px solid rgba(5,11,29,.12);font-size:19px}
-.pack h3{position:relative;z-index:1;max-width:420px;margin:23px 0 8px;font:700 34px/.98 "Space Grotesk",sans-serif;letter-spacing:-1px}
+.pack h3{position:relative;z-index:1;max-width:420px;margin:23px 0 8px;font:700 34px/.98 "Space Grotesk",sans-serif;letter-spacing:-1px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pack-price{font:600 12px/1 "DM Mono",monospace;padding:5px 10px;border-radius:9px;background:rgba(216,255,66,.2);color:var(--av-navy-800);white-space:nowrap}
+.pack-price-99{background:rgba(216,255,66,.2)}
 .pack p{position:relative;z-index:1;max-width:470px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
 .pack-tags{position:relative;z-index:1;display:flex;gap:7px;flex-wrap:wrap;margin-top:19px}
 .pack-tags span{padding:8px 9px;border:1px solid rgba(5,11,29,.13);border-radius:9px;background:rgba(255,255,255,.62);font:600 9px/1 "DM Mono",monospace;color:var(--muted)}

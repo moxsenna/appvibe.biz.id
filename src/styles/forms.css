@@ -1,4 +1,4 @@
-/* ===== MODAL ===== */
+/* ===== MODAL (shared) ===== */
 .modal{
   position:fixed;inset:0;z-index:100;display:none;place-items:center;padding:18px;background:rgba(6,8,13,.62);backdrop-filter:blur(9px)
 }
@@ -9,9 +9,64 @@
 .modal-form{display:grid;gap:10px;margin-top:20px}
 .modal-form input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;background:#fff;font-size:16px}
 .modal-form input:focus{border-color:#91aa2e;box-shadow:0 0 0 4px rgba(216,255,66,.22)}
-.modal-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:18px;color:#4e535b}
+.modal-close{position:absolute;top:12px;right:12px;z-index:10;width:34px;height:34px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:18px;color:#4e535b;cursor:pointer}
 .modal-message{display:none;margin-top:12px;padding:10px 11px;border-radius:10px;background:#eff8ca;color:#4b5e19;font-size:11px;line-height:1.5}
 .modal-message.show{display:block}
+
+/* ===== CHECKOUT CONTAINER ===== */
+.co-container{width:100%}
+.co-container .co-view{width:100%}
+
+/* ===== PACK SELECTION (idle/selecting state) ===== */
+.co-packs{display:grid;gap:8px;margin-top:16px}
+.co-pack-btn{
+  display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;
+  border:1px solid var(--line);border-radius:14px;background:var(--paper-2,#f8f7f3);
+  cursor:pointer;transition:all .15s;text-align:left;font:inherit
+}
+.co-pack-btn:hover{border-color:#91aa2e;background:#f4f9e6;transform:translateY(-1px)}
+.co-pack-btn:active{transform:translateY(0)}
+.co-pack-code{font:700 10px/1 "DM Mono",monospace;color:#91aa2e;background:rgba(216,255,66,.2);padding:5px 8px;border-radius:8px;white-space:nowrap}
+.co-pack-info{flex:1;min-width:0}
+.co-pack-name{display:block;font-weight:700;font-size:13px;line-height:1.3}
+.co-pack-desc{display:block;font-size:10px;color:#7a8290;margin-top:2px}
+.co-pack-price{font:700 14px/1 "DM Mono",monospace;color:var(--av-navy-800,#172008);white-space:nowrap;padding:4px 10px;background:rgba(216,255,66,.25);border-radius:10px}
+.co-note{text-align:center;color:#9ea7b8;font-size:10px;margin-top:12px}
+
+/* ===== CUSTOMER FORM (confirm state) ===== */
+.co-selected-pack{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;border:1px solid #d8ff42;border-radius:14px;background:rgba(216,255,66,.1);margin-top:8px
+}
+.co-selected-label{display:block;font-size:9px;text-transform:uppercase;letter-spacing:.06em;color:#7a8290}
+.co-selected-name{display:block;font-weight:700;font-size:13px;margin-top:2px}
+.co-selected-price{font:700 14px/1 "DM Mono",monospace;color:var(--av-navy-800,#172008);white-space:nowrap;padding:4px 10px;background:#fff;border-radius:10px}
+.co-change-pack{background:none;border:none;color:#465ec6;font-size:11px;cursor:pointer;padding:4px 0;margin-bottom:8px}
+.co-change-pack:hover{text-decoration:underline}
+.co-form{display:grid;gap:10px;margin-top:8px}
+.co-field{display:grid;gap:4px}
+.co-field label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#5f6873}
+.co-field input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 13px;outline:none;background:#fff;font-size:16px;box-sizing:border-box}
+.co-field input:focus{border-color:#91aa2e;box-shadow:0 0 0 4px rgba(216,255,66,.22)}
+.co-form-error{color:#8b2e24;font-size:11px;padding:8px 10px;background:#ffe8e5;border-radius:10px;margin:0}
+.co-submit{min-height:52px;margin-top:4px}
+.form-privacy{font-size:10px;color:#9ea7b8;text-align:center;margin:0}
+.form-privacy a{color:#465ec6;text-decoration:underline}
+
+/* ===== CENTERED STATE (loading, success, error) ===== */
+.co-center{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 16px;text-align:center;min-height:240px}
+.co-spinner{width:32px;height:32px;border:3px solid #e2e0d8;border-top-color:#91aa2e;border-radius:50%;animation:co-spin .8s linear infinite}
+@keyframes co-spin{to{transform:rotate(360deg)}}
+.co-status-text{color:#7a8290;font-size:13px;margin-top:16px}
+.co-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;margin-bottom:12px}
+.co-icon-success{background:#eff8ca;color:#4b5e19}
+.co-icon-fail{background:#ffe8e5;color:#8b2e24}
+.co-result-title{font-size:22px;margin:8px 0 6px!important}
+.co-result-text{font-size:13px;color:#626a72;max-width:360px;line-height:1.6}
+.co-order-ref{font-family:"DM Mono",monospace;font-size:11px;color:#9ea7b8;background:#f4f2ea;padding:6px 12px;border-radius:8px;margin:8px 0;word-break:break-all}
+.co-result-hint{font-size:10px;color:#9ea7b8;margin-top:4px}
+.co-result-actions{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;justify-content:center}
+.co-result-actions .btn{min-width:140px}
 
 /* ===== STICKY CTA MOBILE ===== */
 .sticky-cta{
