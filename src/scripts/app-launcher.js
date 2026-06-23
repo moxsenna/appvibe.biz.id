@@ -1,76 +1,96 @@
-import { appData } from './data/apps.js';
+import { vaultApps } from './data/vault-apps.js';
+import { vaultPacks } from './data/vault-packs.js';
 
 export function initAppLauncher() {
   const launcherButtons = document.querySelectorAll(".app-card");
-  const previewButtons = document.querySelectorAll(".preview-card");
   const detailLabel = document.getElementById("detailLabel");
   const detailTitle = document.getElementById("detailTitle");
   const detailText = document.getElementById("detailText");
   const detailList = document.getElementById("detailList");
   const detailFooter = document.getElementById("detailFooter");
-  const activeAppName = document.getElementById("activeAppName");
+  const detailCta = document.getElementById("detailCta");
 
-  function setActiveApp(appKey) {
-    const item = appData[appKey];
+  const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
+  let activeAppId = null; // displayed app (default display, NOT user selection)
+
+  function track(name, params) {
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent(name, params);
+    }
+  }
+
+  // userAction = false: initial/default render, no selection event
+  function setActiveApp(appKey, userAction) {
+    const item = vaultApps[appKey];
     if (!item) return;
     launcherButtons.forEach(btn => btn.classList.toggle("active", btn.dataset.app === appKey));
-    previewButtons.forEach(btn => btn.setAttribute("aria-pressed", String(btn.dataset.app === appKey)));
     detailLabel.textContent = item.label;
     detailTitle.innerHTML = item.title;
     detailText.textContent = item.text;
     detailList.innerHTML = item.points.map(point => `<li>${point}</li>`).join("");
     detailFooter.textContent = item.footer;
-    const activeLauncher = document.querySelector(`.app-card[data-app="${appKey}"] b`);
-    if (activeAppName) activeAppName.textContent = activeLauncher?.textContent || appKey;
+    activeAppId = appKey;
 
-    // Fire tracking event
-    if (typeof window.trackEvent === 'function') {
-      window.trackEvent('AppLauncher_Click', { selected_app: appKey });
+    if (userAction) {
+      state.selectedApp = appKey;
+      track('vault_app_selected', { app_id: appKey, pack_context: item.packs.join(',') });
+    }
+
+    // Scroll detail ke view (mobile)
+    const detail = document.querySelector('.app-detail');
+    if (detail && window.innerWidth <= 760) {
+      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }
 
-  // Preview cards (marquee)
-  previewButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      setActiveApp(button.dataset.app);
-      document.getElementById("aplikasi")?.scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  });
-
-  // Launcher grid cards
   launcherButtons.forEach(button => {
-    button.addEventListener("click", () => {
-      setActiveApp(button.dataset.app);
-      if (window.innerWidth <= 760) {
-        document.querySelector('.app-detail')?.scrollIntoView({behavior:'smooth', block:'nearest'});
+    button.addEventListener("click", () => setActiveApp(button.dataset.app, true));
+  });
+
+  // Pack CTAs — delegate to single orchestration point
+  document.querySelectorAll("[data-pack]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const packId = btn.dataset.pack;
+      if (!packId || !vaultPacks[packId]) return;
+      if (typeof window.setSelectedPack === 'function') {
+        window.setSelectedPack(packId, 'app_launcher');
       }
     });
   });
 
-  // Niche pack buttons
-  document.querySelectorAll("[data-pack]").forEach(button => {
-    button.addEventListener("click", () => {
-      const pack = button.dataset.pack;
-      detailLabel.textContent = "NICHE POSITIONING / " + pack.toUpperCase();
-      detailTitle.innerHTML = `Start with <em>${pack}.</em>`;
-      detailText.textContent = "Paket ini adalah titik masuk untuk membangun lini produk AI yang nyambung dengan market Anda. Ambil aplikasi yang paling relevan, beri nama baru, lalu kemas sebagai offer yang spesifik.";
-      detailList.innerHTML = [
-        "Mulai dari 1 produk unggulan agar positioning tetap tajam",
-        "Gunakan bundle untuk menaikkan perceived value",
-        "Jadikan aplikasi sebagai pintu masuk ke offer premium Anda"
-      ].map(point => `<li>${point}</li>`).join("");
-      detailFooter.textContent = "\u201cBukan tentang menjual lebih banyak aplikasi. Ini tentang meluncurkan produk yang tepat ke audiens yang tepat.\u201d";
-      document.getElementById("aplikasi")?.scrollIntoView({behavior:"smooth", block:"start"});
+  // Detail CTA — apply pack-app compatibility check
+  function openDetailForm() {
+    state.lastFormPlacement = 'app_launcher';
+    const selPack = state.selectedPack;
+    const selApp = activeAppId;
 
-      if (typeof window.trackEvent === 'function') {
-        window.trackEvent('NichePack_Click', { selected_niche_pack: pack });
+    // If app is not in the currently selected pack, send selected_pack: null
+    let effectivePack = null;
+    if (selPack && selApp) {
+      const app = vaultApps[selApp];
+      if (app && app.packs && app.packs.includes(selPack)) {
+        effectivePack = selPack;
       }
-    });
-  });
+    }
 
-  // Set initial active app
+    if (typeof window.openModal === 'function') {
+      window.openModal('app_launcher', effectivePack, selApp);
+    }
+  }
+
+  if (detailCta) {
+    detailCta.addEventListener("click", openDetailForm);
+  } else {
+    const detailCtaBtn = document.querySelector('[data-open-form-from-detail]');
+    if (detailCtaBtn) {
+      detailCtaBtn.addEventListener("click", openDetailForm);
+    }
+  }
+
+  // First active app (default display only, NOT user selection)
   const firstActive = document.querySelector(".app-card.active");
   if (firstActive) {
-    setActiveApp(firstActive.dataset.app || "adsprint");
+    setActiveApp(firstActive.dataset.app || "adsprint", false);
   }
 }
+

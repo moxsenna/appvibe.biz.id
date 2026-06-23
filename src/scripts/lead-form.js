@@ -4,18 +4,14 @@ export function initLeadForm() {
   const form = document.getElementById("leadForm");
   const message = document.getElementById("modalMessage");
   const honeypot = document.getElementById("honeypot");
+  const submitBtn = form?.querySelector("button[type='submit']");
+  let submitting = false;
 
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
+    if (submitting) return;
 
-    // Firebase tracking: form start
-    if (typeof window.trackEvent === 'function') {
-      window.trackEvent('LeadForm_Start');
-    }
-
-    // Honeypot check
     if (honeypot && honeypot.value.trim() !== '') {
-      // Bot detected, silently reject
       showSuccess(message);
       return;
     }
@@ -24,26 +20,61 @@ export function initLeadForm() {
     const name = formData.get('name')?.trim();
     const email = formData.get('email')?.trim();
     const niche = formData.get('niche')?.trim();
+    const whatsapp = formData.get('whatsapp')?.trim() || '';
+    const modelPenggunaan = formData.get('model_penggunaan')?.trim() || '';
+
+    const selectedPack = formData.get('selected_pack')?.trim() || null;
+    const selectedApp = formData.get('selected_app')?.trim() || null;
+    const planId = formData.get('plan_id')?.trim() || '';
+    const planName = formData.get('plan_name')?.trim() || '';
+    const planPrice = Number(formData.get('plan_price')) || 0;
+    const packId = formData.get('pack_id')?.trim() || '';
+    const packName = formData.get('pack_name')?.trim() || '';
+
+    const turnstileToken = (function() {
+      const widget = document.querySelector('.cf-turnstile iframe');
+      if (widget && typeof window.turnstile !== 'undefined') {
+        return window.turnstile.getResponse?.() || '';
+      }
+      const hidden = formData.get('cf-turnstile-response');
+      return hidden || '';
+    })();
 
     if (!name || !email || !niche) return;
 
-    // Collect UTM + session data
+    submitting = true;
+    if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Mengirim...'; }
+
     const utm = getUtmParams();
     const session = getSessionMeta();
-
-    // Generate event_id for TikTok Events API dedup
+    const formOpenSource = formData.get('form_open_source')?.trim() || 'general';
     const eventId = crypto.randomUUID?.() ?? `${Date.now()}-${Math.random().toString(36).slice(2,10)}`;
 
-    // Fire TikTok Lead event with event_id for client→server dedup
-    if (window.ttq) {
-      try { ttq.track('Lead', { email, niche, name, event_id: eventId }); } catch(e) {}
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_lead_submit_attempt', {
+        selected_pack: selectedPack,
+        selected_app: selectedApp,
+        model_penggunaan: modelPenggunaan,
+        form_open_source: formOpenSource,
+      });
     }
 
     const payload = {
       event_id: eventId,
       name,
       email,
+      whatsapp,
       niche,
+      model_penggunaan: modelPenggunaan,
+      selected_pack: selectedPack,
+      selected_app: selectedApp,
+      plan_id: planId || undefined,
+      plan_name: planName || undefined,
+      plan_price: planPrice || undefined,
+      pack_id: packId || undefined,
+      pack_name: packName || undefined,
+      form_open_source: formOpenSource,
+      turnstileToken,
       utm_source: utm.source,
       utm_medium: utm.medium,
       utm_campaign: utm.campaign,
@@ -55,12 +86,6 @@ export function initLeadForm() {
       device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
     };
 
-    // Fire tracking event
-    if (typeof window.trackEvent === 'function') {
-      window.trackEvent('Lead', { ...payload, email: undefined });
-    }
-
-    // Submit to Cloudflare Pages Function
     try {
       const response = await fetch('/api/lead', {
         method: 'POST',
@@ -68,17 +93,59 @@ export function initLeadForm() {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        console.error('Lead submission failed:', response.status);
+      if (response.ok) {
+        const data = await response.json().catch(() => ({}));
+        if (data.success) {
+          if (typeof window.fireStandardConversions === 'function') {
+            window.fireStandardConversions({
+              selected_pack: selectedPack,
+              selected_app: selectedApp,
+              model_penggunaan: modelPenggunaan,
+            });
+          }
+          if (typeof window.trackVaultEvent === 'function') {
+            window.trackVaultEvent('vault_lead_submit_success', {
+              selected_pack: selectedPack,
+              selected_app: selectedApp,
+              model_penggunaan: modelPenggunaan,
+              form_open_source: formOpenSource,
+            });
+          }
+          showSuccess(message);
+          form.reset();
+          ['formSelectedPack', 'formSelectedApp', 'formOpenSource', 'selectedPlanId', 'selectedPlanName', 'selectedPlanPrice', 'selectedPackId', 'selectedPackName'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+          });
+        }
+      } else {
+        showErrorByStatus(response.status, response);
       }
     } catch (err) {
-      // Silent fail — form still shows success to user
-      console.error('Lead submission error:', err);
+      showModalError('Gagal terhubung ke server. Coba lagi nanti.');
+    } finally {
+      submitting = false;
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = 'Kirim minat akses →'; }
     }
-
-    showSuccess(message);
-    form.reset();
   });
+}
+
+function showErrorByStatus(status, response) {
+  const map = {
+    400: 'Data tidak lengkap. Periksa kembali isian Anda.',
+    403: 'Verifikasi keamanan gagal. Silakan muat ulang halaman.',
+    409: 'Pengiriman terdeteksi ganda. Tunggu sebentar sebelum mencoba lagi.',
+    502: 'Server pemrosesan sedang sibuk. Coba lagi nanti.',
+    503: 'Sistem belum siap menerima data. Tim kami sedang menyiapkan konfigurasi.',
+  };
+  const msg = map[status] || `Terjadi kendala (${status}). Coba lagi.`;
+  showModalError(msg);
+}
+
+function showModalError(msg) {
+  if (typeof window.showModalError === 'function') {
+    window.showModalError(msg);
+  }
 }
 
 function showSuccess(el) {
