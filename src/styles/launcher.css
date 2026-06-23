@@ -1,10 +1,10 @@
 /* ===== PRODUCT GALLERY MARQUEE ===== */
 .product-gallery{padding:54px 0 0;overflow:hidden}
 .gallery-intro{display:flex;align-items:flex-end;justify-content:space-between;gap:22px;margin:0 0 16px}
-.gallery-intro h2{margin:8px 0 0;font:600 clamp(30px,3.8vw,48px)/.98 "Playfair Display",Georgia,serif;letter-spacing:-1.5px}
-.gallery-intro h2 em{font-style:italic;color:#405cb7}
+.gallery-intro h2{margin:8px 0 0;font:700 clamp(30px,3.8vw,48px)/.98 "Space Grotesk",sans-serif;letter-spacing:-1.5px}
+.gallery-intro h2 em{font-style:italic;background:var(--gradient-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .gallery-intro p{max-width:460px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
-.gallery-eyebrow{color:#5f6f34;font:600 10px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}
+.gallery-eyebrow{color:var(--av-blue-600);font:600 10px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}
 .gallery-viewport{position:relative;overflow:hidden;padding:8px 0}
 .gallery-viewport:before,.gallery-viewport:after{content:"";position:absolute;z-index:2;top:0;bottom:0;width:92px;pointer-events:none}
 .gallery-viewport:before{left:0;background:linear-gradient(90deg,var(--paper),rgba(246,244,238,0))}
@@ -28,7 +28,7 @@
 .preview-top{display:flex;justify-content:space-between;align-items:center;font:500 6px/1 "DM Mono",monospace;letter-spacing:.75px;text-transform:uppercase;color:var(--p-soft)}
 .preview-top i{display:block;width:7px;height:7px;border-radius:2px;background:var(--p-accent)}
 .preview-hero{margin-top:18px;display:grid;grid-template-columns:1fr 59px;gap:8px;align-items:end}
-.preview-title{font:700 19px/.9 "Playfair Display",Georgia,serif;letter-spacing:-.8px;color:var(--p-ink)}
+.preview-title{font:700 19px/.9 "Space Grotesk",sans-serif;letter-spacing:-.6px;color:var(--p-ink)}
 .preview-title em{color:var(--p-accent);font-style:italic}
 .preview-title.small{font-size:16px;line-height:.94}
 .preview-side{height:51px;border:1px solid var(--p-line);border-radius:10px;background:var(--p-panel)}
@@ -74,7 +74,7 @@
 }
 .detail-label{display:flex;align-items:center;gap:8px;color:#c2cae3;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}
 .detail-label i{width:8px;height:8px;background:var(--lime);border-radius:2px}
-.app-detail h3{margin:23px 0 10px;font:600 45px/.93 "Playfair Display",Georgia,serif;letter-spacing:-1.3px}
+.app-detail h3{margin:23px 0 10px;font:700 40px/.96 "Space Grotesk",sans-serif;letter-spacing:-1.2px}
 .app-detail h3 em{font-style:italic;color:var(--lime)}
 .app-detail p{margin:0;color:#bac0cc;font-size:12px;line-height:1.72}
 .detail-line{height:1px;background:rgba(255,255,255,.13);margin:21px 0}

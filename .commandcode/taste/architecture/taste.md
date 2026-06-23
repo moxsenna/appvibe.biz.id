@@ -5,3 +5,4 @@
 - Lead form must forward to operational destination (Google Sheets/Telegram/email/CRM) via Cloudflare env vars — no console.log placeholder for production. Confidence: 0.75
 - Include mobile sticky CTA from V1 (appears after hero scroll, full-width, hides during modal). Confidence: 0.70
 - Place _headers in public/ folder for Cloudflare Pages static asset rules. Confidence: 0.70
+- When reviewing landing page layouts, analyze the entire page holistically instead of focusing on a single element in isolation. Confidence: 0.65
