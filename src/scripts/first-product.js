@@ -4,23 +4,44 @@ import { vaultApps } from './data/vault-apps.js';
 export function initFirstProduct() {
   const recommendationCard = document.getElementById('firstProductCard');
   const recommendationContent = document.getElementById('firstProductContent');
+  const showcaseGrid = document.getElementById('showcaseGrid');
   if (!recommendationCard || !recommendationContent) return;
 
   const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
 
+  // ===== SINGLE ORCHESTRATION POINT =====
+  function setSelectedPack(packId, entryPoint) {
+    state.selectedPack = packId;
+
+    // Update active pack card
+    document.querySelectorAll('.pack').forEach(p => p.classList.remove('selected'));
+    document.querySelectorAll(`.pack[data-sel="${packId}"]`).forEach(b => b.closest('.pack')?.classList.add('selected'));
+
+    // Render first-product recommendation
+    renderRecommendation(packId);
+
+    // Render product showcase
+    renderProductShowcase(packId);
+
+    // Fire tracking event ONCE
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_pack_selected', {
+        pack_id: packId,
+        entry_point: entryPoint || 'unknown'
+      });
+    }
+  }
+  window.setSelectedPack = setSelectedPack;
+
+  // ===== RECOMMENDATION CARD =====
   function renderRecommendation(packId) {
     const pack = vaultPacks[packId];
     if (!pack) return;
     const primaryApp = vaultApps[pack.primaryAppId];
     const otherApps = pack.appIds.filter(id => id !== pack.primaryAppId).slice(0, 2).map(id => vaultApps[id]).filter(Boolean);
 
-    const isDefault = !state.selectedPack;
-    const eyebrow = isDefault
-      ? 'CONTOH REKOMENDASI &mdash; ' + pack.scope
-      : 'REKOMENDASI UNTUK ' + pack.scope;
-
     recommendationContent.innerHTML = `
-      <div class="fp-eyebrow">${eyebrow}</div>
+      <div class="fp-eyebrow">REKOMENDASI UNTUK ${pack.scope}</div>
       <h3 class="fp-title">Mulai dengan <em>${pack.primaryProductName}.</em></h3>
       <p class="fp-outcome">${pack.productOutcome}</p>
       <div class="fp-meta">
@@ -46,20 +67,16 @@ export function initFirstProduct() {
         `).join('')}
       </div>
       <div class="fp-actions">
-        <button class="btn lime" data-scroll-to="aplikasi" data-pack="${packId}">Lihat aplikasi pembentuk pack ini &rarr;</button>
+        <button class="btn lime" data-scroll-to="aplikasi">Lihat aplikasi pembentuk pack ini &rarr;</button>
         <button class="btn ghost" data-open-form data-form-source="first_product" data-pack="${packId}">Saya tertarik dengan pack ini</button>
       </div>
     `;
 
-    // Re-bind events
     recommendationContent.querySelector('[data-scroll-to]')?.addEventListener('click', (e) => {
-      const targetId = e.currentTarget.dataset.scrollTo;
-      document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.getElementById('aplikasi')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     recommendationContent.querySelector('[data-open-form]')?.addEventListener('click', (e) => {
-      const packId = e.currentTarget.dataset.pack;
-      state.selectedPack = packId;
       state.lastFormPlacement = 'first_product';
       if (typeof window.openModal === 'function') {
         window.openModal('first_product', packId, null);
@@ -67,20 +84,28 @@ export function initFirstProduct() {
     });
   }
 
-  // Initial render with default recommended pack
-  renderRecommendation(state.recommendedPack);
+  // ===== PRODUCT SHOWCASE (3 apps) =====
+  function renderProductShowcase(packId) {
+    if (!showcaseGrid) return;
+    const pack = vaultPacks[packId];
+    if (!pack) return;
 
-  // Listen for pack selection events
-  window.addEventListener('vault_pack_selected', (e) => {
-    renderRecommendation(e.detail?.packId || state.selectedPack || state.recommendedPack);
-  });
+    const featuredApps = pack.appIds.slice(0, 3).map(id => vaultApps[id]).filter(Boolean);
 
-  // Re-render when state changes
-  const originalSetPack = Object.getOwnPropertyDescriptor(window, 'setSelectedPack');
-  if (!originalSetPack) {
-    window.setSelectedPack = (packId) => {
-      state.selectedPack = packId;
-      renderRecommendation(packId);
-    };
+    showcaseGrid.innerHTML = featuredApps.map(app => `
+      <article class="showcase-card" data-app="${app.id}">
+        <div class="showcase-card-top">
+          <span class="showcase-app-symbol">${app.iconLabel}</span>
+          <strong>${app.name}</strong>
+        </div>
+        <h4 class="showcase-rebrand">${app.exampleRebrandName}</h4>
+        <p class="showcase-outcome">${app.endUserOutcome}</p>
+        <span class="showcase-tagline">${app.tagline}</span>
+      </article>
+    `).join('');
   }
+
+  // ===== INITIAL RENDER =====
+  renderRecommendation(state.recommendedPack);
+  renderProductShowcase(state.recommendedPack);
 }

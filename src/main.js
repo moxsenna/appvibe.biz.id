@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initModal();
   initLeadForm();
 
-  // Scroll-to handlers for hero CTAs
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', () => {
       const id = btn.dataset.scrollTo;
@@ -23,19 +22,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Pack selection buttons (with data-sel)
+  // Pack card selection — single orchestration point
   document.querySelectorAll('[data-sel]').forEach(btn => {
     btn.addEventListener('click', () => {
       const packId = btn.dataset.pack;
       if (!packId) return;
-      document.querySelectorAll('.pack').forEach(p => p.classList.remove('selected'));
-      btn.closest('.pack')?.classList.add('selected');
-      // Set state
       if (typeof window.setSelectedPack === 'function') {
-        window.setSelectedPack(packId);
-      }
-      if (window.vaultState) {
-        window.vaultState.selectedPack = packId;
+        window.setSelectedPack(packId, 'pack_card');
       }
     });
   });

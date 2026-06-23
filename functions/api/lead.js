@@ -3,13 +3,13 @@
  * POST /api/lead
  *
  * Environment variables:
- * - LEAD_WEBHOOK_URL: endpoint to forward lead
+ * - LEAD_WEBHOOK_URL: endpoint to forward lead (REQUIRED for production)
  * - TURNSTILE_SECRET_KEY: Cloudflare Turnstile secret key
  */
 
 const VALID_PACKS = ['advertiser', 'commerce', 'creator', 'brand_launch'];
 const VALID_APPS = ['adsprint', 'pikat', 'rupa', 'mula', 'arah', 'cetak', 'adegan', 'suara', 'bukti', 'mimik', 'ritme', 'tayang', 'katalog'];
-const DEDUPE_MAP = new Map(); // best-effort, per-isolate
+const DEDUPE_MAP = new Map();
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -26,8 +26,7 @@ export async function onRequest(context) {
 
   if (request.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json', ...corsHeaders },
+      status: 405, headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
   }
 
@@ -36,89 +35,92 @@ export async function onRequest(context) {
     const {
       name, email, whatsapp, niche, model_penggunaan,
       selected_pack, selected_app, event_id,
+      turnstileToken,
       form_open_source, utm_source, utm_medium, utm_campaign, utm_content, utm_term,
       referrer, landing_url, timestamp, device_type,
     } = body;
 
-    // Validation
+    // --- Validation ---
     if (!name || name.trim().length < 2) {
-      return jsonError('Nama minimal 2 karakter', 400, corsHeaders);
+      return jsonErr('Nama minimal 2 karakter', 400, corsHeaders);
     }
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return jsonError('Email tidak valid', 400, corsHeaders);
+      return jsonErr('Email tidak valid', 400, corsHeaders);
     }
     if (!niche || niche.trim().length < 2) {
-      return jsonError('Niche tidak valid', 400, corsHeaders);
+      return jsonErr('Niche tidak valid', 400, corsHeaders);
     }
 
-    // Normalize WhatsApp
     const normalizedWa = whatsapp ? whatsapp.replace(/[^\d+]/g, '').replace(/^0/, '+62') : '';
-
-    // Validate selected_pack against valid IDs
     const safePack = selected_pack && VALID_PACKS.includes(selected_pack) ? selected_pack : null;
     const safeApp = selected_app && VALID_APPS.includes(selected_app) ? selected_app : null;
 
-    // Turnstile verification
-    if (env.TURNSTILE_SECRET_KEY && body.turnstileToken) {
-      const turnstileRes = await fetch(
-        'https://challenges.cloudflare.com/turnstile/v0/siteverify',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            secret: env.TURNSTILE_SECRET_KEY,
-            response: body.turnstileToken,
-          }),
-        }
-      );
-      const turnstileData = await turnstileRes.json();
-      if (!turnstileData.success) {
-        return jsonError('Verifikasi keamanan gagal', 403, corsHeaders);
+    // --- Turnstile verification (BLOCK 4: reject if secret configured but no valid token) ---
+    if (env.TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return jsonErr('Verifikasi keamanan diperlukan', 403, corsHeaders);
+      }
+      const tsRes = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ secret: env.TURNSTILE_SECRET_KEY, response: turnstileToken }),
+      });
+      const tsData = await tsRes.json();
+      if (!tsData.success) {
+        return jsonErr('Verifikasi keamanan gagal', 403, corsHeaders);
       }
     }
 
-    // Best-effort dedupe by event_id (only prevent within same isolate)
+    // --- Dedupe (best-effort) ---
     if (event_id) {
       if (DEDUPE_MAP.has(event_id)) {
-        return jsonError('Duplicate submission', 409, corsHeaders);
+        return jsonErr('Duplicate submission', 409, corsHeaders);
       }
       DEDUPE_MAP.set(event_id, Date.now());
-      // Clean old entries (keep last 100)
       if (DEDUPE_MAP.size > 100) {
         const oldest = [...DEDUPE_MAP.entries()].sort((a, b) => a[1] - b[1])[0];
         if (oldest) DEDUPE_MAP.delete(oldest[0]);
       }
     }
 
-    // Forward to webhook
-    if (env.LEAD_WEBHOOK_URL) {
-      try {
-        await fetch(env.LEAD_WEBHOOK_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: name.trim(),
-            email: email.trim(),
-            whatsapp: normalizedWa,
-            niche: niche.trim(),
-            model_penggunaan: model_penggunaan || '',
-            selected_pack: safePack,
-            selected_app: safeApp,
-            form_open_source: form_open_source || '',
-            utm_source: utm_source || '',
-            utm_medium: utm_medium || '',
-            utm_campaign: utm_campaign || '',
-            utm_content: utm_content || '',
-            utm_term: utm_term || '',
-            referrer: referrer || '',
-            landing_url: landing_url || '',
-            device_type: device_type || '',
-            captured_at: timestamp || new Date().toISOString(),
-          }),
-        });
-      } catch (err) {
-        console.error('Webhook forwarding failed:', err);
-      }
+    // --- BLOCKER 5: webhook delivery must succeed ---
+    if (!env.LEAD_WEBHOOK_URL) {
+      console.error('LEAD_WEBHOOK_URL not configured');
+      return jsonErr('Konfigurasi server belum lengkap', 503, corsHeaders);
+    }
+
+    let webhookOk = false;
+    try {
+      const whRes = await fetch(env.LEAD_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name.trim(),
+          email: email.trim(),
+          whatsapp: normalizedWa,
+          niche: niche.trim(),
+          model_penggunaan: model_penggunaan || '',
+          selected_pack: safePack,
+          selected_app: safeApp,
+          form_open_source: form_open_source || '',
+          utm_source: utm_source || '',
+          utm_medium: utm_medium || '',
+          utm_campaign: utm_campaign || '',
+          utm_content: utm_content || '',
+          utm_term: utm_term || '',
+          referrer: referrer || '',
+          landing_url: landing_url || '',
+          device_type: device_type || '',
+          captured_at: timestamp || new Date().toISOString(),
+        }),
+      });
+      webhookOk = whRes.ok;
+    } catch (err) {
+      console.error('Webhook delivery error:', err);
+    }
+
+    if (!webhookOk) {
+      return jsonErr('Gagal mengirim data. Silakan coba lagi.', 502, corsHeaders);
     }
 
     return new Response(JSON.stringify({ success: true }), {
@@ -126,11 +128,11 @@ export async function onRequest(context) {
       headers: { 'Content-Type': 'application/json', ...corsHeaders },
     });
   } catch (err) {
-    return jsonError('Invalid request', 400, corsHeaders);
+    return jsonErr('Invalid request', 400, corsHeaders);
   }
 }
 
-function jsonError(message, status, corsHeaders) {
+function jsonErr(message, status, corsHeaders) {
   return new Response(JSON.stringify({ error: message }), {
     status,
     headers: { 'Content-Type': 'application/json', ...corsHeaders },

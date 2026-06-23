@@ -171,7 +171,9 @@
 .pack-top{position:relative;z-index:1;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .pack-code{font:600 9px/1 "DM Mono",monospace;color:#617086;letter-spacing:1px;text-transform:uppercase}
 .pack-icon{width:42px;height:42px;border-radius:14px;background:var(--av-white);display:grid;place-items:center;border:1px solid rgba(5,11,29,.12);font-size:19px}
-.pack h3{position:relative;z-index:1;max-width:420px;margin:23px 0 8px;font:700 34px/.98 "Space Grotesk",sans-serif;letter-spacing:-1px}
+.pack h3{position:relative;z-index:1;max-width:420px;margin:23px 0 8px;font:700 34px/.98 "Space Grotesk",sans-serif;letter-spacing:-1px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pack-price{font:600 12px/1 "DM Mono",monospace;padding:5px 10px;border-radius:9px;background:rgba(216,255,66,.2);color:var(--av-navy-800);white-space:nowrap}
+.pack-price-99{background:rgba(216,255,66,.2)}
 .pack p{position:relative;z-index:1;max-width:470px;margin:0;color:var(--muted);font-size:12px;line-height:1.65}
 .pack-tags{position:relative;z-index:1;display:flex;gap:7px;flex-wrap:wrap;margin-top:19px}
 .pack-tags span{padding:8px 9px;border:1px solid rgba(5,11,29,.13);border-radius:9px;background:rgba(255,255,255,.62);font:600 9px/1 "DM Mono",monospace;color:var(--muted)}
@@ -278,7 +280,15 @@ footer a{text-decoration:underline;text-underline-offset:3px}
 /* ===== PRODUCT SHOWCASE ===== */
 .showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
 .showcase-placeholder{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px}
-.showcase-cta{text-align:center;margin-top:8px}
+.showcase-card{padding:22px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--paper-2);box-shadow:var(--soft-shadow);transition:transform .15s}
+.showcase-card:hover{transform:translateY(-3px)}
+.showcase-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.showcase-app-symbol{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--av-blue-600);color:#fff;font:700 14px/1 "Space Grotesk",sans-serif;flex:none}
+.showcase-card-top strong{font-size:14px;letter-spacing:-.2px}
+.showcase-rebrand{margin:0 0 6px;font:700 18px/1.15 "Space Grotesk",sans-serif;color:var(--ink);letter-spacing:-.4px}
+.showcase-outcome{margin:0 0 10px;color:var(--muted);font-size:11px;line-height:1.55}
+.showcase-tagline{font:500 9px/1 "DM Mono",monospace;color:var(--av-blue-600);letter-spacing:.5px;text-transform:uppercase}
+.showcase-cta{text-align:center;margin-top:12px}
 
 /* ===== PACK SELECTED STATE ===== */
 .pack.selected{border-color:var(--av-blue-600);box-shadow:0 0 0 3px rgba(18,107,255,.15)}
