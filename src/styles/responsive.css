@@ -1,5 +1,7 @@
 @media (max-width:1120px){
+  .brand-logo{height:32px}
   .nav{display:none}
+  .menu-btn{display:inline-grid;width:40px;height:40px;place-items:center;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05);color:#fff}
   .hero{grid-template-columns:1fr;min-height:auto}
   .hero-visual{min-height:370px}
   .vault-card{max-width:470px}
@@ -11,13 +13,12 @@
 }
 @media (max-width:760px){
   .wrap{padding:12px}
-  .topbar{top:8px;padding:10px 10px 10px 14px}
-  .brand-mark{width:40px;height:40px}
-  .brand-copy strong{font-size:13px}
-  .brand-copy span{font-size:8px}
+  .topbar{top:8px;padding:10px;gap:10px}
+  .brand-logo{height:28px}
+  .brand-copy strong{display:none}
+  .brand-logo{height:24px}
   .header-actions .status{display:none}
   .header-actions .btn{display:none}
-  .menu-btn{display:inline-grid;width:40px;height:40px;place-items:center;border:1px solid rgba(255,255,255,.14);border-radius:12px;background:rgba(255,255,255,.05);color:#fff}
   .hero{margin-top:12px;padding:34px 24px;border-radius:26px}
   .hero h1{font-size:48px;letter-spacing:-2.5px}
   .hero p{font-size:13px}
