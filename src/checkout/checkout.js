@@ -2,6 +2,7 @@
  * checkout.js — Dedicated conversion checkout page logic.
  * Handles offer validation, form submission, payment redirect, and return polling.
  */
+<<<<<<< HEAD
 import { PLANS, vaultPacks, validateOffer, getAppIdsForOffer, getPackLabel } from '../scripts/data/offer-catalog.js';
 
 /* ---- State ---- */
@@ -18,7 +19,10 @@ let state = {
 const MAX_POLL_ATTEMPTS = 40;
 const POLL_INTERVAL = 5000;
 const CREATE_ORDER_ENDPOINT = '/api/checkout/create-order';
+<<<<<<< HEAD
 const STATUS_ENDPOINT = '/api/checkout/status';
+=======
+>>>>>>> c52b7d0 (fix: sync pack prices to Rp97.000, add checkout to Vite entry)
 
 /* ---- DOM refs ---- */
 let els = {};
@@ -243,9 +247,16 @@ async function createOrder(name, email, phone) {
   return data;
 }
 
+<<<<<<< HEAD
 async function pollStatus(orderId) {
   try {
     const url = `${STATUS_ENDPOINT}?order_id=${encodeURIComponent(orderId)}`;
+=======
+/* ---- Polling ---- */
+async function pollStatus(orderId) {
+  try {
+    const url = `/api/checkout/status?order_id=${encodeURIComponent(orderId)}`;
+>>>>>>> c52b7d0 (fix: sync pack prices to Rp97.000, add checkout to Vite entry)
     const response = await fetch(url);
     const data = await response.json().catch(() => ({}));
     if (!response.ok) return null;
@@ -255,7 +266,10 @@ async function pollStatus(orderId) {
   }
 }
 
+<<<<<<< HEAD
 /* ---- Polling ---- */
+=======
+>>>>>>> c52b7d0 (fix: sync pack prices to Rp97.000, add checkout to Vite entry)
 function startPolling(orderId) {
   clearPolling();
   state.pollAttempts = 0;

@@ -1,0 +1,7 @@
+fix: sync pack prices to Rp97.000, add checkout to Vite entry
+
+- Fix all 4 static pack card prices in index.html (Rp99.000 → Rp97.000)
+- Add checkout/index.html to vite.config.js rollup input
+- Restore missing checkout.js, main.js, checkout.css
+
+Co-authored-by: CommandCodeBot <noreply@commandcode.ai>
