@@ -4,7 +4,6 @@ import { vaultApps } from './data/vault-apps.js';
 export function initFirstProduct() {
   const recommendationCard = document.getElementById('firstProductCard');
   const recommendationContent = document.getElementById('firstProductContent');
-  const showcaseGrid = document.getElementById('showcaseGrid');
   if (!recommendationCard || !recommendationContent) return;
 
   const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
@@ -19,9 +18,6 @@ export function initFirstProduct() {
 
     // Render first-product recommendation
     renderRecommendation(packId);
-
-    // Render product showcase
-    renderProductShowcase(packId);
 
     // Fire tracking event ONCE
     if (typeof window.trackVaultEvent === 'function') {
@@ -84,28 +80,8 @@ export function initFirstProduct() {
     });
   }
 
-  // ===== PRODUCT SHOWCASE (3 apps) =====
-  function renderProductShowcase(packId) {
-    if (!showcaseGrid) return;
-    const pack = vaultPacks[packId];
-    if (!pack) return;
-
-    const featuredApps = pack.appIds.slice(0, 3).map(id => vaultApps[id]).filter(Boolean);
-
-    showcaseGrid.innerHTML = featuredApps.map(app => `
-      <article class="showcase-card" data-app="${app.id}">
-        <div class="showcase-card-top">
-          <span class="showcase-app-symbol">${app.iconLabel}</span>
-          <strong>${app.name}</strong>
-        </div>
-        <h4 class="showcase-rebrand">${app.exampleRebrandName}</h4>
-        <p class="showcase-outcome">${app.endUserOutcome}</p>
-        <span class="showcase-tagline">${app.tagline}</span>
-      </article>
-    `).join('');
-  }
+  // ===== PRODUCT SHOWCASE (3 apps) — DISABLED per owner request =====
 
   // ===== INITIAL RENDER =====
   renderRecommendation(state.recommendedPack);
-  renderProductShowcase(state.recommendedPack);
 }

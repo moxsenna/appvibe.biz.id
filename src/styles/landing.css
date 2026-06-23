@@ -277,19 +277,6 @@ footer a{text-decoration:underline;text-underline-offset:3px}
 .fp-app-pill em{font-style:normal;color:var(--av-cyan-500)}
 .fp-actions{display:flex;gap:10px;flex-wrap:wrap}
 
-/* ===== PRODUCT SHOWCASE ===== */
-.showcase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
-.showcase-placeholder{grid-column:1/-1;text-align:center;padding:40px;color:var(--muted);font-size:13px}
-.showcase-card{padding:22px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--paper-2);box-shadow:var(--soft-shadow);transition:transform .15s}
-.showcase-card:hover{transform:translateY(-3px)}
-.showcase-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.showcase-app-symbol{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:var(--av-blue-600);color:#fff;font:700 14px/1 "Space Grotesk",sans-serif;flex:none}
-.showcase-card-top strong{font-size:14px;letter-spacing:-.2px}
-.showcase-rebrand{margin:0 0 6px;font:700 18px/1.15 "Space Grotesk",sans-serif;color:var(--ink);letter-spacing:-.4px}
-.showcase-outcome{margin:0 0 10px;color:var(--muted);font-size:11px;line-height:1.55}
-.showcase-tagline{font:500 9px/1 "DM Mono",monospace;color:var(--av-blue-600);letter-spacing:.5px;text-transform:uppercase}
-.showcase-cta{text-align:center;margin-top:12px}
-
 /* ===== PACK SELECTED STATE ===== */
 .pack.selected{border-color:var(--av-blue-600);box-shadow:0 0 0 3px rgba(18,107,255,.15)}
 
