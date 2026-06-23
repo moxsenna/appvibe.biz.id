@@ -9,6 +9,7 @@
 
 const VALID_PACKS = ['advertiser', 'commerce', 'creator', 'brand_launch'];
 const VALID_APPS = ['adsprint', 'pikat', 'rupa', 'mula', 'arah', 'cetak', 'adegan', 'suara', 'bukti', 'mimik', 'ritme', 'tayang', 'katalog'];
+
 const PACK_APPS = {
   advertiser: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula'],
   commerce: ['katalog', 'rupa', 'bukti', 'pikat', 'adsprint'],

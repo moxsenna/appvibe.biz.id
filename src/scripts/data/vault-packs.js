@@ -3,9 +3,6 @@ export const vaultPacks = {
     id: 'advertiser',
     code: '01',
     label: 'Advertiser App Pack',
-    product_key: 'pack_advertiser',
-    amount: 97000,
-    currency: 'IDR',
     scope: 'FOR MEDIA BUYERS',
     targetAudience: 'Media buyer, agency performance, mentor ads',
     audienceProblem: 'Klien butuh strategi campaign yang terukur, bukan trial-and-error di Ads Manager.',
@@ -22,9 +19,6 @@ export const vaultPacks = {
     id: 'commerce',
     code: '02',
     label: 'Commerce & Marketplace Pack',
-    product_key: 'pack_commerce',
-    amount: 97000,
-    currency: 'IDR',
     scope: 'FOR ECOMMERCE OPERATORS',
     targetAudience: 'Seller mentor, marketplace operator, ecommerce agency',
     audienceProblem: 'Seller butuh listing, visual, proof, dan konten affiliate yang meningkatkan konversi dan persepsi nilai.',
@@ -41,9 +35,6 @@ export const vaultPacks = {
     id: 'creator',
     code: '03',
     label: 'Creator & Affiliate Pack',
-    product_key: 'pack_creator',
-    amount: 97000,
-    currency: 'IDR',
     scope: 'FOR CREATOR EDUCATORS',
     targetAudience: 'Creator educator, affiliate mentor, social media agency',
     audienceProblem: 'Creator butuh sistem konten yang konsisten, bukan ide sporadis yang cepat habis.',
@@ -60,9 +51,6 @@ export const vaultPacks = {
     id: 'brand_launch',
     code: '04',
     label: 'Brand & Launch Pack',
-    product_key: 'pack_branding',
-    amount: 97000,
-    currency: 'IDR',
     scope: 'FOR STRATEGISTS & BUILDERS',
     targetAudience: 'Brand strategist, web designer, course creator, consultant',
     audienceProblem: 'Klien butuh fondasi brand dan struktur launch yang jelas, bukan template generik yang bisa dicari di Google.',
@@ -74,28 +62,9 @@ export const vaultPacks = {
     appIds: ['arah', 'mimik', 'mula', 'tayang', 'cetak'],
     formInterestValue: 'brand_launch',
     gradient: 'linear-gradient(145deg,#e8f5ee,#d2ecdc)'
-  },
-  vault_full: {
-    id: 'vault_full',
-    code: '05',
-    label: 'Full Vault License',
-    product_key: 'vault_full_license',
-    amount: 199000,
-    currency: 'IDR',
-    scope: 'FULL ACCESS — 13 APPS',
-    targetAudience: 'Agency, reseller, dan professional yang ingin seluruh katalog',
-    audienceProblem: 'Anda ingin akses penuh ke semua aplikasi tanpa dibatasi pack.',
-    primaryProductName: 'White-Label AI App Vault',
-    primaryAppId: 'katalog',
-    productOutcome: 'Semua 13 aplikasi dengan lisensi white-label penuh, arahan rebrand, dan kit go-to-market.',
-    buyerTypes: ['Agency', 'Reseller', 'Professional'],
-    launchModels: ['Full catalog', 'Reseller license', 'Enterprise access'],
-    appIds: ['adsprint', 'pikat', 'rupa', 'mula', 'arah', 'cetak', 'adegan', 'suara', 'bukti', 'mimik', 'ritme', 'tayang', 'katalog'],
-    formInterestValue: 'vault_full',
-    gradient: 'linear-gradient(145deg,#fef8e8,#fdf0d0)'
   }
 };
 
-export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch', 'vault_full'];
-export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000, vault_full: 199000 };
-export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding', vault_full: 'vault_full_license' };
+export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch'];
+export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000 };
+export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding' };
