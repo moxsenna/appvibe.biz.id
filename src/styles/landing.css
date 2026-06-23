@@ -11,7 +11,7 @@
   backdrop-filter:blur(18px);
 }
 .brand{display:flex;align-items:center;gap:12px;min-width:0}
-.brand-logo{display:block;height:36px;width:auto}
+.brand-logo{display:block;height:48px;width:auto}
 .nav{display:flex;align-items:center;gap:2px}
 .nav a{font-size:11px;font-weight:700;color:#bec1ca;padding:10px 12px;border-radius:var(--pill);transition:.18s}
 .nav a:hover{background:rgba(255,255,255,.08);color:#fff}
