@@ -242,17 +242,24 @@ export async function onRequest(context) {
             captured_at: fulfillmentTimestamp,
           });
 
-          const res = await fetch(fulfillmentWebhook, {
+          let fwdRes = await fetch(fulfillmentWebhook, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             redirect: 'manual',
             body,
           });
 
-          // Google Apps Script returns 302 as CSRF redirect — initial POST
-          // already stores the body and triggers doPost(). Treat 302 as success.
-          if (!res.ok && res.status !== 302) {
-            console.warn('[Fulfillment] webhook returned', res.status);
+          // Google Apps Script returns 302 CSRF redirect — follow as GET
+          // to trigger actual doPost() execution with the stored body.
+          if (fwdRes.status === 302) {
+            const location = fwdRes.headers.get('location');
+            if (location) {
+              fwdRes = await fetch(location, { redirect: 'follow' });
+            }
+          }
+
+          if (!fwdRes.ok) {
+            console.warn('[Fulfillment] webhook returned', fwdRes.status);
           }
         } catch (err) {
           console.error('Fulfillment webhook forwarding failed:', err);
