@@ -37,7 +37,7 @@ export async function onRequest(context) {
   const appId = env.PAYCORE_APP_ID || 'appvibe_vault';
   const keyId = env.PAYCORE_KEY_ID;
   const appSecret = env.PAYCORE_APP_SECRET;
-  const returnUrl = env.PAYCORE_RETURN_URL || 'https://appvibe.web.id/payment/return';
+  const returnUrl = env.PAYCORE_RETURN_URL || 'https://appvibe.biz.id/checkout/';
 
   if (!keyId || !appSecret) {
     return json(
