@@ -88,127 +88,132 @@ export async function onRequest(context) {
     );
   }
 
-  const pack = PACKS[packId];
-  const externalOrderId = `vault-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+  try {
+    const pack = PACKS[packId];
+    const externalOrderId = `vault-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+    const idempotencyKey = crypto.randomUUID();
 
-  // Check idempotency: same (email + packId) within short window to prevent double-click
-  const idempotencyKey = crypto.randomUUID();
-
-  const orderBody = {
-    external_order_id: externalOrderId,
-    merchant_profile_id: 'appvibe_default',
-    product_key: pack.product_key,
-    description: pack.description,
-    amount: pack.amount,
-    currency: pack.currency,
-    customer: {
-      name,
-      email,
-      phone: phone || '081234567890',
-    },
-    return_url: returnUrl,
-    fulfillment_data: {
-      pack_id: packId,
+    const orderBody = {
+      external_order_id: externalOrderId,
+      merchant_profile_id: 'appvibe_default',
       product_key: pack.product_key,
-      email,
-      name,
-      phone,
-      source: 'appvibe.web.id_checkout',
-    },
-  };
+      description: pack.description,
+      amount: pack.amount,
+      currency: pack.currency,
+      customer: {
+        name,
+        email,
+        phone: phone || '081234567890',
+      },
+      return_url: returnUrl,
+      fulfillment_data: {
+        pack_id: packId,
+        product_key: pack.product_key,
+        email,
+        name,
+        phone,
+        source: 'appvibe.web.id_checkout',
+      },
+    };
 
-  const rawBody = JSON.stringify(orderBody);
-  const timestamp = new Date().toISOString();
-  const path = '/v1/orders';
-  const signatureHex = await signPayCoreRequest({
-    appSecret,
-    timestamp,
-    method: 'POST',
-    path,
-    rawBody,
-  });
+    const rawBody = JSON.stringify(orderBody);
+    const timestamp = new Date().toISOString();
+    const path = '/v1/orders';
+    const signatureHex = await signPayCoreRequest({
+      appSecret,
+      timestamp,
+      method: 'POST',
+      path,
+      rawBody,
+    });
 
-  // Call PayCore API
-  const paycoreRes = await fetch(`${baseUrl.replace(/\/+$/, '')}${path}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-PayCore-App': appId,
-      'X-PayCore-Key-Id': keyId,
-      'X-PayCore-Timestamp': timestamp,
-      'X-PayCore-Signature': `sha256=${signatureHex}`,
-      'Idempotency-Key': idempotencyKey,
-    },
-    body: rawBody,
-  });
+    // Call PayCore API
+    const paycoreRes = await fetch(`${baseUrl.replace(/\/+$/, '')}${path}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-PayCore-App': appId,
+        'X-PayCore-Key-Id': keyId,
+        'X-PayCore-Timestamp': timestamp,
+        'X-PayCore-Signature': `sha256=${signatureHex}`,
+        'Idempotency-Key': idempotencyKey,
+      },
+      body: rawBody,
+    });
 
-  const paycoreJson = await paycoreRes.json().catch(() => ({}));
+    const paycoreJson = await paycoreRes.json().catch(() => ({}));
 
-  if (!paycoreRes.ok) {
+    if (!paycoreRes.ok) {
+      return json(
+        {
+          error: 'paycore_error',
+          status: paycoreRes.status,
+          message: 'Gagal membuat order pembayaran. Silakan coba lagi.',
+        },
+        paycoreRes.status >= 500 ? 502 : 400,
+        cors,
+      );
+    }
+
+    if (!paycoreJson.checkout_url) {
+      return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
+    }
+
+    // Persist order locally in KV for status tracking (best-effort)
+    try {
+      if (env.CHECKOUT_EVENTS) {
+        const orderRecord = {
+          external_order_id: externalOrderId,
+          paycore_order_id: paycoreJson.order_id,
+          pack_id: packId,
+          product_key: pack.product_key,
+          amount: pack.amount,
+          currency: pack.currency,
+          customer_name: name,
+          customer_email: email,
+          customer_phone: phone,
+          payment_status: paycoreJson.payment_status || 'pending',
+          fulfillment_status: 'pending',
+          checkout_url: paycoreJson.checkout_url,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        };
+
+        await env.CHECKOUT_EVENTS.put(`order:${paycoreJson.order_id}`, JSON.stringify(orderRecord), {
+          expirationTtl: 60 * 60 * 24 * 90,
+        });
+        await env.CHECKOUT_EVENTS.put(`ext:${externalOrderId}`, paycoreJson.order_id, {
+          expirationTtl: 60 * 60 * 24 * 90,
+        });
+        await env.CHECKOUT_EVENTS.put(`buyer:${email}`, paycoreJson.order_id, {
+          expirationTtl: 60 * 60 * 24 * 90,
+        });
+      }
+    } catch (kvErr) {
+      console.error('[Checkout] KV persist failed:', kvErr);
+      // Non-fatal — order still created, status tracking degraded
+    }
+
     return json(
       {
-        error: 'paycore_error',
-        status: paycoreRes.status,
-        message: 'Gagal membuat order pembayaran. Silakan coba lagi.',
+        checkout_url: paycoreJson.checkout_url,
+        order_id: paycoreJson.order_id,
+        external_order_id: paycoreJson.external_order_id,
+        payment_status: paycoreJson.payment_status || 'pending',
+        amount: pack.amount,
       },
-      paycoreRes.status >= 500 ? 502 : 400,
+      201,
+      cors,
+    );
+  } catch (err) {
+    console.error('[Checkout] create-order error:', err);
+    return json(
+      {
+        error: 'create_order_failed',
+        message: 'Gagal membuat order. Silakan coba lagi nanti.',
+      },
+      502,
       cors,
     );
   }
-
-  if (!paycoreJson.checkout_url) {
-    return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
-  }
-
-  // Persist order locally in KV for status tracking
-  if (env.CHECKOUT_EVENTS) {
-    const orderRecord = {
-      external_order_id: externalOrderId,
-      paycore_order_id: paycoreJson.order_id,
-      pack_id: packId,
-      product_key: pack.product_key,
-      amount: pack.amount,
-      currency: pack.currency,
-      customer_name: name,
-      customer_email: email,
-      customer_phone: phone,
-      payment_status: paycoreJson.payment_status || 'pending',
-      fulfillment_status: 'pending',
-      checkout_url: paycoreJson.checkout_url,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    };
-
-    await env.CHECKOUT_EVENTS.put(
-      `order:${paycoreJson.order_id}`,
-      JSON.stringify(orderRecord),
-      { expirationTtl: 60 * 60 * 24 * 90 }, // 90 days
-    );
-
-    // Also index by external_order_id
-    await env.CHECKOUT_EVENTS.put(
-      `ext:${externalOrderId}`,
-      paycoreJson.order_id,
-      { expirationTtl: 60 * 60 * 24 * 90 },
-    );
-
-    // Track last order by email (for quick lookup)
-    await env.CHECKOUT_EVENTS.put(
-      `buyer:${email}`,
-      paycoreJson.order_id,
-      { expirationTtl: 60 * 60 * 24 * 90 },
-    );
-  }
-
-  return json(
-    {
-      checkout_url: paycoreJson.checkout_url,
-      order_id: paycoreJson.order_id,
-      external_order_id: paycoreJson.external_order_id,
-      payment_status: paycoreJson.payment_status || 'pending',
-      amount: pack.amount,
-    },
-    201,
-    cors,
-  );
 }
