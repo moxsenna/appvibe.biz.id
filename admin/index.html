@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <title>Admin — AppVibe Orders</title>
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--navy:#050b1d;--blue:#126bff;--bg:#eef3fa;--surface:#fff;--line:#c9d4e5;--text:#10203f;--muted:#66748d;--success:#16866d;--danger:#a0392c}
+    body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;font-size:13px}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    a{color:var(--blue)}
+
+    .ad-header{background:var(--surface);border-bottom:1px solid var(--line);padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+    .ad-header h1{margin:0;font-size:16px;font-weight:800;color:var(--navy)}
+    .ad-header span{color:var(--muted);font-size:11px}
+
+    .ad-wrapper{max-width:1200px;margin:0 auto;padding:20px}
+
+    .ad-login{max-width:400px;margin:80px auto;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px;text-align:center}
+    .ad-login h2{margin:0 0 8px;font-size:18px}
+    .ad-login p{margin:0 0 20px;color:var(--muted);font-size:12px}
+    .ad-login input{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:12px;font-size:14px;outline:none;margin-bottom:12px}
+    .ad-login input:focus{border-color:var(--blue)}
+    .ad-login button{width:100%;padding:12px;border:0;border-radius:12px;color:#fff;background:var(--blue);font-weight:700;font-size:13px}
+    .ad-login .ad-error{color:var(--danger);font-size:11px;margin:8px 0 0;display:none}
+
+    .ad-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+    .ad-toolbar-left{display:flex;align-items:center;gap:10px}
+    .ad-toolbar-left input{padding:9px 12px;border:1.5px solid var(--line);border-radius:10px;outline:none;font-size:12px;min-width:200px}
+    .ad-toolbar-left input:focus{border-color:var(--blue)}
+    .ad-count{color:var(--muted);font-size:11px;font-weight:600}
+    .ad-refresh{padding:9px 16px;border:1px solid var(--line);border-radius:10px;background:var(--surface);font-weight:600;font-size:11px}
+    .ad-sheet-link{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:10px;color:#fff;background:#1a8a34;font-weight:600;font-size:11px;text-decoration:none}
+
+    .ad-table-wrap{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:16px}
+    table{width:100%;border-collapse:collapse;font-size:11px}
+    th{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;font-size:9px;white-space:nowrap;position:sticky;top:0;background:var(--surface)}
+    td{padding:10px 12px;border-bottom:1px solid #e2eaf5;vertical-align:middle}
+    tr:hover td{background:#f7faff}
+
+    .ad-badge{display:inline-flex;padding:4px 8px;border-radius:999px;font:700 8px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.2px}
+    .ad-badge.paid,.ad-badge.delivered,.ad-badge.success{color:#116c59;background:#e5f8f2}
+    .ad-badge.pending{color:#8b7500;background:#fff8e0}
+    .ad-badge.failed,.ad-badge.error{color:var(--danger);background:#fff0ed}
+    .ad-badge.created{color:#526788;background:#edf4ff}
+
+    .ad-mono{font-family:'DM Mono',monospace;font-size:10px;color:var(--muted)}
+    .ad-amount{font-weight:700}
+    .ad-hidden{display:none}
+
+    .ad-footer{text-align:center;padding:20px;color:var(--muted);font-size:10px}
+  </style>
+</head>
+<body>
+  <header class="ad-header">
+    <div>
+      <h1>AppVibe Admin</h1>
+      <span>Order management</span>
+    </div>
+    <button id="adLogout" class="ad-hidden" style="padding:7px 14px;border:1px solid var(--line);border-radius:8px;background:var(--surface);font-size:11px;font-weight:600">Logout</button>
+  </header>
+
+  <div class="ad-wrapper" id="adApp">
+    <!-- Login -->
+    <div class="ad-login" id="adLogin">
+      <h2>Admin</h2>
+      <p>Masukkan token admin untuk mengakses panel.</p>
+      <input type="password" id="adTokenInput" placeholder="Token admin" />
+      <button id="adLoginBtn">Masuk</button>
+      <p class="ad-error" id="adLoginError">Token tidak valid.</p>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="adDashboard" class="ad-hidden">
+      <div class="ad-toolbar">
+        <div class="ad-toolbar-left">
+          <input type="text" id="adSearch" placeholder="Cari nama/email/order…" />
+          <span class="ad-count" id="adCount">0 orders</span>
+        </div>
+        <div>
+          <a class="ad-sheet-link" href="https://docs.google.com/spreadsheets" target="_blank" rel="noopener">↗ Google Sheet</a>
+          <button class="ad-refresh" id="adRefresh">↻ Refresh</button>
+        </div>
+      </div>
+
+      <div class="ad-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Pembeli</th>
+              <th>Email</th>
+              <th>Paket</th>
+              <th>Jumlah</th>
+              <th>Pembayaran</th>
+              <th>Akses</th>
+              <th>Tanggal</th>
+            </tr>
+          </thead>
+          <tbody id="adTbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="ad-footer">AppVibe &middot; Data diambil dari Cloudflare KV</div>
+
+  <script type="module">
+    const TOKEN_KEY = 'av_admin_token';
+    const API = '/api/admin/orders';
+
+    const loginEl = document.getElementById('adLogin');
+    const dashboardEl = document.getElementById('adDashboard');
+    const tokenInput = document.getElementById('adTokenInput');
+    const loginBtn = document.getElementById('adLoginBtn');
+    const loginError = document.getElementById('adLoginError');
+    const logoutBtn = document.getElementById('adLogout');
+    const searchInput = document.getElementById('adSearch');
+    const countEl = document.getElementById('adCount');
+    const refreshBtn = document.getElementById('adRefresh');
+    const tbody = document.getElementById('adTbody');
+
+    let allOrders = [];
+    let token = localStorage.getItem(TOKEN_KEY) || '';
+
+    function formatPrice(amount) {
+      return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function statusBadge(status) {
+      const s = (status || 'unknown').toLowerCase();
+      return `<span class="ad-badge ${s}">${s}</span>`;
+    }
+
+    function showLogin() {
+      loginEl.style.display = 'block';
+      dashboardEl.classList.add('ad-hidden');
+      logoutBtn.classList.add('ad-hidden');
+    }
+
+    function showDashboard() {
+      loginEl.style.display = 'none';
+      dashboardEl.classList.remove('ad-hidden');
+      logoutBtn.classList.remove('ad-hidden');
+    }
+
+    function renderOrders(orders, query) {
+      const q = (query || '').toLowerCase().trim();
+      const filtered = q
+        ? orders.filter(o =>
+            (o.buyer_name || '').toLowerCase().includes(q) ||
+            (o.buyer_email || '').toLowerCase().includes(q) ||
+            (o.order_id || '').toLowerCase().includes(q) ||
+            (o.pack_id || '').toLowerCase().includes(q) ||
+            (o.pack_name || '').toLowerCase().includes(q)
+          )
+        : orders;
+
+      countEl.textContent = filtered.length + ' orders';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--muted)">Tidak ada data.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(o => `
+        <tr>
+          <td class="ad-mono" title="${o.order_id}">${o.order_id.slice(0, 20)}…</td>
+          <td><strong>${o.buyer_name || '-'}</strong></td>
+          <td class="ad-mono">${o.buyer_email || '-'}</td>
+          <td>${o.pack_name || o.pack_id}</td>
+          <td class="ad-amount">${formatPrice(o.amount)}</td>
+          <td>${statusBadge(o.payment_status)}</td>
+          <td>${statusBadge(o.fulfillment_status)}</td>
+          <td style="white-space:nowrap">${formatDate(o.created_at)}</td>
+        </tr>
+      `).join('');
+    }
+
+    async function fetchOrders() {
+      try {
+        const res = await fetch(API + '?token=' + encodeURIComponent(token));
+        if (res.status === 401) {
+          localStorage.removeItem(TOKEN_KEY);
+          token = '';
+          showLogin();
+          loginError.style.display = 'block';
+          return;
+        }
+        const data = await res.json();
+        if (data.orders) {
+          allOrders = data.orders;
+          renderOrders(allOrders, searchInput.value);
+        }
+      } catch (err) {
+        console.error('Failed to fetch orders:', err);
+      }
+    }
+
+    function login() {
+      const t = tokenInput.value.trim();
+      if (!t) return;
+      token = t;
+      localStorage.setItem(TOKEN_KEY, t);
+      loginError.style.display = 'none';
+      fetchOrders().then(showDashboard);
+    }
+
+    loginBtn.addEventListener('click', login);
+    tokenInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+
+    logoutBtn.addEventListener('click', () => {
+      localStorage.removeItem(TOKEN_KEY);
+      token = '';
+      showLogin();
+    });
+
+    searchInput.addEventListener('input', () => {
+      renderOrders(allOrders, searchInput.value);
+    });
+
+    refreshBtn.addEventListener('click', fetchOrders);
+
+    // Check saved token
+    if (token) {
+      fetchOrders().then(showDashboard).catch(showLogin);
+    }
+  </script>
+</body>
+</html>

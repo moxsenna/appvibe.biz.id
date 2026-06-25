@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <title>Akses Saya — AppVibe</title>
+  <meta name="description" content="Lihat akses White-Label AI App Vault Anda." />
+  <link rel="canonical" href="https://appvibe.biz.id/access/" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--navy:#050b1d;--blue:#126bff;--cyan:#10dcd5;--bg:#eef3fa;--surface:#fff;--line:#c9d4e5;--text:#10203f;--muted:#66748d;--muted-light:#8491a8;--success:#16866d;--danger:#a0392c;--radius-xl:28px;--radius-lg:18px;--shadow:0 22px 60px rgba(8,30,77,0.11)}
+    html{min-width:320px;background:var(--bg)}
+    body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;background:radial-gradient(circle at 8% 0%,rgba(18,107,255,0.08),transparent 24%),radial-gradient(circle at 92% 9%,rgba(16,220,213,0.07),transparent 24%),var(--bg)}
+    button,input{font:inherit}
+    button{cursor:pointer}
+    a{color:inherit}
+
+    .ac-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(201,212,229,.78);background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
+    .ac-header-inner{display:flex;align-items:center;justify-content:space-between;width:min(960px,calc(100% - 32px));min-height:64px;margin:0 auto;gap:16px}
+    .ac-header-brand{display:inline-flex;align-items:center;text-decoration:none;font-weight:800;font-size:1rem;color:var(--navy)}
+    .ac-header-back{color:var(--blue);font-size:12px;font-weight:800;text-decoration:none}
+    .ac-header-back:hover{text-decoration:underline}
+
+    .ac-wrapper{width:min(720px,calc(100% - 32px));margin:0 auto;padding:42px 0 72px}
+    .ac-card{border:1px solid rgba(201,212,229,.95);border-radius:var(--radius-xl);background:rgba(255,255,255,.94);box-shadow:var(--shadow);padding:clamp(24px,4vw,42px)}
+    .ac-card h1{margin:0 0 8px;color:var(--navy);font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);letter-spacing:-.065em;line-height:1.02}
+    .ac-card>p{margin:0 0 24px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    .ac-field{display:flex;gap:10px;margin-bottom:20px}
+    .ac-field input{flex:1;min-height:50px;outline:none;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--text);background:#fbfdff;font-size:15px;font-weight:600;transition:border-color .18s ease,box-shadow .18s ease}
+    .ac-field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(18,107,255,.11)}
+    .ac-field button{flex:none;min-height:50px;border:0;border-radius:14px;padding:12px 22px;color:#fff;background:var(--blue);font-weight:800;font-size:13px;transition:background .14s ease}
+    .ac-field button:hover{background:#2579ff}
+    .ac-field button:disabled{opacity:.5;cursor:not-allowed}
+
+    .ac-status{display:none;margin:0 0 20px;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;line-height:1.45}
+    .ac-status.show{display:block}
+    .ac-status.error{border:1px solid #ffcfc6;color:var(--danger);background:#fff0ed}
+    .ac-status.empty{border:1px solid #d5e2fa;color:var(--muted);background:#edf4ff}
+    .ac-status.loading{color:var(--muted);text-align:center}
+
+    .ac-order{border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;margin-bottom:16px}
+    .ac-order:last-of-type{margin-bottom:0}
+    .ac-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+    .ac-order-head h2{margin:0;font-size:18px;letter-spacing:-.03em}
+    .ac-order-id{color:var(--muted-light);font:500 10px/1.4 'DM Mono',monospace;margin:0 0 14px}
+
+    .ac-badge{display:inline-flex;padding:5px 10px;border-radius:999px;font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
+    .ac-badge.paid,.ac-badge.delivered,.ac-badge.success{color:#116c59;background:#e5f8f2}
+    .ac-badge.pending{color:#8b7500;background:#fff8e0}
+    .ac-badge.failed{color:var(--danger);background:#fff0ed}
+
+    .ac-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+    .ac-detail-item{}
+    .ac-detail-item span{display:block;color:var(--muted-light);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+    .ac-detail-item strong{font-size:13px}
+
+    .ac-apps{margin-top:16px;border-top:1px solid #e2eaf5;padding-top:14px}
+    .ac-apps-label{color:var(--muted-light);font:500 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
+    .ac-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;list-style:none;padding:0;margin:0}
+    .ac-app-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:700;color:#3c4f6b}
+    .ac-app-mark{display:grid;width:22px;height:22px;place-items:center;border:1px solid #cbd8ee;border-radius:7px;color:var(--blue);background:#f3f7ff;font:700 10px/1 'Space Grotesk',sans-serif;flex:none}
+
+    .ac-access-note{margin-top:20px;padding:16px;border:1px solid #b8eee9;border-radius:13px;background:#ebfbfa;font-size:11px;line-height:1.6;color:#1f5f68}
+    .ac-access-note strong{display:block;margin-bottom:4px;font-size:12px}
+
+    .ac-loader{display:none;text-align:center;padding:40px 0}
+    .ac-loader.show{display:block}
+    .ac-spinner{width:32px;height:32px;margin:0 auto 12px;border:3px solid #cddcf5;border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    @media(max-width:600px){
+      .ac-field{flex-direction:column}
+      .ac-detail-grid{grid-template-columns:1fr}
+      .ac-wrapper{padding-top:22px;padding-bottom:42px}
+    }
+  </style>
+</head>
+<body>
+  <header class="ac-header">
+    <div class="ac-header-inner">
+      <a class="ac-header-brand" href="/">AppVibe</a>
+      <a class="ac-header-back" href="/">&larr; Kembali</a>
+    </div>
+  </header>
+
+  <main class="ac-wrapper">
+    <div class="ac-card">
+      <h1>Akses Saya</h1>
+      <p>Masukkan email yang digunakan saat checkout untuk melihat akses dan status pembelian Anda.</p>
+
+      <div class="ac-field">
+        <input type="email" id="acEmail" placeholder="email@contoh.com" autocomplete="email" inputmode="email" />
+        <button id="acLookup">Cari</button>
+      </div>
+
+      <div class="ac-status" id="acStatus" role="alert"></div>
+
+      <div class="ac-loader" id="acLoader">
+        <div class="ac-spinner"></div>
+        <p style="color:var(--muted);font-size:12px;margin:0">Mencari data akses Anda…</p>
+      </div>
+
+      <div id="acResults"></div>
+    </div>
+  </main>
+
+  <script type="module">
+    const emailInput = document.getElementById('acEmail');
+    const lookupBtn = document.getElementById('acLookup');
+    const statusEl = document.getElementById('acStatus');
+    const loaderEl = document.getElementById('acLoader');
+    const resultsEl = document.getElementById('acResults');
+
+    const template = document.createElement('template');
+
+    const APP_NAMES = {
+      adsprint: 'ADSprint', pikat: 'PIKAT', rupa: 'RUPA', mula: 'MULA',
+      arah: 'ARAH', cetak: 'CETAK', adegan: 'ADEGAN', suara: 'SUARA',
+      bukti: 'BUKTI', mimik: 'MIMIK', ritme: 'RITME', tayang: 'TAYANG',
+      katalog: 'KATALOG',
+    };
+    const APP_ICONS = {
+      adsprint: 'A', pikat: 'P', rupa: 'R', mula: 'M',
+      arah: 'A', cetak: 'C', adegan: 'A', suara: 'S',
+      bukti: 'B', mimik: 'M', ritme: 'R', tayang: 'T', katalog: 'K',
+    };
+
+    // Pack app mappings
+    const PACK_APPS = {
+      advertiser: ['adsprint','rupa','adegan','bukti','mula'],
+      commerce: ['katalog','rupa','bukti','pikat','adsprint'],
+      creator: ['pikat','ritme','mimik','rupa','suara'],
+      brand_launch: ['arah','mimik','mula','tayang','cetak'],
+      vault_full: ['adsprint','rupa','adegan','bukti','mula','katalog','pikat','ritme','mimik','suara','arah','tayang','cetak'],
+    };
+
+    const PACK_LABELS = {
+      advertiser: 'Advertiser App Pack',
+      commerce: 'Commerce & Marketplace Pack',
+      creator: 'Creator & Affiliate Pack',
+      brand_launch: 'Brand & Launch Pack',
+      vault_full: 'Full AppVibe Vault',
+    };
+
+    function setStatus(type, msg) {
+      statusEl.className = 'ac-status show ' + type;
+      statusEl.textContent = msg;
+    }
+
+    function hideStatus() {
+      statusEl.className = 'ac-status';
+    }
+
+    function formatPrice(amount) {
+      return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const d = new Date(dateStr);
+      return d.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    }
+
+    function renderOrders(orders) {
+      if (!orders || orders.length === 0) {
+        resultsEl.innerHTML = '';
+        return;
+      }
+
+      const html = orders.map(order => {
+        const packId = order.pack_id;
+        const appIds = PACK_APPS[packId] || [];
+        const label = PACK_LABELS[packId] || packId;
+        const apps = renderApps(appIds);
+
+        return `
+          <div class="ac-order">
+            <div class="ac-order-head">
+              <h2>${label}</h2>
+              <span class="ac-badge ${order.payment_status}">${order.payment_status}</span>
+            </div>
+            <p class="ac-order-id">Order: ${order.order_id || '-'}</p>
+
+            <div class="ac-detail-grid">
+              <div class="ac-detail-item">
+                <span>Status Pembayaran</span>
+                <strong>${order.payment_status === 'paid' ? 'Lunas' : order.payment_status === 'pending' ? 'Menunggu' : order.payment_status}</strong>
+              </div>
+              <div class="ac-detail-item">
+                <span>Status Akses</span>
+                <strong>${order.fulfillment_status === 'delivered' ? 'Aktif' : order.fulfillment_status}</strong>
+              </div>
+              <div class="ac-detail-item">
+                <span>Total</span>
+                <strong>${formatPrice(order.amount)}</strong>
+              </div>
+              <div class="ac-detail-item">
+                <span>Dibeli</span>
+                <strong>${formatDate(order.created_at)}</strong>
+              </div>
+            </div>
+
+            ${order.fulfillment_status === 'delivered' ? `
+            <div class="ac-apps">
+              <div class="ac-apps-label">Aplikasi dalam akses ini (${appIds.length})</div>
+              <ul class="ac-app-grid">${apps}</ul>
+            </div>
+            <div class="ac-access-note">
+              <strong>✦ Hak penggunaan</strong>
+              Anda berhak merebrand dan menjual ulang akses aplikasi ini kepada end user Anda sendiri sesuai ketentuan lisensi White-Label AI App Vault.
+            </div>
+            ` : `
+            <div class="ac-access-note" style="border-color:#d5e2fa;background:#edf4ff;color:var(--muted)">
+              <strong>⏳ Menunggu pembayaran</strong>
+              Akses akan aktif setelah pembayaran terverifikasi. Detail dikirim ke email Anda.
+            </div>
+            `}
+          </div>
+        `;
+      }).join('');
+
+      resultsEl.innerHTML = html;
+    }
+
+    function renderApps(appIds) {
+      return appIds.map(id => {
+        const name = APP_NAMES[id] || id;
+        const icon = APP_ICONS[id] || id.slice(0,1).toUpperCase();
+        return `<li class="ac-app-item"><span class="ac-app-mark">${icon}</span>${name}</li>`;
+      }).join('');
+    }
+
+    async function lookup(email) {
+      hideStatus();
+      resultsEl.innerHTML = '';
+      loaderEl.classList.add('show');
+
+      try {
+        const res = await fetch('/api/access?email=' + encodeURIComponent(email));
+        const data = await res.json();
+
+        if (!res.ok) {
+          setStatus('error', data.message || data.error || 'Gagal mencari data.');
+          return;
+        }
+
+        if (!data.orders || data.orders.length === 0) {
+          setStatus('empty', data.message || 'Belum ada pembelian ditemukan untuk email ini.');
+          return;
+        }
+
+        renderOrders(data.orders);
+      } catch (err) {
+        setStatus('error', 'Koneksi bermasalah. Silakan coba lagi.');
+      } finally {
+        loaderEl.classList.remove('show');
+      }
+    }
+
+    lookupBtn.addEventListener('click', () => {
+      const email = emailInput.value.trim();
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        setStatus('error', 'Masukkan alamat email yang valid.');
+        return;
+      }
+      lookup(email);
+    });
+
+    emailInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') lookupBtn.click();
+    });
+
+    // Auto-lookup if email passed via URL param
+    const params = new URLSearchParams(window.location.search);
+    const emailParam = params.get('email');
+    if (emailParam) {
+      emailInput.value = emailParam;
+      lookup(emailParam);
+    }
+  </script>
+</body>
+</html>
