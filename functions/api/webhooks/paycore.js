@@ -242,26 +242,16 @@ export async function onRequest(context) {
             captured_at: fulfillmentTimestamp,
           });
 
-          let res = await fetch(fulfillmentWebhook, {
+          const res = await fetch(fulfillmentWebhook, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             redirect: 'manual',
             body,
           });
 
-          // Google Apps Script web apps return 302 → re-POST to redirect target
-          if ([301, 302, 307, 308].includes(res.status)) {
-            const location = res.headers.get('location');
-            if (location) {
-              res = await fetch(location, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body,
-              });
-            }
-          }
-
-          if (!res.ok) {
+          // Google Apps Script returns 302 as CSRF redirect — initial POST
+          // already stores the body and triggers doPost(). Treat 302 as success.
+          if (!res.ok && res.status !== 302) {
             console.warn('[Fulfillment] webhook returned', res.status);
           }
         } catch (err) {
