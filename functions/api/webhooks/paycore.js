@@ -219,24 +219,28 @@ export async function onRequest(context) {
         { expirationTtl: 60 * 60 * 24 * 90 },
       );
 
+      // Reshape to match lead-form column format so the same sheet handles both
       fetch(fulfillmentWebhook, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          type: 'payment.fulfilled',
-          event_id: eventId,
-          paycore_order_id: orderId,
-          external_order_id: externalOrderId,
-          pack_id: packId,
-          product_key: productKey,
-          amount,
-          currency: 'IDR',
-          customer: {
-            name: buyerName,
-            email: buyerEmail,
-          },
-          fulfilled_at: fulfillmentTimestamp,
-          source: 'appvibe.web.id_paycore_webhook',
+          name: buyerName,
+          email: buyerEmail,
+          whatsapp: '',
+          niche: packId,
+          model_penggunaan: 'purchase',
+          selected_pack: packId,
+          selected_app: '',
+          form_open_source: 'paycore_webhook',
+          utm_source: '',
+          utm_medium: '',
+          utm_campaign: '',
+          utm_content: '',
+          utm_term: '',
+          referrer: '',
+          landing_url: '',
+          device_type: '',
+          captured_at: fulfillmentTimestamp,
         }),
       }).catch((err) => {
         console.error('Fulfillment webhook forwarding failed:', err);
