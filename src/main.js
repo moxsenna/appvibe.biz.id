@@ -2,9 +2,7 @@ import './styles/index.css';
 import { initAppLauncher } from './scripts/app-launcher.js';
 import { initFirstProduct } from './scripts/first-product.js';
 import { initMobileNav } from './scripts/mobile-nav.js';
-import { initModal } from './scripts/modal.js';
 import { initTracking } from './scripts/tracking.js';
-import { initLeadForm } from './scripts/lead-form.js';
 import { initPricing } from './scripts/pricing.js';
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,9 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAppLauncher();
   initFirstProduct();
   initMobileNav();
-  initModal();
   initPricing();
-  initLeadForm();
 
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', () => {
@@ -31,7 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!packId) return;
       const params = new URLSearchParams({ plan: 'single-pack', pack: packId });
 
-      // Persist UTM from session
       const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
       utmKeys.forEach((key) => {
         const val = sessionStorage.getItem(key);
@@ -43,5 +38,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
       window.location.href = `/checkout/?${params.toString()}`;
     });
+  });
+
+  // CTA tracking — delegated click listener for conversion events
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-cta], [data-scroll-to]');
+    if (!btn) return;
+    const placement = btn.dataset.placement || btn.dataset.ctaPlacement || 'unknown';
+    const ctaLabel = btn.dataset.ctaLabel || btn.textContent.trim()?.slice(0, 60) || '';
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_cta_click', { placement, cta_label: ctaLabel });
+    }
   });
 });

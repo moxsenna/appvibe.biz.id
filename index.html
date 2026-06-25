@@ -60,7 +60,7 @@
       </nav>
       <div class="header-actions">
         <span class="status"><i></i> untuk advertiser &amp; agency</span>
-        <button class="btn lime small" data-open-modal>Lihat opsi akses <span>→</span></button>
+        <a href="/checkout/" class="btn lime small">Lihat opsi akses <span>→</span></a>
         <button class="menu-btn" id="menuBtn" aria-label="Buka menu">☰</button>
       </div>
     </header>
@@ -72,7 +72,7 @@
       <a href="#aplikasi">13 aplikasi</a>
       <a href="#lisensi">Lisensi</a>
       <a href="#faq">FAQ</a>
-      <button class="btn lime" data-open-modal>Lihat opsi akses →</button>
+      <a href="/checkout/" class="btn lime">Lihat opsi akses →</a>
     </nav>
 
     <main id="top">
@@ -308,7 +308,7 @@
               <li>Model jualan: lifetime tool, bonus mentorship, atau agency client portal</li>
             </ul>
             <div class="detail-footer" id="detailFooter">"Jual outcome yang dicari advertiser: arah campaign yang lebih jelas sebelum budget iklan dibakar."</div>
-            <button class="btn ghost" id="detailCta" data-open-form-from-detail style="margin-top:14px">Saya ingin meluncurkan produk seperti ini →</button>
+            <a href="/checkout/" class="btn ghost" style="margin-top:14px">Saya ingin meluncurkan produk seperti ini →</a>
             <div class="detail-mobile-hint">Ketuk ikon aplikasi lain untuk melihat detail yang berbeda.</div>
           </div>
         </div>
@@ -542,7 +542,7 @@
           <h2 id="cta-title">Pilih niche Anda. Kami bantu Anda menentukan <em>produk pertama</em> yang paling layak diluncurkan.</h2>
           <p>Tinggalkan detail singkat. Anda akan menerima informasi paket, batas lisensi, dan jalur yang paling sesuai dengan market Anda.</p>
           <div class="cta-actions">
-            <button class="btn cta-dark" data-open-modal>Lihat opsi akses saya →</button>
+            <a href="/checkout/" class="btn cta-dark">Lihat opsi akses saya →</a>
             <a class="btn cta-paper" href="#aplikasi">Eksplor 13 aplikasi</a>
           </div>
           <div class="cta-note">Contoh model monetisasi: lifetime access, bundle niche, bonus program, atau client portal.</div>
@@ -558,55 +558,9 @@
 
     <!-- Sticky CTA Mobile -->
     <div class="sticky-cta" id="stickyCta">
-      <button class="btn lime" data-open-modal>Lihat opsi akses <span>→</span></button>
+      <a href="/checkout/" class="btn lime">Lihat opsi akses <span>→</span></a>
     </div>
 
-    <!-- Lead Modal -->
-    <div class="modal" id="leadModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div class="modal-card">
-        <button class="modal-close" id="modalClose" aria-label="Tutup">&times;</button>
-        <h3 id="modalTitle">Lihat opsi akses.</h3>
-        <p id="modalDescription">Tinggalkan detail singkat. Anda akan menerima informasi paket, batas lisensi, dan jalur yang paling sesuai dengan market Anda.</p>
-
-        <div class="modal-offer-summary" id="modalOfferSummary" hidden>
-          <span>Pilihan Anda</span>
-          <strong id="modalOfferName"></strong>
-          <small id="modalOfferMeta"></small>
-        </div>
-
-        <form class="modal-form" id="leadForm">
-          <input type="text" id="honeypot" name="website" class="sr-only" tabindex="-1" autocomplete="off" aria-hidden="true" />
-          <input type="hidden" id="formSelectedPack" name="selected_pack" value="" />
-          <input type="hidden" id="formSelectedApp" name="selected_app" value="" />
-          <input type="hidden" id="formOpenSource" name="form_open_source" value="" />
-          <input type="hidden" id="selectedPlanId" name="plan_id" value="" />
-          <input type="hidden" id="selectedPlanName" name="plan_name" value="" />
-          <input type="hidden" id="selectedPlanPrice" name="plan_price" value="" />
-          <input type="hidden" id="selectedPackId" name="pack_id" value="" />
-          <input type="hidden" id="selectedPackName" name="pack_name" value="" />
-          <input type="text" name="name" placeholder="Nama lengkap" required />
-          <input type="email" name="email" placeholder="Email aktif" required />
-          <input type="tel" name="whatsapp" placeholder="WhatsApp (contoh: 0812xxxx)" />
-          <input type="text" name="niche" placeholder="Audiens utama / niche Anda" required />
-          <select name="model_penggunaan" required>
-            <option value="">Model penggunaan yang paling dekat</option>
-            <option value="lifetime_tool">Lifetime tool (jual akses sekali beli)</option>
-            <option value="bundle_creator">Bundle creator (paket konten + tool)</option>
-            <option value="bonus_program">Bonus program / mentorship</option>
-            <option value="client_portal">Agency client portal</option>
-            <option value="community_benefit">Community / member benefit</option>
-          </select>
-          <div class="cf-turnstile" data-sitekey="0x4AAAAAAAXxxxxx_REPLACE_ME"></div>
-          <input type="hidden" name="cf-turnstile-response" id="cfTurnstileResponse" />
-          <div class="modal-error" id="modalError"></div>
-          <button class="btn lime full" type="submit">Kirim minat akses →</button>
-          <p class="form-privacy">Dengan mengirim form ini, Anda setuju dihubungi AppVibe terkait informasi akses dan paket yang relevan.</p>
-        </form>
-        <div class="modal-message" id="modalMessage">Minat Anda sudah kami terima. Kami akan mengirim detail opsi yang relevan berdasarkan niche dan produk yang Anda pilih.</div>
-      </div>
-    </div>
   </div>
-
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </body>
 </html>

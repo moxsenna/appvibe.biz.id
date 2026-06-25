@@ -333,35 +333,12 @@ function pushCheckoutEvent(eventName, packId, orderId) {
  * The backend contract remains unchanged: POST /api/checkout/create-order
  * with { name, email, phone, pack_id }, then redirect to checkout_url.
  */
-export function initCheckoutUI(options = {}) {
-  const { container: externalContainer } = options;
-  const isPageMode = Boolean(externalContainer);
-  let modal;
-  let modalCard;
+export function initCheckoutUI({ container } = {}) {
+  if (!container) throw new Error('Checkout container required');
   let pollInterval = null;
   const trackedPurchases = new Set();
 
-  if (!isPageMode) {
-    modal = document.getElementById('leadModal');
-    modalCard = modal?.querySelector('.modal-card');
-    if (!modal || !modalCard) return null;
-  }
-
-  function getContainer() {
-    if (isPageMode && externalContainer) return externalContainer;
-
-    let container = modalCard.querySelector('.co-container');
-    if (!container) {
-      const existingForm = modalCard.querySelector('form');
-      const existingMessage = modalCard.querySelector('.modal-message');
-      if (existingForm) existingForm.style.display = 'none';
-      if (existingMessage) existingMessage.style.display = 'none';
-      container = document.createElement('div');
-      container.className = 'co-container';
-      modalCard.appendChild(container);
-    }
-    return container;
-  }
+  function getContainer() { return container; }
 
   function render(state) {
     if (pollInterval) {
@@ -579,16 +556,4 @@ export function initCheckoutUI(options = {}) {
   return { render, checkReturnFromPayment, getState: () => checkoutStore.getState() };
 }
 
-export function openCheckoutForPack(packId, formSource = 'pack_selection') {
-  if (typeof window.openModal === 'function') {
-    window.openModal(formSource, packId, null);
-  }
-  window.setTimeout(() => {
-    window.setSelectedPack?.(packId);
-    checkoutStore.selectPack(packId);
-  }, 150);
-}
 
-if (typeof window !== 'undefined') {
-  window.openCheckoutForPack = openCheckoutForPack;
-}
