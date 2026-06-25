@@ -14,6 +14,13 @@ function esc(value = '') {
   return div.innerHTML;
 }
 
+/** Get buyer email from store or sessionStorage (persisted before Duitku redirect). */
+function getBuyerEmail() {
+  const fromStore = checkoutStore.getState().buyerEmail;
+  if (fromStore) return fromStore;
+  try { return sessionStorage.getItem('av_checkout_email'); } catch { return null; }
+}
+
 function icon(name) {
   const icons = {
     lock: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 10V8a5 5 0 0 1 10 0v2"/><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M12 14v2"/></svg>',
@@ -229,14 +236,15 @@ function renderLoading() {
   `;
 }
 
-function renderStatus(type, { orderId, error } = {}) {
+function renderStatus(type, { orderId, error, buyerEmail } = {}) {
+  const accessUrl = buyerEmail ? `/access/?email=${encodeURIComponent(buyerEmail)}` : '/';
   const definitions = {
     success: {
       mark: '✓',
       kicker: 'PEMBAYARAN BERHASIL',
       title: 'Akses Anda sedang disiapkan.',
-      text: 'Kami telah menerima pembayaran Anda. Detail akses akan dikirim ke email dalam beberapa menit.',
-      action: '<a href="/" class="co-status-primary">Kembali ke beranda</a>',
+      text: 'Kami telah menerima pembayaran Anda. Silakan lihat akses Anda di halaman berikut.',
+      action: `<a href="${esc(accessUrl)}" class="co-status-primary">Lihat akses saya →</a>`,
     },
     failed: {
       mark: '!',
@@ -264,7 +272,7 @@ function renderStatus(type, { orderId, error } = {}) {
       kicker: 'ORDER SUDAH DIBAYAR',
       title: 'Pembayaran untuk order ini sudah diterima.',
       text: 'Akses akan dikirim ke email Anda. Tidak perlu melakukan pembayaran ulang.',
-      action: '<a href="/" class="co-status-primary">Kembali ke beranda</a>',
+      action: `<a href="${esc(accessUrl)}" class="co-status-primary">Lihat akses saya →</a>`,
     },
     pending: {
       mark: '…',
@@ -367,7 +375,7 @@ export function initCheckoutUI({ container } = {}) {
         if (orderId) startPolling(orderId);
         break;
       case 'success':
-        html = renderStatus('success', { orderId });
+        html = renderStatus('success', { orderId, buyerEmail: getBuyerEmail() });
         if (packId && !trackedPurchases.has(orderId || packId)) {
           trackedPurchases.add(orderId || packId);
           pushCheckoutEvent('purchase', packId, orderId);
@@ -383,7 +391,7 @@ export function initCheckoutUI({ container } = {}) {
         html = renderStatus('expired');
         break;
       case 'already_paid':
-        html = renderStatus('already_paid', { orderId });
+        html = renderStatus('already_paid', { orderId, buyerEmail: getBuyerEmail() });
         break;
       case 'error':
       default:
@@ -450,7 +458,7 @@ export function initCheckoutUI({ container } = {}) {
       return;
     }
 
-    checkoutStore.transition('creating');
+    checkoutStore.transition('creating', { buyerEmail: email, buyerName: name });
     pushCheckoutEvent('begin_checkout', packId);
 
     try {
@@ -474,6 +482,8 @@ export function initCheckoutUI({ container } = {}) {
         orderId: data.order_id,
         checkoutUrl: data.checkout_url,
       });
+      // Persist buyer email across payment redirect + return
+      try { sessionStorage.setItem('av_checkout_email', email); } catch {}
       window.location.assign(data.checkout_url);
     } catch (error) {
       console.error('[Checkout] create-order failed:', error);
