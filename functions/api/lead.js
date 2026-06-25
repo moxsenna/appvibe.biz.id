@@ -109,6 +109,7 @@ export async function onRequest(context) {
       const whRes = await fetch(env.LEAD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        redirect: 'follow',
         body: JSON.stringify({
           name: name.trim(),
           email: email.trim(),
