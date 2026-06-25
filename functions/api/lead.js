@@ -106,30 +106,44 @@ export async function onRequest(context) {
 
     let webhookOk = false;
     try {
-      const whRes = await fetch(env.LEAD_WEBHOOK_URL, {
+      const body = JSON.stringify({
+        name: name.trim(),
+        email: email.trim(),
+        whatsapp: normalizedWa,
+        niche: niche.trim(),
+        model_penggunaan: model_penggunaan || '',
+        selected_pack: safePack,
+        selected_app: safeApp,
+        form_open_source: form_open_source || '',
+        utm_source: utm_source || '',
+        utm_medium: utm_medium || '',
+        utm_campaign: utm_campaign || '',
+        utm_content: utm_content || '',
+        utm_term: utm_term || '',
+        referrer: referrer || '',
+        landing_url: landing_url || '',
+        device_type: device_type || '',
+        captured_at: timestamp || new Date().toISOString(),
+      });
+
+      let whRes = await fetch(env.LEAD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        redirect: 'follow',
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          whatsapp: normalizedWa,
-          niche: niche.trim(),
-          model_penggunaan: model_penggunaan || '',
-          selected_pack: safePack,
-          selected_app: safeApp,
-          form_open_source: form_open_source || '',
-          utm_source: utm_source || '',
-          utm_medium: utm_medium || '',
-          utm_campaign: utm_campaign || '',
-          utm_content: utm_content || '',
-          utm_term: utm_term || '',
-          referrer: referrer || '',
-          landing_url: landing_url || '',
-          device_type: device_type || '',
-          captured_at: timestamp || new Date().toISOString(),
-        }),
+        redirect: 'manual',
+        body,
       });
+
+      // Google Apps Script web apps return 302 → re-POST to the redirect target
+      if ([301, 302, 307, 308].includes(whRes.status)) {
+        const location = whRes.headers.get('location');
+        if (location) {
+          whRes = await fetch(location, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body,
+          });
+        }
+      }
       webhookOk = whRes.ok;
     } catch (err) {
       console.error('Webhook delivery error:', err);

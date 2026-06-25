@@ -220,31 +220,54 @@ export async function onRequest(context) {
       );
 
       // Reshape to match lead-form column format so the same sheet handles both
-      fetch(fulfillmentWebhook, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: buyerName,
-          email: buyerEmail,
-          whatsapp: '',
-          niche: packId,
-          model_penggunaan: 'purchase',
-          selected_pack: packId,
-          selected_app: '',
-          form_open_source: 'paycore_webhook',
-          utm_source: '',
-          utm_medium: '',
-          utm_campaign: '',
-          utm_content: '',
-          utm_term: '',
-          referrer: '',
-          landing_url: '',
-          device_type: '',
-          captured_at: fulfillmentTimestamp,
-        }),
-      }).catch((err) => {
-        console.error('Fulfillment webhook forwarding failed:', err);
-      });
+      (async () => {
+        try {
+          const body = JSON.stringify({
+            name: buyerName,
+            email: buyerEmail,
+            whatsapp: '',
+            niche: packId,
+            model_penggunaan: 'purchase',
+            selected_pack: packId,
+            selected_app: '',
+            form_open_source: 'paycore_webhook',
+            utm_source: '',
+            utm_medium: '',
+            utm_campaign: '',
+            utm_content: '',
+            utm_term: '',
+            referrer: '',
+            landing_url: '',
+            device_type: '',
+            captured_at: fulfillmentTimestamp,
+          });
+
+          let res = await fetch(fulfillmentWebhook, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            redirect: 'manual',
+            body,
+          });
+
+          // Google Apps Script web apps return 302 → re-POST to redirect target
+          if ([301, 302, 307, 308].includes(res.status)) {
+            const location = res.headers.get('location');
+            if (location) {
+              res = await fetch(location, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body,
+              });
+            }
+          }
+
+          if (!res.ok) {
+            console.warn('[Fulfillment] webhook returned', res.status);
+          }
+        } catch (err) {
+          console.error('Fulfillment webhook forwarding failed:', err);
+        }
+      })();
     }
 
     console.log('[Fulfillment] payment_succeeded', JSON.stringify(fulfilled));
