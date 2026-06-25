@@ -1,4 +1,4 @@
-import { vaultPacks, PACK_ORDER } from './data/vault-packs.js';
+import { vaultPacks, PACK_ORDER, PACK_PRICES } from './data/vault-packs.js';
 import { checkoutStore } from './checkout-store.js';
 
 /** Format price in IDR */
@@ -26,7 +26,7 @@ const TEMPLATES = {
             <span class="co-pack-name">${esc(p.label)}</span>
             <span class="co-pack-desc">${esc(p.scope)}</span>
           </div>
-          <span class="co-pack-price">${formatPrice(p.amount)}</span>
+          <span class="co-pack-price">${formatPrice(PACK_PRICES[p.id] || 0)}</span>
         </button>
       `;
     }).join('');
@@ -52,7 +52,7 @@ const TEMPLATES = {
             <span class="co-selected-label">Paket dipilih</span>
             <span class="co-selected-name">${esc(p.label)}</span>
           </div>
-          <span class="co-selected-price">${formatPrice(p.amount)}</span>
+          <span class="co-selected-price">${formatPrice(PACK_PRICES[packId] || 0)}</span>
         </div>
         <button class="co-change-pack" id="coChangePack">Ganti paket →</button>
         <form class="co-form" id="coForm">
@@ -72,7 +72,7 @@ const TEMPLATES = {
               placeholder="08xxxxxxxxxx" />
           </div>
           <button type="submit" class="btn lime full co-submit" id="coSubmit">
-            Lanjut ke pembayaran — ${formatPrice(p.amount)}
+            Lanjut ke pembayaran — ${formatPrice(PACK_PRICES[packId] || 0)}
           </button>
           <p class="form-privacy">Dengan melanjutkan, Anda setuju dengan <a href="/terms" target="_blank">ketentuan</a> dan <a href="/privacy" target="_blank">kebijakan privasi</a> kami.</p>
         </form>
@@ -189,31 +189,44 @@ const TEMPLATES = {
   },
 };
 
-export function initCheckoutUI() {
-  const modal = document.getElementById('leadModal');
-  const modalCard = modal?.querySelector('.modal-card');
-  const modalClose = document.getElementById('modalClose');
+/**
+ * Initialize checkout UI.
+ *
+ * @param {Object} [options]
+ * @param {HTMLElement} [options.container] - Dedicated page container (page mode).
+ *   When omitted, renders inside the lead modal (modal mode).
+ * @returns {{ getState: Function, render: Function, checkReturn: Function }}
+ */
+export function initCheckoutUI(options = {}) {
+  const { container: externalContainer } = options;
+  const isPageMode = Boolean(externalContainer);
+  let modal, modalCard, pollInterval = null;
 
-  if (!modal || !modalCard) return;
+  if (!isPageMode) {
+    modal = document.getElementById('leadModal');
+    modalCard = modal?.querySelector('.modal-card');
+    if (!modal || !modalCard) return;
+  }
 
-  // Track if we have a checkout context
-  let pollInterval = null;
-
-  /** Find or create the checkout container inside the modal */
+  /** Find or create the checkout container */
   function getContainer() {
-    let container = modalCard.querySelector('.co-container');
-    if (!container) {
-      // Remove existing form content
+    if (isPageMode && externalContainer) {
+      return externalContainer;
+    }
+
+    // Modal mode — find/create .co-container inside modal card
+    let c = modalCard.querySelector('.co-container');
+    if (!c) {
       const existingForm = modalCard.querySelector('form');
       if (existingForm) existingForm.style.display = 'none';
       const existingMsg = modalCard.querySelector('.modal-message');
       if (existingMsg) existingMsg.style.display = 'none';
 
-      container = document.createElement('div');
-      container.className = 'co-container';
-      modalCard.appendChild(container);
+      c = document.createElement('div');
+      c.className = 'co-container';
+      modalCard.appendChild(c);
     }
-    return container;
+    return c;
   }
 
   /** Render the current checkout state */
@@ -337,12 +350,12 @@ export function initCheckoutUI() {
 
     // Fire InitiateCheckout
     if (typeof window.fireStandardConversions === 'function') {
-      window.fireStandardConversions.checkout?.(packId, vaultPacks[packId]?.amount);
+      window.fireStandardConversions.checkout?.(packId, PACK_PRICES[packId] || 0);
     }
     if (typeof window.trackVaultEvent === 'function') {
       window.trackVaultEvent('vault_checkout_attempt', {
         selected_pack: packId,
-        amount: vaultPacks[packId]?.amount,
+        amount: PACK_PRICES[packId] || 0,
       });
     }
 
@@ -459,7 +472,7 @@ export function initCheckoutUI() {
       if (typeof window.fireStandardConversions === 'function') {
         window.fireStandardConversions.purchase?.({
           pack_id: packId,
-          amount: pack.amount,
+          amount: PACK_PRICES[packId] || 0,
           order_id: orderId,
         });
       }
@@ -468,7 +481,7 @@ export function initCheckoutUI() {
       if (typeof window.trackVaultEvent === 'function') {
         window.trackVaultEvent('vault_checkout_success', {
           selected_pack: packId,
-          amount: pack.amount,
+          amount: PACK_PRICES[packId] || 0,
           order_id: orderId,
         });
       }
@@ -515,7 +528,7 @@ export function initCheckoutUI() {
   // Expose render for external use
   window.renderCheckout = (state) => render(state);
 
-  return { render, checkReturnFromPayment };
+  return { render, checkReturnFromPayment, getState: () => checkoutStore.getState() };
 }
 
 /**

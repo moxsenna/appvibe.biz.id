@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — AppVibe White-Label AI App Vault</title>
+  <meta name="description" content="Selesaikan pembelian White-Label AI App Vault Anda." />
+  <link rel="canonical" href="https://appvibe.web.id/checkout/" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:wght@800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/checkout.css" />
+</head>
+<body>
+  <header class="co-header">
+    <a class="co-header-brand" href="/">AppVibe</a>
+    <a class="co-header-back" href="/#harga">&larr; Kembali</a>
+  </header>
+
+  <main class="co-wrapper" id="coMain">
+    <div id="coCheckoutContainer">
+      <!-- Templates render here by checkout-ui.js -->
+    </div>
+  </main>
+
+  <script type="module">
+    import { initCheckoutUI } from '../src/scripts/checkout-ui.js';
+    import { checkoutStore } from '../src/scripts/checkout-store.js';
+    import { PLANS, vaultPacks, validateOffer } from '../src/scripts/data/offer-catalog.js';
+
+    const container = document.getElementById('coCheckoutContainer');
+    if (!container) throw new Error('Checkout container not found');
+
+    const checkout = initCheckoutUI({ container });
+
+    // Parse URL params
+    const params = new URLSearchParams(window.location.search);
+    const planId = params.get('plan');
+    const packId = params.get('pack');
+    const orderId = params.get('order_id');
+
+    if (orderId) {
+      // checkReturnFromPayment inside initCheckoutUI handles this
+    } else if (planId === 'full-vault') {
+      // Full vault — use vault_full as pack ID for the store
+      checkoutStore.selectPack('vault_full');
+    } else if (planId === 'single-pack' && packId) {
+      const result = validateOffer(planId, packId);
+      if (result.valid) {
+        checkoutStore.selectPack(packId);
+      }
+    }
+    // If no valid params, stay in idle — user picks a pack from the template
+  </script>
+</body>
+</html>

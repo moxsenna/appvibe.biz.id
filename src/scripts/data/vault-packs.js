@@ -62,9 +62,17 @@ export const vaultPacks = {
     appIds: ['arah', 'mimik', 'mula', 'tayang', 'cetak'],
     formInterestValue: 'brand_launch',
     gradient: 'linear-gradient(145deg,#e8f5ee,#d2ecdc)'
-  }
+  },
+  vault_full: {
+    id: 'vault_full',
+    code: '00',
+    label: 'Full AppVibe Vault',
+    scope: 'ALL ACCESS',
+    targetAudience: 'Power users who want all packs',
+    appIds: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula', 'katalog', 'pikat', 'ritme', 'mimik', 'suara', 'arah', 'tayang', 'cetak'],
+  },
 };
 
 export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch'];
-export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000 };
-export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding' };
+export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000, vault_full: 147000 };
+export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding', vault_full: 'vault_full_license' };
