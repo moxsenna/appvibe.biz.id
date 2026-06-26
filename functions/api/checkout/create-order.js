@@ -30,6 +30,43 @@ export async function onRequest(context) {
     return new Response(null, { headers: cors });
   }
   if (request.method !== 'POST') {
+    // Forward order data to spreadsheet immediately (fire-and-forget)
+    try {
+      const sheetUrl = env.LEAD_WEBHOOK_URL;
+      if (sheetUrl) {
+        fetch(sheetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          redirect: 'manual',
+          body: JSON.stringify({
+            name,
+            email,
+            whatsapp: phone || '',
+            niche: packId,
+            model_penggunaan: 'purchase',
+            selected_pack: packId,
+            selected_app: '',
+            form_open_source: 'checkout_form',
+            utm_source: '',
+            utm_medium: '',
+            utm_campaign: '',
+            utm_content: '',
+            utm_term: '',
+            referrer: '',
+            landing_url: '',
+            device_type: '',
+            captured_at: new Date().toISOString(),
+          }),
+        }).then(async (r) => {
+          // Follow Google Apps Script 302 redirect as GET to trigger doPost execution
+          if (r.status === 302) {
+            const loc = r.headers.get('location');
+            if (loc) await fetch(loc, { redirect: 'follow' });
+          }
+        }).catch(() => {});
+      }
+    } catch {}
+
     return json({ error: 'method_not_allowed' }, 405, cors);
   }
 
