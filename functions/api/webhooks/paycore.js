@@ -240,6 +240,9 @@ export async function onRequest(context) {
             landing_url: '',
             device_type: '',
             captured_at: fulfillmentTimestamp,
+            order_id: orderId,
+            order_status: 'paid',
+            fulfilled_at: fulfillmentTimestamp,
           });
 
           let fwdRes = await fetch(fulfillmentWebhook, {

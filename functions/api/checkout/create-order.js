@@ -56,6 +56,8 @@ export async function onRequest(context) {
             landing_url: '',
             device_type: '',
             captured_at: new Date().toISOString(),
+            order_id: paycoreJson.order_id || '',
+            order_status: 'pending',
           }),
         }).then(async (r) => {
           // Follow Google Apps Script 302 redirect as GET to trigger doPost execution
