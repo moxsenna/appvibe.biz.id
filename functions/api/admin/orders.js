@@ -1,4 +1,5 @@
 import { PACKS } from '../../lib/packs.js';
+import { createMemberAccessRepo } from '../../lib/db.js';
 
 function json(data, status = 200, extra = {}) {
   return new Response(JSON.stringify(data), {
@@ -21,8 +22,8 @@ function corsHeaders(request) {
  * GET /api/admin/orders
  * Requires ?token=ADMIN_TOKEN or Authorization: Bearer ADMIN_TOKEN
  *
- * Lists all orders from CHECKOUT_EVENTS KV.
- * Returns paginated results sorted by creation date (newest first).
+ * Lists all orders from D1. Returns paginated results sorted by creation
+ * date (newest first). Reads from APPVIBE_DB (D1).
  */
 export async function onRequest(context) {
   const { request, env } = context;
@@ -46,69 +47,46 @@ export async function onRequest(context) {
     return json({ error: 'unauthorized', message: 'Token admin tidak valid.' }, 401, cors);
   }
 
-  if (!env.CHECKOUT_EVENTS) {
-    return json({ error: 'storage_unavailable', message: 'KV CHECKOUT_EVENTS tidak tersedia.' }, 503, cors);
+  if (!env.APPVIBE_DB) {
+    return json({ error: 'storage_unavailable', message: 'D1 database tidak tersedia.' }, 503, cors);
   }
 
   try {
-    // List all order keys
-    const orderKeys = [];
-    let cursor;
-    do {
-      const listResult = await env.CHECKOUT_EVENTS.list({
-        prefix: 'order:',
-        cursor,
-        limit: 1000,
-      });
-      orderKeys.push(...listResult.keys);
-      cursor = listResult.cursor;
-    } while (cursor);
+    const repo = createMemberAccessRepo(env.APPVIBE_DB);
 
-    // Fetch all order records in parallel (batched)
-    const batchSize = 50;
-    const orders = [];
-    for (let i = 0; i < orderKeys.length; i += batchSize) {
-      const batch = orderKeys.slice(i, i + batchSize);
-      const results = await Promise.allSettled(
-        batch.map((k) => env.CHECKOUT_EVENTS.get(k.name))
-      );
-      results.forEach((r) => {
-        if (r.status === 'fulfilled' && r.value) {
-          try {
-            const order = JSON.parse(r.value);
-            const pack = PACKS[order.pack_id];
-            orders.push({
-              order_id: order.paycore_order_id || '',
-              external_order_id: order.external_order_id || '',
-              pack_id: order.pack_id,
-              pack_name: pack?.description || order.product_key || order.pack_id,
-              amount: order.amount,
-              currency: order.currency,
-              buyer_name: order.customer_name || '',
-              buyer_email: order.customer_email || '',
-              payment_status: order.payment_status || 'unknown',
-              fulfillment_status: order.fulfillment_status || 'unknown',
-              checkout_url: order.checkout_url || '',
-              created_at: order.created_at,
-              updated_at: order.updated_at,
-              fulfilled_at: order.fulfilled_at,
-            });
-          } catch {}
-        }
-      });
-    }
+    // Read all orders via D1. We query orders joined with members for
+    // buyer info. Since D1 doesn't have a paginated list-all on the repo,
+    // we use a raw query.
+    const { results: orderRows } = await env.APPVIBE_DB
+      .prepare(
+        `SELECT o.*, m.name AS member_name, m.email_normalized, m.phone_e164
+         FROM orders o
+         JOIN members m ON m.id = o.member_id
+         ORDER BY o.created_at DESC`
+      )
+      .all();
 
-    // Sort newest first
-    orders.sort((a, b) => {
-      const da = a.created_at ? new Date(a.created_at).getTime() : 0;
-      const db = b.created_at ? new Date(b.created_at).getTime() : 0;
-      return db - da;
+    const orders = (orderRows || []).map((row) => {
+      const pack = PACKS[row.pack_id];
+      return {
+        order_id: row.paycore_order_id || '',
+        external_order_id: row.external_order_id || '',
+        pack_id: row.pack_id,
+        pack_name: pack?.description || row.product_key || row.pack_id,
+        amount: row.amount,
+        currency: row.currency,
+        buyer_name: row.member_name || '',
+        buyer_email: row.email_normalized || '',
+        payment_status: row.payment_status || 'unknown',
+        fulfillment_status: row.fulfillment_status || 'unknown',
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+        fulfilled_at: row.fulfilled_at,
+        paid_at: row.paid_at,
+      };
     });
 
-    return json({
-      total: orders.length,
-      orders,
-    }, 200, cors);
+    return json({ total: orders.length, orders }, 200, cors);
   } catch (err) {
     console.error('[Admin] list orders error:', err);
     return json({ error: 'list_failed', message: 'Gagal mengambil daftar order.' }, 500, cors);

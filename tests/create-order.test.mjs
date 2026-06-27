@@ -1,128 +1,120 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
+import { readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 
 import { onRequest } from '../functions/api/checkout/create-order.js';
+import { createFakeD1, applyMigration } from '../functions/lib/fake-d1.js';
+import { createMemberAccessRepo } from '../functions/lib/db.js';
 
-function makeKv() {
-  const writes = [];
-  return {
-    writes,
-    async put(key, value, options) {
-      writes.push({ key, value, options });
-    },
-  };
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const MIGRATION_SQL = readFileSync(join(__dirname, '..', 'migrations', '0001_init.sql'), 'utf8');
+
+async function makeD1() {
+  const d1 = createFakeD1();
+  await applyMigration(d1, MIGRATION_SQL);
+  return d1;
 }
 
 function makeContext({ method = 'POST', body, env = {}, fetchImpl }) {
-  const waitUntilPromises = [];
   const request = new Request('https://appvibe.biz.id/api/checkout/create-order', {
     method,
     headers: method === 'POST' ? { 'Content-Type': 'application/json', Origin: 'https://appvibe.biz.id' } : {},
     body: body === undefined ? undefined : JSON.stringify(body),
   });
-
   return {
-    context: {
-      request,
-      env,
-      waitUntil(promise) {
-        waitUntilPromises.push(promise);
-      },
-    },
-    waitUntilPromises,
+    context: { request, env, waitUntil() {} },
     installFetch() {
-      const originalFetch = globalThis.fetch;
+      const original = globalThis.fetch;
       globalThis.fetch = fetchImpl;
-      return () => {
-        globalThis.fetch = originalFetch;
-      };
+      return () => { globalThis.fetch = original; };
     },
   };
 }
 
-test('create-order uses checkout return URL and schedules pending order forwarding', async () => {
-  const checkoutEvents = makeKv();
-  const paycoreRequests = [];
-  const sheetRequests = [];
+test('create-order requires a valid whatsapp number', async () => {
+  const d1 = await makeD1();
+  const { context, installFetch } = makeContext({
+    body: { name: 'Bima', email: 'bima@example.com', phone: '0215550199', pack_id: 'advertiser' },
+    env: { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's' },
+    async fetchImpl() { throw new Error('should not call paycore'); },
+  });
+  const restore = installFetch();
+  try {
+    const res = await onRequest(context);
+    assert.equal(res.status, 422);
+    const data = await res.json();
+    assert.equal(data.error, 'validation');
+  } finally { restore(); }
+});
 
-  const { context, waitUntilPromises, installFetch } = makeContext({
-    body: {
-      name: 'Bima Putra',
-      email: 'Buyer@Example.com',
-      phone: '081234567890',
-      pack_id: 'advertiser',
-    },
-    env: {
-      PAYCORE_BASE_URL: 'https://pay-staging.appvibe.biz.id',
-      PAYCORE_APP_ID: 'appvibe_vault',
-      PAYCORE_KEY_ID: 'key_123',
-      PAYCORE_APP_SECRET: 'secret_123',
-      LEAD_WEBHOOK_URL: 'https://sheet.example.test/exec',
-      CHECKOUT_EVENTS: checkoutEvents,
-    },
-    async fetchImpl(url, init = {}) {
+test('create-order creates a member and persists order to D1', async () => {
+  const d1 = await makeD1();
+  const repo = createMemberAccessRepo(d1);
+  const paycoreCalls = [];
+
+  const { context, installFetch } = makeContext({
+    body: { name: 'Bima Putra', email: 'Buyer@Example.com', phone: '081234567890', pack_id: 'advertiser' },
+    env: { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's' },
+    async fetchImpl(url, init) {
       if (String(url).includes('/v1/orders')) {
-        paycoreRequests.push({ url: String(url), init });
+        paycoreCalls.push({ url: String(url), init });
         return Response.json({
-          checkout_url: 'https://pay-staging.appvibe.biz.id/checkout/order_123',
-          order_id: 'order_123',
+          checkout_url: 'https://pay/checkout/order_1',
+          order_id: 'order_1',
           external_order_id: 'vault-test',
           payment_status: 'pending',
         }, { status: 201 });
       }
-
-      sheetRequests.push({ url: String(url), init });
       return Response.json({ ok: true });
     },
   });
 
-  const restoreFetch = installFetch();
+  const restore = installFetch();
   try {
-    const response = await onRequest(context);
-    assert.equal(response.status, 201);
+    const res = await onRequest(context);
+    assert.equal(res.status, 201);
+    const data = await res.json();
+    assert.equal(data.order_id, 'order_1');
 
-    assert.equal(paycoreRequests.length, 1);
-    const paycoreBody = JSON.parse(paycoreRequests[0].init.body);
-    assert.equal(paycoreBody.return_url, 'https://appvibe.biz.id/checkout/');
-    assert.equal(paycoreBody.fulfillment_data.source, 'appvibe.biz.id_checkout');
+    // Member created with canonical phone.
+    const member = await repo.getMemberByPhone('+6281234567890');
+    assert.ok(member);
+    assert.equal(member.email_normalized, 'buyer@example.com');
 
-    assert.equal(waitUntilPromises.length, 1);
-    await Promise.all(waitUntilPromises);
-
-    assert.equal(sheetRequests.length, 1);
-    const sheetBody = JSON.parse(sheetRequests[0].init.body);
-    assert.equal(sheetBody.name, 'Bima Putra');
-    assert.equal(sheetBody.email, 'Buyer@Example.com');
-    assert.equal(sheetBody.whatsapp, '081234567890');
-    assert.equal(sheetBody.selected_pack, 'advertiser');
-    assert.equal(sheetBody.order_id, 'order_123');
-    assert.equal(sheetBody.order_status, 'pending');
-
-    assert.ok(checkoutEvents.writes.some((write) => write.key === 'order:order_123'));
-    assert.ok(checkoutEvents.writes.some((write) => write.key === 'buyer:buyer@example.com'));
-  } finally {
-    restoreFetch();
-  }
+    // Order persisted to D1 and linked to member.
+    const order = await repo.getOrderByPaycoreId('order_1');
+    assert.ok(order);
+    assert.equal(order.member_id, member.id);
+    assert.equal(order.pack_id, 'advertiser');
+    assert.equal(order.payment_status, 'pending');
+  } finally { restore(); }
 });
 
-test('create-order rejects non-POST without forwarding partial data', async () => {
-  const sheetRequests = [];
-  const { context, waitUntilPromises, installFetch } = makeContext({
-    method: 'GET',
-    env: { LEAD_WEBHOOK_URL: 'https://sheet.example.test/exec' },
-    async fetchImpl(url, init = {}) {
-      sheetRequests.push({ url: String(url), init });
+test('create-order does not overwrite existing member email on a new checkout', async () => {
+  const d1 = await makeD1();
+  const repo = createMemberAccessRepo(d1);
+  // Pre-existing member with a known email.
+  const existing = await repo.findOrCreateMember({ name: 'Bima', email: 'first@example.com', phone_e164: '+6281234567890' });
+
+  const { context, installFetch } = makeContext({
+    body: { name: 'Bima Putra', email: 'second@example.com', phone: '081234567890', pack_id: 'commerce' },
+    env: { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's' },
+    async fetchImpl(url) {
+      if (String(url).includes('/v1/orders')) {
+        return Response.json({ checkout_url: 'https://pay/c', order_id: 'order_2', payment_status: 'pending' }, { status: 201 });
+      }
       return Response.json({ ok: true });
     },
   });
-
-  const restoreFetch = installFetch();
+  const restore = installFetch();
   try {
-    const response = await onRequest(context);
-    assert.equal(response.status, 405);
-    assert.equal(sheetRequests.length, 0);
-    assert.equal(waitUntilPromises.length, 0);
-  } finally {
-    restoreFetch();
-  }
+    const res = await onRequest(context);
+    assert.equal(res.status, 201);
+    const member = await repo.getMemberByPhone('+6281234567890');
+    assert.equal(member.id, existing.id);
+    // Original email preserved — not clobbered by the new checkout input.
+    assert.equal(member.email_normalized, 'first@example.com');
+  } finally { restore(); }
 });

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <title>Konfirmasi Masuk — AppVibe</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <!-- Prevent token from leaking to external sites via Referer. -->
+  <meta name="referrer" content="no-referrer" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    :root{--navy:#050b1d;--blue:#126bff;--bg:#eef3fa;--text:#10203f;--muted:#66748d;--danger:#a0392c;--radius-xl:28px;--shadow:0 22px 60px rgba(8,30,77,0.11)}
+    html{min-width:320px;background:var(--bg)}
+    body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;background:var(--bg)}
+    button{cursor:pointer;font:inherit}
+    a{color:inherit}
+
+    .ac-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(201,212,229,.78);background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
+    .ac-header-inner{display:flex;align-items:center;justify-content:space-between;width:min(960px,calc(100% - 32px));min-height:64px;margin:0 auto;gap:16px}
+    .ac-header-brand{display:inline-flex;align-items:center;text-decoration:none;font-weight:800;font-size:1rem;color:var(--navy)}
+
+    .ac-wrapper{width:min(520px,calc(100% - 32px));margin:60px auto;padding-bottom:72px}
+    .ac-card{border:1px solid rgba(201,212,229,.95);border-radius:var(--radius-xl);background:rgba(255,255,255,.94);box-shadow:var(--shadow);padding:clamp(28px,5vw,48px);text-align:center}
+    .ac-card h1{margin:0 0 10px;color:var(--navy);font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(22px,4vw,32px);letter-spacing:-.05em;line-height:1.1}
+    .ac-card>p{margin:0 0 28px;color:var(--muted);font-size:13px;line-height:1.7}
+
+    .ac-verify-btn{display:inline-flex;align-items:center;gap:10px;min-height:54px;border:0;border-radius:16px;padding:14px 32px;color:#fff;background:var(--blue);font-weight:800;font-size:15px;transition:background .14s ease}
+    .ac-verify-btn:hover{background:#2579ff}
+    .ac-verify-btn:disabled{opacity:.5;cursor:not-allowed}
+    .ac-verify-btn svg{width:20px;height:20px}
+
+    .ac-status{display:none;margin:16px 0 0;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;line-height:1.45}
+    .ac-status.show{display:block}
+    .ac-status.error{border:1px solid #ffcfc6;color:var(--danger);background:#fff0ed}
+    .ac-status.success{border:1px solid #b8eee9;color:#1f5f68;background:#ebfbfa}
+
+    .ac-sec-note{margin-top:24px;font-size:10px;color:var(--muted-light);line-height:1.6}
+  </style>
+</head>
+<body>
+  <header class="ac-header">
+    <div class="ac-header-inner">
+      <a class="ac-header-brand" href="/">AppVibe</a>
+    </div>
+  </header>
+
+  <main class="ac-wrapper">
+    <div class="ac-card" id="acCard">
+      <h1>Konfirmasi untuk masuk ke AppVibe Vault</h1>
+      <p>Tekan tombol di bawah untuk melanjutkan ke dashboard akses Anda. Tautan ini hanya berlaku satu kali.</p>
+      <button class="ac-verify-btn" id="acVerify">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Lanjut masuk ke AppVibe Vault
+      </button>
+      <div class="ac-status" id="acStatus" role="alert"></div>
+      <p class="ac-sec-note">Tautan ini hanya berlaku 15 menit dan akan hangus setelah digunakan. Jangan bagikan tautan ini kepada siapa pun.</p>
+    </div>
+  </main>
+
+  <script type="module">
+    // Immediately strip the token from the address bar so it is never
+    // forwarded via Referer if the user clicks an external link.
+    const url = new URL(window.location.href);
+    const token = url.searchParams.get('token');
+    if (token) {
+      url.searchParams.delete('token');
+      window.history.replaceState(null, '', url.toString());
+    }
+
+    const btn = document.getElementById('acVerify');
+    const statusEl = document.getElementById('acStatus');
+
+    btn.addEventListener('click', async () => {
+      if (!token) {
+        statusEl.className = 'ac-status show error';
+        statusEl.textContent = 'Tautan tidak valid atau sudah kedaluwarsa.';
+        btn.disabled = true;
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Memproses…';
+
+      try {
+        const res = await fetch('/api/auth/consume-magic-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token }),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (res.ok && data.ok) {
+          statusEl.className = 'ac-status show success';
+          statusEl.textContent = 'Berhasil masuk. Mengarahkan…';
+          // Small delay so the user sees the success state.
+          setTimeout(() => { window.location.href = '/access/'; }, 800);
+          return;
+        }
+
+        // Token was invalid, expired, or already used.
+        statusEl.className = 'ac-status show error';
+        statusEl.textContent = data.message || 'Tautan tidak valid atau sudah kedaluwarsa. Silakan minta tautan baru.';
+        btn.style.display = 'none';
+      } catch {
+        statusEl.className = 'ac-status show error';
+        statusEl.textContent = 'Koneksi bermasalah. Silakan coba lagi.';
+        btn.disabled = false;
+        btn.textContent = 'Lanjut masuk ke AppVibe Vault';
+      }
+    });
+  </script>
+</body>
+</html>
