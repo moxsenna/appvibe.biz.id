@@ -14,12 +14,7 @@ function esc(value = '') {
   return div.innerHTML;
 }
 
-/** Get buyer email from store or sessionStorage (persisted before Duitku redirect). */
-function getBuyerEmail() {
-  const fromStore = checkoutStore.getState().buyerEmail;
-  if (fromStore) return fromStore;
-  try { return sessionStorage.getItem('av_checkout_email'); } catch { return null; }
-}
+const ACCESS_FROM_PAYMENT_URL = '/access/?from=payment';
 
 function icon(name) {
   const icons = {
@@ -179,8 +174,8 @@ function renderConfirm(packId) {
             <p class="co-field-help">Detail akses dan bukti pembayaran akan dikirim ke email ini.</p>
           </div>
           <div class="co-field">
-            <label for="coPhone">WhatsApp <span>(opsional)</span></label>
-            <input id="coPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx" />
+            <label for="coPhone">WhatsApp <em>*</em></label>
+            <input id="coPhone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx" />
           </div>
 
           <div class="co-submit-area">
@@ -236,15 +231,14 @@ function renderLoading() {
   `;
 }
 
-function renderStatus(type, { orderId, error, buyerEmail } = {}) {
-  const accessUrl = buyerEmail ? `/access/?email=${encodeURIComponent(buyerEmail)}` : '/';
+function renderStatus(type, { orderId, error } = {}) {
   const definitions = {
     success: {
       mark: '✓',
       kicker: 'PEMBAYARAN BERHASIL',
-      title: 'Akses Anda sedang disiapkan.',
-      text: 'Kami telah menerima pembayaran Anda. Silakan lihat akses Anda di halaman berikut.',
-      action: `<a href="${esc(accessUrl)}" class="co-status-primary">Lihat akses saya →</a>`,
+      title: 'Akses Anda sudah siap.',
+      text: 'Kami akan mengarahkan Anda ke halaman akses. Masukkan nomor WhatsApp checkout untuk menerima tautan login.',
+      action: `<a href="${ACCESS_FROM_PAYMENT_URL}" class="co-status-primary">Lihat akses saya →</a>`,
     },
     failed: {
       mark: '!',
@@ -271,8 +265,15 @@ function renderStatus(type, { orderId, error, buyerEmail } = {}) {
       mark: '✓',
       kicker: 'ORDER SUDAH DIBAYAR',
       title: 'Pembayaran untuk order ini sudah diterima.',
-      text: 'Akses akan dikirim ke email Anda. Tidak perlu melakukan pembayaran ulang.',
-      action: `<a href="${esc(accessUrl)}" class="co-status-primary">Lihat akses saya →</a>`,
+      text: 'Akses sudah tersedia. Tidak perlu melakukan pembayaran ulang.',
+      action: `<a href="${ACCESS_FROM_PAYMENT_URL}" class="co-status-primary">Lihat akses saya →</a>`,
+    },
+    preparing_access: {
+      mark: '…',
+      kicker: 'PEMBAYARAN DITERIMA',
+      title: 'Menyiapkan akses Anda.',
+      text: 'Pembayaran sudah diterima. Halaman ini akan lanjut otomatis setelah akses aktif.',
+      action: '<a href="/" class="co-status-secondary">Kembali ke beranda</a>',
     },
     pending: {
       mark: '…',
@@ -370,12 +371,15 @@ export function initCheckoutUI({ container } = {}) {
         html = renderLoading();
         break;
       case 'pending':
-      case 'reconciling':
         html = renderStatus('pending', { orderId });
         if (orderId) startPolling(orderId);
         break;
+      case 'reconciling':
+        html = renderStatus('preparing_access', { orderId });
+        if (orderId) startPolling(orderId);
+        break;
       case 'success':
-        html = renderStatus('success', { orderId, buyerEmail: getBuyerEmail() });
+        html = renderStatus('success', { orderId });
         if (packId && !trackedPurchases.has(orderId || packId)) {
           trackedPurchases.add(orderId || packId);
           pushCheckoutEvent('purchase', packId, orderId);
@@ -391,7 +395,7 @@ export function initCheckoutUI({ container } = {}) {
         html = renderStatus('expired');
         break;
       case 'already_paid':
-        html = renderStatus('already_paid', { orderId, buyerEmail: getBuyerEmail() });
+        html = renderStatus('already_paid', { orderId });
         break;
       case 'error':
       default:
@@ -453,6 +457,11 @@ export function initCheckoutUI({ container } = {}) {
       form.querySelector('#coEmail')?.focus();
       return;
     }
+    if (!phone || phone.length < 8) {
+      showFormError(form, 'Masukkan nomor WhatsApp yang valid.');
+      form.querySelector('#coPhone')?.focus();
+      return;
+    }
     if (!packId || !vaultPacks[packId]) {
       showFormError(form, 'Silakan pilih akses terlebih dahulu.');
       return;
@@ -484,6 +493,7 @@ export function initCheckoutUI({ container } = {}) {
       });
       // Persist buyer email across payment redirect + return
       try { sessionStorage.setItem('av_checkout_email', email); } catch {}
+      try { sessionStorage.setItem('av_checkout_phone', phone); } catch {}
       window.location.assign(data.checkout_url);
     } catch (error) {
       console.error('[Checkout] create-order failed:', error);
@@ -501,10 +511,16 @@ export function initCheckoutUI({ container } = {}) {
         const response = await fetch(`/api/checkout/status?order_id=${encodeURIComponent(orderId)}`);
         const data = await response.json().catch(() => ({}));
 
-        if (data.payment_status === 'paid') {
+        if (data.fulfillment_status === 'delivered') {
           clearInterval(pollInterval);
           pollInterval = null;
           checkoutStore.transition('success', { orderId });
+          window.setTimeout(() => window.location.assign(ACCESS_FROM_PAYMENT_URL), 800);
+          return;
+        }
+        if (data.payment_status === 'paid') {
+          const current = checkoutStore.getState().current;
+          if (current !== 'reconciling') checkoutStore.transition('reconciling', { orderId });
           return;
         }
         if (data.payment_status === 'failed') {
@@ -519,10 +535,11 @@ export function initCheckoutUI({ container } = {}) {
           checkoutStore.transition('expired', { orderId });
           return;
         }
-        if (data.payment_status === 'already_paid' || data.fulfillment_status === 'delivered') {
+        if (data.payment_status === 'already_paid') {
           clearInterval(pollInterval);
           pollInterval = null;
           checkoutStore.transition('already_paid', { orderId });
+          window.setTimeout(() => window.location.assign(ACCESS_FROM_PAYMENT_URL), 800);
           return;
         }
       } catch (error) {
@@ -565,5 +582,4 @@ export function initCheckoutUI({ container } = {}) {
   window.renderCheckout = (state) => render(state);
   return { render, checkReturnFromPayment, getState: () => checkoutStore.getState() };
 }
-
 

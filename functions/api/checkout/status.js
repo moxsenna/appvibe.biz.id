@@ -115,7 +115,11 @@ export async function onRequest(context) {
             const paycoreData = await paycoreRes.json();
             const remoteStatus = paycoreData.payment_status;
             if (remoteStatus && remoteStatus !== order.payment_status) {
-              order.payment_status = remoteStatus;
+              const updated = await repo.updateOrderPaymentStatus({
+                paycore_order_id: orderId,
+                payment_status: remoteStatus,
+              });
+              if (updated) order.payment_status = updated.payment_status;
             }
           }
         }

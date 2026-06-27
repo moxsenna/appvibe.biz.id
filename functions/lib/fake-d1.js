@@ -284,7 +284,9 @@ export function createFakeD1() {
 
   async function batch(statements) {
     const out = [];
-    for (const st of statements) out.push(await st);
+    for (const st of statements) {
+      out.push(typeof st?.run === 'function' ? await st.run() : await st);
+    }
     return out;
   }
 

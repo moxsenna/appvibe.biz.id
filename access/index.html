@@ -272,6 +272,10 @@
       const phoneInput = document.getElementById('vhPhone');
       const sendBtn = document.getElementById('vhSend');
       const statusEl = document.getElementById('vhStatus');
+      try {
+        const savedPhone = sessionStorage.getItem('av_checkout_phone');
+        if (savedPhone) phoneInput.value = savedPhone;
+      } catch {}
       sendBtn.addEventListener('click', () => handleSend(phoneInput, sendBtn, statusEl));
       phoneInput.addEventListener('keydown', (e) => { if(e.key==='Enter') sendBtn.click(); });
     }

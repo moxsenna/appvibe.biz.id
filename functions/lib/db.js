@@ -79,6 +79,17 @@ export function createMemberAccessRepo(db) {
     return db.prepare('SELECT * FROM orders WHERE paycore_order_id = ?').bind(paycore_order_id).first();
   }
 
+  async function updateOrderPaymentStatus({ paycore_order_id, payment_status }) {
+    const allowed = new Set(['pending', 'paid', 'failed', 'expired', 'created']);
+    if (!allowed.has(payment_status)) return null;
+    const ts = now();
+    await db
+      .prepare('UPDATE orders SET payment_status = ?, updated_at = ? WHERE paycore_order_id = ?')
+      .bind(payment_status, ts, paycore_order_id)
+      .run();
+    return getOrderByPaycoreId(paycore_order_id);
+  }
+
   async function listOrdersByMember(member_id) {
     const { results } = await db
       .prepare('SELECT * FROM orders WHERE member_id = ? ORDER BY created_at DESC')
@@ -126,14 +137,14 @@ export function createMemberAccessRepo(db) {
     const pack = PACKS[order.pack_id];
     const ent = entitlementForPack(order.pack_id);
 
-    // 1. Mark order paid + delivered.
-    await db
-      .prepare(
-        `UPDATE orders SET payment_status = 'paid', fulfillment_status = 'delivered', paid_at = ?, fulfilled_at = ?, updated_at = ?
-         WHERE paycore_order_id = ?`,
-      )
-      .bind(paidTs, fulfilledTs, ts, paycore_order_id)
-      .run();
+    const statements = [
+      db
+        .prepare(
+          `UPDATE orders SET payment_status = 'paid', fulfillment_status = 'delivered', paid_at = ?, fulfilled_at = ?, updated_at = ?
+           WHERE paycore_order_id = ?`,
+        )
+        .bind(paidTs, fulfilledTs, ts, paycore_order_id),
+    ];
 
     // 2. Grant entitlement. INSERT OR IGNORE so the unique partial index
     //    uq_entitlements_active(member_id, resource_id) WHERE status='active'
@@ -149,13 +160,13 @@ export function createMemberAccessRepo(db) {
 
     if (!existingEnt) {
       const entId = crypto.randomUUID();
-      await db
-        .prepare(
+      statements.push(
+        db.prepare(
           `INSERT OR IGNORE INTO entitlements (id, member_id, resource_type, resource_id, status, source_order_id, granted_at, created_at, updated_at)
            VALUES (?, ?, ?, ?, 'active', ?, ?, ?, ?)`,
         )
-        .bind(entId, order.member_id, ent.resource_type, ent.resource_id, order.id, fulfilledTs, ts, ts)
-        .run();
+          .bind(entId, order.member_id, ent.resource_type, ent.resource_id, order.id, fulfilledTs, ts, ts),
+      );
     }
 
     // 3. Activate member. Bump entitlement_version only when a new entitlement
@@ -165,8 +176,8 @@ export function createMemberAccessRepo(db) {
     const firstPaid = member?.first_paid_at || paidTs;
     const accessLabel = pack?.resourceType === 'vault' ? 'Full Vault' : pack?.description || order.pack_id;
 
-    await db
-      .prepare(
+    statements.push(
+      db.prepare(
         `UPDATE members
            SET status = 'active',
                entitlement_version = ?,
@@ -176,16 +187,24 @@ export function createMemberAccessRepo(db) {
                updated_at = ?
          WHERE id = ?`,
       )
-      .bind(newEntitlementVersion, accessLabel, firstPaid, paidTs, ts, order.member_id)
-      .run();
+        .bind(newEntitlementVersion, accessLabel, firstPaid, paidTs, ts, order.member_id),
+    );
 
-    // 4. Audit log.
-    await insertAuditLog({
-      member_id: order.member_id,
-      order_id: order.id,
-      event_type: 'entitlement_granted',
-      metadata_json: JSON.stringify({ pack_id: order.pack_id, resource_type: ent.resource_type, resource_id: ent.resource_id }),
-    });
+    statements.push(
+      db.prepare(
+        `INSERT INTO audit_logs (member_id, order_id, event_type, metadata_json, created_at)
+         VALUES (?, ?, ?, ?, ?)`,
+      )
+        .bind(
+          order.member_id,
+          order.id,
+          'entitlement_granted',
+          JSON.stringify({ pack_id: order.pack_id, resource_type: ent.resource_type, resource_id: ent.resource_id }),
+          ts,
+        ),
+    );
+
+    await db.batch(statements);
 
     return { ...order, payment_status: 'paid', fulfillment_status: 'delivered', paid_at: paidTs, fulfilled_at: fulfilledTs };
   }
@@ -322,6 +341,7 @@ export function createMemberAccessRepo(db) {
     getMemberByIdWithEntitlements,
     createOrder,
     getOrderByPaycoreId,
+    updateOrderPaymentStatus,
     listOrdersByMember,
     isEventSeen,
     markEventSeen,
