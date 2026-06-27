@@ -92,6 +92,81 @@ test('create-order creates a member and persists order to D1', async () => {
   } finally { restore(); }
 });
 
+test('create-order requires Turnstile when configured', async () => {
+  const d1 = await makeD1();
+  const { context, installFetch } = makeContext({
+    body: { name: 'Bima', email: 'bima@example.com', phone: '081234567890', pack_id: 'advertiser' },
+    env: { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's', TURNSTILE_SECRET_KEY: 'ts_secret' },
+    async fetchImpl() { throw new Error('should not call external services'); },
+  });
+  const restore = installFetch();
+  try {
+    const res = await onRequest(context);
+    assert.equal(res.status, 403);
+    const data = await res.json();
+    assert.equal(data.error, 'turnstile_failed');
+  } finally { restore(); }
+});
+
+test('create-order verifies Turnstile before creating PayCore order', async () => {
+  const d1 = await makeD1();
+  const calls = [];
+  const { context, installFetch } = makeContext({
+    body: {
+      name: 'Bima',
+      email: 'bima@example.com',
+      phone: '081234567890',
+      pack_id: 'advertiser',
+      turnstile_token: 'turnstile_ok',
+    },
+    env: { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's', TURNSTILE_SECRET_KEY: 'ts_secret' },
+    async fetchImpl(url) {
+      calls.push(String(url));
+      if (String(url).includes('challenges.cloudflare.com')) {
+        return Response.json({ success: true });
+      }
+      if (String(url).includes('/v1/orders')) {
+        return Response.json({ checkout_url: 'https://pay/c', order_id: 'order_turnstile', payment_status: 'pending' }, { status: 201 });
+      }
+      return Response.json({ ok: true });
+    },
+  });
+  const restore = installFetch();
+  try {
+    const res = await onRequest(context);
+    assert.equal(res.status, 201);
+    assert.ok(calls.some((url) => url.includes('challenges.cloudflare.com')));
+    assert.ok(calls.some((url) => url.includes('/v1/orders')));
+  } finally { restore(); }
+});
+
+test('create-order rate limits repeated checkout attempts', async () => {
+  const d1 = await makeD1();
+  const body = { name: 'Bima', email: 'bima@example.com', phone: '081234567890', pack_id: 'advertiser' };
+  const env = { APPVIBE_DB: d1, PAYCORE_KEY_ID: 'k', PAYCORE_APP_SECRET: 's', AUTH_TOKEN_PEPPER: 'pepper_abc' };
+
+  async function fetchImpl(url) {
+    if (String(url).includes('/v1/orders')) {
+      return Response.json({ checkout_url: 'https://pay/c', order_id: crypto.randomUUID(), payment_status: 'pending' }, { status: 201 });
+    }
+    return Response.json({ ok: true });
+  }
+
+  const first = makeContext({ body, env, fetchImpl });
+  const restoreFirst = first.installFetch();
+  try {
+    const res = await onRequest(first.context);
+    assert.equal(res.status, 201);
+  } finally { restoreFirst(); }
+
+  const second = makeContext({ body, env, fetchImpl });
+  const restoreSecond = second.installFetch();
+  try {
+    const res = await onRequest(second.context);
+    assert.equal(res.status, 429);
+  } finally { restoreSecond(); }
+});
+
 test('create-order does not overwrite existing member email on a new checkout', async () => {
   const d1 = await makeD1();
   const repo = createMemberAccessRepo(d1);

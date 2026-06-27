@@ -11,6 +11,15 @@ export function initTracking() {
 
   try {
     sessionStorage.setItem('utm_params', JSON.stringify(utm));
+    Object.entries({
+      utm_source: utm.source,
+      utm_medium: utm.medium,
+      utm_campaign: utm.campaign,
+      utm_content: utm.content,
+      utm_term: utm.term,
+    }).forEach(([key, value]) => {
+      if (value) sessionStorage.setItem(key, value);
+    });
     sessionStorage.setItem('referrer', document.referrer || '');
     sessionStorage.setItem('landing_url', window.location.href);
   } catch (e) { /* ignore */ }
@@ -90,4 +99,19 @@ export function getSessionMeta() {
   } catch (e) {
     return { referrer: '', landing_url: '' };
   }
+}
+
+export function getCheckoutAttribution() {
+  const utm = getUtmParams();
+  const sessionMeta = getSessionMeta();
+  return {
+    utm_source: utm.source || '',
+    utm_medium: utm.medium || '',
+    utm_campaign: utm.campaign || '',
+    utm_content: utm.content || '',
+    utm_term: utm.term || '',
+    referrer: sessionMeta.referrer || '',
+    landing_url: sessionMeta.landing_url || '',
+    device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+  };
 }

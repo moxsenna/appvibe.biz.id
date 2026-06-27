@@ -351,6 +351,7 @@ a { color: inherit; }
   box-shadow: 0 0 0 4px rgba(18, 107, 255, 0.11);
 }
 .co-field-help { margin: 7px 0 0; color: var(--co-muted-light); font-size: 10px; line-height: 1.45; }
+.co-turnstile { display: flex; justify-content: center; min-height: 65px; margin: 6px 0 14px; }
 .co-submit-area { padding-top: 7px; }
 .co-submit {
   display: inline-flex;

@@ -2,6 +2,9 @@ import { signPayCoreRequest } from '../../lib/paycore-sign.js';
 import { PACKS, VALID_PACK_IDS, purchaseTypeForPack } from '../../lib/packs.js';
 import { normalizePhone, InvalidPhoneError } from '../../lib/phone.js';
 import { createMemberAccessRepo } from '../../lib/db.js';
+import { hashIdentifier } from '../../lib/auth-crypto.js';
+import { checkRateLimit } from '../../lib/rate-limit.js';
+import { clientIp, verifyTurnstile } from '../../lib/turnstile.js';
 
 const APP_ORIGIN = 'https://appvibe.biz.id';
 
@@ -110,6 +113,7 @@ export async function onRequest(context) {
   const email = String(body.email || '').trim();
   const phoneInput = String(body.phone || '').trim();
   const packId = String(body.pack_id || '').trim();
+  const turnstileToken = String(body.turnstile_token || '').trim();
 
   // Validate pack
   if (!packId || !VALID_PACK_IDS.includes(packId)) {
@@ -152,8 +156,41 @@ export async function onRequest(context) {
   }
 
   try {
+    const turnstile = await verifyTurnstile({
+      secret: env.TURNSTILE_SECRET_KEY,
+      token: turnstileToken,
+      remoteip: clientIp(request),
+      fetchImpl: env._fetchImpl || fetch,
+    });
+    if (!turnstile.ok) {
+      return json(
+        { error: 'turnstile_failed', message: 'Verifikasi keamanan gagal. Silakan muat ulang halaman dan coba lagi.' },
+        403,
+        cors,
+      );
+    }
+
     const pack = PACKS[packId];
     const repo = createMemberAccessRepo(env.APPVIBE_DB);
+
+    if (env.AUTH_TOKEN_PEPPER) {
+      const nowMs = Date.now();
+      const phoneKey = await hashIdentifier(`checkout_phone:${phoneE164}`, env.AUTH_TOKEN_PEPPER);
+      const ipKey = await hashIdentifier(`checkout_ip:${clientIp(request)}`, env.AUTH_TOKEN_PEPPER);
+
+      const phoneLimit = await checkRateLimit(repo, { kind: 'checkout_phone', key: phoneKey, nowMs });
+      const ipLimit = phoneLimit.allowed
+        ? await checkRateLimit(repo, { kind: 'checkout_ip', key: ipKey, nowMs })
+        : { allowed: false };
+
+      if (!phoneLimit.allowed || !ipLimit.allowed) {
+        return json(
+          { error: 'rate_limited', message: 'Terlalu banyak percobaan checkout. Silakan coba lagi beberapa saat lagi.' },
+          429,
+          cors,
+        );
+      }
+    }
 
     // Create or find the member by canonical phone. Existing members keep
     // their original email — a new checkout never overwrites it.

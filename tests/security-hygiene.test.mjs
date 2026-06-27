@@ -31,3 +31,23 @@ test('gitignore excludes local secret files and audit screenshots', () => {
   assert.match(gitignore, /^topbar-\*\.png$/m);
   assert.doesNotMatch(gitignore, /"audit-\*\.png"/);
 });
+
+test('security headers include CSP, HSTS, and Permissions-Policy', () => {
+  const headers = readFileSync(join(root, 'public', '_headers'), 'utf8');
+
+  assert.match(headers, /Content-Security-Policy:/);
+  assert.match(headers, /Strict-Transport-Security:/);
+  assert.match(headers, /Permissions-Policy:/);
+  assert.match(headers, /frame-ancestors 'none'/);
+});
+
+test('public pages use appvibe.biz.id canonicals and no placeholder ad IDs', () => {
+  const files = ['index.html', 'privacy/index.html', 'terms/index.html', 'license/index.html'];
+  const html = files.map((file) => readFileSync(join(root, file), 'utf8')).join('\n');
+
+  assert.doesNotMatch(html, /appvibe\.web\.id/);
+  assert.doesNotMatch(html, /GTM-XXXXXXX/);
+  assert.doesNotMatch(html, /G-XXXXXXXXXX/);
+  assert.doesNotMatch(html, /000000000000000/);
+  assert.match(html, /https:\/\/appvibe\.biz\.id\//);
+});

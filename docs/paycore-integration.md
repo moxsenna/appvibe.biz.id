@@ -4,7 +4,7 @@
 
 This document is for the `appvibe.biz.id` repository only.
 
-- `appvibe.biz.id` is the product sales site: landing page, product offers, checkout, access lookup, legal pages, and Cloudflare Pages Functions.
+- `appvibe.biz.id` is the product sales site: landing page, checkout, member access, admin settings, legal pages, and Cloudflare Pages Functions.
 - `appvibe.web.id` is a different project in `D:\Coding\AppVibe v2`. It focuses on jasa pembuatan landing page and aplikasi.
 - PayCore is a different project in `D:\Coding\paycore`. It is the shared payment hub for AppVibe projects.
 
@@ -25,6 +25,7 @@ Visitor on appvibe.biz.id
   -> chooses product/pack on /
   -> opens /checkout/
   -> submits name/email/phone/pack_id
+  -> optional Turnstile verification and checkout rate limit
   -> POST /api/checkout/create-order
   -> Cloudflare Pages Function signs request
   -> POST PayCore /v1/orders
@@ -34,9 +35,12 @@ Visitor on appvibe.biz.id
   -> PayCore verifies payment
   -> PayCore posts signed event to /api/webhooks/paycore
   -> appvibe.biz.id verifies event signature
-  -> CHECKOUT_EVENTS KV stores order/event/access state
-  -> buyer returns to PAYCORE_RETURN_URL
+  -> D1 marks order paid + delivered and grants entitlement
+  -> buyer returns to /checkout/
   -> /checkout/ polls /api/checkout/status
+  -> buyer is redirected to /access/
+  -> buyer requests WhatsApp magic link
+  -> /access/ opens member area after one-time magic link login
 ```
 
 ## Environment Variables
@@ -46,24 +50,36 @@ Visitor on appvibe.biz.id
 | `PAYCORE_BASE_URL` | Yes | PayCore API base URL. Use staging or production PayCore, not this site's domain. |
 | `PAYCORE_APP_ID` | Yes | PayCore app identifier, currently `appvibe_vault`. |
 | `PAYCORE_KEY_ID` | Yes | Key ID registered in PayCore. |
-| `PAYCORE_APP_SECRET` | Yes | Secret used to sign outgoing PayCore API requests. |
-| `PAYCORE_WEBHOOK_SECRET` | Yes | Secret used to verify PayCore webhook events. |
+| `PAYCORE_APP_SECRET` | Yes | Secret used to sign outgoing PayCore API requests. Rotate together with PayCore. |
+| `PAYCORE_WEBHOOK_SECRET` | Yes | Secret used to verify PayCore webhook events. Rotate together with PayCore. |
 | `PAYCORE_RETURN_URL` | Yes | Buyer return URL after payment. Current default should be `https://appvibe.biz.id/checkout/`. |
-| `FULFILLMENT_WEBHOOK_URL` | No | Optional downstream fulfillment/CRM/email webhook. |
-| `LEAD_WEBHOOK_URL` | No | Legacy/ops webhook. Current code may also use it for spreadsheet/order forwarding. |
-| `ADMIN_TOKEN` | Yes for admin | Token for `/admin/` order panel. Treat as sensitive. |
-| `TURNSTILE_SECRET_KEY` | Optional/currently not enforced | Reserved for anti-spam if Turnstile is wired into checkout. |
-| `CHECKOUT_EVENTS` | Yes | Cloudflare KV namespace binding for local order/event/access state. |
+| `FULFILLMENT_WEBHOOK_URL` | No | Optional downstream fulfillment/CRM webhook. |
+| `LEAD_WEBHOOK_URL` | No | Optional spreadsheet/order forwarding webhook. |
+| `TURNSTILE_SECRET_KEY` | Recommended | When set, `/api/checkout/create-order` requires a valid Turnstile token. |
+| `VITE_TURNSTILE_SITE_KEY` | Recommended | Public Turnstile site key rendered on `/checkout/`. |
+| `ADMIN_TOKEN` | Yes for admin | Token for `/admin/`. Treat as sensitive. |
+| `FONNTE_TOKEN` | Yes for WhatsApp login | Fonnte API token used to send magic links. |
+| `AUTH_TOKEN_PEPPER` | Yes | Pepper for hashing sessions, magic links, identities, and rate-limit keys. |
+| `APP_BASE_URL` | Yes | Canonical public base URL, usually `https://appvibe.biz.id`. |
+| `ACCESS_RESOURCE_URLS_JSON` | Fallback only | Server-side fallback app/resource URLs. Admin D1 app links override app URLs. |
+| `APPVIBE_DB` | Yes | Cloudflare D1 binding for member access state. |
 
-## Internal Endpoints In This Repo
+See `docs/secret-rotation.md` for rotation order.
+
+## Internal Endpoints
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `POST` | `/api/checkout/create-order` | Validate buyer/pack, create PayCore order, persist initial local KV record, return `checkout_url`. |
+| `POST` | `/api/checkout/create-order` | Validate buyer/pack, optionally verify Turnstile and rate limits, create PayCore order, persist local D1 order, return `checkout_url`. |
 | `GET` | `/api/checkout/status?order_id=xxx` | Return local checkout status and reconcile pending orders with PayCore when possible. |
-| `POST` | `/api/webhooks/paycore` | Receive signed PayCore events and mark paid/delivered state. |
-| `GET` | `/api/access?email=xxx` | Buyer access lookup. Needs stronger auth before production hardening. |
+| `POST` | `/api/webhooks/paycore` | Receive signed PayCore events, mark order paid/delivered, activate member, and grant entitlement. |
+| `POST` | `/api/auth/request-magic-link` | Send WhatsApp magic link only for members with active entitlement. |
+| `GET` | `/api/auth/consume-magic-link` | Consume one-time magic link and set member session cookie. |
+| `GET` | `/api/member/me` | Return current member access for a valid session. |
+| `GET` | `/api/member/launch?app_id=xxx` | Validate entitlement and redirect to the configured app URL. |
+| `GET` | `/api/member/resource?bundle_id=xxx&type=xxx` | Validate entitlement and redirect to bundle resource URL. |
 | `GET` | `/api/admin/orders` | Admin order listing. Requires admin auth. |
+| `GET/PUT` | `/api/admin/app-links` | Admin settings for member-area app launch URLs. |
 
 ## PayCore API Used By This Repo
 
@@ -72,60 +88,60 @@ Visitor on appvibe.biz.id
 | `POST` | `/v1/orders` | Create payment order. Request must be HMAC signed. |
 | `GET` | `/v1/orders/:order_id` | Reconcile pending local order status. Request must be HMAC signed. |
 
-## Pages In This Repo
+## Pages
 
 | Path | Purpose |
 |------|---------|
 | `/` | Product landing page for AppVibe digital products. |
 | `/checkout/` | Dedicated checkout page and payment return handler. |
-| `/access/` | Buyer access/status lookup. |
-| `/admin/` | Internal order panel. |
+| `/access/` | Member access and magic-link login. |
+| `/admin/` | Internal order panel and app-link settings. |
 | `/terms/`, `/privacy/`, `/license/` | Legal pages. |
 
 There is no active `/payment/return` page in this repo. Do not document or configure `/payment/return` unless a real page is added and included in `vite.config.js`.
 
-## Checkout Detail
+## Product Data
 
-### 1. Offer Selection
-
-- Landing page displays public offers and pack choices.
 - Single pack price is currently `Rp97.000`.
 - Full Vault price is currently `Rp147.000`.
-- Product/pack definitions must stay aligned between:
-  - `functions/lib/packs.js`
-  - `src/scripts/data/vault-packs.js`
+- Product keys, prices, currency, entitlement resource type, and app IDs are canonical in `functions/lib/packs.js`.
+- Frontend presentation data in `src/scripts/data/vault-packs.js` derives those critical checkout fields from `functions/lib/packs.js`.
 
-### 2. Checkout Page
+## Checkout Detail
+
+### 1. Checkout Page
 
 - `/checkout/` renders the checkout UI.
 - Query examples:
   - `/checkout/?plan=full-vault`
   - `/checkout/?plan=single-pack&pack=advertiser`
   - `/checkout/?order_id=PAYCORE_ORDER_ID`
-- The checkout form posts `{ name, email, phone, pack_id }` to `/api/checkout/create-order`.
+- The checkout form posts `{ name, email, phone, pack_id, turnstile_token, utm_* }` to `/api/checkout/create-order`.
 
-### 3. Create Order
+### 2. Create Order
 
 `POST /api/checkout/create-order`
 
-- Validates `pack_id`, `name`, and `email`.
+- Validates `pack_id`, `name`, `email`, and Indonesian WhatsApp number.
+- Verifies Turnstile when `TURNSTILE_SECRET_KEY` is configured.
+- Rate-limits checkout attempts when `AUTH_TOKEN_PEPPER` is configured.
+- Creates or finds a D1 member by canonical phone.
 - Builds an order payload for PayCore.
 - Signs the request with `PAYCORE_APP_SECRET`.
 - Sends `POST {PAYCORE_BASE_URL}/v1/orders`.
-- Stores best-effort local KV records:
-  - `order:{paycore_order_id}`
-  - `ext:{external_order_id}`
-  - `buyer:{email}`
+- Stores the pending order in D1 linked to the member.
+- Optionally forwards the lead/order to `LEAD_WEBHOOK_URL`.
 - Returns `checkout_url` to the frontend.
 
-### 4. Payment Return
+### 3. Payment Return
 
 - PayCore/payment gateway returns the buyer to `PAYCORE_RETURN_URL`.
 - Current intended return URL: `https://appvibe.biz.id/checkout/`.
 - The checkout page detects `order_id` in the query string and polls `/api/checkout/status`.
 - The return page must not grant final access by itself. Final fulfillment comes from signed PayCore webhook events.
+- Redirect to `/access/?from=payment` happens only after D1 fulfillment is delivered.
 
-### 5. Webhook Fulfillment
+### 4. Webhook Fulfillment
 
 PayCore posts `POST /api/webhooks/paycore` with:
 
@@ -137,42 +153,50 @@ Handler responsibilities:
 
 1. Verify HMAC signature.
 2. Reject replay attempts via timestamp skew.
-3. Enforce event idempotency with `evt:{event_id}`.
+3. Enforce event idempotency with D1 `payment_events`.
 4. Avoid duplicate fulfillment for already delivered orders.
-5. Update local KV order state to paid/delivered.
-6. Record fulfillment/audit keys.
-7. Optionally forward fulfillment data to downstream webhook.
+5. Update D1 order state to paid/delivered.
+6. Grant/confirm active entitlement and activate the member.
+7. Record audit logs.
+8. Optionally forward fulfillment data to downstream webhook.
 
-## KV Structure
+## D1 Tables
 
 ```text
-order:{paycore_order_id} -> local order record
-ext:{external_order_id}  -> paycore_order_id
-buyer:{email}            -> latest paycore_order_id for buyer email
-fulfilled:{email}        -> latest fulfilled access record
-evt:{event_id}           -> webhook idempotency/audit record
-audit:{order_id}         -> webhook/order audit trail
+members         -> buyer identity, status, current access summary
+orders          -> PayCore/local order state
+payment_events  -> webhook idempotency
+entitlements    -> active bundle/vault access grants
+magic_links     -> one-time login links
+sessions        -> member browser sessions
+audit_logs      -> fulfillment and auth audit trail
+rate_limits     -> hashed rate-limit buckets
+app_links       -> admin-configured launch URLs
 ```
 
-Email keys should be normalized consistently before write and read.
+Raw tokens are never stored; sessions and magic links store hashes.
 
 ## Test Flow
 
 1. Open `https://appvibe.biz.id/` or local dev.
 2. Choose a product/pack.
 3. Continue to `/checkout/`.
-4. Fill buyer data.
+4. Fill buyer data and complete Turnstile when enabled.
 5. Submit checkout.
 6. Confirm PayCore order creation and browser redirect to `checkout_url`.
 7. Complete payment in staging/sandbox.
 8. Confirm PayCore posts to `/api/webhooks/paycore`.
-9. Confirm local KV `order:{order_id}` has `payment_status = paid` and `fulfillment_status = delivered`.
-10. Return to `/checkout/?order_id=...` and confirm polling shows the correct status.
+9. Confirm D1 `orders` has `payment_status = paid` and `fulfillment_status = delivered`.
+10. Confirm D1 has active entitlement for the member.
+11. Return to `/checkout/?order_id=...` and confirm polling redirects to `/access/`.
+12. Request magic link by WhatsApp and confirm member area opens.
 
 ## Troubleshooting
 
 - `503 payments_not_configured`: `PAYCORE_KEY_ID` or `PAYCORE_APP_SECRET` is missing.
 - `401 invalid_signature` on webhook: `PAYCORE_WEBHOOK_SECRET` does not match PayCore.
 - Buyer returns to 404: `PAYCORE_RETURN_URL` likely points to a page that does not exist, such as old `/payment/return`.
-- Status remains pending: check PayCore order status, local KV `order:{order_id}`, and webhook logs.
-- Access lookup fails for a paid buyer: check email normalization and `fulfilled:{email}` / `buyer:{email}` keys.
+- `403 turnstile_failed`: `TURNSTILE_SECRET_KEY` is configured but checkout did not send a valid Turnstile token.
+- `429 rate_limited`: checkout attempts exceeded the phone/IP bucket. Wait and retry.
+- Status remains pending: check PayCore order status, D1 `orders`, D1 `payment_events`, and webhook logs.
+- Member login does not send WhatsApp: confirm D1 entitlement is active before debugging Fonnte.

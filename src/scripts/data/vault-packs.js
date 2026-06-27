@@ -1,6 +1,7 @@
-export const vaultPacks = {
+import { PACKS as CANONICAL_PACKS } from '../../../functions/lib/packs.js';
+
+const PACK_META = {
   advertiser: {
-    id: 'advertiser',
     code: '01',
     label: 'Advertiser App Pack',
     scope: 'FOR MEDIA BUYERS',
@@ -11,12 +12,10 @@ export const vaultPacks = {
     productOutcome: 'Campaign direction, audience angles, creative brief, dan testing framework sebelum budget iklan terpakai.',
     buyerTypes: ['Media buyer', 'Affiliate', 'UMKM', 'Tim ads'],
     launchModels: ['Lifetime tool', 'Bonus mentorship', 'Agency client portal'],
-    appIds: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula'],
     formInterestValue: 'advertiser',
-    gradient: 'linear-gradient(145deg,#eaf0ff,#dbe5ff)'
+    gradient: 'linear-gradient(145deg,#eaf0ff,#dbe5ff)',
   },
   commerce: {
-    id: 'commerce',
     code: '02',
     label: 'Commerce & Marketplace Pack',
     scope: 'FOR ECOMMERCE OPERATORS',
@@ -27,12 +26,10 @@ export const vaultPacks = {
     productOutcome: 'Merchandising, listing optimization, proof asset, affiliate content system, dan campaign ads.',
     buyerTypes: ['Seller Shopee/Tokopedia', 'Agency marketplace', 'Brand owner'],
     launchModels: ['Seller toolkit', 'Bundle course', 'Member benefit'],
-    appIds: ['katalog', 'rupa', 'bukti', 'pikat', 'adsprint'],
     formInterestValue: 'commerce',
-    gradient: 'linear-gradient(145deg,#eef9fb,#d8eef0)'
+    gradient: 'linear-gradient(145deg,#eef9fb,#d8eef0)',
   },
   creator: {
-    id: 'creator',
     code: '03',
     label: 'Creator & Affiliate Pack',
     scope: 'FOR CREATOR EDUCATORS',
@@ -43,12 +40,10 @@ export const vaultPacks = {
     productOutcome: 'Content system, hook library, voice direction, script planning, dan persona continuity.',
     buyerTypes: ['Creator', 'Affiliate mentor', 'Social media agency'],
     launchModels: ['Creator bundle', 'Komunitas bonus', 'Access pass'],
-    appIds: ['pikat', 'ritme', 'mimik', 'rupa', 'suara'],
     formInterestValue: 'creator',
-    gradient: 'linear-gradient(145deg,#f1edff,#e2d8ff)'
+    gradient: 'linear-gradient(145deg,#f1edff,#e2d8ff)',
   },
   brand_launch: {
-    id: 'brand_launch',
     code: '04',
     label: 'Brand & Launch Pack',
     scope: 'FOR STRATEGISTS & BUILDERS',
@@ -59,20 +54,31 @@ export const vaultPacks = {
     productOutcome: 'Brand foundation, launch map, website blueprint, print campaign, dan voice system.',
     buyerTypes: ['Brand strategist', 'Web designer', 'Course creator', 'Consultant'],
     launchModels: ['Mini brand kit', 'Launch program', 'Agency portal'],
-    appIds: ['arah', 'mimik', 'mula', 'tayang', 'cetak'],
     formInterestValue: 'brand_launch',
-    gradient: 'linear-gradient(145deg,#e8f5ee,#d2ecdc)'
+    gradient: 'linear-gradient(145deg,#e8f5ee,#d2ecdc)',
   },
   vault_full: {
-    id: 'vault_full',
     code: '00',
     label: 'Full AppVibe Vault',
     scope: 'ALL ACCESS',
     targetAudience: 'Power users who want all packs',
-    appIds: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula', 'katalog', 'pikat', 'ritme', 'mimik', 'suara', 'arah', 'tayang', 'cetak'],
   },
 };
 
-export const PACK_ORDER = ['advertiser', 'commerce', 'creator', 'brand_launch'];
-export const PACK_PRICES = { advertiser: 97000, commerce: 97000, creator: 97000, brand_launch: 97000, vault_full: 147000 };
-export const PACK_PRODUCT_KEYS = { advertiser: 'pack_advertiser', commerce: 'pack_commerce', creator: 'pack_creator', brand_launch: 'pack_branding', vault_full: 'vault_full_license' };
+export const vaultPacks = Object.fromEntries(
+  Object.entries(CANONICAL_PACKS).map(([id, pack]) => [
+    id,
+    {
+      id,
+      ...PACK_META[id],
+      appIds: pack.appIds,
+      amount: pack.amount,
+      currency: pack.currency,
+      productKey: pack.product_key,
+    },
+  ]),
+);
+
+export const PACK_ORDER = Object.keys(CANONICAL_PACKS).filter((id) => id !== 'vault_full');
+export const PACK_PRICES = Object.fromEntries(Object.entries(CANONICAL_PACKS).map(([id, pack]) => [id, pack.amount]));
+export const PACK_PRODUCT_KEYS = Object.fromEntries(Object.entries(CANONICAL_PACKS).map(([id, pack]) => [id, pack.product_key]));

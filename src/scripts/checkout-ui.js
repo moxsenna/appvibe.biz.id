@@ -1,6 +1,7 @@
 import { vaultApps } from './data/vault-apps.js';
 import { vaultPacks, PACK_ORDER, PACK_PRICES } from './data/vault-packs.js';
 import { checkoutStore } from './checkout-store.js';
+import { getCheckoutAttribution } from './tracking.js';
 
 /** Format price in Indonesian Rupiah. */
 function formatPrice(amount = 0) {
@@ -15,6 +16,7 @@ function esc(value = '') {
 }
 
 const ACCESS_FROM_PAYMENT_URL = '/access/?from=payment';
+const TURNSTILE_SITE_KEY = import.meta.env.VITE_TURNSTILE_SITE_KEY || '';
 
 function icon(name) {
   const icons = {
@@ -177,6 +179,11 @@ function renderConfirm(packId) {
             <label for="coPhone">WhatsApp <em>*</em></label>
             <input id="coPhone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" placeholder="08xxxxxxxxxx" />
           </div>
+          ${TURNSTILE_SITE_KEY ? `
+          <div class="co-turnstile">
+            <div class="cf-turnstile" data-sitekey="${esc(TURNSTILE_SITE_KEY)}" data-action="turnstile-spin-v1"></div>
+          </div>
+          ` : ''}
 
           <div class="co-submit-area">
             <button type="submit" class="co-submit" id="coSubmit">
@@ -446,6 +453,7 @@ export function initCheckoutUI({ container } = {}) {
     const email = form.querySelector('#coEmail')?.value?.trim();
     const phone = form.querySelector('#coPhone')?.value?.trim();
     const packId = checkoutStore.getState().packId;
+    const turnstileToken = form.querySelector('[name="cf-turnstile-response"]')?.value || '';
 
     if (!name || name.length < 2) {
       showFormError(form, 'Nama lengkap minimal 2 karakter.');
@@ -466,6 +474,10 @@ export function initCheckoutUI({ container } = {}) {
       showFormError(form, 'Silakan pilih akses terlebih dahulu.');
       return;
     }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      showFormError(form, 'Selesaikan verifikasi keamanan terlebih dahulu.');
+      return;
+    }
 
     checkoutStore.transition('creating', { buyerEmail: email, buyerName: name });
     pushCheckoutEvent('begin_checkout', packId);
@@ -474,7 +486,14 @@ export function initCheckoutUI({ container } = {}) {
       const response = await fetch('/api/checkout/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, phone, pack_id: packId }),
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          pack_id: packId,
+          turnstile_token: turnstileToken,
+          ...getCheckoutAttribution(),
+        }),
       });
       const data = await response.json().catch(() => ({}));
 
@@ -582,4 +601,3 @@ export function initCheckoutUI({ container } = {}) {
   window.renderCheckout = (state) => render(state);
   return { render, checkReturnFromPayment, getState: () => checkoutStore.getState() };
 }
-

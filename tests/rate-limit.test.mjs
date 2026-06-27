@@ -92,3 +92,23 @@ test('ip bucket allows the 10th then blocks the 11th', async () => {
   assert.equal(blocked.allowed, false);
   assert.equal(repo.records.length, 10); // not recorded when blocked
 });
+
+test('checkout phone bucket blocks the second attempt within 60 seconds', async () => {
+  const repo = makeRepo();
+  repo.setClock(T0);
+  await repo.recordRateLimit('checkout_phone_hash', 'checkout_phone');
+
+  const result = await checkRateLimit(repo, { kind: 'checkout_phone', key: 'checkout_phone_hash', nowMs: T0 + 30_000 });
+  assert.equal(result.allowed, false);
+});
+
+test('checkout ip bucket allows 20 requests per 15 minutes then blocks', async () => {
+  const repo = makeRepo();
+  repo.setClock(T0);
+  for (let i = 0; i < 20; i++) {
+    await repo.recordRateLimit('checkout_ip_hash', 'checkout_ip');
+  }
+
+  const result = await checkRateLimit(repo, { kind: 'checkout_ip', key: 'checkout_ip_hash', nowMs: T0 });
+  assert.equal(result.allowed, false);
+});
