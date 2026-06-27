@@ -4,7 +4,9 @@
 **Domain:** `appvibe.biz.id`  
 **Version:** 1.0  
 **Status:** Working brand system  
-**Primary use:** Website studio, product portfolio, landing pages, app ecosystem, social assets, and sales materials.
+**Primary use in this repo:** Product sales site, product portfolio, landing page, checkout experience, app ecosystem, social assets, and sales materials for AppVibe digital products.
+
+> Repository boundary: `appvibe.biz.id` is not the same project as `appvibe.web.id`. The `appvibe.web.id` service-business website lives in `D:\Coding\AppVibe v2`.
 
 ---
 
@@ -12,7 +14,7 @@
 
 ### Brand idea
 
-**AppVibe** is a digital product studio and showcase ecosystem for useful, well-crafted web applications, AI tools, landing pages, and business systems.
+**AppVibe** is a digital product studio and showcase ecosystem for useful, well-crafted web applications, AI tools, landing pages, and business systems. In this repository, that brand is expressed as a product sales and checkout site for AppVibe digital products.
 
 The name combines:
 
@@ -36,7 +38,7 @@ AppVibe should feel:
 
 ### Positioning
 
-AppVibe is not positioned as a generic “website jasa” provider. It is positioned as a **product-minded digital studio**: a partner that packages business opportunities into clear, conversion-aware, usable digital experiences.
+AppVibe is not positioned here as a generic “website jasa” provider. That service-business context belongs to `appvibe.web.id`. In this repo, AppVibe is positioned as a **product-minded digital product brand**: a catalog and checkout experience for clear, conversion-aware, usable digital products.
 
 ### Voice keywords
 

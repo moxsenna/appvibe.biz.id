@@ -2,6 +2,8 @@
 
 Based on: `appvibe-lp-optimization-execution-plan.md` (872 lines) + 8 mandatory amendments + 5 final revisions.
 
+> Status note: this is a historical landing-page optimization plan. The current `appvibe.biz.id` repo already has a dedicated checkout flow under `/checkout/` and Cloudflare Pages Functions under `/api/checkout/*` plus `/api/webhooks/paycore`. Do not treat `functions/api/lead.js`, `lead-form.js`, or modal-lead flow references below as current source of truth unless those files are reintroduced.
+
 ---
 
 ## Revisions applied
@@ -138,11 +140,11 @@ trackVaultEvent('vault_lead_submit_success', { selected_pack, selected_app, mode
 | `src/scripts/first-product.js` | CREATE — dynamic recommendation card |
 | `src/scripts/data/apps.js` | DELETE |
 | `src/scripts/app-launcher.js` | MODIFY — import vault-apps, 5-col, form CTA, events |
-| `src/scripts/lead-form.js` | MODIFY — new fields, idempotency, Meta Lead + GA4, success msg |
-| `src/scripts/modal.js` | MODIFY — context open, form_open_source, focus return |
+| `src/scripts/lead-form.js` | SUPERSEDED — current buyer data capture is in checkout UI |
+| `src/scripts/modal.js` | SUPERSEDED — current checkout is a dedicated page, not a lead modal |
 | `src/scripts/tracking.js` | MODIFY — trackVaultEvent, dataLayer-only vault events, direct fbq/gtag only for standard conversions |
 | `index.html` | MODIFY — 7 section rewrite, product showcase ≤3, form fields, privacy notice, anchors |
-| `functions/api/lead.js` | MODIFY — new fields, server validation, best-effort dedupe |
+| `functions/api/lead.js` | SUPERSEDED — current checkout backend is `/api/checkout/create-order`, `/api/checkout/status`, and `/api/webhooks/paycore` |
 | `src/styles/landing.css` | MODIFY — first-product card, license 2-col, transition strip, scroll-margin, product showcase |
 | `src/styles/launcher.css` | MODIFY — 5-col, disable auto-scroll, detail below |
 | `src/styles/responsive.css` | MODIFY — new sections, scroll-margin, mobile showcase |
@@ -157,9 +159,9 @@ trackVaultEvent('vault_lead_submit_success', { selected_pack, selected_app, mode
 2. Delete `apps.js`, update `app-launcher.js` imports
 3. Build `first-product.js` (dynamic recommendation, uses global state)
 4. Rewrite `tracking.js` (trackVaultEvent, event contract)
-5. Rewrite `modal.js` (context open, focus return, form_open_source)
-6. Rewrite `lead-form.js` (new fields, idempotency, dual analytics)
-7. Rewrite `functions/api/lead.js` (server validation, best-effort dedupe)
+5. SUPERSEDED: old `modal.js` lead-modal step.
+6. SUPERSEDED: old `lead-form.js` step.
+7. SUPERSEDED: old `functions/api/lead.js` step. Current backend work should target checkout/status/webhook functions.
 8. Rebuild `index.html` (all section copy, structure, form fields, product showcase)
 9. CSS updates (landing.css → license 2-col, showcase, scroll-margin; launcher.css → 5-col, disable animation; responsive.css)
 10. `npm run build` → QA → deploy preview

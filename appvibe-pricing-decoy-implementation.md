@@ -1,12 +1,14 @@
 # AppVibe — Pricing Decoy Implementation
 
+> Status note: this document records an earlier pricing/lead-capture implementation phase. The current `appvibe.biz.id` project has a real checkout page at `/checkout/` and PayCore integration through `/api/checkout/*` plus `/api/webhooks/paycore`. Treat any `appvibe:open-lead-modal`, `functions/api/lead.js`, or "checkout nanti" language as historical unless the current code explicitly restores that flow.
+
 Implementasi ini menambahkan dua opsi pembelian dengan aturan bisnis berikut:
 
 - **Pilih 1 Niche Pack — Rp97.000**: pembeli wajib memilih tepat satu dari empat pack.
 - **Full AppVibe Vault — Rp147.000**: mendapatkan empat pack / 13 aplikasi.
 - Kedua opsi mencakup **marketing kit, lisensi jual ulang akses produk jadi, dan hak rebrand** sesuai ketentuan lisensi.
 - Tidak ada plan atau pack yang otomatis terpilih saat halaman dimuat (`selectedPlan` dan `selectedPack` dimulai sebagai `null`).
-- CTA menggunakan contract event yang dapat langsung dihubungkan oleh agen PayCore pada tahap checkout: `appvibe:open-lead-modal` membawa `{ offer }`.
+- Current CTA behavior should lead into the dedicated checkout flow. The older `appvibe:open-lead-modal` contract is historical.
 
 > Catatan lisensi: “jual ulang” di UI ini sengaja dijelaskan sebagai menjual **akses produk branded kepada end user**, bukan menjual ulang file/master template atau memindahkan hak lisensi ke pembeli. Ubah copy ini hanya bila kebijakan lisensi Anda memang berbeda.
 
@@ -671,6 +673,7 @@ function setSelectedOffer(planId, packId = null) {
   return offer;
 }
 
+// Historical snippet. Current repo redirects/links to /checkout/ instead of opening a lead modal.
 function openSelectedOffer(offer) {
   window.dispatchEvent(new CustomEvent('appvibe:open-lead-modal', { detail: { offer } }));
 }
@@ -748,9 +751,9 @@ export function initPricing() {
 
 ---
 
-## 5) Ubah `src/main.js`
+## 5) Historical: Ubah `src/main.js`
 
-Tambahkan import dan inisialisasi pricing.
+Tambahkan import dan inisialisasi pricing. In the current repo, do not reintroduce `initLeadForm()` unless the lead-modal flow is intentionally restored.
 
 ```js
 import './styles/index.css';
@@ -946,7 +949,7 @@ Tambahkan CSS ini di akhir `src/styles/forms.css`:
 
 ---
 
-## 8) Tambahkan metadata offer pada `src/scripts/lead-form.js`
+## 8) Historical: metadata offer pada `src/scripts/lead-form.js`
 
 Pada bagian setelah pembacaan `name`, `email`, dan `niche`, tambahkan:
 
@@ -968,13 +971,13 @@ pack_id: packId,
 pack_name: packName,
 ```
 
-Endpoint `functions/api/lead.js` sudah meneruskan field metadata tambahan ke `LEAD_WEBHOOK_URL` melalui `...meta`; perubahan backend tidak wajib untuk lead capture saat ini.
+Historical note: `functions/api/lead.js` is not the current checkout backend in this repo. Current order creation goes through `functions/api/checkout/create-order.js`.
 
 ---
 
-## Kontrak untuk agen Checkout / PayCore
+## Historical Contract for Checkout / PayCore
 
-Saat checkout nyata diaktifkan, ganti hanya implementasi `openSelectedOffer()` di `src/scripts/pricing.js` atau listener `appvibe:open-lead-modal` menjadi flow checkout. Data yang tersedia:
+Checkout nyata saat ini sudah aktif melalui `/checkout/`. Bagian di bawah dipertahankan sebagai referensi struktur offer lama, bukan instruksi implementasi utama. Data offer yang tersedia:
 
 ```js
 {

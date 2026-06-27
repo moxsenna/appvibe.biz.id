@@ -1,145 +1,178 @@
-# PayCore Checkout Integration — appvibe.web.id
+# PayCore Checkout Integration - appvibe.biz.id
 
-## Tujuan
+## Project Boundaries
 
-PayCore adalah payment hub untuk semua produk AppVibe. Aplikasi konsumen (`appvibe.web.id`) tidak berkomunikasi langsung dengan Duitku — semua pembayaran melalui PayCore.
+This document is for the `appvibe.biz.id` repository only.
 
-## Arsitektur
+- `appvibe.biz.id` is the product sales site: landing page, product offers, checkout, access lookup, legal pages, and Cloudflare Pages Functions.
+- `appvibe.web.id` is a different project in `D:\Coding\AppVibe v2`. It focuses on jasa pembuatan landing page and aplikasi.
+- PayCore is a different project in `D:\Coding\paycore`. It is the shared payment hub for AppVibe projects.
 
-```
-User (LP) → Klik "Beli" → Modal checkout → Isi data → POST /api/checkout/create-order
-  → Cloudflare Function → HMAC-sign → POST PayCore /v1/orders
-  → PayCore buat Duitku checkout → return checkout_url
-  → User redirect ke Duitku → bayar
-  → Duitku callback → PayCore verifikasi → POST /api/webhooks/paycore (signed event)
-  → appvibe.web.id verifikasi signature → idempotency check → fulfillment → KV persist
-  → Forward ke FULFILLMENT_WEBHOOK_URL (CRM/email)
-  → User kembali ke /payment/return → status polling via /api/checkout/status
+Do not copy `appvibe.web.id` URLs or assumptions into this repo.
+
+## PayCore Services
+
+- Staging base URL: `https://pay-staging.appvibe.biz.id`
+- Production domain: `https://pay.appvibe.biz`
+- PayCore repo: `D:\Coding\paycore`
+
+`appvibe.biz.id` is a PayCore client. It signs outgoing PayCore requests and verifies incoming PayCore events, but PayCore's core gateway, provider callback, order database, and payment orchestration live in the PayCore repo.
+
+## Current Architecture
+
+```text
+Visitor on appvibe.biz.id
+  -> chooses product/pack on /
+  -> opens /checkout/
+  -> submits name/email/phone/pack_id
+  -> POST /api/checkout/create-order
+  -> Cloudflare Pages Function signs request
+  -> POST PayCore /v1/orders
+  -> PayCore returns checkout_url
+  -> browser redirects to payment gateway
+  -> payment provider callback reaches PayCore
+  -> PayCore verifies payment
+  -> PayCore posts signed event to /api/webhooks/paycore
+  -> appvibe.biz.id verifies event signature
+  -> CHECKOUT_EVENTS KV stores order/event/access state
+  -> buyer returns to PAYCORE_RETURN_URL
+  -> /checkout/ polls /api/checkout/status
 ```
 
 ## Environment Variables
 
 | Variable | Required | Description |
 |----------|----------|-------------|
-| `PAYCORE_BASE_URL` | Yes | PayCore API URL (staging/production) |
-| `PAYCORE_APP_ID` | Yes | App identifier (`appvibe_vault`) |
-| `PAYCORE_KEY_ID` | Yes | Key ID for HMAC signing |
-| `PAYCORE_APP_SECRET` | Yes | Secret for signing requests to PayCore |
-| `PAYCORE_WEBHOOK_SECRET` | Yes | Secret for verifying events from PayCore |
-| `PAYCORE_RETURN_URL` | Yes | URL after Duitku payment |
-| `FULFILLMENT_WEBHOOK_URL` | No | Fulfillment notification target (falls back to LEAD_WEBHOOK_URL) |
-| `LEAD_WEBHOOK_URL` | No | Legacy lead capture webhook |
-| `CHECKOUT_EVENTS` | Yes | KV namespace binding for orders/events |
+| `PAYCORE_BASE_URL` | Yes | PayCore API base URL. Use staging or production PayCore, not this site's domain. |
+| `PAYCORE_APP_ID` | Yes | PayCore app identifier, currently `appvibe_vault`. |
+| `PAYCORE_KEY_ID` | Yes | Key ID registered in PayCore. |
+| `PAYCORE_APP_SECRET` | Yes | Secret used to sign outgoing PayCore API requests. |
+| `PAYCORE_WEBHOOK_SECRET` | Yes | Secret used to verify PayCore webhook events. |
+| `PAYCORE_RETURN_URL` | Yes | Buyer return URL after payment. Current default should be `https://appvibe.biz.id/checkout/`. |
+| `FULFILLMENT_WEBHOOK_URL` | No | Optional downstream fulfillment/CRM/email webhook. |
+| `LEAD_WEBHOOK_URL` | No | Legacy/ops webhook. Current code may also use it for spreadsheet/order forwarding. |
+| `ADMIN_TOKEN` | Yes for admin | Token for `/admin/` order panel. Treat as sensitive. |
+| `TURNSTILE_SECRET_KEY` | Optional/currently not enforced | Reserved for anti-spam if Turnstile is wired into checkout. |
+| `CHECKOUT_EVENTS` | Yes | Cloudflare KV namespace binding for local order/event/access state. |
 
-## Endpoints
+## Internal Endpoints In This Repo
 
-### Internal API (Cloudflare Pages Functions)
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/api/checkout/create-order` | Validate buyer/pack, create PayCore order, persist initial local KV record, return `checkout_url`. |
+| `GET` | `/api/checkout/status?order_id=xxx` | Return local checkout status and reconcile pending orders with PayCore when possible. |
+| `POST` | `/api/webhooks/paycore` | Receive signed PayCore events and mark paid/delivered state. |
+| `GET` | `/api/access?email=xxx` | Buyer access lookup. Needs stronger auth before production hardening. |
+| `GET` | `/api/admin/orders` | Admin order listing. Requires admin auth. |
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/api/checkout/create-order` | Create PayCore order + redirect URL |
-| `GET` | `/api/checkout/status?order_id=xxx` | Poll payment/fulfillment status |
-| `POST` | `/api/webhooks/paycore` | Receive payment.succeeded from PayCore |
+## PayCore API Used By This Repo
 
-### PayCore API (outgoing)
+| Method | Path | Purpose |
+|--------|------|---------|
+| `POST` | `/v1/orders` | Create payment order. Request must be HMAC signed. |
+| `GET` | `/v1/orders/:order_id` | Reconcile pending local order status. Request must be HMAC signed. |
 
-| Method | Path | Description |
-|--------|------|-------------|
-| `POST` | `/v1/orders` | Create payment order (signed) |
-| `GET` | `/v1/orders/:order_id` | Get order status |
+## Pages In This Repo
 
-### Halaman
+| Path | Purpose |
+|------|---------|
+| `/` | Product landing page for AppVibe digital products. |
+| `/checkout/` | Dedicated checkout page and payment return handler. |
+| `/access/` | Buyer access/status lookup. |
+| `/admin/` | Internal order panel. |
+| `/terms/`, `/privacy/`, `/license/` | Legal pages. |
 
-| Path | Description |
-|------|-------------|
-| `/` | Landing page dengan pack selector + checkout modal |
-| `/payment/return` | Post-payment status page (status polling) |
+There is no active `/payment/return` page in this repo. Do not document or configure `/payment/return` unless a real page is added and included in `vite.config.js`.
 
-## Alur Checkout Detail
+## Checkout Detail
 
-### 1. User Pilih Pack
+### 1. Offer Selection
 
-- Pack cards di `#niche-pack` menampilkan harga (Rp99.000 / Rp199.000)
-- User klik "Beli" → modal checkout terbuka
-- State: `selectedPack = null` on page load → user explicitly selects
+- Landing page displays public offers and pack choices.
+- Single pack price is currently `Rp97.000`.
+- Full Vault price is currently `Rp147.000`.
+- Product/pack definitions must stay aligned between:
+  - `functions/lib/packs.js`
+  - `src/scripts/data/vault-packs.js`
 
-### 2. Checkout Modal
+### 2. Checkout Page
 
-Menampilkan:
-- Daftar pack dengan harga (5 opsi: 4 niche + vault_full)
-- Setelah pack dipilih: form data pembeli (nama, email, telepon)
-- Tombol "Lanjut ke pembayaran — RpXXX.XXX"
+- `/checkout/` renders the checkout UI.
+- Query examples:
+  - `/checkout/?plan=full-vault`
+  - `/checkout/?plan=single-pack&pack=advertiser`
+  - `/checkout/?order_id=PAYCORE_ORDER_ID`
+- The checkout form posts `{ name, email, phone, pack_id }` to `/api/checkout/create-order`.
 
-### 3. Create Order (Backend)
+### 3. Create Order
 
 `POST /api/checkout/create-order`
 
-- Validasi pack_id, nama, email
-- Build HMAC-signed request ke PayCore `POST /v1/orders`
-- Simpan order record di KV (`CHECKOUT_EVENTS`)
-- Return `checkout_url` ke frontend
+- Validates `pack_id`, `name`, and `email`.
+- Builds an order payload for PayCore.
+- Signs the request with `PAYCORE_APP_SECRET`.
+- Sends `POST {PAYCORE_BASE_URL}/v1/orders`.
+- Stores best-effort local KV records:
+  - `order:{paycore_order_id}`
+  - `ext:{external_order_id}`
+  - `buyer:{email}`
+- Returns `checkout_url` to the frontend.
 
-### 4. Redirect ke Duitku
+### 4. Payment Return
 
-- Frontend redirect ke `checkout_url`
-- User bayar di halaman Duitku Sandbox/Live
+- PayCore/payment gateway returns the buyer to `PAYCORE_RETURN_URL`.
+- Current intended return URL: `https://appvibe.biz.id/checkout/`.
+- The checkout page detects `order_id` in the query string and polls `/api/checkout/status`.
+- The return page must not grant final access by itself. Final fulfillment comes from signed PayCore webhook events.
 
-### 5. Return dari Duitku
+### 5. Webhook Fulfillment
 
-- User kembali ke `PAYCORE_RETURN_URL?order_id=xxx`
-- Halaman `/payment/return` polling status via `/api/checkout/status`
-- JANGAN give akses — hanya display status
+PayCore posts `POST /api/webhooks/paycore` with:
 
-### 6. Webhook (Final Fulfillment)
-
-PayCore mengirim `POST /api/webhooks/paycore` dengan:
 - `X-PayCore-Event-Timestamp`
 - `X-PayCore-Event-Signature: sha256=<hex>`
-- `event_id`, `event_type`, `data.order_id`, dll.
+- JSON body containing `event_id`, `event_type`, `data.order_id`, `data.fulfillment_data`, and payment fields.
 
-Handler:
-1. Verifikasi HMAC signature (timing-safe)
-2. Cek timestamp skew (±5 menit)
-3. Idempotency: `event_id` → KV → skip if seen
-4. Cek `order_id` → skip if already fulfilled
-5. Update KV: `payment_status → paid`, `fulfillment_status → delivered`
-6. Forward ke `FULFILLMENT_WEBHOOK_URL`
-7. Return 200
+Handler responsibilities:
 
-## Idempotency & Duplicate Prevention
-
-- **event_id**: Unique constraint via KV — processed only once
-- **order_id**: fulfillment_status check — only fulfilled once
-- **Double-click**: Tidak dicegah di frontend — backend tidak membuat order duplikat karena setiap request punya `external_order_id` unik
-- **Retry**: PayCore retry dengan `event_id` yang sama → idempotent (200)
+1. Verify HMAC signature.
+2. Reject replay attempts via timestamp skew.
+3. Enforce event idempotency with `evt:{event_id}`.
+4. Avoid duplicate fulfillment for already delivered orders.
+5. Update local KV order state to paid/delivered.
+6. Record fulfillment/audit keys.
+7. Optionally forward fulfillment data to downstream webhook.
 
 ## KV Structure
 
 ```text
-order:{paycore_order_id} → { payment_status, fulfillment_status, ... }
-ext:{external_order_id}  → paycore_order_id (lookup)
-evt:{event_id}           → { event_type, order_id, status, at }
-buyer:{email}             → paycore_order_id (last order)
-fulfilled:{email}         → { order_id, pack_id, fulfilled_at }
-audit:{order_id}          → [{ event, event_id, at, amount }]
+order:{paycore_order_id} -> local order record
+ext:{external_order_id}  -> paycore_order_id
+buyer:{email}            -> latest paycore_order_id for buyer email
+fulfilled:{email}        -> latest fulfilled access record
+evt:{event_id}           -> webhook idempotency/audit record
+audit:{order_id}         -> webhook/order audit trail
 ```
 
-## Tes Flow
+Email keys should be normalized consistently before write and read.
 
-1. Buka `https://appvibe.web.id/` (atau localhost)
-2. Scroll ke `#niche-pack`, klik "Beli Advertiser Pack"
-3. Di modal, isi nama/email/telepon
-4. Klik "Lanjut ke pembayaran"
-5. Redirect ke Duitku Sandbox
-6. Bayar pilih metode (contoh: Transfer BCA)
-7. Kembali ke `/payment/return`
-8. Cek status: pending → paid (dalam ~30 detik)
-9. Cek KV: `order:{order_id}` → `fulfillment_status = "delivered"`
-10. Cek webhook log di Cloudflare Pages
+## Test Flow
+
+1. Open `https://appvibe.biz.id/` or local dev.
+2. Choose a product/pack.
+3. Continue to `/checkout/`.
+4. Fill buyer data.
+5. Submit checkout.
+6. Confirm PayCore order creation and browser redirect to `checkout_url`.
+7. Complete payment in staging/sandbox.
+8. Confirm PayCore posts to `/api/webhooks/paycore`.
+9. Confirm local KV `order:{order_id}` has `payment_status = paid` and `fulfillment_status = delivered`.
+10. Return to `/checkout/?order_id=...` and confirm polling shows the correct status.
 
 ## Troubleshooting
 
-- **403 webhook**: `PAYCORE_WEBHOOK_SECRET` mismatch
-- **503 create-order**: `PAYCORE_KEY_ID`/`PAYCORE_APP_SECRET` not set
-- **Timeout polling**: Checkout masih pending, cek PayCore D1 `payment_orders`
-- **No fulfillment**: Cek `FULFILLMENT_WEBHOOK_URL` dan KV `fulfilled:{email}`
+- `503 payments_not_configured`: `PAYCORE_KEY_ID` or `PAYCORE_APP_SECRET` is missing.
+- `401 invalid_signature` on webhook: `PAYCORE_WEBHOOK_SECRET` does not match PayCore.
+- Buyer returns to 404: `PAYCORE_RETURN_URL` likely points to a page that does not exist, such as old `/payment/return`.
+- Status remains pending: check PayCore order status, local KV `order:{order_id}`, and webhook logs.
+- Access lookup fails for a paid buyer: check email normalization and `fulfilled:{email}` / `buyer:{email}` keys.

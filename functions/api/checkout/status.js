@@ -1,5 +1,8 @@
 import { PACKS } from '../../lib/packs.js';
 
+const APP_ORIGIN = 'https://appvibe.biz.id';
+const ORDER_TTL_SECONDS = 60 * 60 * 24 * 90;
+
 function json(data, status = 200, extra = {}) {
   return new Response(JSON.stringify(data), {
     status,
@@ -12,10 +15,9 @@ function corsHeaders(request) {
   const allowed =
     origin.startsWith('http://localhost') ||
     origin.startsWith('http://127.0.0.1') ||
-    origin === 'https://appvibe.web.id' ||
-    origin === 'https://appvibe.biz.id';
+    origin === APP_ORIGIN;
   return {
-    'Access-Control-Allow-Origin': allowed ? origin : 'https://appvibe.web.id',
+    'Access-Control-Allow-Origin': allowed ? origin : APP_ORIGIN,
     'Access-Control-Allow-Methods': 'GET, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
@@ -135,7 +137,7 @@ export async function onRequest(context) {
             await env.CHECKOUT_EVENTS.put(
               `order:${targetOrderId}`,
               JSON.stringify(order),
-              { expirationTtl: 60 * 60 * 24 * 90 },
+              { expirationTtl: ORDER_TTL_SECONDS },
             );
           }
         }

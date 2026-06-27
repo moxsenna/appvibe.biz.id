@@ -1,9 +1,12 @@
 # PRD — White-Label AI App Vault Landing Page
 
+> Current repository note: this PRD belongs to `appvibe.biz.id`, the AppVibe product sales site with landing page and checkout for digital products. Do not confuse it with `appvibe.web.id`, which is a separate service-business project in `D:\Coding\AppVibe v2`. PayCore is also separate, in `D:\Coding\paycore`.
+
 ## 1. Ringkasan Produk
 
 **Nama proyek:** White-Label AI App Vault
-**Tipe produk:** Mobile-first sales landing page
+**Domain proyek:** `https://appvibe.biz.id`
+**Tipe produk:** Mobile-first product sales landing page + checkout page
 **Tujuan utama:** Menjual lisensi white-label untuk 13 aplikasi AI marketing yang dapat direbrand dan dijual kembali oleh buyer menggunakan brand mereka sendiri.
 
 Landing page tidak menjual aplikasi sebagai “tool untuk dipakai sendiri”, melainkan sebagai:
@@ -238,20 +241,21 @@ Gunakan framing:
 
 * Landing page mobile-first.
 * Responsive desktop, tablet, dan mobile.
+* Dedicated checkout page di `/checkout/`.
+* Cloudflare Pages Functions untuk create order, payment status, PayCore webhook, buyer access, dan admin order view.
 * App launcher untuk 13 aplikasi.
 * Detail panel interaktif untuk setiap aplikasi.
 * 4 niche pack.
-* Lead capture form.
-* WhatsApp CTA.
+* Checkout buyer data capture form.
+* Buyer support/follow-up CTA where needed.
 * UTM capture.
 * Meta Pixel event tracking.
 * Google Tag Manager readiness.
 * Google Analytics 4 readiness.
 * Cloudflare Pages deployment.
-* Cloudflare Pages Functions untuk lead submission.
-* Honeypot anti-spam.
-* Basic rate limiting pada endpoint form.
-* Basic consent text untuk data lead.
+* Cloudflare Pages Functions untuk checkout/order operations.
+* Checkout anti-spam hardening. Turnstile/rate limiting should be wired before heavier paid traffic.
+* Basic consent text untuk buyer/order data.
 * Static legal pages:
 
   * Terms
@@ -263,7 +267,7 @@ Gunakan framing:
 * Login buyer.
 * Dashboard reseller.
 * Automatic license activation.
-* Payment gateway.
+* Implementasi payment gateway internal. Pembayaran memakai PayCore sebagai service terpisah di `D:\Coding\paycore`.
 * Subscription billing.
 * Affiliate dashboard.
 * Customer portal.
@@ -617,36 +621,35 @@ export const apps = [
 
 ---
 
-# 11. Lead Capture Flow
+# 11. Checkout Buyer Data Capture Flow
+
+> Current implementation note: this repo no longer treats a standalone lead modal as the primary conversion path. The active path is `/checkout/` -> `/api/checkout/create-order` -> PayCore -> `/api/webhooks/paycore`.
 
 ## Trigger
 
-Lead form dibuka dari:
+Checkout form dibuka dari:
 
-* Hero CTA.
-* CTA di final section.
-* Sticky mobile CTA.
-* Optional CTA setelah app launcher.
-* Optional CTA setelah niche pack.
+* CTA menuju `/checkout/`.
+* Pricing CTA untuk Single Pack atau Full Vault.
+* Pack-specific CTA yang membawa `plan` dan `pack` query params.
+* Payment return with `order_id` query params.
 
 ## Required Fields
 
 * Nama
 * Email
 * Nomor WhatsApp
-* Niche utama
-* Optional: jumlah audiens atau tipe bisnis
+* Selected pack / product offer
 
-## Niche Dropdown
+## Offer Selection
 
-* Advertiser / Media Buyer
-* Agency
-* Mentor / Course Creator
-* Affiliate / Creator
-* Marketplace Seller / Mentor Seller
-* Web Designer / Funnel Builder
-* Community Owner
-* Other
+Offer selection should resolve to a valid backend `pack_id`:
+
+* `advertiser`
+* `commerce`
+* `creator`
+* `brand_launch`
+* `vault_full`
 
 ## Hidden Fields
 
@@ -660,21 +663,24 @@ Lead form dibuka dari:
 * Timestamp
 * Device type
 * Browser language
-* Form source / CTA location
+* Checkout source / CTA location
+* Selected plan
+* Selected pack
 
-## Submission Success State
+## Submission and Payment State
 
 Setelah submit:
 
-1. Tampilkan success confirmation.
-2. Jika WhatsApp URL sudah tersedia, arahkan ke WhatsApp setelah 2–4 detik.
-3. Simpan lead ke backend.
-4. Kirim event `Lead`.
-5. Simpan attribution data.
+1. Frontend posts to `/api/checkout/create-order`.
+2. Backend validates buyer data and pack ID.
+3. Backend creates PayCore order and stores initial KV record.
+4. Frontend redirects to PayCore `checkout_url`.
+5. PayCore webhook determines final fulfillment.
+6. Return state on `/checkout/` polls `/api/checkout/status`.
 
 Contoh confirmation:
 
-> Terima kasih. Detail akses dan jalur pack yang paling cocok akan kami kirimkan melalui WhatsApp atau email.
+> Pembayaran sedang diverifikasi. Akses akan aktif setelah pembayaran terkonfirmasi.
 
 ---
 
@@ -689,11 +695,11 @@ Mengurangi kehilangan visitor dari traffic Meta Ads yang mayoritas mobile.
 * Muncul setelah visitor scroll melewati hero.
 * Tetap berada di bawah layar.
 * Tidak boleh menutupi form input, modal, cookie notice, atau navigation.
-* Hidden saat modal lead terbuka.
+* Hidden saat checkout/payment UI or a blocking modal is open.
 * CTA:
 
-  * `Cek Lisensi White-Label`
-  * atau `Ambil Akses Awal`
+  * `Lihat opsi akses`
+  * atau `Checkout sekarang`
 
 ## Mobile Design
 
@@ -720,9 +726,10 @@ Mengurangi kehilangan visitor dari traffic Meta Ads yang mayoritas mobile.
 | CTA_Click         | CTA utama atau CTA akhir ditekan |
 | NichePack_Click   | User menekan niche pack          |
 | AppLauncher_Click | User memilih aplikasi            |
-| LeadForm_Open     | Modal form dibuka                |
-| LeadForm_Start    | User mulai mengisi form          |
-| Lead              | Form berhasil submit             |
+| Checkout_Open     | User masuk halaman checkout      |
+| Checkout_Start    | User mulai mengisi checkout      |
+| BeginCheckout     | Order creation dimulai           |
+| Purchase          | Payment confirmed                |
 | WhatsApp_Click    | CTA WhatsApp ditekan             |
 | License_View      | License section masuk viewport   |
 
@@ -773,26 +780,29 @@ Reason:
 ## Hosting
 
 * Cloudflare Pages
-* Production domain custom domain
+* Production domain: `https://appvibe.biz.id`
 * Preview deployments via Git integration
 
 ## Backend
 
-Use Cloudflare Pages Functions or Cloudflare Worker for:
+Current repo uses Cloudflare Pages Functions for checkout and operational endpoints:
 
 ```text
-POST /api/lead
+POST /api/checkout/create-order
+GET  /api/checkout/status?order_id=xxx
+POST /api/webhooks/paycore
+GET  /api/access?email=xxx
+GET  /api/admin/orders
 ```
 
 Responsibilities:
 
-* Validate request payload.
-* Reject invalid email/phone.
-* Honeypot check.
-* Rate limit by IP.
-* Store lead in destination.
-* Forward lead to Google Sheets, CRM, webhook, Telegram, or email provider.
-* Return success response.
+* Validate buyer and selected pack payload.
+* Sign outgoing PayCore order requests.
+* Verify incoming PayCore webhooks.
+* Store order/event/access state in Cloudflare KV.
+* Forward fulfillment/order data to the configured ops webhook when enabled.
+* Return safe status responses to checkout/access/admin pages.
 * Do not expose API secrets to browser.
 
 ## Lead Storage V1
@@ -814,12 +824,16 @@ Recommended V1:
 
 ```env
 LEAD_WEBHOOK_URL=
-WHATSAPP_REDIRECT_URL=
-META_PIXEL_ID=
-GA4_MEASUREMENT_ID=
-GTM_CONTAINER_ID=
+PAYCORE_BASE_URL=
+PAYCORE_APP_ID=
+PAYCORE_KEY_ID=
+PAYCORE_APP_SECRET=
+PAYCORE_WEBHOOK_SECRET=
+PAYCORE_RETURN_URL=https://appvibe.biz.id/checkout/
+FULFILLMENT_WEBHOOK_URL=
 TURNSTILE_SITE_KEY=
 TURNSTILE_SECRET_KEY=
+ADMIN_TOKEN=
 ```
 
 Never expose secrets in frontend code.
@@ -948,11 +962,14 @@ Do not keyword stuff.
 ## Functional
 
 * [ ] Landing page dapat dibuka di desktop dan mobile.
+* [ ] Checkout page `/checkout/` dapat dibuka langsung dan dari CTA landing page.
 * [ ] Tidak ada horizontal overflow pada width 320px.
-* [ ] Semua CTA membuka modal lead atau WhatsApp sesuai konfigurasi.
-* [ ] Form lead tervalidasi di frontend dan backend.
-* [ ] Lead berhasil dikirim ke endpoint backend.
-* [ ] Lead menyimpan UTM dan attribution data.
+* [ ] Semua CTA menuju offer/checkout yang sesuai.
+* [ ] Checkout form tervalidasi di frontend dan backend.
+* [ ] Order berhasil dibuat melalui `/api/checkout/create-order`.
+* [ ] `PAYCORE_RETURN_URL` menuju halaman yang benar-benar ada, saat ini `/checkout/`.
+* [ ] Webhook PayCore `/api/webhooks/paycore` memverifikasi signature dan mengupdate KV.
+* [ ] Checkout/status/access flow menyimpan attribution dan data operasional yang diperlukan.
 * [ ] App launcher berisi 13 app.
 * [ ] App launcher mobile tampil 4 kolom.
 * [ ] Klik app launcher mengganti detail content.
@@ -1021,12 +1038,12 @@ Do not keyword stuff.
 * Dynamic testimonial section.
 * Comparison table untuk license tier.
 * FAQ schema.
-* Exit-intent lead capture desktop.
+* Checkout recovery / exit-intent offer capture desktop.
 * Multi-step lead qualification form.
 
 ## V1.2
 
-* Payment page.
+* Checkout hardening and dedicated payment return UX if needed.
 * Voucher code.
 * Order bump.
 * Affiliate/referral attribution.

@@ -1,5 +1,8 @@
 import { signPayCoreRequest } from '../../lib/paycore-sign.js';
-import { PACKS, VALID_PACK_IDS, DEFAULT_PACK_ID } from '../../lib/packs.js';
+import { PACKS, VALID_PACK_IDS } from '../../lib/packs.js';
+
+const APP_ORIGIN = 'https://appvibe.biz.id';
+const ORDER_TTL_SECONDS = 60 * 60 * 24 * 90;
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -13,13 +16,49 @@ function corsHeaders(request) {
   const allowed =
     origin.startsWith('http://localhost') ||
     origin.startsWith('http://127.0.0.1') ||
-    origin === 'https://appvibe.web.id' ||
-    origin === 'https://appvibe.biz.id';
+    origin === APP_ORIGIN;
   return {
-    'Access-Control-Allow-Origin': allowed ? origin : 'https://appvibe.web.id',
+    'Access-Control-Allow-Origin': allowed ? origin : APP_ORIGIN,
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };
+}
+
+function pickMeta(body, key) {
+  return typeof body?.[key] === 'string' ? body[key].trim() : '';
+}
+
+async function postJsonFollowingGoogleRedirect(url, payload) {
+  let response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    redirect: 'manual',
+    body: JSON.stringify(payload),
+  });
+
+  if (response.status === 302) {
+    const location = response.headers.get('location');
+    if (location) {
+      response = await fetch(location, { redirect: 'follow' });
+    }
+  }
+
+  if (!response.ok) {
+    console.warn('[Checkout] order forwarding returned', response.status);
+  }
+}
+
+async function scheduleBackground(context, promise, label) {
+  const guarded = promise.catch((err) => {
+    console.error(label, err);
+  });
+
+  if (typeof context.waitUntil === 'function') {
+    context.waitUntil(guarded);
+    return;
+  }
+
+  await guarded;
 }
 
 export async function onRequest(context) {
@@ -30,45 +69,6 @@ export async function onRequest(context) {
     return new Response(null, { headers: cors });
   }
   if (request.method !== 'POST') {
-    // Forward order data to spreadsheet immediately (fire-and-forget)
-    try {
-      const sheetUrl = env.LEAD_WEBHOOK_URL;
-      if (sheetUrl) {
-        fetch(sheetUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          redirect: 'manual',
-          body: JSON.stringify({
-            name,
-            email,
-            whatsapp: phone || '',
-            niche: packId,
-            model_penggunaan: 'purchase',
-            selected_pack: packId,
-            selected_app: '',
-            form_open_source: 'checkout_form',
-            utm_source: '',
-            utm_medium: '',
-            utm_campaign: '',
-            utm_content: '',
-            utm_term: '',
-            referrer: '',
-            landing_url: '',
-            device_type: '',
-            captured_at: new Date().toISOString(),
-            order_id: paycoreJson.order_id || '',
-            order_status: 'pending',
-          }),
-        }).then(async (r) => {
-          // Follow Google Apps Script 302 redirect as GET to trigger doPost execution
-          if (r.status === 302) {
-            const loc = r.headers.get('location');
-            if (loc) await fetch(loc, { redirect: 'follow' });
-          }
-        }).catch(() => {});
-      }
-    } catch {}
-
     return json({ error: 'method_not_allowed' }, 405, cors);
   }
 
@@ -99,6 +99,7 @@ export async function onRequest(context) {
 
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim();
+  const emailKey = email.toLowerCase();
   const phone = String(body.phone || '').trim();
   const packId = String(body.pack_id || '').trim();
 
@@ -151,7 +152,7 @@ export async function onRequest(context) {
         email,
         name,
         phone,
-        source: 'appvibe.web.id_checkout',
+        source: 'appvibe.biz.id_checkout',
       },
     };
 
@@ -198,6 +199,8 @@ export async function onRequest(context) {
       return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
     }
 
+    const now = new Date().toISOString();
+
     // Persist order locally in KV for status tracking (best-effort)
     try {
       if (env.CHECKOUT_EVENTS) {
@@ -214,23 +217,51 @@ export async function onRequest(context) {
           payment_status: paycoreJson.payment_status || 'pending',
           fulfillment_status: 'pending',
           checkout_url: paycoreJson.checkout_url,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          created_at: now,
+          updated_at: now,
         };
 
         await env.CHECKOUT_EVENTS.put(`order:${paycoreJson.order_id}`, JSON.stringify(orderRecord), {
-          expirationTtl: 60 * 60 * 24 * 90,
+          expirationTtl: ORDER_TTL_SECONDS,
         });
         await env.CHECKOUT_EVENTS.put(`ext:${externalOrderId}`, paycoreJson.order_id, {
-          expirationTtl: 60 * 60 * 24 * 90,
+          expirationTtl: ORDER_TTL_SECONDS,
         });
-        await env.CHECKOUT_EVENTS.put(`buyer:${email}`, paycoreJson.order_id, {
-          expirationTtl: 60 * 60 * 24 * 90,
+        await env.CHECKOUT_EVENTS.put(`buyer:${emailKey}`, paycoreJson.order_id, {
+          expirationTtl: ORDER_TTL_SECONDS,
         });
       }
     } catch (kvErr) {
       console.error('[Checkout] KV persist failed:', kvErr);
       // Non-fatal — order still created, status tracking degraded
+    }
+
+    if (env.LEAD_WEBHOOK_URL) {
+      await scheduleBackground(
+        context,
+        postJsonFollowingGoogleRedirect(env.LEAD_WEBHOOK_URL, {
+          name,
+          email,
+          whatsapp: phone || '',
+          niche: packId,
+          model_penggunaan: 'purchase',
+          selected_pack: packId,
+          selected_app: '',
+          form_open_source: 'checkout_form',
+          utm_source: pickMeta(body, 'utm_source'),
+          utm_medium: pickMeta(body, 'utm_medium'),
+          utm_campaign: pickMeta(body, 'utm_campaign'),
+          utm_content: pickMeta(body, 'utm_content'),
+          utm_term: pickMeta(body, 'utm_term'),
+          referrer: pickMeta(body, 'referrer'),
+          landing_url: pickMeta(body, 'landing_url'),
+          device_type: pickMeta(body, 'device_type'),
+          captured_at: now,
+          order_id: paycoreJson.order_id || '',
+          order_status: paycoreJson.payment_status || 'pending',
+        }),
+        '[Checkout] order forwarding failed:',
+      );
     }
 
     return json(

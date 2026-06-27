@@ -5,6 +5,8 @@
 **Revision:** v1.0  
 **Objective:** Increase qualified lead conversion without changing the core offer, app catalog, licensing substance, or delivery infrastructure unless expressly required below.
 
+> Status note: this is a historical landing-page optimization brief. The current `appvibe.biz.id` repo now includes a checkout page at `/checkout/` and PayCore integration. `appvibe.web.id` is a separate service-business project in `D:\Coding\AppVibe v2`; PayCore is a separate payment hub in `D:\Coding\paycore`.
+
 ---
 
 ## 1. Executive directive
@@ -83,7 +85,7 @@ The implementing agent must follow these rules.
 2. **Do not change the license meaning.** The standard license allows selling access to branded products, but does not allow reselling core files/templates or forwarding white-label rights. Preserve this legal boundary.
 3. **Do not promise all 13 apps inside every package** unless the actual commercial offer confirms that. Copy must be configurable.
 4. **Do not expose app source files or imply downloadable source code** unless the offer actually includes it.
-5. **Do not remove working lead capture, analytics, UTM persistence, or responsive behavior.** Inspect first and extend safely.
+5. **Historical lead-capture note:** this brief originally assumed a lead form. In the current repo, preserve checkout, analytics, UTM persistence, and responsive behavior. Inspect first and extend safely.
 6. **Do not use an auto-running app carousel as the primary proof.** It creates duplicated content, makes browsing harder, and can hide the app selector on mobile.
 7. **Do not perform a wholesale visual redesign.** Retain the existing visual language, typography hierarchy, and premium editorial tone wherever feasible.
 8. **No new heavyweight dependency** merely for animation, carousel, form validation, or a modal.
@@ -593,7 +595,7 @@ src/
     AppLauncher.*
     AppDetail.*
     LicenseClarity.*
-    LeadForm.*
+    LeadForm.*  # historical; current repo uses checkout buyer-data capture
   lib/
     analytics.*
     utm.*
@@ -752,10 +754,10 @@ Most paid social traffic is likely to be mobile. Prioritize 360–430 px widths 
 4. Build any modal/drawer with accessibility and mobile behavior.
 5. Add state persistence for the current session only if simple and safe; do not introduce account/database requirements.
 
-### Phase 4 — Lead capture and instrumentation
+### Phase 4 — Historical lead capture / current checkout instrumentation
 
-1. Preserve working submission transport.
-2. Add optional qualification fields only if endpoint supports them; otherwise extend endpoint safely.
+1. Preserve working checkout/order submission transport.
+2. Add optional qualification fields only if the current checkout endpoint supports them; otherwise extend checkout/status/webhook safely.
 3. Persist UTM/referrer/selection metadata.
 4. Implement named events through the existing analytics layer.
 5. Test success, validation, error, retry, and duplicate-submit behavior.
@@ -816,9 +818,9 @@ A new visitor can answer each question within one page pass:
 
 ## 14. Explicitly out of scope
 
-Unless separately requested, do not implement:
+Unless separately requested, do not implement in this landing-page optimization brief:
 
-- checkout/payment gateway;
+- PayCore server/payment-hub logic, which belongs in `D:\Coding\paycore`;
 - login/authentication;
 - customer portal;
 - actual rebranding or deployment of the 13 applications;

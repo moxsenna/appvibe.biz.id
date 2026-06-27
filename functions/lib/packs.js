@@ -1,5 +1,5 @@
 /**
- * Canonical product/pack definitions for appvibe.web.id checkout.
+ * Canonical product/pack definitions for appvibe.biz.id checkout.
  * Single source of truth — mirrors src/scripts/data/vault-packs.js.
  * Both frontend and backend MUST use the same product_keys and amounts.
  */

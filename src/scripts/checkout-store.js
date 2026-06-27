@@ -1,5 +1,5 @@
 /**
- * Checkout state machine for appvibe.web.id PayCore integration.
+ * Checkout state machine for appvibe.biz.id PayCore integration.
  *
  * States:
  * - idle:           No pack selected, checkout not started
