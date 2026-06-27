@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050B1D" />
-  <title>Akses Saya — AppVibe</title>
-  <meta name="description" content="Lihat akses White-Label AI App Vault Anda." />
+  <title>Akses AppVibe Vault</title>
+  <meta name="description" content="Masuk ke AppVibe Vault Anda melalui WhatsApp." />
   <link rel="canonical" href="https://appvibe.biz.id/access/" />
   <link rel="icon" href="/favicon.webp" type="image/webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -41,42 +41,41 @@
     .ac-status{display:none;margin:0 0 20px;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;line-height:1.45}
     .ac-status.show{display:block}
     .ac-status.error{border:1px solid #ffcfc6;color:var(--danger);background:#fff0ed}
-    .ac-status.empty{border:1px solid #d5e2fa;color:var(--muted);background:#edf4ff}
+    .ac-status.success{border:1px solid #b8eee9;color:#1f5f68;background:#ebfbfa}
+    .ac-status.info{border:1px solid #d5e2fa;color:var(--muted);background:#edf4ff}
     .ac-status.loading{color:var(--muted);text-align:center}
 
-    .ac-order{border:1px solid var(--line);border-radius:var(--radius-lg);padding:22px;margin-bottom:16px}
-    .ac-order:last-of-type{margin-bottom:0}
-    .ac-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
-    .ac-order-head h2{margin:0;font-size:18px;letter-spacing:-.03em}
-    .ac-order-id{color:var(--muted-light);font:500 10px/1.4 'DM Mono',monospace;margin:0 0 14px}
-
-    .ac-badge{display:inline-flex;padding:5px 10px;border-radius:999px;font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
-    .ac-badge.paid,.ac-badge.delivered,.ac-badge.success{color:#116c59;background:#e5f8f2}
-    .ac-badge.pending{color:#8b7500;background:#fff8e0}
-    .ac-badge.failed{color:var(--danger);background:#fff0ed}
-
-    .ac-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
-    .ac-detail-item{}
-    .ac-detail-item span{display:block;color:var(--muted-light);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
-    .ac-detail-item strong{font-size:13px}
-
-    .ac-apps{margin-top:16px;border-top:1px solid #e2eaf5;padding-top:14px}
-    .ac-apps-label{color:var(--muted-light);font:500 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px;margin-bottom:10px}
-    .ac-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;list-style:none;padding:0;margin:0}
-    .ac-app-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:700;color:#3c4f6b}
-    .ac-app-mark{display:grid;width:22px;height:22px;place-items:center;border:1px solid #cbd8ee;border-radius:7px;color:var(--blue);background:#f3f7ff;font:700 10px/1 'Space Grotesk',sans-serif;flex:none}
-
-    .ac-access-note{margin-top:20px;padding:16px;border:1px solid #b8eee9;border-radius:13px;background:#ebfbfa;font-size:11px;line-height:1.6;color:#1f5f68}
-    .ac-access-note strong{display:block;margin-bottom:4px;font-size:12px}
+    .ac-note{margin-top:16px;font-size:11px;color:var(--muted-light);line-height:1.6}
 
     .ac-loader{display:none;text-align:center;padding:40px 0}
     .ac-loader.show{display:block}
     .ac-spinner{width:32px;height:32px;margin:0 auto 12px;border:3px solid #cddcf5;border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
 
+    /* Dashboard (logged-in) */
+    .ac-dash-section{margin-bottom:24px}
+    .ac-dash-section:last-child{margin-bottom:0}
+    .ac-dash-label{color:var(--muted-light);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+    .ac-access-tag{display:inline-block;padding:6px 14px;border-radius:999px;font:700 11px/1 'DM Mono',monospace;color:#116c59;background:#e5f8f2;margin-bottom:8px}
+    .ac-bundle-list{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
+    .ac-bundle-item{padding:6px 12px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:600;color:#3c4f6b}
+    .ac-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;list-style:none;padding:0;margin:0}
+    .ac-app-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:700;color:#3c4f6b}
+    .ac-app-mark{display:grid;width:22px;height:22px;place-items:center;border:1px solid #cbd8ee;border-radius:7px;color:var(--blue);background:#f3f7ff;font:700 10px/1 'Space Grotesk',sans-serif;flex:none}
+    .ac-order{border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;margin-bottom:12px}
+    .ac-order:last-child{margin-bottom:0}
+    .ac-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
+    .ac-order-head h3{margin:0;font-size:14px;letter-spacing:-.02em}
+    .ac-badge{display:inline-flex;padding:5px 10px;border-radius:999px;font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
+    .ac-badge.paid,.ac-badge.delivered{color:#116c59;background:#e5f8f2}
+    .ac-badge.pending{color:#8b7500;background:#fff8e0}
+    .ac-detail-row{display:flex;gap:16px;margin:8px 0;font-size:11px;color:var(--muted)}
+    .ac-detail-row strong{color:var(--text)}
+    .ac-logout{margin-top:24px;display:block;width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 22px;background:transparent;font-weight:700;font-size:13px;color:var(--muted);transition:border-color .14s ease,color .14s ease}
+    .ac-logout:hover{border-color:var(--danger);color:var(--danger)}
+
     @media(max-width:600px){
       .ac-field{flex-direction:column}
-      .ac-detail-grid{grid-template-columns:1fr}
       .ac-wrapper{padding-top:22px;padding-bottom:42px}
     }
   </style>
@@ -90,199 +89,160 @@
   </header>
 
   <main class="ac-wrapper">
-    <div class="ac-card">
-      <h1>Akses Saya</h1>
-      <p>Masukkan email yang digunakan saat checkout untuk melihat akses dan status pembelian Anda.</p>
-
-      <div class="ac-field">
-        <input type="email" id="acEmail" placeholder="email@contoh.com" autocomplete="email" inputmode="email" />
-        <button id="acLookup">Cari</button>
-      </div>
-
-      <div class="ac-status" id="acStatus" role="alert"></div>
-
-      <div class="ac-loader" id="acLoader">
-        <div class="ac-spinner"></div>
-        <p style="color:var(--muted);font-size:12px;margin:0">Mencari data akses Anda…</p>
-      </div>
-
-      <div id="acResults"></div>
+    <div class="ac-card" id="acCard">
+      <!-- JS renders the login or dashboard here -->
     </div>
   </main>
 
   <script type="module">
-    const emailInput = document.getElementById('acEmail');
-    const lookupBtn = document.getElementById('acLookup');
-    const statusEl = document.getElementById('acStatus');
-    const loaderEl = document.getElementById('acLoader');
-    const resultsEl = document.getElementById('acResults');
-
-    const template = document.createElement('template');
-
+    const card = document.getElementById('acCard');
     const APP_NAMES = {
-      adsprint: 'ADSprint', pikat: 'PIKAT', rupa: 'RUPA', mula: 'MULA',
-      arah: 'ARAH', cetak: 'CETAK', adegan: 'ADEGAN', suara: 'SUARA',
-      bukti: 'BUKTI', mimik: 'MIMIK', ritme: 'RITME', tayang: 'TAYANG',
-      katalog: 'KATALOG',
+      adsprint:'ADSprint', pikat:'PIKAT', rupa:'RUPA', mula:'MULA',
+      arah:'ARAH', cetak:'CETAK', adegan:'ADEGAN', suara:'SUARA',
+      bukti:'BUKTI', mimik:'MIMIK', ritme:'RITME', tayang:'TAYANG',
+      katalog:'KATALOG',
     };
-    const APP_ICONS = {
-      adsprint: 'A', pikat: 'P', rupa: 'R', mula: 'M',
-      arah: 'A', cetak: 'C', adegan: 'A', suara: 'S',
-      bukti: 'B', mimik: 'M', ritme: 'R', tayang: 'T', katalog: 'K',
-    };
-
-    // Pack app mappings
-    const PACK_APPS = {
-      advertiser: ['adsprint','rupa','adegan','bukti','mula'],
-      commerce: ['katalog','rupa','bukti','pikat','adsprint'],
-      creator: ['pikat','ritme','mimik','rupa','suara'],
-      brand_launch: ['arah','mimik','mula','tayang','cetak'],
-      vault_full: ['adsprint','rupa','adegan','bukti','mula','katalog','pikat','ritme','mimik','suara','arah','tayang','cetak'],
-    };
-
     const PACK_LABELS = {
-      advertiser: 'Advertiser App Pack',
-      commerce: 'Commerce & Marketplace Pack',
-      creator: 'Creator & Affiliate Pack',
-      brand_launch: 'Brand & Launch Pack',
-      vault_full: 'Full AppVibe Vault',
+      advertiser:'Advertiser App Pack', commerce:'Commerce & Marketplace Pack',
+      creator:'Creator & Affiliate Pack', brand_launch:'Brand & Launch Pack',
+      vault_full:'Full AppVibe Vault',
     };
 
-    function setStatus(type, msg) {
-      statusEl.className = 'ac-status show ' + type;
-      statusEl.textContent = msg;
+    const COOLDOWN_SEC = 60;
+    let cooldownTimer = null;
+
+    function formatPrice(a){ return 'Rp'+Number(a||0).toLocaleString('id-ID'); }
+    function formatDate(s){ if(!s)return'-'; return new Date(s).toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'}); }
+
+    // ──── Login view ────
+    function renderLogin(){
+      card.innerHTML = `
+        <h1>Akses AppVibe Vault</h1>
+        <p>Masukkan nomor WhatsApp yang Anda gunakan saat checkout. Tautan akses akan dikirim ke WhatsApp tersebut.</p>
+        <div class="ac-field">
+          <input type="tel" id="acPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" />
+          <button id="acSend">Kirim Tautan Akses</button>
+        </div>
+        <div class="ac-status" id="acStatus" role="alert"></div>
+        <div class="ac-note">Tautan berlaku selama 15 menit dan hanya dapat digunakan satu kali. Pastikan nomor WhatsApp yang dimasukkan sama dengan yang tercatat saat pembelian.</div>
+      `;
+      const phoneInput = document.getElementById('acPhone');
+      const sendBtn = document.getElementById('acSend');
+      const statusEl = document.getElementById('acStatus');
+
+      sendBtn.addEventListener('click', () => handleSend(phoneInput, sendBtn, statusEl));
+      phoneInput.addEventListener('keydown', (e) => { if(e.key==='Enter') sendBtn.click(); });
     }
 
-    function hideStatus() {
-      statusEl.className = 'ac-status';
+    function setStatus(el, type, msg){
+      el.className = 'ac-status show ' + type;
+      el.textContent = msg;
     }
 
-    function formatPrice(amount) {
-      return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
-    }
-
-    function formatDate(dateStr) {
-      if (!dateStr) return '-';
-      const d = new Date(dateStr);
-      return d.toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
-    }
-
-    function renderOrders(orders) {
-      if (!orders || orders.length === 0) {
-        resultsEl.innerHTML = '';
+    async function handleSend(input, btn, statusEl){
+      const phone = input.value.trim();
+      if(!phone || phone.length < 8){
+        setStatus(statusEl, 'error', 'Masukkan nomor WhatsApp yang valid.');
+        input.focus();
         return;
       }
-
-      const html = orders.map(order => {
-        const packId = order.pack_id;
-        const appIds = PACK_APPS[packId] || [];
-        const label = PACK_LABELS[packId] || packId;
-        const apps = renderApps(appIds);
-
-        return `
-          <div class="ac-order">
-            <div class="ac-order-head">
-              <h2>${label}</h2>
-              <span class="ac-badge ${order.payment_status}">${order.payment_status}</span>
-            </div>
-            <p class="ac-order-id">Order: ${order.order_id || '-'}</p>
-
-            <div class="ac-detail-grid">
-              <div class="ac-detail-item">
-                <span>Status Pembayaran</span>
-                <strong>${order.payment_status === 'paid' ? 'Lunas' : order.payment_status === 'pending' ? 'Menunggu' : order.payment_status}</strong>
-              </div>
-              <div class="ac-detail-item">
-                <span>Status Akses</span>
-                <strong>${order.fulfillment_status === 'delivered' ? 'Aktif' : order.fulfillment_status}</strong>
-              </div>
-              <div class="ac-detail-item">
-                <span>Total</span>
-                <strong>${formatPrice(order.amount)}</strong>
-              </div>
-              <div class="ac-detail-item">
-                <span>Dibeli</span>
-                <strong>${formatDate(order.created_at)}</strong>
-              </div>
-            </div>
-
-            ${order.fulfillment_status === 'delivered' ? `
-            <div class="ac-apps">
-              <div class="ac-apps-label">Aplikasi dalam akses ini (${appIds.length})</div>
-              <ul class="ac-app-grid">${apps}</ul>
-            </div>
-            <div class="ac-access-note">
-              <strong>✦ Hak penggunaan</strong>
-              Anda berhak merebrand dan menjual ulang akses aplikasi ini kepada end user Anda sendiri sesuai ketentuan lisensi White-Label AI App Vault.
-            </div>
-            ` : `
-            <div class="ac-access-note" style="border-color:#d5e2fa;background:#edf4ff;color:var(--muted)">
-              <strong>⏳ Menunggu pembayaran</strong>
-              Akses akan aktif setelah pembayaran terverifikasi. Detail dikirim ke email Anda.
-            </div>
-            `}
-          </div>
-        `;
-      }).join('');
-
-      resultsEl.innerHTML = html;
-    }
-
-    function renderApps(appIds) {
-      return appIds.map(id => {
-        const name = APP_NAMES[id] || id;
-        const icon = APP_ICONS[id] || id.slice(0,1).toUpperCase();
-        return `<li class="ac-app-item"><span class="ac-app-mark">${icon}</span>${name}</li>`;
-      }).join('');
-    }
-
-    async function lookup(email) {
-      hideStatus();
-      resultsEl.innerHTML = '';
-      loaderEl.classList.add('show');
+      btn.disabled = true;
+      setStatus(statusEl, 'loading', 'Mengirim…');
 
       try {
-        const res = await fetch('/api/access?email=' + encodeURIComponent(email));
-        const data = await res.json();
-
-        if (!res.ok) {
-          setStatus('error', data.message || data.error || 'Gagal mencari data.');
-          return;
-        }
-
-        if (!data.orders || data.orders.length === 0) {
-          setStatus('empty', data.message || 'Belum ada pembelian ditemukan untuk email ini.');
-          return;
-        }
-
-        renderOrders(data.orders);
-      } catch (err) {
-        setStatus('error', 'Koneksi bermasalah. Silakan coba lagi.');
-      } finally {
-        loaderEl.classList.remove('show');
+        const res = await fetch('/api/auth/request-magic-link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone }),
+        });
+        const data = await res.json().catch(() => ({}));
+        setStatus(statusEl, 'success', data.message || 'Jika nomor terdaftar, tautan akses telah dikirim melalui WhatsApp.');
+        startCooldown(btn, statusEl);
+      } catch {
+        setStatus(statusEl, 'error', 'Koneksi bermasalah. Silakan coba lagi.');
+        btn.disabled = false;
       }
     }
 
-    lookupBtn.addEventListener('click', () => {
-      const email = emailInput.value.trim();
-      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        setStatus('error', 'Masukkan alamat email yang valid.');
-        return;
-      }
-      lookup(email);
-    });
-
-    emailInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') lookupBtn.click();
-    });
-
-    // Auto-lookup if email passed via URL param
-    const params = new URLSearchParams(window.location.search);
-    const emailParam = params.get('email');
-    if (emailParam) {
-      emailInput.value = emailParam;
-      lookup(emailParam);
+    function startCooldown(btn, statusEl){
+      let remaining = COOLDOWN_SEC;
+      btn.textContent = `Kirim ulang (${remaining}s)`;
+      cooldownTimer = setInterval(() => {
+        remaining--;
+        if(remaining <= 0){
+          clearInterval(cooldownTimer);
+          btn.disabled = false;
+          btn.textContent = 'Kirim Tautan Akses';
+          return;
+        }
+        btn.textContent = `Kirim ulang (${remaining}s)`;
+      }, 1000);
     }
+
+    // ──── Dashboard view ────
+    function renderDashboard(data){
+      const { member_name, has_full_vault, bundle_ids, app_ids, orders } = data;
+
+      const accessTag = has_full_vault
+        ? '<span class="ac-access-tag">Full Vault — Semua Akses</span>'
+        : (bundle_ids.length > 0
+          ? bundle_ids.map(b => `<span class="ac-access-tag">${PACK_LABELS[b]||b}</span>`).join(' ')
+          : '<span class="ac-access-tag" style="color:var(--muted);background:#edf4ff">Belum ada akses aktif</span>');
+
+      const bundlesHtml = bundle_ids.length > 0
+        ? `<div class="ac-dash-section"><div class="ac-dash-label">Bundle Aktif</div><ul class="ac-bundle-list">${bundle_ids.map(b=>`<li class="ac-bundle-item">${PACK_LABELS[b]||b}</li>`).join('')}</ul></div>`
+        : '';
+
+      const appsHtml = app_ids.length > 0
+        ? `<div class="ac-dash-section"><div class="ac-dash-label">Aplikasi Terbuka (${app_ids.length})</div><ul class="ac-app-grid">${app_ids.map(id=>{
+            const name = APP_NAMES[id]||id;
+            const icon = name.slice(0,1);
+            return `<li class="ac-app-item"><span class="ac-app-mark">${icon}</span>${name}</li>`;
+          }).join('')}</ul></div>`
+        : '';
+
+      const ordersHtml = orders.length > 0
+        ? `<div class="ac-dash-section"><div class="ac-dash-label">Riwayat Pembelian</div>${orders.map(o=>{
+            const badge = o.payment_status === 'paid' || o.fulfillment_status === 'delivered' ? 'paid' : o.payment_status;
+            const label = PACK_LABELS[o.pack_id] || o.pack_id;
+            return `<div class="ac-order"><div class="ac-order-head"><h3>${label}</h3><span class="ac-badge ${badge}">${badge}</span></span></div><div class="ac-detail-row"><span>${formatPrice(o.amount)}</span><span>${formatDate(o.created_at)}</span><span>${o.paid_at?'Dibayar '+formatDate(o.paid_at):''}</span></div></div>`;
+          }).join('')}</div>`
+        : '';
+
+      card.innerHTML = `
+        <h1>Halo, ${esc(member_name)}</h1>
+        <p>Berikut ringkasan akses AppVibe Vault Anda.</p>
+        ${accessTag}
+        ${bundlesHtml}
+        ${appsHtml}
+        ${ordersHtml}
+        <button class="ac-logout" id="acLogout">Keluar</button>
+      `;
+      document.getElementById('acLogout').addEventListener('click', handleLogout);
+    }
+
+    async function handleLogout(){
+      try { await fetch('/api/auth/logout', { method: 'POST' }); } catch {}
+      renderLogin();
+    }
+
+    function esc(s){ const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
+
+    // ──── Init: check session ────
+    async function init(){
+      card.innerHTML = '<div class="ac-loader show"><div class="ac-spinner"></div><p style="color:var(--muted);font-size:12px;margin:0">Memeriksa sesi…</p></div>';
+      try {
+        const res = await fetch('/api/member/me');
+        if(res.ok){
+          const data = await res.json();
+          renderDashboard(data);
+          return;
+        }
+      } catch {}
+      renderLogin();
+    }
+
+    init();
   </script>
 </body>
 </html>

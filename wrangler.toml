@@ -5,3 +5,8 @@ compatibility_date = "2026-06-01"
 [[kv_namespaces]]
 binding = "CHECKOUT_EVENTS"
 id = "b08e7a2cfe9e4fd6b298cf442af7d2c7"
+
+[[d1_databases]]
+binding = "APPVIBE_DB"
+database_name = "appvibe-member-access"
+database_id = "FILL_IN_AFTER_CREATION"

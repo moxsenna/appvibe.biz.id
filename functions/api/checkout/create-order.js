@@ -1,8 +1,9 @@
 import { signPayCoreRequest } from '../../lib/paycore-sign.js';
-import { PACKS, VALID_PACK_IDS } from '../../lib/packs.js';
+import { PACKS, VALID_PACK_IDS, purchaseTypeForPack } from '../../lib/packs.js';
+import { normalizePhone, InvalidPhoneError } from '../../lib/phone.js';
+import { createMemberAccessRepo } from '../../lib/db.js';
 
 const APP_ORIGIN = 'https://appvibe.biz.id';
-const ORDER_TTL_SECONDS = 60 * 60 * 24 * 90;
 
 function json(data, status = 200, extraHeaders = {}) {
   return new Response(JSON.stringify(data), {
@@ -90,6 +91,14 @@ export async function onRequest(context) {
     );
   }
 
+  if (!env.APPVIBE_DB) {
+    return json(
+      { error: 'storage_unavailable', message: 'Database belum dikonfigurasi.' },
+      503,
+      cors,
+    );
+  }
+
   let body;
   try {
     body = await request.json();
@@ -99,8 +108,7 @@ export async function onRequest(context) {
 
   const name = String(body.name || '').trim();
   const email = String(body.email || '').trim();
-  const emailKey = email.toLowerCase();
-  const phone = String(body.phone || '').trim();
+  const phoneInput = String(body.phone || '').trim();
   const packId = String(body.pack_id || '').trim();
 
   // Validate pack
@@ -128,10 +136,32 @@ export async function onRequest(context) {
     );
   }
 
+  // WhatsApp number is mandatory and must be a valid Indonesian mobile.
+  let phoneE164;
+  try {
+    phoneE164 = normalizePhone(phoneInput);
+  } catch (err) {
+    if (err instanceof InvalidPhoneError) {
+      return json(
+        { error: 'validation', message: 'Nomor WhatsApp tidak valid. Gunakan format 08xxxxxxxxxx.' },
+        422,
+        cors,
+      );
+    }
+    throw err;
+  }
+
   try {
     const pack = PACKS[packId];
+    const repo = createMemberAccessRepo(env.APPVIBE_DB);
+
+    // Create or find the member by canonical phone. Existing members keep
+    // their original email — a new checkout never overwrites it.
+    const member = await repo.findOrCreateMember({ name, email, phone_e164: phoneE164 });
+
     const externalOrderId = `vault-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
     const idempotencyKey = crypto.randomUUID();
+    const orderId = crypto.randomUUID();
 
     const orderBody = {
       external_order_id: externalOrderId,
@@ -143,7 +173,7 @@ export async function onRequest(context) {
       customer: {
         name,
         email,
-        phone: phone || '081234567890',
+        phone: phoneE164,
       },
       return_url: returnUrl,
       fulfillment_data: {
@@ -151,7 +181,7 @@ export async function onRequest(context) {
         product_key: pack.product_key,
         email,
         name,
-        phone,
+        phone: phoneE164,
         source: 'appvibe.biz.id_checkout',
       },
     };
@@ -199,50 +229,27 @@ export async function onRequest(context) {
       return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
     }
 
-    const now = new Date().toISOString();
-
-    // Persist order locally in KV for status tracking (best-effort)
-    try {
-      if (env.CHECKOUT_EVENTS) {
-        const orderRecord = {
-          external_order_id: externalOrderId,
-          paycore_order_id: paycoreJson.order_id,
-          pack_id: packId,
-          product_key: pack.product_key,
-          amount: pack.amount,
-          currency: pack.currency,
-          customer_name: name,
-          customer_email: email,
-          customer_phone: phone,
-          payment_status: paycoreJson.payment_status || 'pending',
-          fulfillment_status: 'pending',
-          checkout_url: paycoreJson.checkout_url,
-          created_at: now,
-          updated_at: now,
-        };
-
-        await env.CHECKOUT_EVENTS.put(`order:${paycoreJson.order_id}`, JSON.stringify(orderRecord), {
-          expirationTtl: ORDER_TTL_SECONDS,
-        });
-        await env.CHECKOUT_EVENTS.put(`ext:${externalOrderId}`, paycoreJson.order_id, {
-          expirationTtl: ORDER_TTL_SECONDS,
-        });
-        await env.CHECKOUT_EVENTS.put(`buyer:${emailKey}`, paycoreJson.order_id, {
-          expirationTtl: ORDER_TTL_SECONDS,
-        });
-      }
-    } catch (kvErr) {
-      console.error('[Checkout] KV persist failed:', kvErr);
-      // Non-fatal — order still created, status tracking degraded
-    }
+    // Persist the order to D1, linked to the member, BEFORE redirecting.
+    await repo.createOrder({
+      id: orderId,
+      member_id: member.id,
+      paycore_order_id: paycoreJson.order_id,
+      external_order_id: externalOrderId,
+      pack_id: packId,
+      product_key: pack.product_key,
+      purchase_type: purchaseTypeForPack(packId),
+      amount: pack.amount,
+      currency: pack.currency,
+    });
 
     if (env.LEAD_WEBHOOK_URL) {
+      const now = new Date().toISOString();
       await scheduleBackground(
         context,
         postJsonFollowingGoogleRedirect(env.LEAD_WEBHOOK_URL, {
           name,
           email,
-          whatsapp: phone || '',
+          whatsapp: phoneE164,
           niche: packId,
           model_penggunaan: 'purchase',
           selected_pack: packId,

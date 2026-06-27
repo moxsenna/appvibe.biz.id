@@ -1,8 +1,6 @@
 import { verifyPayCoreEvent } from '../../lib/paycore-verify.js';
 import { PACKS } from '../../lib/packs.js';
-
-const ORDER_TTL_SECONDS = 60 * 60 * 24 * 90;
-const FULFILLMENT_TTL_SECONDS = 60 * 60 * 24 * 365;
+import { createMemberAccessRepo } from '../../lib/db.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -28,14 +26,13 @@ async function scheduleBackground(context, promise, label) {
  * POST /api/webhooks/paycore
  *
  * Receives payment.succeeded events from PayCore.
- * Requirements:
- * - Verify HMAC signature with timing-safe compare
- * - Reject replay attacks via timestamp skew check
- * - Idempotent: same event_id never processed twice
+ * D1 is the single source of truth. Requirements:
+ * - Verify HMAC signature with timing-safe compare + timestamp skew check
+ * - Idempotent: same event_id never processed twice (payment_events table)
  * - Duplicate-safe: same order_id never fulfilled twice
- * - Grants entitlement/fulfillment exactly once
- * - Records audit trail in KV
- * - Forwards fulfillment data to configured webhook
+ * - Grants entitlement exactly once (unique active entitlement index)
+ * - Records audit trail in D1
+ * - Forwards fulfillment data to configured webhook (best-effort)
  */
 export async function onRequest(context) {
   const { request, env } = context;
@@ -49,12 +46,12 @@ export async function onRequest(context) {
     return json({ error: 'webhook_not_configured' }, 503);
   }
 
-  // 1. Read raw body before any parsing
+  // 1. Read raw body before any parsing.
   const rawBody = await request.text();
   const ts = request.headers.get('X-PayCore-Event-Timestamp');
   const sig = request.headers.get('X-PayCore-Event-Signature');
 
-  // 2. Verify HMAC signature
+  // 2. Verify HMAC signature.
   const ok = await verifyPayCoreEvent({
     webhookSecret: secret,
     timestampHeader: ts || '',
@@ -66,7 +63,7 @@ export async function onRequest(context) {
     return json({ error: 'invalid_signature' }, 401);
   }
 
-  // 3. Parse payload
+  // 3. Parse payload.
   let payload;
   try {
     payload = JSON.parse(rawBody);
@@ -77,177 +74,100 @@ export async function onRequest(context) {
   const eventId = payload.event_id;
   const eventType = payload.event_type;
   const orderId = payload.data?.order_id;
-  const externalOrderId = payload.data?.external_order_id || '';
-  const productKey = payload.data?.product_key || '';
-  const fulfillmentData = payload.data?.fulfillment_data || {};
 
   if (!eventId || !orderId) {
     return json({ error: 'missing_event_fields' }, 400);
   }
 
-  if (eventType === 'payment.succeeded' && !env.CHECKOUT_EVENTS) {
-    return json({ error: 'storage_unavailable', message: 'Checkout storage binding is required.' }, 503);
+  if (!env.APPVIBE_DB) {
+    return json({ error: 'storage_unavailable', message: 'D1 database is required.' }, 503);
   }
 
-  // 4. Idempotency — check if event already processed
-  if (env.CHECKOUT_EVENTS) {
-    const seen = await env.CHECKOUT_EVENTS.get(`evt:${eventId}`);
-    if (seen) {
-      return json({ ok: true, duplicate: true, event_id: eventId }, 200);
-    }
-  }
+  const repo = createMemberAccessRepo(env.APPVIBE_DB);
 
-  // 5. Only process payment.succeeded
-  if (eventType !== 'payment.succeeded') {
-    // Acknowledge non-success events (they're logged by PayCore)
-    if (env.CHECKOUT_EVENTS) {
-      await env.CHECKOUT_EVENTS.put(
-        `evt:${eventId}`,
-        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'ignored', at: new Date().toISOString() }),
-        { expirationTtl: ORDER_TTL_SECONDS },
-      );
-    }
-    return json({ ok: true, event_id: eventId, ignored: true }, 200);
-  }
-
-  const packId = fulfillmentData.pack_id || '';
-  const buyerEmail = fulfillmentData.email || '';
-  const buyerEmailKey = String(buyerEmail).trim().toLowerCase();
-  const buyerName = fulfillmentData.name || '';
-  const amount = payload.data?.amount || 0;
-
-  // 6. Validate payload has required data
-  if (!buyerEmail) {
-    return json({ error: 'missing_fulfillment_data', message: 'Email buyer diperlukan.' }, 422);
-  }
-
-  if (!packId || !PACKS[packId]) {
-    return json({ error: 'invalid_product', message: `Product key tidak dikenal: ${productKey}` }, 422);
-  }
-
-  // 7. Check that this order_id hasn't been fulfilled already
-  let existingOrder = null;
-  if (env.CHECKOUT_EVENTS) {
-    const raw = await env.CHECKOUT_EVENTS.get(`order:${orderId}`);
-    if (raw) {
-      try {
-        existingOrder = JSON.parse(raw);
-      } catch {}
-    }
-  }
-
-  // Check if already fulfilled
-  if (existingOrder?.fulfillment_status === 'delivered') {
-    // Already fulfilled — record event but don't duplicate
-    if (env.CHECKOUT_EVENTS) {
-      await env.CHECKOUT_EVENTS.put(
-        `evt:${eventId}`,
-        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'already_fulfilled', at: new Date().toISOString() }),
-        { expirationTtl: ORDER_TTL_SECONDS },
-      );
-    }
+  // 4. Idempotency — if the event was already seen, acknowledge and stop.
+  if (await repo.isEventSeen(eventId)) {
     return json({ ok: true, duplicate: true, event_id: eventId }, 200);
   }
 
-  // 8. Execute fulfillment atomically with KV writes
-  const fulfillmentTimestamp = new Date().toISOString();
-  const fulfilled = {
-    event_id: eventId,
-    event_type: eventType,
-    order_id: orderId,
-    external_order_id: externalOrderId,
-    product_key: productKey,
-    pack_id: packId,
-    amount,
-    customer_email: buyerEmail,
-    customer_name: buyerName,
-    fulfilled_at: fulfillmentTimestamp,
-    paid_at: payload.data?.paid_at || fulfillmentTimestamp,
-  };
+  // 5. Only process payment.succeeded; record others as ignored.
+  if (eventType !== 'payment.succeeded') {
+    await repo.markEventSeen({
+      event_id: eventId,
+      event_type: eventType,
+      paycore_order_id: orderId,
+      status: 'ignored',
+    });
+    return json({ ok: true, event_id: eventId, ignored: true }, 200);
+  }
 
+  // 6. Resolve the order from the database by paycore_order_id.
+  //    We never trust browser-supplied data.
+  const order = await repo.getOrderByPaycoreId(orderId);
+  if (!order) {
+    return json({ error: 'order_not_found', message: 'Order tidak ditemukan untuk event ini.' }, 404);
+  }
+
+  // 7. Validate pack/product consistency against the server-created order.
+  const pack = PACKS[order.pack_id];
+  if (!pack) {
+    return json({ error: 'invalid_product', message: `Product tidak dikenal: ${order.pack_id}` }, 422);
+  }
+
+  const payloadAmount = payload.data?.amount;
+  if (typeof payloadAmount === 'number' && payloadAmount !== order.amount) {
+    return json({ error: 'amount_mismatch', message: 'Jumlah pembayaran tidak sesuai order.' }, 422);
+  }
+
+  // 8. Already delivered? Record the event and stop (no double-grant).
+  if (order.fulfillment_status === 'delivered') {
+    await repo.markEventSeen({
+      event_id: eventId,
+      event_type: eventType,
+      paycore_order_id: orderId,
+      status: 'already_fulfilled',
+    });
+    return json({ ok: true, duplicate: true, event_id: eventId }, 200);
+  }
+
+  // 9. Atomically fulfill: mark paid + delivered, grant entitlement,
+  //    activate member, bump entitlement_version, audit log.
   try {
-    if (env.CHECKOUT_EVENTS) {
-      // Update order record to paid + delivered
-      const orderRecord = existingOrder || {};
-      const updatedOrder = {
-        ...orderRecord,
-        paycore_order_id: orderId,
-        external_order_id: externalOrderId,
-        pack_id: packId,
-        product_key: productKey,
-        amount,
-        customer_email: buyerEmail,
-        customer_name: buyerName,
-        payment_status: 'paid',
-        fulfillment_status: 'delivered',
-        fulfilled_at: fulfillmentTimestamp,
-        updated_at: fulfillmentTimestamp,
-      };
+    await repo.fulfillOrder({
+      paycore_order_id: orderId,
+      paid_at: payload.data?.paid_at,
+      fulfilled_at: new Date().toISOString(),
+    });
 
-      await env.CHECKOUT_EVENTS.put(
-        `order:${orderId}`,
-        JSON.stringify(updatedOrder),
-        { expirationTtl: ORDER_TTL_SECONDS },
-      );
+    await repo.markEventSeen({
+      event_id: eventId,
+      event_type: eventType,
+      paycore_order_id: orderId,
+      status: 'processed',
+    });
 
-      // Index by external_order_id if present
-      if (externalOrderId) {
-        await env.CHECKOUT_EVENTS.put(`ext:${externalOrderId}`, orderId, {
-          expirationTtl: ORDER_TTL_SECONDS,
-        });
-      }
+    await repo.insertAuditLog({
+      member_id: order.member_id,
+      order_id: order.id,
+      event_type: 'payment_succeeded',
+      metadata_json: JSON.stringify({ event_id: eventId, amount: order.amount }),
+    });
 
-      // Track fulfilled buyers
-      await env.CHECKOUT_EVENTS.put(
-        `fulfilled:${buyerEmailKey}`,
-        JSON.stringify({
-          order_id: orderId,
-          pack_id: packId,
-          fulfilled_at: fulfillmentTimestamp,
-        }),
-        { expirationTtl: FULFILLMENT_TTL_SECONDS },
-      );
-
-      await env.CHECKOUT_EVENTS.put(`buyer:${buyerEmailKey}`, orderId, {
-        expirationTtl: ORDER_TTL_SECONDS,
-      });
-
-      // Payment audit log
-      const auditKey = `audit:${orderId}`;
-      const existingAudit = await env.CHECKOUT_EVENTS.get(auditKey);
-      const auditEntries = existingAudit ? JSON.parse(existingAudit) : [];
-      auditEntries.push({
-        event: 'payment.succeeded',
-        event_id: eventId,
-        at: fulfillmentTimestamp,
-        amount,
-      });
-      await env.CHECKOUT_EVENTS.put(auditKey, JSON.stringify(auditEntries), {
-        expirationTtl: FULFILLMENT_TTL_SECONDS,
-      });
-
-      // Mark the event processed only after fulfillment state has been written.
-      await env.CHECKOUT_EVENTS.put(
-        `evt:${eventId}`,
-        JSON.stringify({ event_type: eventType, order_id: orderId, status: 'processed', at: fulfillmentTimestamp }),
-        { expirationTtl: ORDER_TTL_SECONDS },
-      );
-    }
-
-    // 9. Forward fulfillment to configured webhook (LEAD_WEBHOOK_URL or FULFILLMENT_URL)
+    // 10. Forward fulfillment to configured webhook (best-effort, background).
     const fulfillmentWebhook = env.FULFILLMENT_WEBHOOK_URL || env.LEAD_WEBHOOK_URL;
     if (fulfillmentWebhook) {
-      // Forward in the background and mark notification only after success.
+      const fulfillmentTimestamp = new Date().toISOString();
       await scheduleBackground(
         context,
         (async () => {
+          const member = await repo.getMemberById(order.member_id);
           const body = JSON.stringify({
-            name: buyerName,
-            email: buyerEmail,
-            whatsapp: fulfillmentData.phone || '',
-            niche: packId,
+            name: member?.name || '',
+            email: member?.email_normalized || '',
+            whatsapp: member?.phone_e164 || '',
+            niche: order.pack_id,
             model_penggunaan: 'purchase',
-            selected_pack: packId,
+            selected_pack: order.pack_id,
             selected_app: '',
             form_open_source: 'paycore_webhook',
             utm_source: '',
@@ -278,38 +198,18 @@ export async function onRequest(context) {
               fwdRes = await fetch(location, { redirect: 'follow' });
             }
           }
-
-          if (!fwdRes.ok) {
-            console.warn('[Fulfillment] webhook returned', fwdRes.status);
-            return;
-          }
-
-          if (env.CHECKOUT_EVENTS) {
-            await env.CHECKOUT_EVENTS.put(
-              `fulfillment_notified:${orderId}`,
-              fulfillmentTimestamp,
-              { expirationTtl: ORDER_TTL_SECONDS },
-            );
-          }
         })(),
         '[Fulfillment] webhook forwarding failed:',
       );
     }
 
-    console.log('[Fulfillment] payment_succeeded', JSON.stringify(fulfilled));
-
     return json(
-      {
-        ok: true,
-        event_id: eventId,
-        order_id: orderId,
-        fulfillment_status: 'delivered',
-      },
+      { ok: true, event_id: eventId, order_id: orderId, fulfillment_status: 'delivered' },
       200,
     );
   } catch (err) {
     console.error('[Fulfillment] error:', err);
-    // Return 5xx so PayCore retries
+    // Return 5xx so PayCore retries.
     return json({ error: 'fulfillment_failed', message: err.message }, 500);
   }
 }
