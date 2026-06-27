@@ -111,7 +111,6 @@
   <div class="ad-footer">AppVibe &middot; Data diambil dari Cloudflare KV</div>
 
   <script type="module">
-    const TOKEN_KEY = 'av_admin_token';
     const API = '/api/admin/orders';
 
     const loginEl = document.getElementById('adLogin');
@@ -126,7 +125,7 @@
     const tbody = document.getElementById('adTbody');
 
     let allOrders = [];
-    let token = localStorage.getItem(TOKEN_KEY) || '';
+    let token = '';
 
     function formatPrice(amount) {
       return 'Rp' + Number(amount || 0).toLocaleString('id-ID');
@@ -190,9 +189,10 @@
 
     async function fetchOrders() {
       try {
-        const res = await fetch(API + '?token=' + encodeURIComponent(token));
+        const res = await fetch(API, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (res.status === 401) {
-          localStorage.removeItem(TOKEN_KEY);
           token = '';
           showLogin();
           loginError.style.display = 'block';
@@ -212,7 +212,7 @@
       const t = tokenInput.value.trim();
       if (!t) return;
       token = t;
-      localStorage.setItem(TOKEN_KEY, t);
+      tokenInput.value = '';
       loginError.style.display = 'none';
       fetchOrders().then(showDashboard);
     }
@@ -221,7 +221,6 @@
     tokenInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
 
     logoutBtn.addEventListener('click', () => {
-      localStorage.removeItem(TOKEN_KEY);
       token = '';
       showLogin();
     });
@@ -232,10 +231,7 @@
 
     refreshBtn.addEventListener('click', fetchOrders);
 
-    // Check saved token
-    if (token) {
-      fetchOrders().then(showDashboard).catch(showLogin);
-    }
+    showLogin();
   </script>
 </body>
 </html>

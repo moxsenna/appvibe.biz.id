@@ -1,7 +1,8 @@
 node_modules/
 dist/
 .env
+.staging.vars
 temp_full.html
-"audit-*.png"  
-"check-*.png"  
-"topbar-*.png"  
+audit-*.png
+check-*.png
+topbar-*.png
