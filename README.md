@@ -20,7 +20,7 @@
 All AppVibe projects should connect to the shared PayCore service instead of implementing payment gateway logic independently.
 
 - Staging PayCore: `https://pay-staging.appvibe.biz.id`
-- Production PayCore: `https://pay.appvibe.biz`
+- Production PayCore: `https://pay.appvibe.biz.id`
 - PayCore repo: `D:\Coding\paycore`
 
 This repo signs outgoing PayCore API requests and verifies incoming PayCore webhooks, but PayCore itself remains a separate repository/service.

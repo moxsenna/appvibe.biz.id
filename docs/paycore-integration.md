@@ -13,7 +13,7 @@ Do not copy `appvibe.web.id` URLs or assumptions into this repo.
 ## PayCore Services
 
 - Staging base URL: `https://pay-staging.appvibe.biz.id`
-- Production domain: `https://pay.appvibe.biz`
+- Production domain: `https://pay.appvibe.biz.id`
 - PayCore repo: `D:\Coding\paycore`
 
 `appvibe.biz.id` is a PayCore client. It signs outgoing PayCore requests and verifies incoming PayCore events, but PayCore's core gateway, provider callback, order database, and payment orchestration live in the PayCore repo.

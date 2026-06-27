@@ -13,7 +13,7 @@ This repository is for `appvibe.biz.id`.
 - `appvibe.web.id` is a separate project in `D:\Coding\AppVibe v2`. That project focuses on jasa pembuatan landing page and aplikasi.
 - PayCore is a separate payment hub in `D:\Coding\paycore`.
 - Staging PayCore base URL: `https://pay-staging.appvibe.biz.id`.
-- Production PayCore domain: `https://pay.appvibe.biz`.
+- Production PayCore domain: `https://pay.appvibe.biz.id`.
 - This repo integrates with PayCore through signed API calls and signed webhooks. Do not move PayCore server logic into this repo.
 
 ## Current Checkout Flow
