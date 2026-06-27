@@ -2,7 +2,7 @@
  * GET /api/member/launch?app_id={id}
  *
  * Validates the buyer's session and entitlement, then 302-redirects to
- * the app's external URL from ACCESS_RESOURCE_URLS_JSON.
+ * the app's external URL from admin D1 settings, then ACCESS_RESOURCE_URLS_JSON.
  *
  * - Never returns app URLs in JSON payloads.
  - Cache-Control: no-store, Referrer-Policy: no-referrer.
@@ -11,6 +11,7 @@
  */
 import { resolveSession } from '../../lib/session.js';
 import { getAppLaunchUrl } from '../../lib/access-resources.js';
+import { getStoredAppLaunchUrl } from '../../lib/app-links.js';
 import { computeUnlockedAppIds } from '../../lib/entitlements.js';
 
 export async function onRequest(context) {
@@ -56,8 +57,9 @@ export async function onRequest(context) {
     });
   }
 
-  // Resolve URL from server-side config.
-  const url = getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
+  // Resolve URL from admin settings first, with env fallback for bootstrap.
+  const url = await getStoredAppLaunchUrl(env.APPVIBE_DB, appId)
+    || getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
   if (!url) {
     return new Response(JSON.stringify({
       error: 'app_not_configured',

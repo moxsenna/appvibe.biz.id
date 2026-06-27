@@ -13,6 +13,15 @@ test('admin panel sends token via Authorization header only', () => {
   assert.match(html, /Authorization\s*:\s*`Bearer \$\{token\}`/);
 });
 
+test('admin panel exposes app link settings without query-token auth', () => {
+  const html = readFileSync(join(root, 'admin', 'index.html'), 'utf8');
+
+  assert.match(html, /Pengaturan/);
+  assert.match(html, /\/api\/admin\/app-links/);
+  assert.match(html, /Authorization\s*:\s*`Bearer \$\{token\}`/);
+  assert.doesNotMatch(html, /\?token=/);
+});
+
 test('gitignore excludes local secret files and audit screenshots', () => {
   const gitignore = readFileSync(join(root, '.gitignore'), 'utf8');
 
