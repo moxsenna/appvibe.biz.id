@@ -296,7 +296,9 @@ export function createFakeD1() {
  * Mirrors what `wrangler d1 migrations apply` does against real D1.
  */
 export async function applyMigration(d1, sql) {
+  // Normalize Windows \r\n line endings, then strip line comments.
   const cleaned = String(sql)
+    .replace(/\r/g, '')
     .split('\n')
     .map((line) => line.replace(/--.*$/, ''))
     .join('\n');

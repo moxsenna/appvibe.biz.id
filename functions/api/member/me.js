@@ -3,11 +3,15 @@
  *
  * Returns the authenticated member's safe dashboard data based on the
  * av_session cookie. Never exposes raw phone, email, tokens, or audit logs.
+ *
+ * Now includes app catalog metadata and resource availability (without
+ * leaking actual URLs).
  */
-import { hashToken } from '../../lib/auth-crypto.js';
-import { createMemberAccessRepo } from '../../lib/db.js';
+import { resolveSession } from '../../lib/session.js';
 import { summarizeAccess } from '../../lib/entitlements.js';
 import { PACKS } from '../../lib/packs.js';
+import { APP_CATALOG, packsForApp } from '../../lib/catalog.js';
+import { getResourceAvailability } from '../../lib/access-resources.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -16,52 +20,38 @@ function json(data, status = 200) {
   });
 }
 
-function parseSessionCookie(request) {
-  const cookie = request.headers.get('Cookie') || '';
-  const match = cookie.match(/(?:^|;\s*)av_session=([^;]+)/);
-  return match ? match[1] : null;
-}
-
 export async function onRequest(context) {
   const { request, env } = context;
 
   if (request.method !== 'GET') return json({ error: 'method_not_allowed' }, 405);
 
-  if (!env.APPVIBE_DB || !env.AUTH_TOKEN_PEPPER) {
-    return json({ error: 'server_misconfigured' }, 500);
+  const session = await resolveSession({
+    request,
+    db: env.APPVIBE_DB,
+    pepper: env.AUTH_TOKEN_PEPPER,
+  });
+  if (!session.ok) {
+    return json({ error: session.error, message: session.message }, session.status);
   }
 
-  const rawToken = parseSessionCookie(request);
-  if (!rawToken) return json({ error: 'unauthenticated', message: 'Silakan masuk terlebih dahulu.' }, 401);
+  const access = summarizeAccess(session.entitlements);
+  const orders = await session.repo.listOrdersByMember(session.member.id);
 
-  const pepper = env.AUTH_TOKEN_PEPPER;
-  const repo = createMemberAccessRepo(env.APPVIBE_DB);
-  const tokenHash = await hashToken(rawToken, pepper);
-
-  const session = await repo.getSessionByHash(tokenHash);
-  if (!session || session.revoked_at) {
-    return json({ error: 'session_invalid' }, 401);
-  }
-
-  if (new Date(session.expires_at).getTime() < Date.now()) {
-    return json({ error: 'session_expired' }, 401);
-  }
-
-  // Touch last_seen_at (best-effort, non-blocking).
-  repo.touchSession(session.id, new Date().toISOString()).catch(() => {});
-
-  const member = await repo.getMemberById(session.member_id);
-  if (!member) return json({ error: 'member_not_found' }, 404);
-
-  const entitlements = await repo.getActiveEntitlements(member.id);
-  const access = summarizeAccess(entitlements);
-  const orders = await repo.listOrdersByMember(member.id);
-
-  // Build app details with status from canonical pack data.
-  const appsWithStatus = access.appIds.map((appId) => ({
-    id: appId,
-    unlocked: true,
-  }));
+  // Build app details with catalog metadata.
+  const apps = access.appIds.map((appId) => {
+    const meta = APP_CATALOG[appId];
+    return {
+      id: appId,
+      name: meta?.name || appId,
+      label: meta?.label || appId.slice(0, 3).toUpperCase(),
+      function: meta?.function || '',
+      output: meta?.output || '',
+      rebrand: meta?.rebrand || '',
+      prompt: meta?.prompt || '',
+      accent: meta?.accent || '#126BFF',
+      packs: packsForApp(appId),
+    };
+  });
 
   // Build order summary (safe subset only).
   const orderSummary = orders.map((o) => ({
@@ -76,11 +66,32 @@ export async function onRequest(context) {
     paid_at: o.paid_at,
   }));
 
+  // Resource availability (booleans only, no URLs leaked).
+  const resources = getResourceAvailability(
+    access.bundleIds,
+    access.hasFullVault,
+    env.ACCESS_RESOURCE_URLS_JSON,
+  );
+
+  // Build bundle display info.
+  const bundles = (access.hasFullVault
+    ? ['advertiser', 'commerce', 'creator', 'brand_launch']
+    : access.bundleIds
+  ).map((bid) => ({
+    id: bid,
+    name: PACKS[bid]?.description?.replace('White-Label Vault — ', '') || bid,
+    resources: resources.resources[bid] || { marketing_kit: false, guide: false },
+  }));
+
   return json({
-    member_name: member.name,
+    member_name: session.member.name,
+    first_name: session.member.name.split(' ')[0],
     has_full_vault: access.hasFullVault,
     bundle_ids: access.bundleIds,
     app_ids: access.appIds,
+    apps,
+    bundles,
+    resources: resources.resources,
     orders: orderSummary,
   });
 }
