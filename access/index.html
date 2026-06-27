@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050B1D" />
-  <title>Akses AppVibe Vault</title>
-  <meta name="description" content="Masuk ke AppVibe Vault Anda melalui WhatsApp." />
+  <title>AppVibe Vault — Portal Akses</title>
+  <meta name="description" content="Masuk ke AppVibe Vault Anda. Buka aplikasi, akses marketing kit, dan kelola lisensi rebrand Anda." />
   <link rel="canonical" href="https://appvibe.biz.id/access/" />
   <link rel="icon" href="/favicon.webp" type="image/webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -13,129 +13,271 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <style>
     *,*::before,*::after{box-sizing:border-box}
-    :root{--navy:#050b1d;--blue:#126bff;--cyan:#10dcd5;--bg:#eef3fa;--surface:#fff;--line:#c9d4e5;--text:#10203f;--muted:#66748d;--muted-light:#8491a8;--success:#16866d;--danger:#a0392c;--radius-xl:28px;--radius-lg:18px;--shadow:0 22px 60px rgba(8,30,77,0.11)}
-    html{min-width:320px;background:var(--bg)}
-    body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;background:radial-gradient(circle at 8% 0%,rgba(18,107,255,0.08),transparent 24%),radial-gradient(circle at 92% 9%,rgba(16,220,213,0.07),transparent 24%),var(--bg)}
-    button,input{font:inherit}
-    button{cursor:pointer}
-    a{color:inherit}
-
-    .ac-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(201,212,229,.78);background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
-    .ac-header-inner{display:flex;align-items:center;justify-content:space-between;width:min(960px,calc(100% - 32px));min-height:64px;margin:0 auto;gap:16px}
-    .ac-header-brand{display:inline-flex;align-items:center;text-decoration:none;font-weight:800;font-size:1rem;color:var(--navy)}
-    .ac-header-back{color:var(--blue);font-size:12px;font-weight:800;text-decoration:none}
-    .ac-header-back:hover{text-decoration:underline}
-
-    .ac-wrapper{width:min(720px,calc(100% - 32px));margin:0 auto;padding:42px 0 72px}
-    .ac-card{border:1px solid rgba(201,212,229,.95);border-radius:var(--radius-xl);background:rgba(255,255,255,.94);box-shadow:var(--shadow);padding:clamp(24px,4vw,42px)}
-    .ac-card h1{margin:0 0 8px;color:var(--navy);font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,4vw,40px);letter-spacing:-.065em;line-height:1.02}
-    .ac-card>p{margin:0 0 24px;color:var(--muted);font-size:13px;line-height:1.7}
-
-    .ac-field{display:flex;gap:10px;margin-bottom:20px}
-    .ac-field input{flex:1;min-height:50px;outline:none;border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;color:var(--text);background:#fbfdff;font-size:15px;font-weight:600;transition:border-color .18s ease,box-shadow .18s ease}
-    .ac-field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(18,107,255,.11)}
-    .ac-field button{flex:none;min-height:50px;border:0;border-radius:14px;padding:12px 22px;color:#fff;background:var(--blue);font-weight:800;font-size:13px;transition:background .14s ease}
-    .ac-field button:hover{background:#2579ff}
-    .ac-field button:disabled{opacity:.5;cursor:not-allowed}
-
-    .ac-status{display:none;margin:0 0 20px;border-radius:12px;padding:12px 14px;font-size:12px;font-weight:600;line-height:1.45}
-    .ac-status.show{display:block}
-    .ac-status.error{border:1px solid #ffcfc6;color:var(--danger);background:#fff0ed}
-    .ac-status.success{border:1px solid #b8eee9;color:#1f5f68;background:#ebfbfa}
-    .ac-status.info{border:1px solid #d5e2fa;color:var(--muted);background:#edf4ff}
-    .ac-status.loading{color:var(--muted);text-align:center}
-
-    .ac-note{margin-top:16px;font-size:11px;color:var(--muted-light);line-height:1.6}
-
-    .ac-loader{display:none;text-align:center;padding:40px 0}
-    .ac-loader.show{display:block}
-    .ac-spinner{width:32px;height:32px;margin:0 auto 12px;border:3px solid #cddcf5;border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Dashboard (logged-in) */
-    .ac-dash-section{margin-bottom:24px}
-    .ac-dash-section:last-child{margin-bottom:0}
-    .ac-dash-label{color:var(--muted-light);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
-    .ac-access-tag{display:inline-block;padding:6px 14px;border-radius:999px;font:700 11px/1 'DM Mono',monospace;color:#116c59;background:#e5f8f2;margin-bottom:8px}
-    .ac-bundle-list{list-style:none;padding:0;margin:0;display:flex;flex-wrap:wrap;gap:6px}
-    .ac-bundle-item{padding:6px 12px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:600;color:#3c4f6b}
-    .ac-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:7px;list-style:none;padding:0;margin:0}
-    .ac-app-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:10px;font-size:11px;font-weight:700;color:#3c4f6b}
-    .ac-app-mark{display:grid;width:22px;height:22px;place-items:center;border:1px solid #cbd8ee;border-radius:7px;color:var(--blue);background:#f3f7ff;font:700 10px/1 'Space Grotesk',sans-serif;flex:none}
-    .ac-order{border:1px solid var(--line);border-radius:var(--radius-lg);padding:18px;margin-bottom:12px}
-    .ac-order:last-child{margin-bottom:0}
-    .ac-order-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px}
-    .ac-order-head h3{margin:0;font-size:14px;letter-spacing:-.02em}
-    .ac-badge{display:inline-flex;padding:5px 10px;border-radius:999px;font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
-    .ac-badge.paid,.ac-badge.delivered{color:#116c59;background:#e5f8f2}
-    .ac-badge.pending{color:#8b7500;background:#fff8e0}
-    .ac-detail-row{display:flex;gap:16px;margin:8px 0;font-size:11px;color:var(--muted)}
-    .ac-detail-row strong{color:var(--text)}
-    .ac-logout{margin-top:24px;display:block;width:100%;border:1.5px solid var(--line);border-radius:14px;padding:12px 22px;background:transparent;font-weight:700;font-size:13px;color:var(--muted);transition:border-color .14s ease,color .14s ease}
-    .ac-logout:hover{border-color:var(--danger);color:var(--danger)}
-
-    @media(max-width:600px){
-      .ac-field{flex-direction:column}
-      .ac-wrapper{padding-top:22px;padding-bottom:42px}
+    :root{
+      --navy:#050B1D;--navy-900:#07142F;--navy-800:#0B2352;
+      --blue:#126BFF;--blue-hover:#2579ff;--cyan:#10DCD5;--violet:#6D35FF;--violet-500:#8756FF;
+      --bg:#EEF3FA;--surface:#FFFFFF;--line:#C9D4E5;--line-light:#E2EAF5;
+      --text:#10203F;--muted:#66748D;--muted-light:#8491A8;
+      --success:#16866D;--success-bg:#E5F8F2;--danger:#A0392C;--danger-bg:#FFF0ED;--warn:#8B7500;--warn-bg:#FFF8E0;
+      --radius-sm:10px;--radius-md:14px;--radius-lg:20px;--radius-xl:28px;--radius-pill:999px;
+      --shadow:0 12px 30px rgba(10,28,66,0.08);--shadow-float:0 20px 50px rgba(0,0,0,0.28);
+      --gradient-brand:linear-gradient(135deg,#126BFF 0%,#10DCD5 48%,#8756FF 100%);
     }
+    html{min-width:320px;background:var(--bg)}
+    body{margin:0;font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);-webkit-font-smoothing:antialiased;background:var(--bg);font-size:15px;line-height:1.65}
+    button,input{font:inherit;font-size:inherit}
+    button{cursor:pointer}
+    a{color:var(--blue);text-decoration:none}
+    a:hover{text-decoration:underline}
+    ul,ol{list-style:none;padding:0;margin:0}
+    img{max-width:100%;display:block}
+
+    /* ─── Header ─── */
+    .vh-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(201,212,229,.78);background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
+    .vh-header-inner{display:flex;align-items:center;justify-content:space-between;width:min(1200px,calc(100% - 32px));min-height:60px;margin:0 auto;gap:12px;flex-wrap:wrap}
+    .vh-brand{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:1rem;color:var(--navy);flex-shrink:0}
+    .vh-brand-icon{display:grid;width:28px;height:28px;place-items:center;border-radius:8px;background:var(--gradient-brand);color:#fff;font:700 11px/1 'Space Grotesk',sans-serif}
+    .vh-vault-badge{display:inline-flex;padding:3px 10px;border-radius:var(--radius-pill);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;color:var(--blue);background:rgba(18,107,255,.08);flex-shrink:0}
+    .vh-header-right{display:flex;align-items:center;gap:12px;flex-shrink:0}
+    .vh-access-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:var(--radius-pill);font:600 10px/1 'DM Mono',monospace;color:var(--success);background:var(--success-bg);flex-shrink:0}
+    .vh-access-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--success)}
+    .vh-logout-btn{border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 14px;background:transparent;font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);transition:border-color .14s,color .14s;white-space:nowrap}
+    .vh-logout-btn:hover{border-color:var(--danger);color:var(--danger)}
+    .vh-logout-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+    /* ─── Layout ─── */
+    .vh-main{width:min(1200px,calc(100% - 32px));margin:0 auto;padding:28px 0 72px}
+    .vh-section{margin-bottom:40px}
+    .vh-section:last-child{margin-bottom:0}
+    .vh-section-title{font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-weight:700;letter-spacing:-.03em;color:var(--navy);margin:0 0 16px;font-size:clamp(18px,3vw,22px)}
+    .vh-mono-label{color:var(--muted-light);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+
+    /* ─── Hero Welcome ─── */
+    .vh-hero{border-radius:var(--radius-xl);padding:clamp(24px,5vw,40px);background:radial-gradient(circle at 20% 20%,rgba(25,140,255,.12),transparent 35%),radial-gradient(circle at 78% 70%,rgba(109,53,255,.1),transparent 34%),var(--navy);color:#fff;margin-bottom:32px}
+    .vh-hero h1{margin:0 0 6px;font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,5vw,42px);letter-spacing:-.06em;line-height:1.05}
+    .vh-hero p{margin:0 0 20px;color:rgba(255,255,255,.65);font-size:clamp(14px,2.5vw,16px);line-height:1.6;max-width:600px}
+    .vh-hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+    .vh-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:var(--radius-pill);font:700 10px/1 'DM Mono',monospace;letter-spacing:.3px}
+    .vh-badge--full{color:#10DCD5;background:rgba(16,220,213,.15)}
+    .vh-badge--bundle{color:rgba(255,255,255,.85);background:rgba(255,255,255,.12)}
+    .vh-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:12px}
+    .vh-metric{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:16px;text-align:center}
+    .vh-metric-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,4vw,32px);color:#fff;line-height:1}
+    .vh-metric-label{font:600 10px/1.3 'DM Mono',monospace;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.3px}
+
+    /* ─── Quick Steps ─── */
+    .vh-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px}
+    .vh-step{display:flex;gap:12px;padding:16px;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface)}
+    .vh-step-num{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:var(--gradient-brand);color:#fff;font:700 12px/1 'Space Grotesk',sans-serif}
+    .vh-step-text{font-size:13px;font-weight:500;color:var(--text);line-height:1.5}
+
+    /* ─── Filter Chips ─── */
+    .vh-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .vh-chip{border:1px solid var(--line);border-radius:var(--radius-pill);padding:7px 16px;background:var(--surface);font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);transition:all .15s;cursor:pointer;white-space:nowrap}
+    .vh-chip:hover{border-color:var(--blue);color:var(--blue)}
+    .vh-chip.active{border-color:var(--blue);color:#fff;background:var(--blue)}
+    .vh-chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+    /* ─── App Grid ─── */
+    .vh-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+    .vh-app-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden;transition:box-shadow .2s,border-color .2s;cursor:pointer}
+    .vh-app-card:hover{box-shadow:var(--shadow);border-color:var(--line)}
+    .vh-app-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+    .vh-app-icon{width:48px;height:48px;border-radius:var(--radius-md);display:grid;place-items:center;font:700 16px/1 'Space Grotesk',sans-serif;color:#fff;margin:16px 16px 0;flex:none}
+    .vh-app-body{padding:12px 16px 16px;flex:1;display:flex;flex-direction:column}
+    .vh-app-name{font-weight:800;font-size:15px;letter-spacing:-.02em;margin-bottom:2px}
+    .vh-app-func{font-size:12px;color:var(--muted);line-height:1.4;margin-bottom:10px;flex:1}
+    .vh-app-cta{display:flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border:0;border-radius:var(--radius-md);padding:10px 16px;color:#fff;background:var(--blue);font:700 12px/1 'Plus Jakarta Sans',sans-serif;transition:background .14s;width:100%}
+    .vh-app-cta:hover{background:var(--blue-hover)}
+    .vh-app-cta:disabled,.vh-app-cta.vh-disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
+    .vh-app-cta svg{width:14px;height:14px;flex:none}
+
+    /* ─── Detail Drawer (mobile bottom sheet) ─── */
+    .vh-drawer-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(5,11,29,.45);backdrop-filter:blur(4px)}
+    .vh-drawer-overlay.open{display:block}
+    .vh-drawer{position:fixed;bottom:0;left:0;right:0;z-index:101;max-height:85vh;overflow-y:auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0;background:var(--surface);box-shadow:var(--shadow-float);transform:translateY(100%);transition:transform .3s ease}
+    .vh-drawer-overlay.open .vh-drawer{transform:translateY(0)}
+    .vh-drawer-handle{display:flex;justify-content:center;padding:10px 0 4px}
+    .vh-drawer-handle::after{content:'';width:40px;height:4px;border-radius:2px;background:var(--line)}
+    .vh-drawer-inner{padding:8px 24px 32px}
+    .vh-drawer-inner h2{margin:0 0 4px;font-family:'Space Grotesk',sans-serif;font-size:22px;letter-spacing:-.04em}
+    .vh-drawer-func{color:var(--muted);font-size:14px;margin:0 0 20px}
+    .vh-drawer-grid{display:grid;gap:16px;margin-bottom:24px}
+    .vh-drawer-item{padding:14px;border:1px solid var(--line-light);border-radius:var(--radius-md)}
+    .vh-drawer-item dt{font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;color:var(--muted-light);margin-bottom:6px}
+    .vh-drawer-item dd{margin:0;font-size:14px;color:var(--text);line-height:1.5}
+    .vh-drawer-close{position:absolute;top:16px;right:16px;width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:var(--radius-sm);background:var(--surface);color:var(--muted);font-size:18px;cursor:pointer}
+    .vh-drawer-close:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+    .vh-drawer-launch{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;border-radius:var(--radius-md);padding:12px 24px;color:#fff;background:var(--blue);font:700 14px/1 'Plus Jakarta Sans',sans-serif;transition:background .14s}
+    .vh-drawer-launch:hover{background:var(--blue-hover)}
+    .vh-drawer-launch svg{width:16px;height:16px}
+
+    @media(min-width:640px){
+      .vh-drawer{left:50%;right:auto;transform:translateX(-50%) translateY(100%);width:min(560px,calc(100% - 32px));border-radius:var(--radius-xl)}
+      .vh-drawer-overlay.open .vh-drawer{transform:translateX(-50%) translateY(0)}
+    }
+
+    /* ─── Assets Section ─── */
+    .vh-asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .vh-asset-card{display:flex;flex-direction:column;gap:10px;padding:20px;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface)}
+    .vh-asset-icon{width:40px;height:40px;border-radius:var(--radius-md);display:grid;place-items:center;font:700 16px/1;color:#fff;flex:none}
+    .vh-asset-title{font-weight:700;font-size:14px;letter-spacing:-.01em}
+    .vh-asset-desc{font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+    .vh-asset-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;border:1px solid var(--line);border-radius:var(--radius-md);padding:10px 16px;background:var(--surface);font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--text);transition:all .14s;width:100%}
+    .vh-asset-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .vh-asset-btn:disabled{border-color:var(--line-light);color:var(--muted-light);cursor:not-allowed;background:var(--bg)}
+    .vh-asset-btn.vh-configured{border-color:var(--blue);color:var(--blue);background:rgba(18,107,255,.04)}
+
+    /* ─── Orders (collapsible) ─── */
+    .vh-orders-toggle{display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line-light);border-radius:var(--radius-md);background:var(--surface);font:600 13px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);cursor:pointer;width:100%;transition:color .14s}
+    .vh-orders-toggle:hover{color:var(--text)}
+    .vh-orders-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+    .vh-orders-toggle svg{margin-left:auto;transition:transform .2s;flex:none}
+    .vh-orders-toggle.open svg{transform:rotate(180deg)}
+    .vh-orders-body{display:none;margin-top:12px}
+    .vh-orders-body.open{display:block}
+    .vh-order-row{padding:14px;border:1px solid var(--line-light);border-radius:var(--radius-md);background:var(--surface);margin-bottom:8px}
+    .vh-order-row:last-child{margin-bottom:0}
+    .vh-order-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+    .vh-order-head h3{margin:0;font-size:14px;font-weight:700;letter-spacing:-.01em}
+    .vh-order-badge{display:inline-flex;padding:4px 10px;border-radius:var(--radius-pill);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.3px}
+    .vh-order-badge.paid,.vh-order-badge.delivered{color:var(--success);background:var(--success-bg)}
+    .vh-order-badge.pending{color:var(--warn);background:var(--warn-bg)}
+    .vh-order-detail{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
+
+    /* ─── Empty / Pending ─── */
+    .vh-empty{text-align:center;padding:clamp(28px,5vw,48px);border:1px dashed var(--line);border-radius:var(--radius-xl);background:var(--surface)}
+    .vh-empty h3{margin:0 0 8px;font-family:'Space Grotesk',sans-serif;font-size:20px;letter-spacing:-.03em}
+    .vh-empty p{margin:0 0 16px;color:var(--muted);font-size:14px;max-width:400px;margin-inline:auto}
+    .vh-empty-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:0;border-radius:var(--radius-md);padding:10px 24px;color:#fff;background:var(--blue);font:700 13px/1 'Plus Jakarta Sans',sans-serif;transition:background .14s}
+    .vh-empty-btn:hover{background:var(--blue-hover)}
+
+    /* ─── Login ─── */
+    .vh-login-wrap{max-width:520px;margin:0 auto}
+    .vh-login-card{border:1px solid rgba(201,212,229,.95);border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow);padding:clamp(24px,5vw,42px)}
+    .vh-login-card h1{margin:0 0 6px;font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,5vw,36px);letter-spacing:-.06em;line-height:1.05}
+    .vh-login-card>p{margin:0 0 24px;color:var(--muted);font-size:14px;line-height:1.6}
+    .vh-field{display:flex;gap:10px;margin-bottom:16px}
+    .vh-field input{flex:1;min-height:50px;outline:none;border:1.5px solid var(--line);border-radius:var(--radius-md);padding:12px 14px;color:var(--text);background:#FBFDFF;font-size:16px;font-weight:600;transition:border-color .18s,box-shadow .18s}
+    .vh-field input:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(18,107,255,.11)}
+    .vh-field button{flex:none;min-height:50px;border:0;border-radius:var(--radius-md);padding:12px 22px;color:#fff;background:var(--blue);font-weight:800;font-size:13px;transition:background .14s}
+    .vh-field button:hover{background:var(--blue-hover)}
+    .vh-field button:disabled{opacity:.5;cursor:not-allowed}
+    .vh-status{display:none;border-radius:12px;padding:12px 14px;font-size:13px;font-weight:600;line-height:1.45;margin-bottom:16px}
+    .vh-status.show{display:block}
+    .vh-status.error{border:1px solid #FFCFC6;color:var(--danger);background:var(--danger-bg)}
+    .vh-status.success{border:1px solid #B8EEE9;color:#1F5F68;background:#EBFBFA}
+    .vh-login-note{font-size:12px;color:var(--muted-light);line-height:1.6;margin-top:16px}
+    .vh-login-note strong{color:var(--muted)}
+
+    /* ─── Loading ─── */
+    .vh-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 0}
+    .vh-spinner{width:36px;height:36px;border:3px solid var(--line-light);border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .vh-loader p{color:var(--muted);font-size:13px;margin-top:12px}
+
+    /* ─── Mobile ─── */
+    @media(max-width:639px){
+      .vh-field{flex-direction:column}
+      .vh-metrics{grid-template-columns:repeat(2,1fr)}
+      .vh-app-grid{grid-template-columns:repeat(2,1fr)}
+      .vh-asset-grid{grid-template-columns:1fr}
+      .vh-steps{grid-template-columns:1fr}
+      .vh-hero{padding:20px}
+      .vh-header-inner{min-height:52px}
+    }
+
+    @media(max-width:359px){
+      .vh-app-grid{grid-template-columns:1fr}
+    }
+
+    /* ─── Reduced Motion ─── */
+    @media(prefers-reduced-motion:reduce){
+      *{animation-duration:0s!important;transition-duration:0s!important}
+    }
+
+    /* ─── Focus ─── */
+    :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
   </style>
 </head>
 <body>
-  <header class="ac-header">
-    <div class="ac-header-inner">
-      <a class="ac-header-brand" href="/">AppVibe</a>
-      <a class="ac-header-back" href="/">&larr; Kembali</a>
+  <header class="vh-header">
+    <div class="vh-header-inner">
+      <a class="vh-brand" href="/">
+        <span class="vh-brand-icon">AV</span>
+        AppVibe
+      </a>
+      <span class="vh-vault-badge" id="vhVaultBadge" style="display:none">Vault</span>
+      <div class="vh-header-right" id="vhHeaderRight"></div>
     </div>
   </header>
 
-  <main class="ac-wrapper">
-    <div class="ac-card" id="acCard">
-      <!-- JS renders the login or dashboard here -->
-    </div>
+  <main class="vh-main" id="vhMain" aria-live="polite">
+    <!-- JS renders everything here -->
   </main>
 
+  <!-- Detail drawer -->
+  <div class="vh-drawer-overlay" id="vhDrawerOverlay" role="dialog" aria-modal="true" aria-label="Detail aplikasi">
+    <div class="vh-drawer">
+      <div class="vh-drawer-handle"></div>
+      <button class="vh-drawer-close" id="vhDrawerClose" aria-label="Tutup">&times;</button>
+      <div class="vh-drawer-inner" id="vhDrawerInner"></div>
+    </div>
+  </div>
+
   <script type="module">
-    const card = document.getElementById('acCard');
-    const APP_NAMES = {
-      adsprint:'ADSprint', pikat:'PIKAT', rupa:'RUPA', mula:'MULA',
-      arah:'ARAH', cetak:'CETAK', adegan:'ADEGAN', suara:'SUARA',
-      bukti:'BUKTI', mimik:'MIMIK', ritme:'RITME', tayang:'TAYANG',
-      katalog:'KATALOG',
-    };
+    const main = document.getElementById('vhMain');
+    const drawerOverlay = document.getElementById('vhDrawerOverlay');
+    const drawerInner = document.getElementById('vhDrawerInner');
+    const drawerClose = document.getElementById('vhDrawerClose');
+    const headerRight = document.getElementById('vhHeaderRight');
+    const vaultBadge = document.getElementById('vhVaultBadge');
+
     const PACK_LABELS = {
       advertiser:'Advertiser App Pack', commerce:'Commerce & Marketplace Pack',
       creator:'Creator & Affiliate Pack', brand_launch:'Brand & Launch Pack',
       vault_full:'Full AppVibe Vault',
     };
-
     const COOLDOWN_SEC = 60;
     let cooldownTimer = null;
+    let currentData = null;
 
+    // ── Utilities ──
+    function esc(s){ const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
     function formatPrice(a){ return 'Rp'+Number(a||0).toLocaleString('id-ID'); }
     function formatDate(s){ if(!s)return'-'; return new Date(s).toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'}); }
+    function statusLabel(s){
+      const m = {paid:'Dibayar',delivered:'Terkirim',pending:'Menunggu',created:'Dibuat',expired:'Kedaluwarsa',failed:'Gagal'};
+      return m[s]||s;
+    }
 
-    // ──── Login view ────
+    // ── Login View ──
     function renderLogin(){
-      card.innerHTML = `
-        <h1>Akses AppVibe Vault</h1>
-        <p>Masukkan nomor WhatsApp yang Anda gunakan saat checkout. Tautan akses akan dikirim ke WhatsApp tersebut.</p>
-        <div class="ac-field">
-          <input type="tel" id="acPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" />
-          <button id="acSend">Kirim Tautan Akses</button>
+      vaultBadge.style.display = 'none';
+      headerRight.innerHTML = '<a href="/" style="color:var(--blue);font:700 11px/1 \'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.3px">&larr; Beranda</a>';
+      main.innerHTML = `
+        <div class="vh-login-wrap">
+          <div class="vh-login-card">
+            <h1>Masuk ke AppVibe Vault</h1>
+            <p>Masukkan nomor WhatsApp yang Anda gunakan saat checkout. Tautan akses akan dikirim ke WhatsApp tersebut.</p>
+            <div class="vh-field" role="group" aria-label="Nomor WhatsApp">
+              <input type="tel" id="vhPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" style="font-size:16px" aria-label="Nomor WhatsApp" />
+              <button id="vhSend">Kirim tautan akses</button>
+            </div>
+            <div class="vh-status" id="vhStatus" role="alert" aria-live="assertive"></div>
+            <p class="vh-login-note"><strong>Keamanan:</strong> Tautan berlaku 15 menit dan hanya dapat digunakan satu kali. Kami tidak pernah mengungkap apakah nomor Anda terdaftar atau tidak.</p>
+          </div>
         </div>
-        <div class="ac-status" id="acStatus" role="alert"></div>
-        <div class="ac-note">Tautan berlaku selama 15 menit dan hanya dapat digunakan satu kali. Pastikan nomor WhatsApp yang dimasukkan sama dengan yang tercatat saat pembelian.</div>
       `;
-      const phoneInput = document.getElementById('acPhone');
-      const sendBtn = document.getElementById('acSend');
-      const statusEl = document.getElementById('acStatus');
-
+      const phoneInput = document.getElementById('vhPhone');
+      const sendBtn = document.getElementById('vhSend');
+      const statusEl = document.getElementById('vhStatus');
       sendBtn.addEventListener('click', () => handleSend(phoneInput, sendBtn, statusEl));
       phoneInput.addEventListener('keydown', (e) => { if(e.key==='Enter') sendBtn.click(); });
     }
 
     function setStatus(el, type, msg){
-      el.className = 'ac-status show ' + type;
+      el.className = 'vh-status show ' + type;
       el.textContent = msg;
     }
 
@@ -143,99 +285,295 @@
       const phone = input.value.trim();
       if(!phone || phone.length < 8){
         setStatus(statusEl, 'error', 'Masukkan nomor WhatsApp yang valid.');
-        input.focus();
-        return;
+        input.focus(); return;
       }
       btn.disabled = true;
-      setStatus(statusEl, 'loading', 'Mengirim…');
-
+      setStatus(statusEl, 'info', 'Mengirim…');
       try {
         const res = await fetch('/api/auth/request-magic-link', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone }),
+          method: 'POST', headers: {'Content-Type':'application/json'},
+          body: JSON.stringify({phone}),
         });
-        const data = await res.json().catch(() => ({}));
+        const data = await res.json().catch(()=>({}));
         setStatus(statusEl, 'success', data.message || 'Jika nomor terdaftar, tautan akses telah dikirim melalui WhatsApp.');
-        startCooldown(btn, statusEl);
+        startCooldown(btn);
       } catch {
         setStatus(statusEl, 'error', 'Koneksi bermasalah. Silakan coba lagi.');
         btn.disabled = false;
       }
     }
 
-    function startCooldown(btn, statusEl){
-      let remaining = COOLDOWN_SEC;
-      btn.textContent = `Kirim ulang (${remaining}s)`;
-      cooldownTimer = setInterval(() => {
-        remaining--;
-        if(remaining <= 0){
-          clearInterval(cooldownTimer);
-          btn.disabled = false;
-          btn.textContent = 'Kirim Tautan Akses';
-          return;
-        }
-        btn.textContent = `Kirim ulang (${remaining}s)`;
-      }, 1000);
+    function startCooldown(btn){
+      let rem = COOLDOWN_SEC;
+      btn.textContent = `Kirim ulang (${rem}s)`;
+      cooldownTimer = setInterval(()=>{
+        rem--;
+        if(rem<=0){clearInterval(cooldownTimer);btn.disabled=false;btn.textContent='Kirim tautan akses';return;}
+        btn.textContent = `Kirim ulang (${rem}s)`;
+      },1000);
     }
 
-    // ──── Dashboard view ────
+    // ── Dashboard View ──
     function renderDashboard(data){
-      const { member_name, has_full_vault, bundle_ids, app_ids, orders } = data;
+      currentData = data;
+      const {member_name, first_name, has_full_vault, bundle_ids, app_ids, apps, bundles, resources, orders} = data;
 
-      const accessTag = has_full_vault
-        ? '<span class="ac-access-tag">Full Vault — Semua Akses</span>'
-        : (bundle_ids.length > 0
-          ? bundle_ids.map(b => `<span class="ac-access-tag">${PACK_LABELS[b]||b}</span>`).join(' ')
-          : '<span class="ac-access-tag" style="color:var(--muted);background:#edf4ff">Belum ada akses aktif</span>');
-
-      const bundlesHtml = bundle_ids.length > 0
-        ? `<div class="ac-dash-section"><div class="ac-dash-label">Bundle Aktif</div><ul class="ac-bundle-list">${bundle_ids.map(b=>`<li class="ac-bundle-item">${PACK_LABELS[b]||b}</li>`).join('')}</ul></div>`
-        : '';
-
-      const appsHtml = app_ids.length > 0
-        ? `<div class="ac-dash-section"><div class="ac-dash-label">Aplikasi Terbuka (${app_ids.length})</div><ul class="ac-app-grid">${app_ids.map(id=>{
-            const name = APP_NAMES[id]||id;
-            const icon = name.slice(0,1);
-            return `<li class="ac-app-item"><span class="ac-app-mark">${icon}</span>${name}</li>`;
-          }).join('')}</ul></div>`
-        : '';
-
-      const ordersHtml = orders.length > 0
-        ? `<div class="ac-dash-section"><div class="ac-dash-label">Riwayat Pembelian</div>${orders.map(o=>{
-            const badge = o.payment_status === 'paid' || o.fulfillment_status === 'delivered' ? 'paid' : o.payment_status;
-            const label = PACK_LABELS[o.pack_id] || o.pack_id;
-            return `<div class="ac-order"><div class="ac-order-head"><h3>${label}</h3><span class="ac-badge ${badge}">${badge}</span></span></div><div class="ac-detail-row"><span>${formatPrice(o.amount)}</span><span>${formatDate(o.created_at)}</span><span>${o.paid_at?'Dibayar '+formatDate(o.paid_at):''}</span></div></div>`;
-          }).join('')}</div>`
-        : '';
-
-      card.innerHTML = `
-        <h1>Halo, ${esc(member_name)}</h1>
-        <p>Berikut ringkasan akses AppVibe Vault Anda.</p>
-        ${accessTag}
-        ${bundlesHtml}
-        ${appsHtml}
-        ${ordersHtml}
-        <button class="ac-logout" id="acLogout">Keluar</button>
+      vaultBadge.style.display = '';
+      headerRight.innerHTML = `
+        <span class="vh-access-pill">Aktif</span>
+        <button class="vh-logout-btn" id="vhLogout">Keluar</button>
       `;
-      document.getElementById('acLogout').addEventListener('click', handleLogout);
+      document.getElementById('vhLogout').addEventListener('click', handleLogout);
+
+      const mkCount = bundles.reduce((n,b)=>n+(b.resources?.marketing_kit?1:0),0);
+
+      // Hero
+      const heroBadgeHtml = has_full_vault
+        ? '<span class="vh-badge vh-badge--full">Full Vault — Semua Akses</span>'
+        : bundle_ids.map(b=>`<span class="vh-badge vh-badge--bundle">${esc(PACK_LABELS[b]||b)}</span>`).join('');
+
+      // Steps
+      const stepsHtml = `
+        <div class="vh-steps">
+          <div class="vh-step"><span class="vh-step-num">1</span><span class="vh-step-text">Pilih aplikasi yang sesuai dengan market Anda.</span></div>
+          <div class="vh-step"><span class="vh-step-num">2</span><span class="vh-step-text">Buka dan sesuaikan menjadi brand Anda.</span></div>
+          <div class="vh-step"><span class="vh-step-num">3</span><span class="vh-step-text">Gunakan marketing kit untuk mulai mengenalkan produk.</span></div>
+        </div>
+      `;
+
+      // App filter chips
+      const chipBundles = has_full_vault ? ['all','advertiser','commerce','creator','brand_launch'] : ['all',...bundle_ids];
+      const chipHtml = chipBundles.map((id,i)=>{
+        const label = id==='all' ? 'Semua aplikasi' : (PACK_LABELS[id]||id).replace(' App Pack','').replace(' & Marketplace',' & MKP').replace(' & Affiliate',' & Aff');
+        return `<button class="vh-chip${i===0?' active':''}" data-filter="${id}">${esc(label)}</button>`;
+      }).join('');
+
+      // App grid
+      const appCardsHtml = apps.map(app=>`
+        <article class="vh-app-card" tabindex="0" role="button" aria-label="Detail ${esc(app.name)}" data-app-id="${app.id}">
+          <div class="vh-app-icon" style="background:${esc(app.accent)}">${esc(app.label)}</div>
+          <div class="vh-app-body">
+            <div class="vh-app-name">${esc(app.name)}</div>
+            <div class="vh-app-func">${esc(app.function)}</div>
+            <button class="vh-app-cta" data-launch="${app.id}" onclick="event.stopPropagation()">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Buka aplikasi
+            </button>
+          </div>
+        </article>
+      `).join('');
+
+      // Assets
+      const assetCards = bundles.map(b=>{
+        const mk = b.resources?.marketing_kit;
+        const guide = b.resources?.guide;
+        return `
+          <div class="vh-asset-card">
+            <div class="vh-asset-icon" style="background:var(--blue)">${esc(b.name.charAt(0))}</div>
+            <div class="vh-asset-title">${esc(b.name)}</div>
+            <div class="vh-asset-desc">Marketing kit dan aset peluncuran untuk ${esc(b.name)}.</div>
+            <button class="vh-asset-btn${mk?' vh-configured':''}" ${mk?'':'disabled'} data-resource="${b.id}:marketing_kit">
+              ${mk ? 'Buka marketing kit' : 'Marketing kit belum tersedia'}
+            </button>
+            ${guide ? `<button class="vh-asset-btn vh-configured" data-resource="${b.id}:guide">Buka panduan mulai</button>` : ''}
+          </div>
+        `;
+      }).join('');
+
+      const licenseCard = `
+        <div class="vh-asset-card">
+          <div class="vh-asset-icon" style="background:var(--violet)">&#x2713;</div>
+          <div class="vh-asset-title">Lisensi Rebrand</div>
+          <div class="vh-asset-desc">Syarat dan ketentuan penggunaan aset produk AppVibe.</div>
+          <a class="vh-asset-btn vh-configured" href="/license/" style="text-decoration:none;text-align:center">Baca lisensi rebrand</a>
+        </div>
+      `;
+
+      // Orders
+      const ordersHtml = orders.length > 0 ? `
+        <button class="vh-orders-toggle" id="vhOrdersToggle" aria-expanded="false">
+          Riwayat pembelian (${orders.length})
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="vh-orders-body" id="vhOrdersBody">
+          ${orders.map(o=>{
+            const badge = o.payment_status==='paid'||o.fulfillment_status==='delivered'?'paid':o.payment_status;
+            return `<div class="vh-order-row">
+              <div class="vh-order-head">
+                <h3>${esc(PACK_LABELS[o.pack_id]||o.pack_id)}</h3>
+                <span class="vh-order-badge ${badge}">${esc(statusLabel(badge))}</span>
+              </div>
+              <div class="vh-order-detail">
+                <span>${formatPrice(o.amount)}</span>
+                <span>${formatDate(o.created_at)}</span>
+                ${o.paid_at?`<span>Dibayar ${formatDate(o.paid_at)}</span>`:''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      ` : '';
+
+      main.innerHTML = `
+        <section class="vh-hero" aria-label="Selamat datang">
+          <h1>Halo, ${esc(first_name)}</h1>
+          <p>Aset produk yang bisa Anda gunakan untuk membangun lini produk digital Anda.</p>
+          <div class="vh-hero-badges">${heroBadgeHtml}</div>
+          <div class="vh-metrics">
+            <div class="vh-metric"><div class="vh-metric-num">${app_ids.length}</div><div class="vh-metric-label">Aplikasi</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${bundles.length}</div><div class="vh-metric-label">Bundle</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${mkCount}</div><div class="vh-metric-label">Mkt Kit</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${has_full_vault?'13':app_ids.length}</div><div class="vh-metric-label">Lisensi</div></div>
+          </div>
+        </section>
+
+        <section class="vh-section" aria-label="Langkah awal">
+          <h2 class="vh-section-title">Mulai dari sini</h2>
+          ${stepsHtml}
+        </section>
+
+        <section class="vh-section" aria-label="Aplikasi Anda">
+          <h2 class="vh-section-title">Aplikasi Anda</h2>
+          <div class="vh-filters" role="tablist" aria-label="Filter bundle">${chipHtml}</div>
+          <div class="vh-app-grid" id="vhAppGrid">${appCardsHtml}</div>
+        </section>
+
+        <section class="vh-section" aria-label="Aset peluncuran">
+          <h2 class="vh-section-title">Aset Peluncuran</h2>
+          <div class="vh-asset-grid">${assetCards}${licenseCard}</div>
+        </section>
+
+        ${ordersHtml ? `<section class="vh-section" aria-label="Riwayat pembelian"><h2 class="vh-section-title">Riwayat Pembelian</h2>${ordersHtml}</section>` : ''}
+      `;
+
+      wireDashboardEvents(apps);
+    }
+
+    function wireDashboardEvents(apps){
+      // Filter chips
+      const chips = main.querySelectorAll('.vh-chip');
+      const grid = document.getElementById('vhAppGrid');
+      chips.forEach(chip=>{
+        chip.addEventListener('click',()=>{
+          chips.forEach(c=>c.classList.remove('active'));
+          chip.classList.add('active');
+          const filter = chip.dataset.filter;
+          grid.querySelectorAll('.vh-app-card').forEach(card=>{
+            if(filter==='all'){card.style.display='';return;}
+            const app = apps.find(a=>a.id===card.dataset.appId);
+            card.style.display = (app&&app.packs.includes(filter)) ? '' : 'none';
+          });
+        });
+      });
+
+      // App cards → drawer
+      grid.querySelectorAll('.vh-app-card').forEach(card=>{
+        const handler = ()=>openDrawer(card.dataset.appId, apps);
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', (e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handler();}});
+      });
+
+      // Launch buttons (stop propagation so card click doesn't fire)
+      grid.querySelectorAll('[data-launch]').forEach(btn=>{
+        btn.addEventListener('click',(e)=>{
+          e.stopPropagation();
+          launchApp(btn.dataset.launch);
+        });
+      });
+
+      // Resource buttons
+      main.querySelectorAll('[data-resource]').forEach(btn=>{
+        btn.addEventListener('click',()=>{
+          const [bundleId, type] = btn.dataset.resource.split(':');
+          launchResource(bundleId, type);
+        });
+      });
+
+      // Orders toggle
+      const ordersToggle = document.getElementById('vhOrdersToggle');
+      const ordersBody = document.getElementById('vhOrdersBody');
+      if(ordersToggle && ordersBody){
+        ordersToggle.addEventListener('click',()=>{
+          const open = ordersToggle.classList.toggle('open');
+          ordersBody.classList.toggle('open');
+          ordersToggle.setAttribute('aria-expanded', open);
+        });
+      }
+    }
+
+    // ── Drawer ──
+    function openDrawer(appId, apps){
+      const app = apps.find(a=>a.id===appId);
+      if(!app) return;
+      const packLabels = app.packs.map(p=>PACK_LABELS[p]||p).join(', ');
+      drawerInner.innerHTML = `
+        <h2>${esc(app.name)}</h2>
+        <p class="vh-drawer-func">${esc(app.function)}</p>
+        <div class="vh-drawer-grid">
+          <div class="vh-drawer-item"><dt>Fungsi</dt><dd>${esc(app.function)}</dd></div>
+          <div class="vh-drawer-item"><dt>Output</dt><dd>${esc(app.output)}</dd></div>
+          <div class="vh-drawer-item"><dt>Contoh nama rebrand</dt><dd>${esc(app.rebrand)}</dd></div>
+          <div class="vh-drawer-item"><dt>Pack terkait</dt><dd>${esc(packLabels)}</dd></div>
+          <div class="vh-drawer-item"><dt>Langkah pertama</dt><dd>${esc(app.prompt)}</dd></div>
+        </div>
+        <button class="vh-drawer-launch" data-launch="${app.id}">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Buka ${esc(app.name)}
+        </button>
+      `;
+      drawerInner.querySelector('[data-launch]').addEventListener('click',()=>launchApp(app.id));
+      drawerOverlay.classList.add('open');
+      drawerClose.focus();
+    }
+
+    function closeDrawer(){
+      drawerOverlay.classList.remove('open');
+    }
+    drawerClose.addEventListener('click', closeDrawer);
+    drawerOverlay.addEventListener('click',(e)=>{if(e.target===drawerOverlay) closeDrawer();});
+    document.addEventListener('keydown',(e)=>{if(e.key==='Escape' && drawerOverlay.classList.contains('open')) closeDrawer();});
+
+    // ── Launch ──
+    function launchApp(appId){
+      // Opens the launch endpoint in a new tab. The server validates
+      // session + entitlement and 302-redirects to the real URL.
+      window.open(`/api/member/launch?app_id=${encodeURIComponent(appId)}`, '_blank', 'noopener');
+    }
+
+    function launchResource(bundleId, type){
+      // Resources are also launched via server-side redirect for consistency.
+      window.open(`/api/member/resource?bundle_id=${encodeURIComponent(bundleId)}&type=${encodeURIComponent(type)}`, '_blank', 'noopener');
     }
 
     async function handleLogout(){
-      try { await fetch('/api/auth/logout', { method: 'POST' }); } catch {}
+      try{await fetch('/api/auth/logout',{method:'POST'});}catch{}
       renderLogin();
     }
 
-    function esc(s){ const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
+    // ── Pending state ──
+    function renderPending(){
+      vaultBadge.style.display = 'none';
+      headerRight.innerHTML = '';
+      main.innerHTML = `
+        <div class="vh-empty">
+          <h3>Pembayaran sedang diproses</h3>
+          <p>Akses Anda sedang diverifikasi. Jika Anda sudah membayar, silakan tunggu beberapa saat lalu muat ulang halaman ini.</p>
+          <button class="vh-empty-btn" onclick="location.reload()">Muat ulang</button>
+        </div>
+      `;
+    }
 
-    // ──── Init: check session ────
+    // ── Init ──
     async function init(){
-      card.innerHTML = '<div class="ac-loader show"><div class="ac-spinner"></div><p style="color:var(--muted);font-size:12px;margin:0">Memeriksa sesi…</p></div>';
+      main.innerHTML = '<div class="vh-loader"><div class="vh-spinner"></div><p>Memeriksa sesi…</p></div>';
       try {
         const res = await fetch('/api/member/me');
         if(res.ok){
           const data = await res.json();
-          renderDashboard(data);
+          if(data.app_ids && data.app_ids.length > 0){
+            renderDashboard(data);
+          } else {
+            renderPending();
+          }
           return;
         }
       } catch {}
