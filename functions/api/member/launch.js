@@ -45,15 +45,11 @@ export async function onRequest(context) {
     });
   }
 
-  // URL resolution strategy:
-  //   Production: ACCESS_RESOURCE_URLS_JSON Secret is the sole source.
-  //   Development: D1 app_links override is checked first (allows localhost),
-  //                then Secret as fallback.
+  // URL resolution: D1 app_links is the primary source. Secret is fallback.
+  // Localhost URLs are only valid in development.
   const isDev = env.ENVIRONMENT === 'development';
-  const url = isDev
-    ? (await getStoredAppLaunchUrl(env.APPVIBE_DB, appId, { allowLocalhost: true })
-       || getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON))
-    : getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
+  const url = await getStoredAppLaunchUrl(env.APPVIBE_DB, appId, { allowLocalhost: isDev })
+    || getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
   if (!url) {
     return errorResponse(request, {
       status: 503,
