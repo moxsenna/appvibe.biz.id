@@ -42,7 +42,7 @@ export async function getStoredAppLaunchUrl(db, appId, { allowLocalhost = false 
   return normalized || null;
 }
 
-export async function listAppLinkSettings(db, rawResourceConfig) {
+export async function listAppLinkSettings(db, rawResourceConfig, { allowLocalhost = false } = {}) {
   const storedRows = db
     ? (await db.prepare('SELECT app_id, launch_url, updated_at FROM app_links ORDER BY app_id').all()).results || []
     : [];
@@ -51,7 +51,7 @@ export async function listAppLinkSettings(db, rawResourceConfig) {
   return ALL_CATALOG_IDS.map((appId) => {
     const meta = APP_CATALOG[appId];
     const stored = storedById.get(appId);
-    const storedUrl = normalizeLaunchUrl(stored?.launch_url, true); // admin: allow localhost
+    const storedUrl = normalizeLaunchUrl(stored?.launch_url, allowLocalhost);
     const fallbackUrl = getAppLaunchUrl(appId, rawResourceConfig);
     const launchUrl = storedUrl || fallbackUrl || '';
     const source = storedUrl ? 'd1' : (fallbackUrl ? 'env' : 'none');
@@ -70,7 +70,7 @@ export async function listAppLinkSettings(db, rawResourceConfig) {
   });
 }
 
-export async function saveAppLaunchUrl(db, appId, rawUrl, rawResourceConfig) {
+export async function saveAppLaunchUrl(db, appId, rawUrl, rawResourceConfig, { allowLocalhost = false } = {}) {
   if (!APP_CATALOG[appId]) {
     return { ok: false, status: 422, error: 'invalid_app', message: 'Aplikasi tidak dikenal.' };
   }
@@ -78,7 +78,7 @@ export async function saveAppLaunchUrl(db, appId, rawUrl, rawResourceConfig) {
     return { ok: false, status: 503, error: 'storage_unavailable', message: 'D1 database tidak tersedia.' };
   }
 
-  const normalizedUrl = normalizeLaunchUrl(rawUrl, true); // admin: allow localhost
+  const normalizedUrl = normalizeLaunchUrl(rawUrl, allowLocalhost);
   if (normalizedUrl === null) {
     return { ok: false, status: 422, error: 'invalid_url', message: 'URL harus memakai https://.' };
   }
@@ -91,6 +91,6 @@ export async function saveAppLaunchUrl(db, appId, rawUrl, rawResourceConfig) {
       .run();
   }
 
-  const apps = await listAppLinkSettings(db, rawResourceConfig);
+  const apps = await listAppLinkSettings(db, rawResourceConfig, { allowLocalhost });
   return { ok: true, app: apps.find((app) => app.app_id === appId) };
 }

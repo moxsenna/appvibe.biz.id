@@ -57,8 +57,11 @@ export async function onRequest(context) {
   }
 
   try {
+    const isDev = env.ENVIRONMENT === 'development';
+    const opts = { allowLocalhost: isDev };
+
     if (request.method === 'GET') {
-      const apps = await listAppLinkSettings(env.APPVIBE_DB, env.ACCESS_RESOURCE_URLS_JSON);
+      const apps = await listAppLinkSettings(env.APPVIBE_DB, env.ACCESS_RESOURCE_URLS_JSON, opts);
       return json({ total: apps.length, apps }, 200, cors);
     }
 
@@ -67,7 +70,8 @@ export async function onRequest(context) {
       env.APPVIBE_DB,
       payload.app_id,
       payload.launch_url,
-      env.ACCESS_RESOURCE_URLS_JSON
+      env.ACCESS_RESOURCE_URLS_JSON,
+      opts,
     );
 
     if (!result.ok) {
