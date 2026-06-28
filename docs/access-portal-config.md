@@ -17,7 +17,11 @@ App launch URLs and resource URLs are **never** in the frontend source. They are
 
 ### `ACCESS_RESOURCE_URLS_JSON` (required for app launch)
 
-A JSON string containing URLs for apps and bundle resources. Set in Cloudflare Pages → Settings → Environment variables.
+A JSON string containing URLs for apps and bundle resources. **Store as a Cloudflare Secret** (not a plain environment variable) so the URLs are encrypted and cannot be viewed after saving.
+
+Set via: `wrangler pages secret put ACCESS_RESOURCE_URLS_JSON`
+
+Or in Cloudflare Dashboard → Pages → Settings → Environment variables → **Encrypt**.
 
 **Structure:**
 

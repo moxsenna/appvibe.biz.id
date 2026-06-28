@@ -5,24 +5,24 @@
  * the bundle resource URL (marketing kit or guide) from
  * ACCESS_RESOURCE_URLS_JSON.
  *
- * - Full vault buyers can access resources for all bundles.
+ * - Full vault buyers can access resources for all four canonical bundles.
  * - Bundle buyers can only access resources for their active bundles.
- * - Returns 503 if the resource URL is not configured.
+ * - Returns branded HTML error pages for browser navigation.
+ * - Returns JSON errors for API callers (fetch).
  */
 import { resolveSession } from '../../lib/session.js';
 import { getBundleResources } from '../../lib/access-resources.js';
 import { isFullVault } from '../../lib/entitlements.js';
+import { errorResponse } from '../../lib/error-page.js';
 
 const VALID_TYPES = ['marketing_kit', 'guide'];
+const CANONICAL_BUNDLES = ['advertiser', 'commerce', 'creator', 'brand_launch'];
 
 export async function onRequest(context) {
   const { request, env } = context;
 
   if (request.method !== 'GET') {
-    return new Response(JSON.stringify({ error: 'method_not_allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return errorResponse(request, { status: 405, error: 'method_not_allowed', message: 'Metode tidak diizinkan.' });
   }
 
   const url = new URL(request.url);
@@ -30,12 +30,17 @@ export async function onRequest(context) {
   const resourceType = url.searchParams.get('type');
 
   if (!bundleId || !resourceType || !VALID_TYPES.includes(resourceType)) {
-    return new Response(JSON.stringify({
-      error: 'missing_params',
+    return errorResponse(request, {
+      status: 400, error: 'missing_params',
       message: 'Parameter bundle_id dan type (marketing_kit|guide) diperlukan.',
-    }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Whitelist: only the four canonical bundles are valid targets.
+  if (!CANONICAL_BUNDLES.includes(bundleId)) {
+    return errorResponse(request, {
+      status: 400, error: 'invalid_bundle',
+      message: 'Bundle ID tidak valid.',
     });
   }
 
@@ -45,10 +50,7 @@ export async function onRequest(context) {
     pepper: env.AUTH_TOKEN_PEPPER,
   });
   if (!session.ok) {
-    return new Response(JSON.stringify({ error: session.error, message: session.message }), {
-      status: session.status,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return errorResponse(request, { status: session.status, error: session.error, message: session.message });
   }
 
   // Full vault buyers can access any bundle's resources.
@@ -58,12 +60,9 @@ export async function onRequest(context) {
       .filter((e) => e.status === 'active' && e.resource_type === 'bundle')
       .map((e) => e.resource_id);
     if (!activeBundleIds.includes(bundleId)) {
-      return new Response(JSON.stringify({
-        error: 'forbidden',
+      return errorResponse(request, {
+        status: 403, error: 'forbidden',
         message: 'Anda tidak memiliki akses ke bundle ini.',
-      }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' },
       });
     }
   }
@@ -73,12 +72,9 @@ export async function onRequest(context) {
 
   if (!targetUrl) {
     const typeLabel = resourceType === 'marketing_kit' ? 'Marketing kit' : 'Panduan mulai';
-    return new Response(JSON.stringify({
-      error: 'resource_not_configured',
+    return errorResponse(request, {
+      status: 503, error: 'resource_not_configured',
       message: `${typeLabel} untuk bundle ini belum tersedia. Hubungi support.`,
-    }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' },
     });
   }
 
