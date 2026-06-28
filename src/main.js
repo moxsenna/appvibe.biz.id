@@ -4,6 +4,7 @@ import { initFirstProduct } from './scripts/first-product.js';
 import { initMobileNav } from './scripts/mobile-nav.js';
 import { initTracking } from './scripts/tracking.js';
 import { initPricing } from './scripts/pricing.js';
+import { initShowcase3D } from './scripts/showcase-3d.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   initTracking();
@@ -11,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initFirstProduct();
   initMobileNav();
   initPricing();
+  initShowcase3D();
 
   document.querySelectorAll('[data-scroll-to]').forEach(btn => {
     btn.addEventListener('click', () => {

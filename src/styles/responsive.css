@@ -139,8 +139,8 @@
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
-  .gallery-track,.showcase-track{animation-play-state:paused!important}
-  .app-card,.preview-card,.btn,.showcase-item{transition:none!important}
+  .gallery-track{animation-play-state:paused!important}
+  .app-card,.preview-card,.btn{transition:none!important}
 }
 @media (min-width:761px){
   .mobile-nav{display:none!important}
