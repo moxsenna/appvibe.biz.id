@@ -42,8 +42,9 @@ function build(container) {
 
   function getRadius() {
     const w = container.clientWidth;
-    if (w < 400) return 200;
-    if (w < 600) return 280;
+    if (w < 360) return 240;
+    if (w < 400) return 270;
+    if (w < 600) return 300;
     if (w < 800) return 360;
     return 420;
   }

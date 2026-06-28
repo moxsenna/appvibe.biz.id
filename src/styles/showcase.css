@@ -71,11 +71,16 @@
   .showcase-head{padding:0 16px}
   .showcase-head h2{font-size:clamp(18px,5vw,24px)}
   .showcase-canvas{height:clamp(220px,45vw,340px);perspective:900px}
-  .showcase-ring-card{width:150px;height:225px}
-  .showcase-ring{width:150px;height:225px}
+  .showcase-ring-card{width:140px;height:210px}
+  .showcase-ring{width:140px;height:210px}
 }
 @media(max-width:480px){
   .showcase-canvas{height:clamp(200px,50vw,280px);perspective:700px}
   .showcase-ring-card{width:120px;height:180px}
   .showcase-ring{width:120px;height:180px}
+}
+@media(max-width:380px){
+  .showcase-canvas{perspective:600px}
+  .showcase-ring-card{width:100px;height:150px;border-radius:10px}
+  .showcase-ring{width:100px;height:150px}
 }
