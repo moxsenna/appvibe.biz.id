@@ -96,8 +96,8 @@ test('launch: redirects to app URL for authorized app', async () => {
   assert.equal(res.headers.get('Referrer-Policy'), 'no-referrer');
 });
 
-test('launch: uses admin-configured D1 URL before env fallback', async () => {
-  const env = await makeEnv();
+test('launch: uses admin D1 URL when ENVIRONMENT=development', async () => {
+  const env = await makeEnv({ ENVIRONMENT: 'development' });
   await env.APPVIBE_DB
     .prepare('INSERT INTO app_links (app_id, launch_url, updated_at) VALUES (?, ?, ?)')
     .bind('adsprint', 'https://admin-link.example.com', new Date().toISOString())
@@ -112,6 +112,25 @@ test('launch: uses admin-configured D1 URL before env fallback', async () => {
   const res = await onRequest({ request: req, env, waitUntil() {} });
   assert.equal(res.status, 302);
   assert.equal(res.headers.get('Location'), 'https://admin-link.example.com');
+});
+
+test('launch: production ignores D1 override, uses Secret only', async () => {
+  const env = await makeEnv(); // ENVIRONMENT not set → production
+  await env.APPVIBE_DB
+    .prepare('INSERT INTO app_links (app_id, launch_url, updated_at) VALUES (?, ?, ?)')
+    .bind('adsprint', 'https://admin-link.example.com', new Date().toISOString())
+    .run();
+  const member = await seedPaidMember(env, { pack_id: 'advertiser' });
+  const cookie = await getAuthCookie(env, member);
+
+  const req = new Request('https://appvibe.biz.id/api/member/launch?app_id=adsprint', {
+    method: 'GET',
+    headers: { Cookie: `av_session=${cookie}` },
+  });
+  const res = await onRequest({ request: req, env, waitUntil() {} });
+  assert.equal(res.status, 302);
+  // In production, Secret URL wins, not the D1 override.
+  assert.equal(res.headers.get('Location'), 'https://ads.example.com');
 });
 
 test('launch: rejects app not in buyer entitlement', async () => {

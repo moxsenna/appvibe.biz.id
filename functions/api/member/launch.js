@@ -45,9 +45,15 @@ export async function onRequest(context) {
     });
   }
 
-  // Resolve URL: admin D1 settings first, then env fallback.
-  const url = await getStoredAppLaunchUrl(env.APPVIBE_DB, appId)
-    || getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
+  // URL resolution strategy:
+  //   Production: ACCESS_RESOURCE_URLS_JSON Secret is the sole source.
+  //   Development: D1 app_links override is checked first (allows localhost),
+  //                then Secret as fallback.
+  const isDev = env.ENVIRONMENT === 'development';
+  const url = isDev
+    ? (await getStoredAppLaunchUrl(env.APPVIBE_DB, appId, { allowLocalhost: true })
+       || getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON))
+    : getAppLaunchUrl(appId, env.ACCESS_RESOURCE_URLS_JSON);
   if (!url) {
     return errorResponse(request, {
       status: 503,
