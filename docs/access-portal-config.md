@@ -125,3 +125,6 @@ Validates session + entitlement → 302 redirect to resource URL.
 - The `/api/member/launch` endpoint returns a 302 redirect, not a JSON payload with URLs.
 - Session + entitlement are validated on every launch/resource request.
 - `Referrer-Policy: no-referrer` prevents URL leakage to third parties.
+- **Production:** `ACCESS_RESOURCE_URLS_JSON` (Cloudflare Secret) is the sole source for app URLs. The D1 `app_links` table is ignored in production.
+- **Development:** When `ENVIRONMENT=development`, the D1 `app_links` table is checked first and allows `http://localhost` / `http://127.0.0.1` URLs. This is intended for local testing only — the guard is explicit (`env.ENVIRONMENT === 'development'`) and cannot be triggered in production.
+- If you need to override an app URL temporarily in production, update the Secret. Do not insert rows into `app_links` expecting them to take effect in production.
