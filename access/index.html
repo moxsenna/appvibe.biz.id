@@ -91,6 +91,10 @@
     .vh-app-cta:hover{background:var(--blue-hover)}
     .vh-app-cta:disabled,.vh-app-cta.vh-disabled{background:var(--line);color:var(--muted);cursor:not-allowed}
     .vh-app-cta svg{width:14px;height:14px;flex:none}
+    .vh-app-actions{display:flex;flex-direction:column;gap:6px}
+    .vh-app-detail-btn{min-height:36px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 12px;background:var(--surface);font:600 11px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);transition:border-color .14s,color .14s;width:100%}
+    .vh-app-detail-btn:hover{border-color:var(--blue);color:var(--blue)}
+    .vh-app-detail-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
     /* ─── Detail Drawer (mobile bottom sheet) ─── */
     .vh-drawer-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(5,11,29,.45);backdrop-filter:blur(4px)}
@@ -354,15 +358,18 @@
 
       // App grid
       const appCardsHtml = apps.map(app=>`
-        <article class="vh-app-card" tabindex="0" role="button" aria-label="Detail ${esc(app.name)}" data-app-id="${app.id}">
+        <article class="vh-app-card" data-app-id="${app.id}">
           <div class="vh-app-icon" style="background:${esc(app.accent)}">${esc(app.label)}</div>
           <div class="vh-app-body">
             <div class="vh-app-name">${esc(app.name)}</div>
             <div class="vh-app-func">${esc(app.function)}</div>
-            <button class="vh-app-cta" data-launch="${app.id}" onclick="event.stopPropagation()">
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Buka aplikasi
-            </button>
+            <div class="vh-app-actions">
+              <button class="vh-app-cta" data-launch="${app.id}">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Buka aplikasi
+              </button>
+              <button class="vh-app-detail-btn" data-detail="${app.id}">Detail</button>
+            </div>
           </div>
         </article>
       `).join('');
@@ -426,7 +433,7 @@
             <div class="vh-metric"><div class="vh-metric-num">${app_ids.length}</div><div class="vh-metric-label">Aplikasi</div></div>
             <div class="vh-metric"><div class="vh-metric-num">${bundles.length}</div><div class="vh-metric-label">Bundle</div></div>
             <div class="vh-metric"><div class="vh-metric-num">${mkCount}</div><div class="vh-metric-label">Mkt Kit</div></div>
-            <div class="vh-metric"><div class="vh-metric-num">${has_full_vault?'13':app_ids.length}</div><div class="vh-metric-label">Lisensi</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${has_full_vault?'Aktif':bundle_ids.length + ' aktif'}</div><div class="vh-metric-label">Lisensi</div></div>
           </div>
         </section>
 
@@ -469,19 +476,14 @@
         });
       });
 
-      // App cards → drawer
-      grid.querySelectorAll('.vh-app-card').forEach(card=>{
-        const handler = ()=>openDrawer(card.dataset.appId, apps);
-        card.addEventListener('click', handler);
-        card.addEventListener('keydown', (e)=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();handler();}});
+      // Detail buttons → drawer
+      grid.querySelectorAll('[data-detail]').forEach(btn=>{
+        btn.addEventListener('click',()=>openDrawer(btn.dataset.detail, apps));
       });
 
-      // Launch buttons (stop propagation so card click doesn't fire)
+      // Launch buttons
       grid.querySelectorAll('[data-launch]').forEach(btn=>{
-        btn.addEventListener('click',(e)=>{
-          e.stopPropagation();
-          launchApp(btn.dataset.launch);
-        });
+        btn.addEventListener('click',()=>launchApp(btn.dataset.launch));
       });
 
       // Resource buttons
@@ -505,12 +507,16 @@
     }
 
     // ── Drawer ──
+    let drawerOriginator = null;
+
     function openDrawer(appId, apps){
       const app = apps.find(a=>a.id===appId);
       if(!app) return;
+      // Remember which button opened the drawer for return-focus.
+      drawerOriginator = document.querySelector(`[data-detail="${appId}"]`);
       const packLabels = app.packs.map(p=>PACK_LABELS[p]||p).join(', ');
       drawerInner.innerHTML = `
-        <h2>${esc(app.name)}</h2>
+        <h2 tabindex="-1">${esc(app.name)}</h2>
         <p class="vh-drawer-func">${esc(app.function)}</p>
         <div class="vh-drawer-grid">
           <div class="vh-drawer-item"><dt>Fungsi</dt><dd>${esc(app.function)}</dd></div>
@@ -526,15 +532,30 @@
       `;
       drawerInner.querySelector('[data-launch]').addEventListener('click',()=>launchApp(app.id));
       drawerOverlay.classList.add('open');
-      drawerClose.focus();
+      // Focus the heading (tabindex=-1) so screen readers announce the dialog.
+      drawerInner.querySelector('h2').focus();
     }
 
     function closeDrawer(){
       drawerOverlay.classList.remove('open');
+      // Return focus to the button that opened the drawer.
+      if(drawerOriginator){ drawerOriginator.focus(); drawerOriginator = null; }
     }
     drawerClose.addEventListener('click', closeDrawer);
     drawerOverlay.addEventListener('click',(e)=>{if(e.target===drawerOverlay) closeDrawer();});
-    document.addEventListener('keydown',(e)=>{if(e.key==='Escape' && drawerOverlay.classList.contains('open')) closeDrawer();});
+    document.addEventListener('keydown',(e)=>{
+      if(e.key==='Escape' && drawerOverlay.classList.contains('open')){ closeDrawer(); return; }
+      // Focus trap: Tab cycles within the drawer when open.
+      if(e.key==='Tab' && drawerOverlay.classList.contains('open')){
+        const drawer = drawerOverlay.querySelector('.vh-drawer');
+        const focusable = drawer.querySelectorAll('button, [tabindex]:not([tabindex="-1"]), a[href]');
+        if(focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+      }
+    });
 
     // ── Launch ──
     function launchApp(appId){

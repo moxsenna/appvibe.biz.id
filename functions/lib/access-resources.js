@@ -40,10 +40,26 @@ export function parseResourceConfig(raw) {
  * @param {string} rawJson  ACCESS_RESOURCE_URLS_JSON
  * @returns {string|null}
  */
+/**
+ * Validate that a value is an https:// URL. Returns the URL string if
+ * valid, null otherwise. Uses new URL() parsing — rejects malformed
+ * strings, http://, and anything that isn't https: protocol.
+ * @param {string} val
+ * @returns {string|null}
+ */
+function strictHttps(val) {
+  if (!val || typeof val !== 'string') return null;
+  try {
+    const u = new URL(val);
+    return u.protocol === 'https:' ? val : null;
+  } catch {
+    return null;
+  }
+}
+
 export function getAppLaunchUrl(appId, rawJson) {
   const cfg = parseResourceConfig(rawJson);
-  const url = cfg.apps[appId];
-  return (url && typeof url === 'string' && url.startsWith('http')) ? url : null;
+  return strictHttps(cfg.apps[appId]);
 }
 
 /**
@@ -57,8 +73,8 @@ export function getBundleResources(bundleId, rawJson) {
   const cfg = parseResourceConfig(rawJson);
   const res = cfg.resources[bundleId] || {};
   return {
-    marketing_kit: (res.marketing_kit && res.marketing_kit.startsWith('http')) ? res.marketing_kit : null,
-    guide: (res.guide && res.guide.startsWith('http')) ? res.guide : null,
+    marketing_kit: strictHttps(res.marketing_kit),
+    guide: strictHttps(res.guide),
   };
 }
 
@@ -76,7 +92,7 @@ export function getResourceAvailability(bundleIds, hasFullVault, rawJson) {
   const cfg = parseResourceConfig(rawJson);
   const apps = {};
   for (const [id, url] of Object.entries(cfg.apps)) {
-    apps[id] = !!(url && typeof url === 'string' && url.startsWith('http'));
+    apps[id] = !!strictHttps(url);
   }
   const resources = {};
   const relevantBundles = hasFullVault
@@ -85,8 +101,8 @@ export function getResourceAvailability(bundleIds, hasFullVault, rawJson) {
   for (const bid of relevantBundles) {
     const r = cfg.resources[bid] || {};
     resources[bid] = {
-      marketing_kit: !!(r.marketing_kit && r.marketing_kit.startsWith('http')),
-      guide: !!(r.guide && r.guide.startsWith('http')),
+      marketing_kit: !!strictHttps(r.marketing_kit),
+      guide: !!strictHttps(r.guide),
     };
   }
   return { apps, resources };
