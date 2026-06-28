@@ -102,10 +102,14 @@
   .small-included{padding:20px}
   .small-included h4{font-size:20px}
   .small-included p{font-size:11px}
+  .license-grid{grid-template-columns:1fr;gap:12px}
+  .license-allowed,.license-forbidden{padding:16px 14px}
+  .license-point{font-size:10.5px;padding:10px 11px}
+  .license-point i{width:18px;height:18px;font-size:10px}
+  .license-allowed h3,.license-forbidden h3{font-size:16px;margin-bottom:12px}
   .license-note{grid-template-columns:1fr;padding:22px;gap:18px}
   .license-note h3{font-size:28px;letter-spacing:-1px}
   .license-note p{font-size:12px}
-  .license-point{font-size:11px;padding:11px}
   .cta{margin-top:60px;padding:32px 22px;border-radius:24px}
   .cta h2{font-size:36px;letter-spacing:-1.4px;line-height:1.02}
   .cta p{font-size:13px;margin-top:14px}
