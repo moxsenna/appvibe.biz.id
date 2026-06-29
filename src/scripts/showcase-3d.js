@@ -41,7 +41,9 @@ function build(container) {
   const angleStep = 360 / IMAGE_COUNT;
 
   function getRadius() {
-    const w = container.clientWidth;
+    // Use cached width to avoid forced reflow
+    const w = container._cachedWidth || container.clientWidth;
+    container._cachedWidth = w;
     if (w < 360) return 240;
     if (w < 400) return 270;
     if (w < 600) return 300;
@@ -115,9 +117,14 @@ function build(container) {
 
   container.style.cursor = 'grab';
 
-  // Resize
-  window.addEventListener('resize', () => {
-    radius = getRadius();
-    applyTransforms(radius);
+  // Resize - use ResizeObserver to avoid forced reflow
+  const resizeObserver = new ResizeObserver((entries) => {
+    const entry = entries[0];
+    if (entry) {
+      container._cachedWidth = entry.contentRect.width;
+      radius = getRadius();
+      applyTransforms(radius);
+    }
   });
+  resizeObserver.observe(container);
 }
