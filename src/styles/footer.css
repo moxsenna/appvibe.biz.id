@@ -2,8 +2,8 @@
 .appvibe-footer {
   margin-top: 60px;
   padding-top: 40px;
-  border-top: 1px solid var(--border-color, rgba(0,0,0,0.1));
-  color: var(--muted, #767a81);
+  border-top: 1px solid var(--line, rgba(0,0,0,0.1));
+  color: var(--muted, #8A96AD);
   font-size: 13px;
   line-height: 1.6;
 }
@@ -16,7 +16,7 @@
   gap: 32px;
   margin-bottom: 40px;
   padding-bottom: 32px;
-  border-bottom: 1px dashed var(--border-color, rgba(0,0,0,0.1));
+  border-bottom: 1px dashed var(--line, rgba(0,0,0,0.1));
 }
 @media(min-width: 640px) {
   .appvibe-footer-grid {
@@ -28,7 +28,7 @@
   display: block;
   font-size: 14px;
   font-weight: 700;
-  color: var(--ink, #0d0f13);
+  color: var(--ink, #10203F);
   margin-bottom: 12px;
   font-family: "Space Grotesk", "Playfair Display", Georgia, serif;
 }
@@ -38,7 +38,7 @@
   font-size: 13px;
 }
 .appvibe-footer a {
-  color: var(--ink, #0d0f13);
+  color: var(--ink, #10203F);
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s ease;
@@ -66,7 +66,7 @@
 }
 .footer-brand .foot-brand {
   font-weight: 800;
-  color: var(--ink, #0d0f13);
+  color: var(--ink, #10203F);
 }
 .footer-links a {
   color: inherit;
@@ -75,5 +75,24 @@
   text-underline-offset: 3px;
 }
 .footer-links a:hover {
-  color: var(--ink, #0d0f13);
+  color: var(--ink, #10203F);
+}
+
+.appvibe-footer {
+  width: 100%;
+}
+.appvibe-footer.wrap {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.appvibe-footer strong {
+  font-family: "Space Grotesk", "Manrope", system-ui, sans-serif;
+  letter-spacing: -0.3px;
+}
+.footer-col-about p, .footer-col-contact p {
+  line-height: 1.8;
+  color: var(--muted);
+}
+.footer-col-contact a {
+  color: var(--ink);
 }
