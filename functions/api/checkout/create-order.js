@@ -114,6 +114,9 @@ export async function onRequest(context) {
   const phoneInput = String(body.phone || '').trim();
   const packId = String(body.pack_id || '').trim();
   const turnstileToken = String(body.turnstile_token || '').trim();
+  const lpVariant = pickMeta(body, 'lp_variant');
+  const lpPlan = pickMeta(body, 'lp_plan');
+  const lpPack = pickMeta(body, 'lp_pack');
 
   // Validate pack
   if (!packId || !VALID_PACK_IDS.includes(packId)) {
@@ -220,6 +223,9 @@ export async function onRequest(context) {
         name,
         phone: phoneE164,
         source: 'appvibe.biz.id_checkout',
+        lp_variant: lpVariant,
+        lp_plan: lpPlan,
+        lp_pack: lpPack,
       },
     };
 
@@ -277,6 +283,9 @@ export async function onRequest(context) {
       purchase_type: purchaseTypeForPack(packId),
       amount: pack.amount,
       currency: pack.currency,
+      lp_variant: lpVariant || undefined,
+      lp_plan: lpPlan || undefined,
+      lp_pack: lpPack || undefined,
     });
 
     if (env.LEAD_WEBHOOK_URL) {
@@ -300,6 +309,9 @@ export async function onRequest(context) {
           referrer: pickMeta(body, 'referrer'),
           landing_url: pickMeta(body, 'landing_url'),
           device_type: pickMeta(body, 'device_type'),
+          lp_variant: lpVariant,
+          lp_plan: lpPlan,
+          lp_pack: lpPack,
           captured_at: now,
           order_id: paycoreJson.order_id || '',
           order_status: paycoreJson.payment_status || 'pending',

@@ -9,6 +9,11 @@ export function initTracking() {
     term: params.get('utm_term') || '',
   };
 
+  // A/B test variant tracking
+  const lpVariant = params.get('variant') || '';
+  const lpPlan = params.get('plan') || '';
+  const lpPack = params.get('pack') || '';
+
   try {
     sessionStorage.setItem('utm_params', JSON.stringify(utm));
     Object.entries({
@@ -20,6 +25,10 @@ export function initTracking() {
     }).forEach(([key, value]) => {
       if (value) sessionStorage.setItem(key, value);
     });
+    // Persist A/B variant info across navigation
+    if (lpVariant) sessionStorage.setItem('lp_variant', lpVariant);
+    if (lpPlan) sessionStorage.setItem('lp_plan', lpPlan);
+    if (lpPack) sessionStorage.setItem('lp_pack', lpPack);
     sessionStorage.setItem('referrer', document.referrer || '');
     sessionStorage.setItem('landing_url', window.location.href);
   } catch (e) { /* ignore */ }
@@ -113,5 +122,8 @@ export function getCheckoutAttribution() {
     referrer: sessionMeta.referrer || '',
     landing_url: sessionMeta.landing_url || '',
     device_type: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop',
+    lp_variant: sessionStorage.getItem('lp_variant') || '',
+    lp_plan: sessionStorage.getItem('lp_plan') || '',
+    lp_pack: sessionStorage.getItem('lp_pack') || '',
   };
 }

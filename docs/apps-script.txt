@@ -1,0 +1,115 @@
+/**
+ * AppVibe — Webhook untuk Lead & Fulfillment Data
+ * 
+ * Fungsi:
+ * - Auto-create headers (20 kolom) jika sheet kosong
+ * - Append row baru untuk lead/order baru
+ * - Update Payment Status + Fulfilled At berdasarkan Order ID
+ *
+ * Cara deploy:
+ * 1. Buka script.google.com
+ * 2. Paste kode ini ke editor
+ * 3. Simpan (Ctrl+S)
+ * 4. Run → doGet → izinkan akses (sekali saja)
+ * 5. Deploy → New deployment → Web app
+ *    - Execute as: Me
+ *    - Who has access: Anyone
+ * 6. Copy URL, kirim ke saya
+ */
+
+var HEADERS = [
+  'Timestamp', 'Nama', 'Email', 'WhatsApp', 'Niche / Pack',
+  'Model Penggunaan', 'Selected Pack', 'Selected App',
+  'Form Source', 'UTM Source', 'UTM Medium', 'UTM Campaign',
+  'UTM Content', 'UTM Term', 'Referrer', 'Landing URL',
+  'Device Type', 'Captured At', 'Order ID', 'Payment Status', 'Fulfilled At'
+];
+
+function doGet() {
+  return ContentService.createTextOutput(
+    JSON.stringify({ status: 'ok', message: 'Script is running' })
+  ).setMimeType(ContentService.MimeType.JSON);
+}
+
+function doPost(e) {
+  try {
+    var data = JSON.parse(e.postData.contents);
+    var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+    var lastRow = sheet.getLastRow();
+
+    // Auto-create headers if sheet is empty
+    if (lastRow === 0) {
+      sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+    }
+
+    // Read existing headers
+    var savedHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+
+    // Helper: get column number (1-based) from header name
+    function getCol(name) {
+      var idx = savedHeaders.indexOf(name);
+      return idx >= 0 ? idx + 1 : null;
+    }
+
+    // === FULFILLMENT UPDATE ===
+    // If payload has order_id + order_status, try to update existing row
+    if (data.order_id && data.order_status) {
+      var orderCol = getCol('Order ID');
+      var payCol = getCol('Payment Status');
+      var fulCol = getCol('Fulfilled At');
+
+      if (orderCol && payCol) {
+        var dataRows = sheet.getLastRow() - 1;
+        if (dataRows > 0) {
+          var existingOrders = sheet.getRange(2, orderCol, dataRows, 1).getValues();
+          for (var i = 0; i < existingOrders.length; i++) {
+            if (String(existingOrders[i][0]) === String(data.order_id)) {
+              var targetRow = i + 2;
+              sheet.getRange(targetRow, payCol).setValue(data.order_status);
+              if (data.fulfilled_at && fulCol) {
+                sheet.getRange(targetRow, fulCol).setValue(data.fulfilled_at);
+              }
+              return ContentService.createTextOutput(
+                JSON.stringify({ success: true, action: 'updated' })
+              ).setMimeType(ContentService.MimeType.JSON);
+            }
+          }
+        }
+      }
+    }
+
+    // === APPEND NEW ROW ===
+    sheet.appendRow([
+      new Date().toISOString(),            // Timestamp
+      data.name || '',                     // Nama
+      data.email || '',                    // Email
+      data.whatsapp || '',                 // WhatsApp
+      data.niche || '',                    // Niche / Pack
+      data.model_penggunaan || '',         // Model Penggunaan
+      data.selected_pack || '',            // Selected Pack
+      data.selected_app || '',             // Selected App
+      data.form_open_source || '',         // Form Source
+      data.utm_source || '',               // UTM Source
+      data.utm_medium || '',               // UTM Medium
+      data.utm_campaign || '',             // UTM Campaign
+      data.utm_content || '',              // UTM Content
+      data.utm_term || '',                 // UTM Term
+      data.referrer || '',                 // Referrer
+      data.landing_url || '',              // Landing URL
+      data.device_type || '',              // Device Type
+      data.captured_at || '',              // Captured At
+      data.order_id || '',                 // Order ID
+      data.order_status || 'pending',      // Payment Status
+      ''                                   // Fulfilled At (placeholder)
+    ]);
+
+    return ContentService.createTextOutput(
+      JSON.stringify({ success: true, action: 'created' })
+    ).setMimeType(ContentService.MimeType.JSON);
+
+  } catch (err) {
+    return ContentService.createTextOutput(
+      JSON.stringify({ success: false, error: err.message })
+    ).setMimeType(ContentService.MimeType.JSON);
+  }
+}

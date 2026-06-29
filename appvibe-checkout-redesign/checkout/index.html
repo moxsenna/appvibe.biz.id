@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <title>Checkout Aman — AppVibe</title>
+  <meta name="description" content="Selesaikan pembelian AppVibe White-Label AI App Vault Anda." />
+  <link rel="canonical" href="https://appvibe.biz.id/checkout/" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/checkout.css" />
+</head>
+<body>
+  <header class="co-header">
+    <div class="co-header-inner">
+      <a class="co-header-brand" href="/" aria-label="Kembali ke beranda AppVibe">
+        <img src="/logo-dark.webp" alt="AppVibe" width="160" height="41" />
+      </a>
+      <div class="co-header-meta" aria-label="Status checkout">
+        <span class="co-secure-chip"><span aria-hidden="true">⌁</span> Checkout aman</span>
+        <a class="co-header-back" href="/#harga">← Kembali</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="co-wrapper" id="coMain">
+    <div id="coCheckoutContainer">
+      <!-- Rendered by checkout-ui.js -->
+    </div>
+  </main>
+
+  <script type="module">
+    import { initCheckoutUI } from '../src/scripts/checkout-ui.js';
+    import { checkoutStore } from '../src/scripts/checkout-store.js';
+    import { initTracking } from '../src/scripts/tracking.js';
+    import { validateOffer } from '../src/scripts/data/offer-catalog.js';
+
+    // Keeps the checkout-page event contract available even when the user
+    // lands here directly instead of coming from the landing page.
+    initTracking();
+
+    const container = document.getElementById('coCheckoutContainer');
+    if (!container) throw new Error('Checkout container not found');
+
+    initCheckoutUI({ container });
+
+    const params = new URLSearchParams(window.location.search);
+    const planId = params.get('plan');
+    const packId = params.get('pack');
+    const orderId = params.get('order_id');
+
+    // Return states are handled by initCheckoutUI. Do not replace them with
+    // an offer-selection state when Duitku sends the visitor back here.
+    if (!orderId && planId === 'full-vault') {
+      checkoutStore.selectPack('vault_full');
+    } else if (!orderId && planId === 'single-pack' && packId) {
+      const result = validateOffer(planId, packId);
+      if (result.valid) checkoutStore.selectPack(packId);
+    }
+  </script>
+</body>
+</html>

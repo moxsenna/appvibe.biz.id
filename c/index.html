@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="AppVibe — vault aplikasi AI yang dapat Anda rename, rebrand, jual sebagai source code, bonus, bundle, atau lead magnet milik brand Anda." />
+  <meta name="robots" content="noindex,nofollow" />
+  <meta name="theme-color" content="#120e2b" />
+  <title>AppVibe — Ambil. Ganti Nama. Jual sebagai Produk Anda.</title>
+  <link rel="canonical" href="https://appvibe.biz.id/c" />
+  <meta property="og:title" content="AppVibe — Ambil. Ganti Nama. Jual sebagai Produk Anda." />
+  <meta property="og:description" content="AppVibe — vault aplikasi AI yang dapat Anda rename, rebrand, jual sebagai source code, bonus, bundle, atau lead magnet milik brand Anda." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #17112f;
+      --ink-2: #29204d;
+      --muted: #736e89;
+      --paper: #fbf9ff;
+      --paper-2: #f3eeff;
+      --surface: #ffffff;
+      --line: #e3dafa;
+      --line-strong: #cabcf5;
+      --purple: #7448ff;
+      --purple-dark: #4f23db;
+      --violet: #a972ff;
+      --lime: #d8ff60;
+      --lime-2: #efffb3;
+      --orange: #ff8257;
+      --orange-soft: #fff0eb;
+      --mint: #d7fff5;
+      --success: #18715a;
+      --shadow: 0 28px 70px rgba(51, 29, 115, .14);
+      --shadow-soft: 0 12px 30px rgba(51, 29, 115, .08);
+      --r-xl: 34px;
+      --r-lg: 24px;
+      --r-md: 17px;
+      --r-sm: 13px;
+      --container: 1180px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-width: 320px;
+      margin: 0;
+      overflow-x: hidden;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 5% 1%, rgba(169,114,255,.15), transparent 23%),
+        radial-gradient(circle at 96% 7%, rgba(216,255,96,.17), transparent 19%),
+        var(--paper);
+      font-family: Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: .42;
+      background-image:
+        linear-gradient(rgba(116,72,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(116,72,255,.055) 1px, transparent 1px);
+      background-size: 30px 30px;
+      mask-image: linear-gradient(to bottom, black 0%, transparent 88%);
+    }
+    a { color: inherit; text-decoration: none; }
+    button, a { font: inherit; }
+    button { cursor: pointer; }
+    button:focus-visible, a:focus-visible, summary:focus-visible { outline: 3px solid rgba(216,255,96,.9); outline-offset: 3px; }
+    h1,h2,h3,p { margin-top: 0; }
+    h1,h2,h3 { font-family: "Plus Jakarta Sans", Manrope, sans-serif; }
+    .container { width: min(calc(100% - 40px), var(--container)); margin: 0 auto; }
+    .section { padding: 96px 0; }
+    .section-tight { padding: 72px 0; }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--purple-dark);
+      font: 800 10px/1.2 "DM Mono", monospace;
+      letter-spacing: 1.25px;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 9px; height: 9px; border-radius: 2px; background: var(--lime); box-shadow: 0 0 0 4px rgba(216,255,96,.28); }
+    .eyebrow.light { color: #e9e1ff; }
+    .eyebrow.light::before { background: var(--lime); }
+    .eyebrow.orange { color: #b84723; }
+    .eyebrow.orange::before { background: var(--orange); box-shadow: 0 0 0 4px rgba(255,130,87,.16); }
+
+    .btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 15px;
+      padding: 14px 18px;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary { color: #1d1730; background: var(--lime); box-shadow: 0 6px 0 #94be1d, 0 14px 25px rgba(216,255,96,.2); }
+    .btn-primary:hover { box-shadow: 0 8px 0 #94be1d, 0 18px 30px rgba(216,255,96,.25); }
+    .btn-dark { color: white; background: var(--ink); box-shadow: 0 6px 0 #07040f, 0 13px 24px rgba(23,17,47,.17); }
+    .btn-dark:hover { box-shadow: 0 8px 0 #07040f, 0 18px 29px rgba(23,17,47,.2); }
+    .btn-secondary { color: var(--ink); background: rgba(255,255,255,.9); border-color: var(--line-strong); box-shadow: 0 3px 0 rgba(113,93,176,.15); }
+    .btn-secondary:hover { border-color: #a78bed; box-shadow: 0 6px 0 rgba(113,93,176,.15); }
+    .btn-slim { min-height: 38px; padding: 10px 13px; border-radius: 12px; font-size: 11px; }
+    .arrow { font-size: 17px; line-height: .7; }
+
+    /* Header */
+    .header-wrap { position: sticky; top: 12px; z-index: 90; padding-top: 14px; }
+    .nav-shell {
+      min-height: 68px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 12px 10px 16px;
+      border: 1px solid rgba(225,214,252,.98);
+      border-radius: 20px;
+      background: rgba(255,255,255,.88);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(18px);
+    }
+    .brand { display: inline-flex; align-items: center; gap: 10px; min-width: 0; }
+    .brand img { display: block; width: 172px; max-width: 44vw; height: auto; }
+    .brand-mark { width: 38px; height: 38px; position: relative; flex: none; display: grid; place-items: center; overflow: hidden; border-radius: 12px; background: var(--ink); color: var(--lime); font: 800 19px/1 "Plus Jakarta Sans", sans-serif; box-shadow: inset 0 -4px 0 rgba(0,0,0,.18); }
+    .brand-mark::after { content: ""; position: absolute; width: 21px; height: 21px; right: -8px; bottom: -8px; border: 2px solid var(--lime); border-radius: 50%; opacity: .85; }
+    .brand-copy b { display: block; font: 800 19px/1 "Plus Jakarta Sans", sans-serif; letter-spacing: -1px; }
+    .brand-copy span { display: block; margin-top: 4px; color: #867d9d; font: 700 8px/1 "DM Mono", monospace; letter-spacing: 1.12px; text-transform: uppercase; }
+    .desktop-nav { display: flex; align-items: center; gap: 2px; }
+    .desktop-nav a { padding: 9px 11px; border-radius: 10px; color: #706981; font-size: 11px; font-weight: 800; transition: background .18s ease, color .18s ease; }
+    .desktop-nav a:hover, .desktop-nav a.active { color: var(--purple-dark); background: var(--paper-2); }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .header-note { color: #776e83; font: 500 9px/1 "DM Mono", monospace; white-space: nowrap; }
+    .header-note i { display: inline-block; width: 7px; height: 7px; margin-right: 6px; border-radius: 50%; background: #49cfa1; box-shadow: 0 0 0 4px rgba(73,207,161,.12); }
+    .menu-toggle { display: none; width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); color: var(--ink); font-size: 19px; }
+    .mobile-menu { display: none; }
+
+    /* Hero */
+    .hero { padding: 45px 0 66px; }
+    .hero-shell {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.12fr) minmax(345px, .88fr);
+      gap: 38px;
+      min-height: 548px;
+      overflow: hidden;
+      padding: clamp(31px, 5vw, 65px);
+      border: 1px solid rgba(182,155,255,.52);
+      border-radius: var(--r-xl);
+      color: white;
+      background:
+        radial-gradient(circle at 5% 0%, rgba(169,114,255,.3), transparent 31%),
+        radial-gradient(circle at 100% 100%, rgba(216,255,96,.24), transparent 31%),
+        linear-gradient(135deg, #170f35 0%, #291553 52%, #461b85 100%);
+      box-shadow: 0 31px 82px rgba(44,19,104,.27);
+    }
+    .hero-shell::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .35; background-image: linear-gradient(rgba(255,255,255,.08) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.08) 1px, transparent 1px); background-size: 31px 31px; mask-image: linear-gradient(115deg, black, transparent 65%); }
+    .hero-copy { position: relative; z-index: 2; align-self: center; }
+    .hero h1 { max-width: 760px; margin: 16px 0 18px; color: white; font-size: clamp(42px, 5.6vw, 74px); line-height: .94; letter-spacing: -3.4px; }
+    .hero h1 em { color: var(--lime); font-style: normal; }
+    .hero p { max-width: 650px; margin: 0; color: #ded6fb; font-size: 15px; line-height: 1.78; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .hero-proof { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+    .proof-chip { display: inline-flex; align-items: center; gap: 7px; padding: 9px 11px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.08); color: #eeeaff; font: 600 10px/1.2 "DM Mono", monospace; }
+    .proof-chip b { color: var(--lime); font-size: 13px; line-height: .8; }
+    .hero-note { display: flex; gap: 10px; align-items: flex-start; max-width: 610px; margin-top: 20px; color: #beb2e9; font-size: 10px; line-height: 1.55; }
+    .hero-note i { display: grid; place-items: center; width: 25px; height: 25px; flex: none; border: 1px solid rgba(216,255,96,.55); border-radius: 8px; color: var(--lime); font-style: normal; }
+
+    .ownership-card {
+      position: relative;
+      z-index: 2;
+      align-self: center;
+      width: 100%;
+      max-width: 402px;
+      margin: 0 auto;
+      padding: 19px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 24px;
+      color: var(--ink);
+      background: #fffdfb;
+      box-shadow: 18px 20px 0 rgba(216,255,96,.18), 0 24px 50px rgba(7,3,30,.34);
+      transform: rotate(1.4deg);
+    }
+    .ownership-card::before { content: ""; position: absolute; top: 11px; right: 12px; width: 66px; height: 66px; border: 2px solid rgba(116,72,255,.23); border-radius: 50%; }
+    .card-top { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 10px; color: #756e83; font: 700 9px/1 "DM Mono", monospace; letter-spacing: 1px; text-transform: uppercase; }
+    .card-top strong { color: var(--purple-dark); }
+    .ownership-title { position: relative; z-index: 1; margin: 28px 0 15px; font: 800 30px/.98 "Plus Jakarta Sans", sans-serif; letter-spacing: -1.6px; }
+    .ownership-title span { color: var(--purple); }
+    .owner-brand { position: relative; z-index: 1; display: flex; align-items: center; gap: 9px; padding: 11px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .owner-logo { display: grid; place-items: center; width: 33px; height: 33px; border-radius: 10px; background: var(--ink); color: var(--lime); font-size: 13px; font-weight: 900; }
+    .owner-brand b { display: block; font-size: 12px; line-height: 1.1; }
+    .owner-brand small { display: block; margin-top: 3px; color: var(--muted); font: 500 9px/1 "DM Mono", monospace; }
+    .rights-list { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 13px; }
+    .right-item { min-height: 57px; padding: 10px; border: 1px solid #e9e2fb; border-radius: 13px; background: white; }
+    .right-item i { display: block; color: var(--success); font-size: 15px; font-style: normal; font-weight: 900; line-height: 1; }
+    .right-item b { display: block; margin-top: 7px; font-size: 9px; line-height: 1.25; }
+    .rights-stamp { position: relative; z-index: 1; margin-top: 13px; padding: 11px 12px; border: 1px dashed #8b6de4; border-radius: 12px; color: var(--purple-dark); background: #f1edff; font: 700 10px/1.35 "DM Mono", monospace; transform: rotate(-1deg); }
+
+    /* Rights rail */
+    .rights-rail { margin-top: -23px; position: relative; z-index: 5; }
+    .rights-rail-inner { display: grid; grid-template-columns: repeat(5, 1fr); overflow: hidden; border: 1px solid #d9ccfe; border-radius: 18px; background: rgba(255,255,255,.9); box-shadow: var(--shadow-soft); }
+    .rail-item { min-height: 76px; display: flex; align-items: center; gap: 11px; padding: 14px 16px; border-right: 1px solid #e7ddff; }
+    .rail-item:last-child { border-right: 0; }
+    .rail-icon { display: grid; place-items: center; width: 34px; height: 34px; flex: none; border-radius: 10px; background: var(--paper-2); color: var(--purple-dark); font-size: 17px; }
+    .rail-item b { display: block; font-size: 11px; line-height: 1.22; }
+    .rail-item span { display: block; margin-top: 4px; color: var(--muted); font-size: 9px; line-height: 1.35; }
+
+    /* General section */
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 34px; }
+    .section-head-copy { max-width: 710px; }
+    .section h2 { margin: 10px 0 0; font-size: clamp(32px, 4vw, 52px); letter-spacing: -2px; line-height: 1.04; }
+    .section-head p { max-width: 410px; margin: 0; color: var(--muted); font-size: 13px; line-height: 1.75; }
+    .section-head p strong { color: var(--ink); }
+
+    /* Problem */
+    .pain-layout { display: grid; grid-template-columns: .84fr 1.16fr; gap: 18px; }
+    .pain-intro { padding: 28px; border: 1px solid var(--line); border-radius: var(--r-lg); background: linear-gradient(145deg, #f0e9ff, #fbf8ff); box-shadow: var(--shadow-soft); }
+    .pain-intro h3 { margin: 15px 0 12px; font-size: 26px; line-height: 1.1; letter-spacing: -1px; }
+    .pain-intro p { margin: 0; color: #675f7a; font-size: 12px; line-height: 1.75; }
+    .pain-note { margin-top: 18px; padding: 12px 13px; border: 1px solid #d6c8ff; border-radius: 13px; color: #5531c5; background: white; font: 700 10px/1.5 "DM Mono", monospace; }
+    .pain-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 13px; }
+    .pain-card { min-height: 230px; display: flex; flex-direction: column; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: white; box-shadow: var(--shadow-soft); }
+    .pain-card:nth-child(2) { background: #fff8ef; }
+    .pain-card:nth-child(3) { background: #effff8; }
+    .pain-num { color: var(--purple); font: 800 10px/1 "DM Mono", monospace; letter-spacing: .7px; }
+    .pain-card h3 { margin: 22px 0 8px; font-size: 17px; line-height: 1.25; letter-spacing: -.5px; }
+    .pain-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .pain-card .tiny-check { margin-top: auto; padding-top: 15px; color: var(--success); font: 700 10px/1.35 "DM Mono", monospace; }
+
+    /* Ownership section */
+    .ownership-band { position: relative; overflow: hidden; padding: 88px 0; color: white; background: linear-gradient(135deg, #191033, #30205d 54%, #5a24a5); }
+    .ownership-band::before { content: ""; position: absolute; width: 480px; height: 480px; top: -260px; right: -110px; border: 1px dashed rgba(216,255,96,.48); border-radius: 50%; box-shadow: 0 0 0 42px rgba(216,255,96,.035), 0 0 0 86px rgba(216,255,96,.025); }
+    .ownership-band::after { content: ""; position: absolute; width: 260px; height: 260px; bottom: -155px; left: 30%; border-radius: 50%; background: rgba(169,114,255,.3); filter: blur(3px); }
+    .ownership-content { position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.04fr) minmax(340px, .96fr); gap: 44px; align-items: center; }
+    .ownership-copy h2 { max-width: 740px; margin: 13px 0 16px; font-size: clamp(37px, 4.8vw, 62px); line-height: .97; letter-spacing: -2.8px; }
+    .ownership-copy h2 em { color: var(--lime); font-style: normal; }
+    .ownership-copy p { max-width: 625px; margin: 0; color: #d9cfef; font-size: 14px; line-height: 1.78; }
+    .ownership-points { display: grid; gap: 11px; margin-top: 26px; }
+    .ownership-point { display: flex; gap: 12px; align-items: flex-start; padding: 13px; border: 1px solid rgba(255,255,255,.14); border-radius: 15px; background: rgba(255,255,255,.06); }
+    .ownership-point i { display: grid; place-items: center; width: 28px; height: 28px; flex: none; border-radius: 9px; background: var(--lime); color: #1a1234; font-size: 14px; font-style: normal; font-weight: 900; }
+    .ownership-point b { display: block; color: white; font-size: 12px; }
+    .ownership-point span { display: block; margin-top: 4px; color: #c1b6dd; font-size: 10px; line-height: 1.45; }
+    .freedom-card { padding: 21px; border: 1px solid rgba(255,255,255,.18); border-radius: 24px; background: rgba(15,9,34,.5); box-shadow: 14px 18px 0 rgba(216,255,96,.15); backdrop-filter: blur(11px); }
+    .freedom-top { display: flex; align-items: center; justify-content: space-between; color: #bcb1dc; font: 700 9px/1 "DM Mono", monospace; letter-spacing: 1px; text-transform: uppercase; }
+    .freedom-top b { color: var(--lime); }
+    .freedom-card h3 { margin: 26px 0 18px; color: white; font-size: 27px; line-height: 1; letter-spacing: -1.2px; }
+    .freedom-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .freedom-cell { min-height: 88px; padding: 13px; border: 1px solid rgba(255,255,255,.12); border-radius: 14px; background: rgba(255,255,255,.06); }
+    .freedom-cell i { display: block; color: var(--lime); font-size: 17px; font-style: normal; }
+    .freedom-cell b { display: block; margin-top: 10px; font-size: 10px; line-height: 1.3; }
+    .freedom-foot { margin-top: 12px; padding: 11px; border: 1px dashed rgba(216,255,96,.58); border-radius: 12px; color: #e9ffd2; font: 600 10px/1.45 "DM Mono", monospace; }
+
+    /* Business modes */
+    .mode-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .mode-card { min-height: 276px; display: flex; flex-direction: column; padding: 22px; border: 1px solid var(--line); border-radius: var(--r-lg); background: white; box-shadow: var(--shadow-soft); transition: transform .2s ease, box-shadow .2s ease; }
+    .mode-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+    .mode-card:nth-child(2) { background: #f6f2ff; }
+    .mode-card:nth-child(3) { background: #f2fff9; }
+    .mode-card:nth-child(4) { background: #fff6f2; }
+    .mode-icon { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--line); border-radius: 14px; background: white; font-size: 20px; }
+    .mode-card h3 { margin: 19px 0 8px; font-size: 17px; letter-spacing: -.55px; }
+    .mode-card p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.64; }
+    .mode-card small { display: block; margin-top: auto; padding-top: 18px; color: var(--purple-dark); font: 700 9px/1.45 "DM Mono", monospace; }
+
+    /* Offers */
+    .vault { padding: 96px 0; background: linear-gradient(180deg, rgba(243,238,255,.56), rgba(255,255,255,.0)); }
+    .pack-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+    .pack-card { position: relative; overflow: hidden; display: grid; grid-template-columns: 68px minmax(0,1fr) auto; align-items: center; gap: 17px; min-height: 145px; padding: 21px; border: 1px solid var(--line); border-radius: 22px; background: white; box-shadow: var(--shadow-soft); transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+    .pack-card:hover { transform: translateY(-3px); border-color: #bfaaf7; box-shadow: var(--shadow); }
+    .pack-card::after { content: ""; position: absolute; width: 130px; height: 130px; right: -52px; bottom: -72px; border-radius: 50%; background: rgba(116,72,255,.08); }
+    .pack-icon { position: relative; z-index: 1; display: grid; place-items: center; width: 68px; height: 68px; border-radius: 19px; background: var(--ink); color: var(--lime); font: 800 26px/1 "Plus Jakarta Sans", sans-serif; box-shadow: inset 0 -5px 0 rgba(0,0,0,.16); }
+    .pack-card:nth-child(2) .pack-icon { color: white; background: var(--purple); }
+    .pack-card:nth-child(3) .pack-icon { color: var(--ink); background: var(--lime); }
+    .pack-card:nth-child(4) .pack-icon { color: white; background: var(--orange); }
+    .pack-copy { position: relative; z-index: 1; }
+    .pack-copy small { color: var(--purple-dark); font: 800 9px/1 "DM Mono", monospace; letter-spacing: .8px; text-transform: uppercase; }
+    .pack-copy h3 { margin: 9px 0 7px; font-size: 18px; letter-spacing: -.6px; }
+    .pack-copy p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.55; }
+    .pack-count { position: relative; z-index: 1; min-width: 52px; padding: 8px 8px; border: 1px solid var(--line); border-radius: 12px; color: var(--ink); background: #fbfaff; text-align: center; font: 700 9px/1.3 "DM Mono", monospace; }
+    .pack-count b { display: block; color: var(--purple); font-size: 17px; line-height: 1; }
+
+    /* Three steps */
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .step-card { position: relative; min-height: 265px; padding: 23px; overflow: hidden; border: 1px solid var(--line); border-radius: var(--r-lg); background: white; box-shadow: var(--shadow-soft); }
+    .step-card::after { content: ""; position: absolute; width: 105px; height: 105px; right: -28px; bottom: -30px; border-radius: 50%; border: 1px dashed rgba(116,72,255,.34); }
+    .step-no { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; background: var(--ink); color: var(--lime); font: 700 10px/1 "DM Mono", monospace; }
+    .step-card h3 { margin: 27px 0 9px; font-size: 20px; letter-spacing: -.7px; }
+    .step-card p { max-width: 275px; margin: 0; color: var(--muted); font-size: 11px; line-height: 1.65; }
+    .step-card code { display: inline-block; margin-top: 17px; padding: 8px 9px; border: 1px solid var(--line); border-radius: 10px; color: var(--purple-dark); background: var(--paper-2); font: 600 9px/1.35 "DM Mono", monospace; }
+
+    /* Pricing */
+    .pricing-wrap { padding: 88px 0 100px; background: linear-gradient(160deg, #1a1035, #30145c 55%, #4e1c8c); color: white; }
+    .pricing-wrap .section-head h2 { color: white; }
+    .pricing-wrap .section-head p { color: #cfc3e7; }
+    .pricing-grid { display: grid; grid-template-columns: .88fr 1.12fr; gap: 17px; align-items: stretch; }
+    .price-card { position: relative; overflow: hidden; padding: 28px; border: 1px solid rgba(255,255,255,.15); border-radius: 25px; background: rgba(255,255,255,.07); box-shadow: 0 18px 42px rgba(6,2,24,.21); }
+    .price-card.featured { border-color: rgba(216,255,96,.8); background: linear-gradient(145deg, #f6ffe0, #e1ff86); color: var(--ink); box-shadow: 14px 18px 0 rgba(216,255,96,.2), 0 20px 45px rgba(3,1,16,.3); }
+    .price-badge { display: inline-flex; padding: 8px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 999px; color: #e6dcff; font: 700 9px/1 "DM Mono", monospace; letter-spacing: .65px; text-transform: uppercase; }
+    .featured .price-badge { border-color: rgba(71,53,11,.2); color: #58420b; background: rgba(255,255,255,.56); }
+    .price-card h3 { margin: 20px 0 7px; font-size: 28px; letter-spacing: -1.2px; }
+    .price-card > p { max-width: 540px; margin: 0; color: #cec4e5; font-size: 12px; line-height: 1.65; }
+    .featured > p { color: #564f57; }
+    .price { display: flex; align-items: end; gap: 8px; margin: 22px 0 18px; }
+    .price b { font: 800 clamp(42px, 5vw, 60px)/.9 "Plus Jakarta Sans", sans-serif; letter-spacing: -3px; }
+    .price span { padding-bottom: 4px; color: #b8acd3; font: 500 10px/1.2 "DM Mono", monospace; }
+    .featured .price span { color: #5c5560; }
+    .price-list { display: grid; gap: 11px; margin: 21px 0 25px; padding: 0; list-style: none; }
+    .price-list li { display: flex; gap: 9px; color: #ded6ed; font-size: 11px; line-height: 1.42; }
+    .price-list li::before { content: "✓"; color: var(--lime); font-weight: 900; }
+    .featured .price-list li { color: #3d3940; }
+    .featured .price-list li::before { color: #3f7510; }
+    .price-callout { margin: 0 0 20px; padding: 11px 12px; border: 1px solid rgba(255,255,255,.16); border-radius: 13px; color: #d8cfed; font: 600 10px/1.5 "DM Mono", monospace; }
+    .featured .price-callout { border-color: rgba(65,85,17,.22); color: #415315; background: rgba(255,255,255,.55); }
+    .pack-pick-wrap { margin: 0 0 18px; }
+    .pack-pick-label { display: block; margin-bottom: 8px; color: #bdb1d9; font: 700 9px/1.2 "DM Mono", monospace; text-transform: uppercase; letter-spacing: .6px; }
+    .pack-pick-opts { display: flex; flex-direction: column; gap: 6px; }
+    .pack-opt { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.14); border-radius: 12px; background: rgba(255,255,255,.04); color: #d8cfed; cursor: pointer; text-align: left; font: inherit; transition: border-color .15s, background .15s; }
+    .pack-opt.active { border-color: var(--lime); background: rgba(216,255,96,.09); color: var(--lime); }
+    .pack-opt b { display: block; font-size: 12px; }
+    .pack-opt span { font-size: 9px; opacity: .65; }
+    .pack-opt:hover { border-color: rgba(216,255,96,.4); }
+    .pack-opt.active b { color: var(--lime); }
+    .pack-opt.active span { color: rgba(216,255,96,.7); }
+    .price-card .btn { width: 100%; }
+    .price-foot { max-width: 920px; margin: 18px auto 0; color: #bdb1d9; font-size: 10px; line-height: 1.55; text-align: center; }
+
+    /* FAQ */
+    .faq-layout { display: grid; grid-template-columns: .72fr 1.28fr; gap: 18px; align-items: start; }
+    .faq-intro { position: sticky; top: 105px; padding: 27px; border: 1px solid var(--line); border-radius: var(--r-lg); background: linear-gradient(145deg, #f0eaff, #ffffff); box-shadow: var(--shadow-soft); }
+    .faq-intro h2 { margin: 12px 0 12px; font-size: 36px; line-height: 1; letter-spacing: -1.5px; }
+    .faq-intro p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    .faq-list { display: grid; gap: 10px; }
+    details { overflow: hidden; border: 1px solid var(--line); border-radius: 17px; background: white; box-shadow: 0 7px 17px rgba(51,29,115,.035); }
+    summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 17px 18px; list-style: none; color: var(--ink); font-size: 12px; font-weight: 800; cursor: pointer; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; display: grid; place-items: center; width: 25px; height: 25px; flex: none; border-radius: 8px; background: var(--paper-2); color: var(--purple-dark); font: 500 19px/1 sans-serif; }
+    details[open] summary::after { content: "–"; }
+    .faq-answer { padding: 0 18px 17px; color: var(--muted); font-size: 11px; line-height: 1.72; }
+    .faq-answer b { color: var(--ink); }
+
+    /* Final CTA */
+    .final { padding: 32px 0 105px; }
+    .final-shell { position: relative; overflow: hidden; padding: clamp(30px, 5vw, 61px); border: 1px solid #cdbcf9; border-radius: var(--r-xl); color: white; background: linear-gradient(135deg, #20103f, #4d1b88); box-shadow: var(--shadow); text-align: center; }
+    .final-shell::before { content: ""; position: absolute; width: 260px; height: 260px; top: -170px; left: -86px; border: 1px dashed rgba(216,255,96,.55); border-radius: 50%; }
+    .final-shell::after { content: ""; position: absolute; width: 250px; height: 250px; right: -120px; bottom: -140px; border-radius: 50%; background: rgba(216,255,96,.18); }
+    .final-shell > * { position: relative; z-index: 1; }
+    .final h2 { max-width: 790px; margin: 14px auto 16px; font-size: clamp(38px, 5vw, 62px); line-height: .97; letter-spacing: -2.8px; }
+    .final h2 em { color: var(--lime); font-style: normal; }
+    .final p { max-width: 600px; margin: 0 auto; color: #d9d0ee; font-size: 13px; line-height: 1.7; }
+    .final-actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-top: 28px; }
+    .final-micro { margin-top: 19px; color: #c6b7e5; font: 500 9px/1.55 "DM Mono", monospace; }
+
+    /* Sticky mobile CTA */
+    .mobile-sticky { display: none; }
+
+    @media (max-width: 1040px) {
+      .desktop-nav { display: none; }
+      .hero-shell { grid-template-columns: 1fr; min-height: 0; }
+      .ownership-card { margin-top: 3px; }
+      .rights-rail-inner { grid-template-columns: repeat(5, minmax(180px,1fr)); overflow-x: auto; }
+      .rail-item { min-width: 190px; }
+      .pain-layout, .ownership-content, .faq-layout { grid-template-columns: 1fr; }
+      .pain-intro, .faq-intro { position: static; }
+      .mode-grid { grid-template-columns: repeat(2, 1fr); }
+      .faq-intro { max-width: 620px; }
+    }
+    @media (max-width: 760px) {
+      .container { width: min(calc(100% - 28px), var(--container)); }
+      .header-wrap { top: 7px; padding-top: 9px; }
+      .nav-shell { min-height: 61px; padding: 9px 10px 9px 12px; border-radius: 17px; }
+      .brand-mark { width: 35px; height: 35px; border-radius: 10px; font-size: 16px; }
+      .brand-copy b { font-size: 17px; }
+      .brand-copy span { font-size: 7px; }
+      .header-note, .header-actions .btn { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .mobile-menu { display: grid; gap: 4px; max-height: 0; overflow: hidden; padding: 0 12px; border: 1px solid transparent; border-top: 0; border-radius: 0 0 16px 16px; background: rgba(255,255,255,.97); transition: max-height .25s ease, padding .25s ease, border-color .25s ease; }
+      .mobile-menu.is-open { max-height: 280px; padding: 10px 12px 13px; border-color: var(--line); }
+      .mobile-menu a { padding: 11px 10px; border-radius: 10px; color: #625c72; font-size: 11px; font-weight: 800; }
+      .mobile-menu a:hover { background: var(--paper-2); color: var(--purple-dark); }
+      .hero { padding: 23px 0 43px; }
+      .hero-shell { gap: 25px; padding: 29px 22px 25px; border-radius: 25px; }
+      .hero h1 { font-size: clamp(40px, 12vw, 57px); letter-spacing: -2.7px; }
+      .hero p { font-size: 13px; line-height: 1.72; }
+      .hero-actions { display: grid; grid-template-columns: 1fr; }
+      .hero-actions .btn { width: 100%; }
+      .hero-proof { display: grid; grid-template-columns: 1fr 1fr; }
+      .proof-chip { justify-content: center; padding: 8px 7px; font-size: 8px; text-align: center; }
+      .ownership-card { transform: none; }
+      .rights-list { grid-template-columns: 1fr 1fr; }
+      .rights-rail { margin-top: -10px; }
+      .rights-rail-inner { border-radius: 14px; }
+      .section, .vault { padding: 65px 0; }
+      .section-tight { padding: 58px 0; }
+      .section-head { display: block; margin-bottom: 25px; }
+      .section h2 { font-size: clamp(31px, 9vw, 43px); letter-spacing: -1.8px; }
+      .section-head p { margin-top: 13px; font-size: 12px; }
+      .pain-cards, .mode-grid, .steps, .pack-grid, .pricing-grid { grid-template-columns: 1fr; }
+      .pain-intro { padding: 23px; }
+      .pain-card { min-height: 0; }
+      .mode-card { min-height: 223px; }
+      .ownership-band { padding: 64px 0; }
+      .ownership-content { gap: 28px; }
+      .ownership-copy h2 { font-size: clamp(35px, 10vw, 48px); letter-spacing: -2.1px; }
+      .freedom-card { box-shadow: 8px 11px 0 rgba(216,255,96,.15); }
+      .pack-card { grid-template-columns: 55px minmax(0,1fr); gap: 13px; min-height: 0; padding: 17px; }
+      .pack-icon { width: 55px; height: 55px; border-radius: 16px; font-size: 21px; }
+      .pack-count { display: none; }
+      .pack-copy h3 { font-size: 16px; }
+      .pricing-wrap { padding: 65px 0 74px; }
+      .price-card { padding: 23px; }
+      .price-card h3 { font-size: 25px; }
+      .price b { font-size: 52px; }
+      .final { padding: 18px 0 95px; }
+      .final-shell { padding: 33px 21px; border-radius: 25px; text-align: left; }
+      .final h2 { margin-left: 0; font-size: clamp(35px, 10vw, 48px); letter-spacing: -2.2px; }
+      .final p { margin-left: 0; }
+      .final-actions { display: grid; margin-top: 24px; }
+      .final-actions .btn { width: 100%; }
+      .final-micro { text-align: left; }
+      .mobile-sticky { position: fixed; inset: auto 10px 10px; z-index: 110; display: block; padding: 8px; border: 1px solid rgba(255,255,255,.2); border-radius: 17px; background: rgba(23,17,47,.93); box-shadow: 0 16px 38px rgba(23,17,47,.3); backdrop-filter: blur(15px); }
+      .mobile-sticky .btn { width: 100%; min-height: 45px; padding: 12px 14px; }
+    }
+
+    /* Showcase ring (3D carousel inner cards — base styles from JS-injected) */
+    .showcase-ring{ position:relative; width:200px; height:300px; transform-style:preserve-3d; }
+    .showcase-ring-card{ position:absolute; width:200px; height:300px; left:0; top:0; border-radius:14px; overflow:hidden; box-shadow:0 4px 24px rgba(0,0,0,.4),0 0 0 1px rgba(255,255,255,.08); backface-visibility:hidden; transition:box-shadow .3s; }
+    .showcase-ring-card img{ display:block; width:100%; height:100%; object-fit:cover; background:rgba(255,255,255,.04); }
+    @media(max-width:768px){ .showcase-canvas{height:clamp(220px,45vw,340px)!important;perspective:900px} .showcase-ring-card{width:140px;height:210px} .showcase-ring{width:140px;height:210px} }
+    @media(max-width:480px){ .showcase-canvas{height:clamp(200px,50vw,280px)!important;perspective:700px} .showcase-ring-card{width:120px;height:180px} .showcase-ring{width:120px;height:180px} }
+    @media(max-width:380px){ .showcase-canvas{perspective:600px} .showcase-ring-card{width:100px;height:150px;border-radius:10px} .showcase-ring{width:100px;height:150px} }
+  </style>
+</head>
+<body>
+  <div class="header-wrap">
+    <header class="container nav-shell">
+      <a class="brand" href="#top" aria-label="AppVibe beranda">
+        <img src="/logo-dark.webp" alt="AppVibe" width="200" height="52">
+      </a>
+      <nav class="desktop-nav" aria-label="Navigasi utama">
+        <a class="active" href="#hak">Hak Anda</a>
+        <a href="#cara-jual">Cara Menjual</a>
+        <a href="#vault">Isi Vault</a>
+        <a href="#harga">Harga</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="header-actions">
+        <span class="header-note"><i></i>Hak jual bebas</span>
+        <a class="btn btn-dark btn-slim" href="#harga">Ambil Vault <span class="arrow">→</span></a>
+        <button class="menu-toggle" id="menuToggle" aria-label="Buka menu" aria-expanded="false">☰</button>
+      </div>
+    </header>
+    <nav class="container mobile-menu" id="mobileMenu" aria-label="Navigasi mobile">
+      <a href="#hak">Hak Anda</a>
+      <a href="#cara-jual">Cara Menjual</a>
+      <a href="#vault">Isi Vault</a>
+      <a href="#harga">Harga</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+  </div>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container hero-shell">
+        <div class="hero-copy">
+          <span class="eyebrow light">FULL WHITE-LABEL PRODUCT VAULT</span>
+          <h1>Ambil. Ganti nama. <em>Jual sebagai produk Anda.</em></h1>
+          <p>AppVibe bukan akses aplikasi dengan aturan ribet. Ini adalah vault produk AI yang boleh Anda rebrand sepenuhnya, jual sebagai source code, jadikan bonus, bundle, lead magnet, atau penawaran berbayar dengan nama brand Anda sendiri.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#harga" data-track="hero_cta_click">Saya Mau Punya Produk Sendiri <span class="arrow">→</span></a>
+            <a class="btn btn-secondary" href="#hak" data-track="hero_rights_click">Lihat Semua Haknya ↓</a>
+          </div>
+          <div class="hero-proof" aria-label="Keunggulan utama">
+            <span class="proof-chip"><b>✓</b> Tanpa royalty</span>
+            <span class="proof-chip"><b>✓</b> Tanpa bagi hasil</span>
+            <span class="proof-chip"><b>✓</b> Boleh jual source</span>
+            <span class="proof-chip"><b>✓</b> Boleh klaim brand Anda</span>
+          </div>
+          <div class="hero-note"><i>!</i><span>Beli sekali. Setelah itu, Anda menentukan nama, desain, harga, cara distribusi, dan bagaimana produk tersebut muncul di depan market Anda.</span></div>
+        </div>
+
+        <aside class="ownership-card" aria-label="Preview hak white-label">
+          <div class="card-top"><span>WHITE-LABEL STATUS</span><strong>FULL ACCESS</strong></div>
+          <div class="ownership-title">Produk ini tampil sebagai <span>brand Anda.</span></div>
+          <div class="owner-brand">
+            <div class="owner-logo">Y</div>
+            <div><b>YOUR BRAND AI TOOL</b><small>nama + visual + offer milik Anda</small></div>
+          </div>
+          <div class="rights-list">
+            <div class="right-item"><i>✓</i><b>Jual sebagai source code</b></div>
+            <div class="right-item"><i>✓</i><b>Jadikan bonus program</b></div>
+            <div class="right-item"><i>✓</i><b>Bagikan sebagai lead magnet</b></div>
+            <div class="right-item"><i>✓</i><b>Jual ulang dengan harga Anda</b></div>
+          </div>
+          <div class="rights-stamp">NO WATERMARK · NO ATTRIBUTION · NO PER-SALE APPROVAL</div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- SHOWCASE SLIDER -->
+    <section class="showcase" aria-label="Preview produk AppVibe" style="margin-top:14px;padding:28px 0 10px;border-radius:25px;background:linear-gradient(180deg,#120e2b,#1a1440);border:1px solid rgba(255,255,255,.06);overflow:hidden;position:relative;">
+      <div class="container">
+        <div class="showcase-head" style="text-align:center;margin-bottom:28px;padding:0 20px;">
+          <span class="eyebrow light" style="margin-bottom:8px;">PRODUCT PREVIEW</span>
+          <h2 style="font:700 clamp(22px,3.5vw,32px)/1.15 'Plus Jakarta Sans',sans-serif;color:#fff;letter-spacing:-1px;margin:0 0 8px;">Lihat sekilas <em style="color:var(--lime);font-style:normal;">13 produk AI</em> yang siap Anda rebrand.</h2>
+          <p style="color:#bdb1d9;font-size:13px;line-height:1.6;margin:8px 0 0;max-width:500px;margin-inline:auto;">Screenshot produk asli — bukan mockup. Setiap aplikasi sudah berjalan dan siap dipasarkan dengan nama Anda.</p>
+        </div>
+        <div class="showcase-canvas" aria-hidden="true" style="width:100%;height:clamp(260px,40vw,420px);perspective:1200px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center;touch-action:pan-y;"></div>
+      </div>
+    </section>
+
+    <section class="rights-rail" id="hak">
+      <div class="container rights-rail-inner">
+        <div class="rail-item"><span class="rail-icon">⌘</span><div><b>Ubah seluruh identitas</b><span>Nama, logo, niche, copy, visual.</span></div></div>
+        <div class="rail-item"><span class="rail-icon">↗</span><div><b>Jual source code</b><span>Distribusikan sebagai produk Anda.</span></div></div>
+        <div class="rail-item"><span class="rail-icon">✦</span><div><b>Jadikan bonus</b><span>Naikkan value course atau jasa.</span></div></div>
+        <div class="rail-item"><span class="rail-icon">◎</span><div><b>Pakai sebagai lead magnet</b><span>Tarik leads dengan tool bernilai.</span></div></div>
+        <div class="rail-item"><span class="rail-icon">¤</span><div><b>Tentukan model jual</b><span>Lifetime, bundle, member, atau client.</span></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head-copy">
+            <span class="eyebrow orange">MENGAPA ANGLE INI PENTING</span>
+            <h2>Problem Anda bukan kekurangan ide. Problem Anda belum punya <em>produk yang benar-benar bisa Anda miliki.</em></h2>
+          </div>
+          <p>Anda mungkin sudah punya skill, traffic, client, komunitas, atau kemampuan jualan. Namun setiap penawaran baru tetap dimulai dari nol karena belum punya inventory produk yang fleksibel.</p>
+        </div>
+        <div class="pain-layout">
+          <article class="pain-intro">
+            <span class="eyebrow">DARI SKILL KE ASSET</span>
+            <h3>Jasa membuat Anda dibayar sekali. Produk membuat value Anda bisa didistribusikan berulang.</h3>
+            <p>Daripada selalu mulai dari brief, proposal, atau affiliate link orang lain, miliki aset yang bisa dikemas ulang menjadi offer sesuai market Anda.</p>
+            <div class="pain-note">Bukan sekadar “boleh rebrand”.<br />Ini hak untuk menentukan bagaimana produk Anda dijual.</div>
+          </article>
+          <div class="pain-cards">
+            <article class="pain-card">
+              <span class="pain-num">01 / TERKUNCI PLATFORM</span>
+              <h3>Produk orang lain tidak pernah benar-benar jadi aset Anda.</h3>
+              <p>Anda bisa menjualnya, tetapi Anda tidak mengontrol nama, harga, bonus, cara distribusi, atau persepsi brand di mata buyer.</p>
+              <span class="tiny-check">→ AppVibe dapat jadi milik lini bisnis Anda.</span>
+            </article>
+            <article class="pain-card">
+              <span class="pain-num">02 / JASA TIDAK SKALABEL</span>
+              <h3>Setiap revenue baru menuntut waktu baru.</h3>
+              <p>Agency, mentor, dan marketer sering punya expertise kuat—tetapi value-nya masih terbungkus sebagai jam kerja atau konsultasi.</p>
+              <span class="tiny-check">→ Ubah expertise menjadi produk digital.</span>
+            </article>
+            <article class="pain-card">
+              <span class="pain-num">03 / LEAD MAGNET LEMAH</span>
+              <h3>PDF generik sulit membuat orang berhenti scroll.</h3>
+              <p>Tool yang benar-benar bisa dipakai memberi alasan lebih kuat bagi calon buyer untuk masuk ke ekosistem Anda.</p>
+              <span class="tiny-check">→ Jadikan aplikasi sebagai magnet lead.</span>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ownership-band">
+      <div class="container ownership-content">
+        <div class="ownership-copy">
+          <span class="eyebrow light">HAK YANG TIDAK DITAHAN DI BELAKANG</span>
+          <h2>Anda tidak perlu meminta izin setiap kali ingin <em>menjual, membagikan, atau mengubahnya.</em></h2>
+          <p>Setelah Anda membeli, produk dapat bergerak mengikuti strategi bisnis Anda. Masukkan ke offer premium, jual file/source, jadikan free tool untuk mengumpulkan leads, atau kirimkan sebagai bonus yang membuat produk utama Anda terasa lebih bernilai.</p>
+          <div class="ownership-points">
+            <div class="ownership-point"><i>✓</i><div><b>White-label sepenuhnya</b><span>Produk tampil dengan identitas brand Anda, bukan identitas AppVibe.</span></div></div>
+            <div class="ownership-point"><i>✓</i><div><b>Distribusi bebas sesuai model bisnis Anda</b><span>Gunakan untuk jualan langsung, client delivery, bundle, komunitas, atau lead generation.</span></div></div>
+            <div class="ownership-point"><i>✓</i><div><b>Monetisasi ditentukan oleh Anda</b><span>Anda memilih harga, bonus, bundling, dan cara mengemas value-nya.</span></div></div>
+          </div>
+        </div>
+        <aside class="freedom-card">
+          <div class="freedom-top"><span>YOUR DISTRIBUTION RIGHTS</span><b>UNLOCKED</b></div>
+          <h3>Satu vault.<br />Banyak cara menjadi revenue.</h3>
+          <div class="freedom-grid">
+            <div class="freedom-cell"><i>⌘</i><b>Source-code product</b></div>
+            <div class="freedom-cell"><i>✦</i><b>Premium program bonus</b></div>
+            <div class="freedom-cell"><i>◎</i><b>High-value lead magnet</b></div>
+            <div class="freedom-cell"><i>↗</i><b>Client delivery asset</b></div>
+          </div>
+          <div class="freedom-foot">Yang Anda bangun selanjutnya adalah offer dan distribusi—bukan mulai membangun produknya dari nol.</div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="cara-jual">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head-copy">
+            <span class="eyebrow">PILIH CARA ANDA MENJADIKANNYA UANG</span>
+            <h2>Satu produk yang sama bisa memainkan peran berbeda dalam bisnis Anda.</h2>
+          </div>
+          <p>Anda tidak harus mengubah diri menjadi “pembuat aplikasi”. Cukup tempatkan produk ini di titik yang memperkuat model bisnis yang sudah Anda jalankan.</p>
+        </div>
+        <div class="mode-grid">
+          <article class="mode-card">
+            <span class="mode-icon">⌘</span>
+            <h3>Jual sebagai source code atau produk digital</h3>
+            <p>Rebrand produk, tambahkan packaging Anda, lalu jual sebagai solusi mandiri untuk niche yang Anda pahami.</p>
+            <small>CONTOH: “Creator Content Engine” lifetime access</small>
+          </article>
+          <article class="mode-card">
+            <span class="mode-icon">✦</span>
+            <h3>Jadikan bonus agar offer utama lebih sulit ditolak</h3>
+            <p>Tambahkan sebagai bonus pada course, mentorship, workshop, atau layanan agar value yang dirasakan naik tanpa menambah jam kerja Anda.</p>
+            <small>CONTOH: bonus tool eksklusif untuk peserta</small>
+          </article>
+          <article class="mode-card">
+            <span class="mode-icon">◎</span>
+            <h3>Bagikan sebagai lead magnet bernilai tinggi</h3>
+            <p>Gantikan ebook generik dengan tool yang langsung bisa dicoba calon buyer, lalu lanjutkan dengan nurture dan penawaran Anda.</p>
+            <small>CONTOH: free campaign planner untuk leads</small>
+          </article>
+          <article class="mode-card">
+            <span class="mode-icon">↗</span>
+            <h3>Masukkan ke client delivery atau membership</h3>
+            <p>Berikan akses sebagai bagian dari hasil kerja agency, retainer, komunitas berbayar, atau program internal perusahaan.</p>
+            <small>CONTOH: client portal yang memakai brand agency Anda</small>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="vault" id="vault">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head-copy">
+            <span class="eyebrow">13 APLIKASI · 4 NICHE PACK</span>
+            <h2>Mulai dari market yang sudah Anda pahami. Bukan dari halaman kosong.</h2>
+          </div>
+          <p>Setiap pack memberi Anda fondasi untuk mengemas produk yang relevan bagi buyer tertentu—dengan positioning dan offer yang dapat Anda jadikan milik brand Anda.</p>
+        </div>
+        <div class="pack-grid">
+          <article class="pack-card">
+            <div class="pack-icon">A</div>
+            <div class="pack-copy"><small>ADVERTISER & AGENCY</small><h3>Campaign Performance Pack</h3><p>Tool untuk campaign direction, creative angle, voice, evidence, dan eksekusi ads.</p></div>
+            <div class="pack-count"><b>4</b> apps</div>
+          </article>
+          <article class="pack-card">
+            <div class="pack-icon">C</div>
+            <div class="pack-copy"><small>CREATOR & AFFILIATE</small><h3>Content Monetization Pack</h3><p>Tool untuk hook, persona, content planning, visual commerce, dan script direction.</p></div>
+            <div class="pack-count"><b>3</b> apps</div>
+          </article>
+          <article class="pack-card">
+            <div class="pack-icon">S</div>
+            <div class="pack-copy"><small>SELLER & MARKETPLACE</small><h3>Commerce Growth Pack</h3><p>Tool untuk katalog, merchandising, visual offer, proof asset, dan conversion angle.</p></div>
+            <div class="pack-count"><b>3</b> apps</div>
+          </article>
+          <article class="pack-card">
+            <div class="pack-icon">B</div>
+            <div class="pack-copy"><small>BRAND & BUSINESS</small><h3>Brand Launch Pack</h3><p>Tool untuk positioning, launch direction, website blueprint, dan product narrative.</p></div>
+            <div class="pack-count"><b>3</b> apps</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head-copy">
+            <span class="eyebrow orange">DARI VAULT KE OFFER DALAM 3 LANGKAH</span>
+            <h2>Produk pertama Anda tidak harus sempurna. Ia hanya harus punya market dan alasan untuk dipakai.</h2>
+          </div>
+          <p>Jangan kejar membuat 13 produk sekaligus. Pilih satu market, satu aplikasi paling relevan, lalu kemas jadi offer yang jelas.</p>
+        </div>
+        <div class="steps">
+          <article class="step-card"><span class="step-no">01</span><h3>Pilih market yang Anda pahami.</h3><p>Mulai dari buyer yang bahasanya, problemnya, dan pola belanjanya sudah Anda mengerti.</p><code>seller · advertiser · creator · business owner</code></article>
+          <article class="step-card"><span class="step-no">02</span><h3>Ganti identitas agar jadi milik offer Anda.</h3><p>Tentukan nama produk, visual, niche statement, bonus, dan hasil akhir yang Anda ingin buyer rasakan.</p><code>rename · rebrand · reposition</code></article>
+          <article class="step-card"><span class="step-no">03</span><h3>Distribusikan dengan strategi yang paling masuk akal.</h3><p>Jual, bundle, jadikan lead magnet, atau jadikan value amplifier untuk offer yang sudah Anda punya.</p><code>sell · bonus · lead magnet · client asset</code></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="pricing-wrap" id="harga">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-head-copy">
+            <span class="eyebrow light">BUKA INVENTORY PRODUK ANDA</span>
+            <h2>Mulai dari satu niche. Atau amankan seluruh vault sekarang.</h2>
+          </div>
+          <p>Semua pilihan memberi Anda hak white-label dan kebebasan distribusi. Yang berubah hanya jumlah produk yang langsung bisa Anda gunakan.</p>
+        </div>
+        <div class="pricing-grid">
+          <article class="price-card">
+            <span class="price-badge">FOKUS SATU MARKET DULU</span>
+            <h3>1 Niche Pack</h3>
+            <p>Untuk Anda yang ingin menguji satu lini produk paling dekat dengan market saat ini.</p>
+            <div class="price"><b>Rp97rb</b><span>sekali bayar</span></div>
+            <ul class="price-list">
+              <li>Pilih 1 dari 4 niche pack</li>
+              <li>Aplikasi di dalam pack pilihan</li>
+              <li>Marketing kit untuk pack tersebut</li>
+              <li>Rebrand dan distribusi sesuai strategi Anda</li>
+              <li>Boleh dijual sebagai produk, bonus, atau lead magnet</li>
+            </ul>
+            <div class="price-callout">Untuk validasi produk pertama tanpa membuka seluruh vault.</div>
+            <div class="pack-pick-wrap" id="packPicker">
+              <span class="pack-pick-label">Pilih niche pack Anda</span>
+              <div class="pack-pick-opts">
+                <button class="pack-opt active" data-pack="advertiser"><b>Advertiser &amp; Agency</b><span>ADSprint · RUPA · MULA</span></button>
+                <button class="pack-opt" data-pack="commerce"><b>Commerce &amp; Marketplace</b><span>PIKAT · KATALOG · BUKTI</span></button>
+                <button class="pack-opt" data-pack="creator"><b>Creator &amp; Affiliate</b><span>ADEGAN · SUARA · MIMIK · RITME</span></button>
+                <button class="pack-opt" data-pack="brand_launch"><b>Brand &amp; Launch</b><span>ARAH · CETAK · TAYANG</span></button>
+              </div>
+            </div>
+            <a class="btn btn-secondary" href="/checkout/?variant=lp-c&plan=single-pack&pack=advertiser" data-track="pricing_single_click" data-checkout-single>Pilih 1 Niche Pack <span class="arrow">→</span></a>
+          </article>
+
+          <article class="price-card featured">
+            <span class="price-badge">PALING STRATEGIS · TAMBAH Rp50RB</span>
+            <h3>Full AppVibe Vault</h3>
+            <p>Untuk Anda yang ingin punya banyak inventory, lebih banyak angle promosi, dan ruang untuk membangun beberapa offer dari sekarang.</p>
+            <div class="price"><b>Rp147rb</b><span>sekali bayar</span></div>
+            <ul class="price-list">
+              <li>Semua 4 niche pack</li>
+              <li>Total 13 aplikasi siap Anda rebrand</li>
+              <li>Semua marketing kit dan angle promosi</li>
+              <li>Jual source, jadikan bonus, atau bagikan sebagai lead magnet</li>
+              <li>Gunakan di produk, client delivery, atau membership Anda</li>
+            </ul>
+            <div class="price-callout">Tambah Rp50.000 dari satu pack untuk membuka 3 niche pack tambahan dan seluruh kemungkinan offer-nya.</div>
+            <a class="btn btn-dark" href="/checkout/?variant=lp-c&plan=full-vault" data-track="pricing_full_click">Ambil Semua 13 Aplikasi <span class="arrow">→</span></a>
+          </article>
+        </div>
+        <p class="price-foot">Tidak ada royalty per penjualan, tidak ada bagi hasil, dan tidak ada kewajiban menampilkan brand AppVibe pada produk yang Anda distribusikan.</p>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container faq-layout">
+        <aside class="faq-intro">
+          <span class="eyebrow">TANPA BAHASA LISENSI YANG MEMBINGUNGKAN</span>
+          <h2>Yang Anda boleh lakukan, dibuat jelas dari awal.</h2>
+          <p>Bagian ini menjawab penggunaan yang biasanya justru dilarang oleh produk white-label lain.</p>
+        </aside>
+        <div class="faq-list">
+          <details open>
+            <summary>Apakah saya boleh mengaku ini produk buatan brand saya sendiri?</summary>
+            <div class="faq-answer">Ya. Anda boleh menempatkan nama, identitas, positioning, dan komunikasi brand Anda sendiri pada produk yang didistribusikan. Produk tersebut dapat tampil sebagai bagian dari lini produk brand Anda.</div>
+          </details>
+          <details>
+            <summary>Apakah saya boleh menjual source code kepada buyer saya?</summary>
+            <div class="faq-answer">Ya. Anda boleh mengemas dan menjual source code sebagai bagian dari produk Anda, termasuk dalam bundle produk digital, package template, atau offer dengan nilai tambah lain.</div>
+          </details>
+          <details>
+            <summary>Apakah produk boleh dibagikan sebagai bonus, freebie, atau lead magnet?</summary>
+            <div class="faq-answer">Ya. Anda boleh menggunakannya untuk meningkatkan conversion offer utama, menarik leads, memberi bonus untuk komunitas, atau memperkuat program yang sedang Anda jual.</div>
+          </details>
+          <details>
+            <summary>Apakah saya wajib menampilkan watermark atau attribution AppVibe?</summary>
+            <div class="faq-answer">Tidak. Anda dapat menampilkan produk sesuai identitas brand Anda sendiri tanpa kewajiban menampilkan attribution AppVibe.</div>
+          </details>
+          <details>
+            <summary>Apakah ada royalty atau bagi hasil dari penjualan saya?</summary>
+            <div class="faq-answer">Tidak. Setelah pembelian, Anda tidak membayar royalty per transaksi dan tidak perlu membagikan hasil penjualan Anda.</div>
+          </details>
+          <details>
+            <summary>Apakah saya harus menjual semua aplikasi di vault?</summary>
+            <div class="faq-answer">Tidak. Mulai dari satu aplikasi yang paling relevan dengan market Anda. Vault memberi Anda pilihan saat Anda ingin membuat offer baru, bundle baru, atau memasuki niche baru.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final">
+      <div class="container final-shell">
+        <span class="eyebrow light">JANGAN TERUS MENJUAL WAKTU ANDA</span>
+        <h2>Punya produk digital yang <em>bergerak atas nama Anda.</em></h2>
+        <p>Ambil fondasinya hari ini. Besok, ia bisa menjadi produk berbayar, bonus yang menaikkan closing, atau lead magnet yang terus bekerja menarik market Anda.</p>
+        <div class="final-actions">
+          <a class="btn btn-primary" href="/checkout/?variant=lp-c&plan=full-vault" data-track="final_full_click">Buka Full AppVibe Vault <span class="arrow">→</span></a>
+          <a class="btn btn-secondary" href="/checkout/?variant=lp-c&plan=single-pack&pack=advertiser" data-track="final_single_click" data-checkout-single>Mulai dari 1 Niche Pack</a>
+        </div>
+        <div class="final-micro">SEKALI BAYAR · JUAL SOURCE · JADIKAN BONUS · PAKAI SEBAGAI LEAD MAGNET · REBRAND SESUAI BRAND ANDA</div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mobile-sticky" aria-label="Aksi cepat">
+    <a class="btn btn-primary" href="#harga" data-track="mobile_sticky_click">Lihat Harga & Hak Produk <span class="arrow">→</span></a>
+  </div>
+
+  <script>
+    (function () {
+      const menuToggle = document.getElementById('menuToggle');
+      const mobileMenu = document.getElementById('mobileMenu');
+
+      menuToggle?.addEventListener('click', () => {
+        const isOpen = mobileMenu.classList.toggle('is-open');
+        menuToggle.setAttribute('aria-expanded', String(isOpen));
+        menuToggle.textContent = isOpen ? '×' : '☰';
+      });
+
+      mobileMenu?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          mobileMenu.classList.remove('is-open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+          menuToggle.textContent = '☰';
+        });
+      });
+
+      document.querySelectorAll('[data-track]').forEach((element) => {
+        element.addEventListener('click', () => {
+          window.dataLayer = window.dataLayer || [];
+          window.dataLayer.push({
+            event: element.dataset.track,
+            lp_variant: 'lp-c',
+            page_path: window.location.pathname,
+            timestamp: new Date().toISOString()
+          });
+        });
+      });
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'lp_variant_c_view', lp_variant: 'lp-c', page_path: window.location.pathname });
+
+      // Pack selector logic for single-pack CTAs
+      (function() {
+        let selectedPack = 'advertiser';
+        const packPicker = document.getElementById('packPicker');
+        const singleCTAs = document.querySelectorAll('[data-checkout-single]');
+
+        if (packPicker) {
+          packPicker.querySelectorAll('.pack-opt').forEach(btn => {
+            btn.addEventListener('click', () => {
+              packPicker.querySelectorAll('.pack-opt').forEach(b => b.classList.remove('active'));
+              btn.classList.add('active');
+              selectedPack = btn.dataset.pack;
+              singleCTAs.forEach(a => {
+                const url = new URL(a.href, window.location.origin);
+                url.searchParams.set('pack', selectedPack);
+                a.href = url.pathname + url.search;
+              });
+            });
+          });
+        }
+
+        // Also track the selected pack
+        singleCTAs.forEach(a => {
+          a.addEventListener('click', (e) => {
+            const href = new URL(a.href, window.location.origin);
+            // Ensure pack param is set
+            if (!href.searchParams.get('pack') || href.searchParams.get('plan') !== 'single-pack') {
+              href.searchParams.set('pack', href.searchParams.get('pack') || selectedPack);
+              a.href = href.pathname + href.search;
+            }
+            window.dataLayer = window.dataLayer || [];
+            window.dataLayer.push({
+              event: a.dataset.track,
+              lp_variant: 'lp-c',
+              lp_pack: selectedPack,
+              lp_plan: 'single-pack',
+              page_path: window.location.pathname,
+              timestamp: new Date().toISOString()
+            });
+          });
+        });
+      })();
+    })();
+  </script>
+  <script type="module">
+    import { initShowcase3D } from '../src/scripts/showcase-3d.js';
+    initShowcase3D();
+  </script>
+</body>
+</html>

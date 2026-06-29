@@ -196,6 +196,12 @@ function renderConfirm(packId) {
             </div>
           </div>
 
+          <div class="co-trust-note" style="margin-top:20px; padding:16px; background:rgba(255,255,255,0.05); border-radius:8px; font-size:13px; line-height:1.5;">
+            <strong>Produk digital — tanpa pengiriman fisik</strong><br/>
+            Setelah pembayaran berhasil diverifikasi, akses produk dan panduan berikutnya akan dikirim ke email atau WhatsApp yang Anda masukkan saat checkout.<br/><br/>
+            Butuh bantuan sebelum membeli? Hubungi AppVibe melalui WhatsApp <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer" style="color:#FFF;">0851-1725-9331</a> atau email <a href="mailto:appvibeid@gmail.com" style="color:#FFF;">appvibeid@gmail.com</a>.
+          </div>
+
           <p class="co-privacy-note">Dengan melanjutkan, Anda menyetujui <a href="/terms" target="_blank" rel="noopener noreferrer">ketentuan</a> dan <a href="/privacy" target="_blank" rel="noopener noreferrer">kebijakan privasi</a> AppVibe.</p>
         </form>
       </section>
@@ -316,6 +322,8 @@ function pushCheckoutEvent(eventName, packId, orderId) {
   if (!pack) return;
 
   const amount = PACK_PRICES[packId] || 0;
+  const lpVariant = sessionStorage.getItem('lp_variant') || '';
+  const lpPlan = sessionStorage.getItem('lp_plan') || '';
   const payload = {
     event: eventName,
     currency: 'IDR',
@@ -323,6 +331,8 @@ function pushCheckoutEvent(eventName, packId, orderId) {
     pack_id: packId,
     pack_name: pack.label,
     order_id: orderId || undefined,
+    lp_variant: lpVariant,
+    lp_plan: lpPlan,
   };
 
   if (typeof window.trackVaultEvent === 'function') {
