@@ -34,12 +34,12 @@ export function initAppLauncher() {
     if (userAction) {
       state.selectedApp = appKey;
       track('vault_app_selected', { app_id: appKey, pack_context: item.packs.join(',') });
-    }
 
-    // Scroll detail ke view (mobile)
-    const detail = document.querySelector('.app-detail');
-    if (detail && window.innerWidth <= 760) {
-      detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      // Scroll detail ke view (mobile) — only on user interaction
+      const detail = document.querySelector('.app-detail');
+      if (detail && window.innerWidth <= 760) {
+        detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
     }
   }
 
