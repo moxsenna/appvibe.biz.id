@@ -236,9 +236,9 @@ details p{margin:14px 0 0;color:var(--muted);font-size:11px;line-height:1.72}
 .cta-note{margin-top:22px;color:rgba(255,255,255,.6);font:500 10px/1.5 "DM Mono",monospace}
 
 /* ===== FOOTER ===== */
-footer{padding:0 2px 30px;display:flex;align-items:center;justify-content:space-between;gap:16px;color:var(--muted);font-size:10px}
-footer .foot-brand{font-weight:800;color:var(--ink)}
-footer a{text-decoration:underline;text-underline-offset:3px}
+
+
+
 
 /* ===== SCROLL MARGIN ===== */
 #niche-pack,#aplikasi,#first-product,#lisensi,#faq,#cara-kerja{scroll-margin-top:140px}

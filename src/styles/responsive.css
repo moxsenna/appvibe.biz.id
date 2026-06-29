@@ -92,7 +92,7 @@
   .detail-line{margin:14px 0}
   .detail-list{gap:7px}
   .detail-list li{font-size:10px;line-height:1.45}
-  .detail-footer{margin-top:14px;padding:10px 11px;font-size:9px;line-height:1.5}
+  .detail-
   .detail-mobile-hint{display:block;margin-top:12px;color:#9ea7b8;font:500 9px/1.45 "DM Mono",monospace;letter-spacing:.35px}
   .included-main{padding:24px 22px}
   .included-main h3{font-size:30px;letter-spacing:-1px;line-height:1.05}
@@ -119,7 +119,7 @@
   details summary{font-size:13px}
   details p{font-size:11px}
   footer{display:block;line-height:1.7}
-  footer div:last-child{margin-top:4px}
+  
   .sticky-cta{display:block}
 }
 @media (max-width:420px){
