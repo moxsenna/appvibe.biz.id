@@ -7,6 +7,11 @@ import { initPricing } from './scripts/pricing.js';
 import { initShowcase3D } from './scripts/showcase-3d.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Force scroll to top on page load (prevent browser scroll restoration)
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+  window.scrollTo(0, 0);
   initTracking();
   initAppLauncher();
   initFirstProduct();
