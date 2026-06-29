@@ -1,0 +1,22 @@
+# AppVibe — White-Label AI App Vault
+
+13 aplikasi AI siap rebrand untuk advertiser, agency, mentor marketing, dan owner komunitas. Bangun produk digital dengan brand Anda tanpa membuat aplikasi dari nol.
+
+## Produk
+
+- [White-Label AI App Vault](https://appvibe.biz.id/) — 13 aplikasi AI siap jual dengan brand Anda sendiri
+
+## Halaman Utama
+
+- [Checkout](https://appvibe.biz.id/checkout/) — Halaman pembelian produk
+- [Ketentuan Layanan](https://appvibe.biz.id/terms/) — Syarat dan ketentuan penggunaan
+- [Kebijakan Privasi](https://appvibe.biz.id/privacy/) — Kebijakan privasi data pengguna
+- [Lisensi](https://appvibe.biz.id/license/) — Ketentuan lisensi white-label
+
+## Deskripsi
+
+AppVibe menyediakan 13 produk aplikasi AI yang sudah berjalan dan siap dipasarkan dengan brand Anda. Setiap produk mencakup aplikasi, copywriting siap pakai, dan marketing kit. Tidak perlu coding — cukup rebrand, positioning, dan jual.
+
+## Kontak
+
+- Website: [appvibe.biz.id](https://appvibe.biz.id/)
