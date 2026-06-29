@@ -11,7 +11,9 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.webp" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/src/styles/index.css">
   <script type="module" src="/src/main.js"></script>
   <meta property="og:title" content="AppVibe — White-Label AI App Vault" />
@@ -19,7 +21,7 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://appvibe.biz.id/" />
   <meta name="twitter:card" content="summary_large_image" />
-  <!-- TikTok Pixel -->
+  <!-- TikTok Pixel (deferred) -->
   <script>
     !function (w, d, t) {
       w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script");n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
@@ -32,7 +34,7 @@
   <div class="wrap">
     <header class="topbar">
       <a class="brand" href="#top" aria-label="AppVibe">
-        <img src="/logo-dark.webp" alt="AppVibe" class="brand-logo" width="160" height="41" />
+        <img src="/logo-dark.webp" alt="AppVibe" class="brand-logo" width="200" height="52" />
       </a>
       <nav class="nav" aria-label="Navigasi utama">
         <a href="#cara-kerja">Cara kerja</a>
@@ -110,13 +112,13 @@
       </section>
 
       <div class="proof-strip" role="list">
-        <span><b>01</b> Rebrand menjadi produk Anda</span>
+        <span role="listitem"><b>01</b> Rebrand menjadi produk Anda</span>
         <span class="proof-divider" aria-hidden="true"></span>
-        <span><b>02</b> Fokus ke niche yang sudah Anda kuasai</span>
+        <span role="listitem"><b>02</b> Fokus ke niche yang sudah Anda kuasai</span>
         <span class="proof-divider" aria-hidden="true"></span>
-        <span><b>03</b> Jual akses, bundle, atau bonus</span>
+        <span role="listitem"><b>03</b> Jual akses, bundle, atau bonus</span>
         <span class="proof-divider" aria-hidden="true"></span>
-        <span><b>04</b> Dilengkapi kit pemasaran &amp; positioning</span>
+        <span role="listitem"><b>04</b> Dilengkapi kit pemasaran &amp; positioning</span>
       </div>
 
       <!-- PAIN CARDS -->

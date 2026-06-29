@@ -121,8 +121,8 @@
 .section h2 em{font-style:italic;background:var(--gradient-brand);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .section-copy{max-width:420px;margin:0;color:var(--muted);font-size:12px;line-height:1.7}
 .section-tag{
-  flex:none;padding:10px 12px;border:1px solid var(--av-blue-600);border-radius:var(--pill);background:rgba(18,107,255,.08);
-  color:var(--av-blue-600);font:600 9px/1 "DM Mono",monospace;letter-spacing:.7px;white-space:nowrap
+  flex:none;padding:10px 12px;border:1px solid var(--av-blue-500);border-radius:var(--pill);background:rgba(18,107,255,.08);
+  color:var(--av-blue-500);font:600 9px/1 "DM Mono",monospace;letter-spacing:.7px;white-space:nowrap
 }
 
 /* ===== PROBLEM SECTION ===== */
@@ -147,13 +147,13 @@
   background:var(--paper-2);box-shadow:var(--soft-shadow);display:flex;flex-direction:column
 }
 .step-card.featured{background:var(--ink-2);border-color:var(--ink-2);color:#fff;box-shadow:13px 14px 0 rgba(18,107,255,.18)}
-.step-no{font:500 10px/1 "DM Mono",monospace;letter-spacing:1px;color:#7281a8}
+.step-no{font:500 10px/1 "DM Mono",monospace;letter-spacing:1px;color:#96A3C2}
 .step-card:not(.featured) .step-no{color:var(--av-blue-500)}
 .step-card h3{margin:23px 0 10px;font:700 30px/1 "Space Grotesk",sans-serif;letter-spacing:-.7px}
 .step-card p{margin:0;font-size:12px;line-height:1.7;color:#697078}
 .step-card.featured p{color:#bbc0ca}
 .step-chip{display:inline-flex;align-items:center;align-self:flex-start;gap:7px;margin-top:auto;padding:9px 10px;border-radius:10px;font:600 9px/1 "DM Mono",monospace}
-.step-card:not(.featured) .step-chip{background:rgba(18,107,255,.08);color:var(--av-blue-600);border:1px solid rgba(18,107,255,.2)}
+.step-card:not(.featured) .step-chip{background:rgba(18,107,255,.08);color:var(--av-blue-500);border:1px solid rgba(18,107,255,.2)}
 .step-card.featured .step-chip{background:rgba(18,107,255,.12);border:1px solid rgba(18,107,255,.28);color:#b8d0ff}
 .step-chip i{display:block;width:7px;height:7px;border-radius:50%;background:currentColor}
 
