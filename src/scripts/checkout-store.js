@@ -7,7 +7,7 @@
  * - confirm:        Pack selected, showing customer info form
  * - creating:       Sending create-order request to backend
  * - redirecting:    Redirecting user to PayCore checkout_url
- * - pending:        User is at Duitku checkout (waiting for payment)
+ * - pending:        User is at payment provider checkout (waiting for payment)
  * - reconciling:    Checking payment status after return
  * - success:        Payment confirmed via status check
  * - failed:         Payment failed or rejected
@@ -16,20 +16,6 @@
  * - already_paid:   Order was already completed
  * - error:          System error (network, config, etc.)
  *
- * Transitions (valid):
- * idle → selecting (user opens checkout)
- * selecting → confirm (pack chosen)
- * confirm → creating (user submits form)
- * creating → redirecting (checkout_url received)
- * creating → error (API failure)
- * redirecting → pending (browser redirects to Duitku)
- * pending → reconciling (user returns from Duitku)
- * reconciling → success (paid confirmed)
- * reconciling → failed (payment failed)
- * reconciling → cancelled (user cancelled)
- * reconciling → expired (payment expired)
- * reconciling → pending (still waiting)
- * any → error (system failure)
  * any → idle (reset)
  */
 

@@ -53,7 +53,7 @@
     const orderId = params.get('order_id');
 
     // Return states are handled by initCheckoutUI. Do not replace them with
-    // an offer-selection state when Duitku sends the visitor back here.
+    // an offer-selection state when the payment provider sends the visitor back here.
     if (!orderId && planId === 'full-vault') {
       checkoutStore.selectPack('vault_full');
     } else if (!orderId && planId === 'single-pack' && packId) {

@@ -14,7 +14,7 @@ This bundle contains full replacements for three files in `moxsenna/appvibe.biz.
 2. Creates a mobile-first stack: order summary appears before the form instead of leaving the visitor with an isolated form.
 3. Makes all CSS selectors match the HTML emitted by `checkout-ui.js`; the existing version styles obsolete selectors while the runtime generates different class names.
 4. Shows the concrete offer: app count, app list, license rights, marketing-kit inclusion, and the Full Vault upgrade rationale.
-5. Keeps the existing PayCore/Duitku backend contract unchanged:
+5. Keeps the existing PayCore/Payment Provider backend contract unchanged:
    `POST /api/checkout/create-order` with `{ name, email, phone, pack_id }`, followed by the existing order-status polling flow.
 6. Restores direct checkout-page tracking initialization and replaces the inactive `window.fireStandardConversions.checkout?.()` / `.purchase?.()` calls with guarded standard `InitiateCheckout` and `Purchase` events.
 

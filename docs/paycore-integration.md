@@ -18,6 +18,12 @@ Do not copy `appvibe.web.id` URLs or assumptions into this repo.
 
 `appvibe.biz.id` is a PayCore client. It signs outgoing PayCore requests and verifies incoming PayCore events, but PayCore's core gateway, provider callback, order database, and payment orchestration live in the PayCore repo.
 
+All AppVibe projects should connect to the shared PayCore service instead of implementing payment gateway logic independently.
+
+- Provider payment sepenuhnya dikelola oleh PayCore.
+- Appvibe tidak menyimpan credential gateway (seperti API key Mayar atau Duitku).
+- Switch provider dilakukan di sisi PayCore (melalui field `default_merchant_profile_id`), bukan di Appvibe.
+
 ## Current Architecture
 
 ```text
