@@ -205,7 +205,6 @@ export async function onRequest(context) {
 
     const orderBody = {
       external_order_id: externalOrderId,
-      merchant_profile_id: 'appvibe_default',
       product_key: pack.product_key,
       description: pack.description,
       amount: pack.amount,

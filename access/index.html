@@ -395,8 +395,17 @@
         <div class="vh-asset-card">
           <div class="vh-asset-icon" style="background:var(--violet)">&#x2713;</div>
           <div class="vh-asset-title">Lisensi Rebrand</div>
-          <div class="vh-asset-desc">Syarat dan ketentuan penggunaan aset produk AppVibe.</div>
+          <div class="vh-asset-desc">Hak kepemilikan produk yang sudah Anda beli dan ketentuan penggunaannya.</div>
           <a class="vh-asset-btn vh-configured" href="/license/" style="text-decoration:none;text-align:center">Baca lisensi rebrand</a>
+        </div>
+      `;
+
+      const rebrandWorkspaceCard = `
+        <div class="vh-asset-card">
+          <div class="vh-asset-icon" style="background:var(--gradient-brand)">RW</div>
+          <div class="vh-asset-title">Rebrand Workspace</div>
+          <div class="vh-asset-desc">Buat Brand File, pilih aplikasi yang Anda miliki, lalu generate prompt rebrand dan marketing kit.</div>
+          <a class="vh-asset-btn vh-configured" href="/access/rebrand/" style="text-decoration:none;text-align:center">Buka Rebrand Workspace</a>
         </div>
       `;
 
@@ -450,7 +459,7 @@
 
         <section class="vh-section" aria-label="Aset peluncuran">
           <h2 class="vh-section-title">Aset Peluncuran</h2>
-          <div class="vh-asset-grid">${assetCards}${licenseCard}</div>
+          <div class="vh-asset-grid">${assetCards}${rebrandWorkspaceCard}${licenseCard}</div>
         </section>
 
         ${ordersHtml ? `<section class="vh-section" aria-label="Riwayat pembelian"><h2 class="vh-section-title">Riwayat Pembelian</h2>${ordersHtml}</section>` : ''}

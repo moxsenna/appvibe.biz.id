@@ -89,6 +89,9 @@ test('create-order creates a member and persists order to D1', async () => {
     assert.equal(order.member_id, member.id);
     assert.equal(order.pack_id, 'advertiser');
     assert.equal(order.payment_status, 'pending');
+
+    const paycoreBody = JSON.parse(paycoreCalls[0].init.body);
+    assert.equal(paycoreBody.merchant_profile_id, undefined);
   } finally { restore(); }
 });
 

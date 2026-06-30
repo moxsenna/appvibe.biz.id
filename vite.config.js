@@ -10,6 +10,7 @@ export default defineConfig({
         c: resolve(__dirname, 'c/index.html'),
         checkout: resolve(__dirname, 'checkout/index.html'),
         access: resolve(__dirname, 'access/index.html'),
+        accessRebrand: resolve(__dirname, 'access/rebrand/index.html'),
         accessVerify: resolve(__dirname, 'access/verify.html'),
         admin: resolve(__dirname, 'admin/index.html'),
         terms: resolve(__dirname, 'terms/index.html'),

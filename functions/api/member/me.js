@@ -85,6 +85,8 @@ export async function onRequest(context) {
 
   return json({
     member_name: session.member.name,
+    member_key: session.member.id,
+    workspace_key: session.member.id,
     first_name: session.member.name.split(' ')[0],
     has_full_vault: access.hasFullVault,
     bundle_ids: access.bundleIds,

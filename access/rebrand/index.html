@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050B1D" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Workspace Rebrand — AppVibe Vault</title>
+  <meta name="description" content="Workspace private untuk buyer AppVibe Vault: buat Brand File, pilih aplikasi, dan hasilkan prompt rebrand serta marketing kit." />
+  <link rel="canonical" href="https://appvibe.biz.id/access/rebrand/" />
+  <link rel="icon" href="/favicon.webp" type="image/webp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/src/styles/rebrand-workspace.css" />
+  <link rel="stylesheet" href="/src/styles/footer.css" />
+</head>
+<body>
+  <header class="rw-header">
+    <div class="rw-header-inner">
+      <a class="rw-brand" href="/access/" aria-label="Kembali ke Portal AppVibe Vault">
+        <span class="rw-brand-icon">AV</span>
+        AppVibe
+      </a>
+      <div class="rw-header-right">
+        <span class="rw-vault-badge">Workspace Buyer</span>
+        <a class="rw-header-link" href="/access/">Portal Akses</a>
+        <a class="rw-header-link" href="/license/">Lisensi</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="rw-main" id="rebrandWorkspace">
+    <div class="rw-loader" role="status" aria-live="polite">
+      <span class="rw-spinner" aria-hidden="true"></span>
+      <p>Memuat Rebrand Workspace…</p>
+    </div>
+  </main>
+
+  <footer class="appvibe-footer">
+    <div class="wrap">
+      <div class="appvibe-footer-grid">
+        <div class="footer-col-about">
+          <strong>AppVibe</strong>
+          <p>Produk digital dan marketing kit untuk membantu pengguna membangun, rebrand, dan menjual produk digital.</p>
+        </div>
+        <div class="footer-col-contact">
+          <strong>Butuh bantuan?</strong>
+          <p>
+            Email: <a href="mailto:appvibeid@gmail.com">appvibeid@gmail.com</a><br />
+            WhatsApp: <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer">0851-1725-9331</a><br />
+            Alamat: Syuhada Timur 7B, Tlogosari Wetan, Semarang, Indonesia
+          </p>
+        </div>
+      </div>
+      <div class="appvibe-footer-bottom">
+        <div class="footer-brand"><span class="foot-brand">AppVibe</span> &mdash; White-Label AI App Vault</div>
+        <div class="footer-links">&copy; 2026 &middot; <a href="/terms/">Ketentuan</a> &middot; <a href="/privacy/">Privasi</a> &middot; <a href="/license/">Lisensi</a></div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initTracking } from '/src/scripts/tracking.js';
+    import { initRebrandWorkspace } from '/src/scripts/rebrand/workspace.js';
+
+    initTracking();
+    initRebrandWorkspace();
+  </script>
+</body>
+</html>
