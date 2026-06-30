@@ -19,29 +19,29 @@
   <link rel="icon" sizes="192x192" href="/assets/lp-b/favicon-192.png" />
   <style>
     :root {
-      --ink: #07194d;
-      --ink-soft: #203a73;
-      --ink-muted: #587099;
-      --paper: #f7fbff;
-      --paper-2: #edf5ff;
-      --white: #ffffff;
-      --line: #d7e5f5;
-      --line-strong: #bed2ee;
-      --blue: #126cf7;
-      --blue-dark: #074ac2;
-      --cyan: #14d7d4;
-      --purple: #7043ff;
-      --purple-soft: #ede9ff;
-      --mint: #ddfbf8;
-      --orange: #ff8f4c;
-      --orange-soft: #fff0e5;
-      --success: #17755c;
-      --shadow: 0 22px 54px rgba(18, 66, 144, .12);
-      --shadow-soft: 0 10px 28px rgba(18, 66, 144, .075);
-      --radius-xl: 32px;
-      --radius-lg: 24px;
-      --radius-md: 18px;
-      --radius-sm: 14px;
+      --ink: #10203F;
+      --ink-soft: #0B2352;
+      --ink-muted: #66748D;
+      --paper: #EEF3FA;
+      --paper-2: #E2EAF5;
+      --white: #FFFFFF;
+      --line: #C9D4E5;
+      --line-strong: #A8B2C9;
+      --blue: #126BFF;
+      --blue-dark: #0B2352;
+      --cyan: #10DCD5;
+      --purple: #6D35FF;
+      --purple-soft: #E2EAF5;
+      --mint: #E5F8F2;
+      --orange: #FF5E4D;
+      --orange-soft: #FFF0ED;
+      --success: #16866D;
+      --shadow: 0 24px 70px rgba(10,28,66,.17);
+      --shadow-soft: 0 12px 30px rgba(10,28,66,.08);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 14px;
+      --radius-sm: 10px;
       --container: 1180px;
     }
 
@@ -53,10 +53,10 @@
       overflow-x: hidden;
       color: var(--ink);
       background:
-        radial-gradient(circle at 4% 2%, rgba(20, 215, 212, .12), transparent 23%),
-        radial-gradient(circle at 96% 5%, rgba(112, 67, 255, .10), transparent 24%),
+        radial-gradient(circle at 4% 2%, rgba(16, 220, 213, .12), transparent 23%),
+        radial-gradient(circle at 96% 5%, rgba(109, 53, 255, .10), transparent 24%),
         var(--paper);
-      font-family: Manrope, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     body::before {
       content: "";
@@ -75,7 +75,7 @@
     a { color: inherit; text-decoration: none; }
     button { cursor: pointer; }
     button:focus-visible, a:focus-visible, summary:focus-visible {
-      outline: 3px solid rgba(20, 215, 212, .7);
+      outline: 3px solid rgba(18, 107, 255, .7);
       outline-offset: 3px;
     }
 
@@ -96,8 +96,8 @@
       width: 8px;
       height: 8px;
       border-radius: 2px;
-      background: linear-gradient(135deg, var(--cyan), var(--blue));
-      box-shadow: 0 0 0 4px rgba(20, 215, 212, .12);
+      background: linear-gradient(135deg, #126BFF 0%, #10DCD5 48%, #8756FF 100%);
+      box-shadow: 0 0 0 4px rgba(18, 107, 255, .12);
     }
     .eyebrow.light { color: #bcefff; }
     .eyebrow.light::before { background: var(--cyan); }
@@ -136,11 +136,11 @@
     }
     .btn:hover { transform: translateY(-2px); }
     .btn-primary {
-      color: #071d55;
-      background: linear-gradient(135deg, var(--cyan), #7af8ef);
-      box-shadow: 0 6px 0 #00aab1, 0 14px 24px rgba(20, 215, 212, .19);
+      color: #FFFFFF;
+      background: linear-gradient(135deg, #126BFF 0%, #10DCD5 48%, #8756FF 100%);
+      box-shadow: 0 6px 0 #0B2352, 0 14px 24px rgba(18, 107, 255, .22);
     }
-    .btn-primary:hover { box-shadow: 0 8px 0 #00aab1, 0 17px 27px rgba(20, 215, 212, .22); }
+    .btn-primary:hover { box-shadow: 0 8px 0 #0B2352, 0 17px 27px rgba(18, 107, 255, .28); }
     .btn-secondary {
       color: var(--ink);
       background: rgba(255,255,255,.9);
