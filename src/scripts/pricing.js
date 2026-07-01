@@ -2,10 +2,11 @@ import { PLANS, PACK_ORDER, vaultPacks, validateOffer, getAppIdsForOffer } from 
 
 /**
  * PRICING STATE
- * Deliberately starts null. No pack or plan is auto-selected.
+ * Defaults to advertiser pack so single-pack CTA is clickable immediately.
+ * User can change pack or choose Full Vault.
  */
-let selectedPlanId = null;
-let selectedPackId = null;
+let selectedPlanId = 'single-pack';
+let selectedPackId = 'advertiser';
 
 export function getSelectedOffer() {
   return {

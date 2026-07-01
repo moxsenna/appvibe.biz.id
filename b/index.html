@@ -428,11 +428,11 @@
     .market-card.selected { border-color: var(--blue); background: #f7fbff; box-shadow: 0 0 0 3px rgba(18, 108, 247, .11), var(--shadow-soft); }
     .market-card[data-market="commerce"].selected { border-color: #00a99e; box-shadow: 0 0 0 3px rgba(20, 215, 212, .11), var(--shadow-soft); }
     .market-card[data-market="creator"].selected { border-color: var(--mint); box-shadow: 0 0 0 3px rgba(112, 67, 255, .1), var(--shadow-soft); }
-    .market-card[data-market="brand"].selected { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255, 143, 76, .11), var(--shadow-soft); }
+    .market-card[data-market="brand_launch"].selected { border-color: var(--red); box-shadow: 0 0 0 3px rgba(255, 143, 76, .11), var(--shadow-soft); }
     .market-tag { display: inline-flex; width: max-content; padding: 7px 9px; border-radius: 9px; color: var(--ink-2); background: #e7f2ff; font: 700 9px/1 "DM Mono", monospace; letter-spacing: .7px; text-transform: uppercase; }
     .market-card[data-market="commerce"] .market-tag { color: #007b76; background: #dcfbf8; }
     .market-card[data-market="creator"] .market-tag { color: #5d37d9; background: #eeeaff; }
-    .market-card[data-market="brand"] .market-tag { color: #ad5315; background: #fff0e6; }
+    .market-card[data-market="brand_launch"] .market-tag { color: #ad5315; background: #fff0e6; }
     .market-card h3 { margin: 18px 0 8px; font-size: 18px; letter-spacing: -.75px; line-height: 1.12; }
     .market-card p { margin: 0; color: var(--ink-muted); font-size: 11px; line-height: 1.61; }
     .market-card .app-chip-row { margin-top: auto; padding-top: 17px; }
@@ -496,6 +496,7 @@
     .included-card:nth-child(3) { background: rgba(112, 67, 255, .14); }
     .included-card:nth-child(4) { background: rgba(18, 108, 247, .14); }
     .included-card:nth-child(5) { background: rgba(255, 143, 76, .1); }
+    .included-card:nth-child(6) { background: rgba(20, 215, 212, .08); }
     .included-icon { width: 37px; height: 37px; display: grid; place-items: center; border-radius: 12px; color: var(--blue); background: rgba(255,255,255,.1); font-size: 18px; }
     .included-card h3 { margin: 16px 0 7px; font-size: 14px; letter-spacing: -.4px; line-height: 1.2; }
     .included-card p { margin: 0; color: #b8c9e4; font-size: 10px; line-height: 1.57; }
@@ -682,6 +683,21 @@
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
     }
 
+    /* ===== TRANSFORMATION STRIP ===== */
+    .transform-strip{ padding:32px 0 28px; }
+    .transform-flow{ display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px 14px; }
+    .transform-step{ display:flex;align-items:center;gap:9px;padding:11px 14px;border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.9);box-shadow:var(--shadow-soft); }
+    .transform-step .step-dot{ width:32px;height:32px;display:grid;place-items:center;border-radius:10px;color:white;background:var(--ink);font:700 12px/1 "DM Mono",monospace;flex:none; }
+    .transform-step:nth-child(2) .step-dot{ background:var(--av-violet-600); }
+    .transform-step:nth-child(4) .step-dot{ background:var(--av-blue-600); }
+    .transform-step:nth-child(6) .step-dot{ background:linear-gradient(135deg,#126BFF,#10DCD5); }
+    .transform-step:nth-child(8) .step-dot{ color:#002d3c;background:var(--av-cyan-500); }
+    .transform-step b{ display:block;font-size:12px;letter-spacing:-.3px;line-height:1.15; }
+    .transform-step span{ display:block;color:var(--muted);font-size:10px;line-height:1.25; }
+    .transform-arrow{ color:var(--muted-2);font-size:18px;line-height:1; }
+    @media(max-width:760px){ .transform-flow{ gap:8px; } .transform-step{ padding:9px 11px; } .transform-step b{ font-size:11px; } .transform-arrow{ font-size:14px; } }
+    @media(max-width:590px){ .transform-strip{ padding:22px 0 18px; } }
+
     /* ===== PRODUCT SHOWCASE 3D CAROUSEL ===== */
     .showcase{ margin-top:14px;padding:28px 0 10px;border-radius:34px;background:linear-gradient(180deg,var(--av-navy-950),var(--av-navy-900));border:1px solid rgba(255,255,255,.06);overflow:hidden;position:relative; }
     .showcase-head{ text-align:center;margin-bottom:28px;padding:0 20px; }
@@ -733,128 +749,143 @@
       <div class="container">
         <div class="hero-shell">
           <div class="hero-copy">
-            <span class="eyebrow light">untuk marketer, creator, mentor & agency</span>
-            <h1 id="hero-title">Jangan cuma jago menjual produk orang. <em>Punya lini produk AI</em> yang bisa Anda tawarkan dengan brand sendiri.</h1>
-            <p>Anda sudah punya skill, pengalaman, konten, client, atau komunitas. Sekarang Anda butuh produk digital yang punya nama, bentuk, manfaat jelas, dan alasan untuk dibeli.</p>
-            <div class="hero-actions">
-              <a class="btn btn-primary" href="#market" data-track="hero_market_click">Lihat produk yang bisa saya jual <span class="arrow">→</span></a>
-              <a class="btn btn-secondary" href="#cara-kerja" data-track="hero_how_it_works_click">Lihat cara kerjanya <span class="arrow">↓</span></a>
-            </div>
-            <div class="trust-row" aria-label="Keunggulan AppVibe">
-              <span><i>✓</i>13 aplikasi siap rebrand</span>
-              <span><i>✓</i>4 niche pack siap dipasarkan</span>
-              <span><i>✓</i>Tidak perlu coding</span>
-              <span><i>✓</i>Sekali bayar + lisensi jual akses</span>
-            </div>
+	            <span class="eyebrow light">cara tercepat punya produk AI dengan brand Anda sendiri</span>
+	            <h1 id="hero-title">Punya produk digital sendiri <em>tanpa harus membuat dari nol.</em></h1>
+	            <p>Anda sudah punya skill, audiens, atau komunitas. Sekarang Anda butuh produk yang punya nama Anda, buatan Anda, dan bisa dijual berulang — tanpa menunggu berbulan-bulan membangun software.</p>
+	            <div class="hero-actions">
+	              <a class="btn btn-primary" href="#harga" data-track="hero_pricing_click" data-checkout="full-vault">Buka Full Vault — punya produk siap jual <span class="arrow">→</span></a>
+	              <a class="btn btn-secondary" href="#masalah" data-track="hero_problem_click">Mengapa ini penting untuk Anda <span class="arrow">↓</span></a>
+	            </div>
+	            <div class="trust-row" aria-label="Keunggulan AppVibe">
+	              <span><i>✓</i>Punya produk sendiri minggu ini</span>
+	              <span><i>✓</i>Tidak perlu coding</span>
+	              <span><i>✓</i>Boleh jual ulang dengan brand Anda</span>
+	              <span><i>✓</i>13 aplikasi + 4 niche pack</span>
+	            </div>
           </div>
 
-          <aside class="launch-brief" aria-label="Contoh bentuk produk yang dapat diluncurkan">
-            <div class="brief-top"><span>Product launch brief</span><b>ready to rebrand</b></div>
-            <div class="brief-product">
-              <small>Contoh produk Anda</small>
-              <strong>Campaign<br />Blueprint AI</strong>
-              <span>untuk advertiser & agency</span>
-            </div>
-            <div class="brief-grid">
-              <div class="brief-cell"><span>Anda jual</span><b>Tool ber-brand sendiri</b></div>
-              <div class="brief-cell"><span>Buyer</span><b>Media buyer & UMKM</b></div>
-              <div class="brief-cell"><span>Format</span><b>Lifetime / bonus / portal</b></div>
-              <div class="brief-cell"><span>Fondasi</span><b>ADSprint + launch kit</b></div>
-            </div>
-            <div class="brief-footer">Rebrand → package → sell access</div>
-          </aside>
+	          <aside class="launch-brief" aria-label="Contoh produk yang bisa Anda miliki">
+	            <div class="brief-top"><span>Produk pertama Anda</span><b>siap minggu ini</b></div>
+	            <div class="brief-product">
+	              <small>Nama produk Anda</small>
+	              <strong>Campaign<br />Blueprint AI</strong>
+	              <span>brand Anda · niche Anda · harga Anda</span>
+	            </div>
+	            <div class="brief-grid">
+	              <div class="brief-cell"><span>Anda jual</span><b>Produk bernama brand Anda</b></div>
+	              <div class="brief-cell"><span>Buyer</span><b>Media buyer & UMKM</b></div>
+	              <div class="brief-cell"><span>Format</span><b>Lifetime / bonus / portal</b></div>
+	              <div class="brief-cell"><span>Waktu</span><b>Rebrand → jual — bukan berbulan-bulan</b></div>
+	            </div>
+	            <div class="brief-footer">Ambil → ganti nama → jual sebagai produk Anda</div>
+	          </aside>
         </div>
       </div>
-    </section>
+	    </section>
 
-    <!-- SHOWCASE SLIDER -->
+	    <!-- TRANSFORMATION STRIP -->
+	    <section class="transform-strip" aria-label="Perjalanan dari skill ke produk">
+	      <div class="container">
+	        <div class="transform-flow">
+	          <div class="transform-step"><span class="step-dot">1</span><div><b>Skill & audiens</b><span>Sudah Anda miliki</span></div></div>
+	          <span class="transform-arrow">→</span>
+	          <div class="transform-step"><span class="step-dot">2</span><div><b>Brand sendiri</b><span>Produk bernama Anda</span></div></div>
+	          <span class="transform-arrow">→</span>
+	          <div class="transform-step"><span class="step-dot">3</span><div><b>Produk siap jual</b><span>Rebrand → launch</span></div></div>
+	          <span class="transform-arrow">→</span>
+	          <div class="transform-step"><span class="step-dot">4</span><div><b>Income berulang</b><span>Jual akses, bundle, bonus</span></div></div>
+	        </div>
+	      </div>
+	    </section>
+
+	    <!-- SHOWCASE SLIDER -->
     <section class="showcase" aria-label="Preview produk AppVibe">
       <div class="container">
-        <div class="showcase-head">
-          <span class="eyebrow" style="color:var(--blue);margin-bottom:8px;">PRODUCT PREVIEW</span>
-          <h2>Lihat sekilas <em>13 produk AI</em> yang siap Anda rebrand.</h2>
-          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:8px 0 0;max-width:500px;margin-inline:auto;">Screenshot produk asli — bukan mockup. Setiap aplikasi sudah berjalan dan siap dipasarkan dengan nama Anda.</p>
+	        <div class="showcase-head">
+	          <span class="eyebrow" style="color:var(--blue);margin-bottom:8px;">BUKTIKAN PRODUK NYATA</span>
+	          <h2>Inilah <em>13 produk AI</em> yang bisa menjadi milik Anda.</h2>
+	          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:8px 0 0;max-width:500px;margin-inline:auto;">Screenshot produk asli — bukan mockup. Setiap aplikasi sudah berjalan dan siap Anda rebrand menjadi produk dengan nama brand sendiri.</p>
         </div>
         <div class="showcase-canvas" aria-hidden="true"></div>
       </div>
     </section>
 
-    <section class="section-tight" aria-labelledby="problem-title">
-      <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">masalahnya bukan selalu traffic</span>
-            <h2 id="problem-title">Anda mungkin tidak kekurangan skill. Anda kekurangan produk yang benar-benar milik lini bisnis Anda.</h2>
-          </div>
-          <p>Banyak orang sudah punya capability dan market. Namun setiap naik revenue, mereka tetap kembali menjual waktu, komisi, atau produk pihak lain.</p>
-        </div>
-        <div class="problem-grid">
-          <article class="problem-card">
-            <span class="problem-num">01 / SIGNAL</span>
-            <div class="problem-icon">◌</div>
-            <h3>Konten ada. Inventory tidak ada.</h3>
-            <p>Anda bisa mengedukasi audiens setiap hari, tetapi belum punya produk yang cukup kuat untuk menjadi next step setelah mereka percaya kepada Anda.</p>
-          </article>
-          <article class="problem-card">
-            <span class="problem-num">02 / SKILL</span>
-            <div class="problem-icon">✦</div>
-            <h3>Skill ada. Asset sendiri belum ada.</h3>
-            <p>Anda bisa menjalankan ads, membuat campaign, atau membantu bisnis. Tetapi semua value itu masih hidup sebagai jasa, bukan produk.</p>
-          </article>
-          <article class="problem-card">
-            <span class="problem-num">03 / VALUE</span>
-            <div class="problem-icon">↗</div>
-            <h3>Client ada. Upsell premium belum ada.</h3>
-            <p>Anda sudah punya customer atau client, tetapi belum punya tool, bonus, atau portal yang membuat penawaran Anda terasa lebih bernilai.</p>
-          </article>
-        </div>
+	    <section class="section-tight" id="masalah" aria-labelledby="problem-title">
+	      <div class="container">
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">masalahnya bukan kemampuan Anda</span>
+	            <h2 id="problem-title">Anda sudah bisa membantu orang. Yang belum ada adalah <em>produk yang benar-benar milik bisnis Anda.</em></h2>
+	          </div>
+	          <p>Dulu, punya produk digital berarti harus belajar coding. Sekarang AI bisa membuat aplikasi — tapi AI tetap butuh ide, positioning, dan strategi jual. Anda sudah punya itu. Yang kurang: fondasi produk siap pakai.</p>
+	        </div>
+	        <div class="problem-grid">
+	          <article class="problem-card">
+	            <span class="problem-num">01 / ANDA PUNYA SKILL</span>
+	            <div class="problem-icon">◌</div>
+	            <h3>Skill ada. Produk sendiri belum ada.</h3>
+	            <p>Anda bisa mengedukasi, menjalankan ads, membuat campaign, atau membantu bisnis. Tetapi semua value itu masih hidup sebagai jasa — dijual per jam, per project, atau per komisi orang lain.</p>
+	          </article>
+	          <article class="problem-card">
+	            <span class="problem-num">02 / ANDA PUNYA AUDIENS</span>
+	            <div class="problem-icon">✦</div>
+	            <h3>Audiens percaya. Inventory produk belum ada.</h3>
+	            <p>Anda sudah punya orang yang mendengarkan, mengikuti, atau membeli dari Anda. Tetapi setiap menawarkan sesuatu yang baru, Anda kembali mulai dari nol — karena belum punya aset produk yang bisa dijual berulang.</p>
+	          </article>
+	          <article class="problem-card">
+	            <span class="problem-num">03 / ANDA PUNYA REVENUE</span>
+	            <div class="problem-icon">↗</div>
+	            <h3>Pendapatan ada. Tapi tidak skalabel tanpa produk.</h3>
+	            <p>Setiap revenue baru menuntut waktu baru. Anda butuh aset yang bisa dikemas ulang — jadi tool berbayar, bonus program, bundle niche, atau client portal — tanpa membangun dari halaman kosong.</p>
+	          </article>
+	        </div>
       </div>
     </section>
 
-    <section class="section-tight" aria-labelledby="reframe-title">
-      <div class="container">
-        <div class="reframe-shell">
-          <div class="reframe-copy">
-            <span class="eyebrow">dari skill menjadi produk</span>
-            <h2 id="reframe-title">Ubah “saya bisa bantu” menjadi produk yang punya nama, pengalaman, dan alasan untuk dibeli.</h2>
-            <p>AppVibe bukan kumpulan prompt. Setiap aplikasi menjadi fondasi produk yang bisa Anda tempatkan dalam niche, positioning, dan model monetisasi yang sesuai dengan bisnis Anda.</p>
-          </div>
-          <div class="reframe-list">
-            <article class="reframe-item"><span class="reframe-number">01</span><div><b>Terasa seperti produk, bukan dokumen</b><p>Aplikasi dengan alur dan output yang lebih jelas dibanding file prompt atau template biasa.</p></div></article>
-            <article class="reframe-item"><span class="reframe-number">02</span><div><b>Bisa diposisikan sesuai market Anda</b><p>Ubah nama, niche, visual identity, copy, dan angle penawarannya agar relevan bagi buyer Anda.</p></div></article>
-            <article class="reframe-item"><span class="reframe-number">03</span><div><b>Sudah ada bahan untuk mulai menjual</b><p>Gunakan launch kit berisi positioning, headline, CTA, ide konten, dan format offer sebagai titik awal.</p></div></article>
-          </div>
-        </div>
-      </div>
-    </section>
+	    <section class=”section-tight” aria-labelledby=”reframe-title”>
+	      <div class=”container”>
+	        <div class=”reframe-shell”>
+	          <div class=”reframe-copy”>
+	            <span class=”eyebrow”>dari skill menjadi produk — kenapa sekarang</span>
+	            <h2 id=”reframe-title”>AI sudah bisa membuat aplikasi. Tetapi AI <em>tidak punya ide, positioning, dan buyer Anda.</em></h2>
+	            <p>Dulu, punya produk berarti belajar coding berbulan-bulan. Sekarang AI menyelesaikan bagian teknis — tapi value sebenarnya ada di tangan Anda: pemahaman market, strategi jual, dan relasi dengan buyer. AppVibe menjembatani keduanya.</p>
+	          </div>
+	          <div class=”reframe-list”>
+	            <article class=”reframe-item”><span class=”reframe-number”>01</span><div><b>Kenapa AI: fondasi produk sudah siap</b><p>13 aplikasi AI sudah berjalan dan menghasilkan output nyata. Anda tidak membangun dari nol — Anda mengambil dan mengubahnya menjadi milik Anda.</p></div></article>
+	            <article class=”reframe-item”><span class=”reframe-number”>02</span><div><b>Kenapa white-label: produk bernama brand Anda</b><p>Ubah nama, niche, visual identity, copy, dan harga. Produk tampil bukan sebagai “tool AI” — tetapi sebagai produk buatan brand Anda.</p></div></article>
+	            <article class=”reframe-item”><span class=”reframe-number”>03</span><div><b>Kenapa sekarang: market menunggu produk, bukan konten</b><p>Audiens sudah percaya pada Anda. Yang kurang adalah produk konkret yang bisa mereka beli — bukan edukasi lain, bukan template biasa.</p></div></article>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
 
     <section class="section" aria-labelledby="format-title">
-      <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">satu vault, banyak model bisnis</span>
-            <h2 id="format-title">Bukan satu jenis produk. Anda bisa membentuknya sesuai cara bisnis Anda menghasilkan uang.</h2>
-          </div>
-          <p>Fondasi yang sama bisa dipaketkan menjadi alat berbayar, bonus, client portal, atau bundle niche sesuai distribusi yang sudah Anda miliki.</p>
-        </div>
-        <div class="format-grid">
-          <article class="format-card"><div class="format-icon">◈</div><h3>Tool berbayar untuk niche tertentu</h3><p>Jual akses aplikasi sebagai tool lifetime untuk advertiser, seller, creator, atau business owner.</p><div class="format-example"><span>contoh</span>Campaign Blueprint AI</div></article>
-          <article class="format-card"><div class="format-icon">✦</div><h3>Bonus premium untuk program Anda</h3><p>Tambahkan aplikasi sebagai bonus agar course, mentorship, atau komunitas terasa lebih bernilai.</p><div class="format-example"><span>contoh</span>Member-only Hook Generator</div></article>
-          <article class="format-card"><div class="format-icon">⌘</div><h3>Client portal untuk agency</h3><p>Gunakan aplikasi sebagai bagian dari deliverable agar client memperoleh sistem, bukan hanya laporan atau konsultasi.</p><div class="format-example"><span>contoh</span>Creative Direction Portal</div></article>
-          <article class="format-card"><div class="format-icon">▦</div><h3>Bundle produk untuk audience</h3><p>Kemas beberapa tool dalam satu kategori agar buyer menerima solusi yang terasa lebih lengkap.</p><div class="format-example"><span>contoh</span>Marketplace Seller Toolkit</div></article>
-        </div>
+	      <div class="container">
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">satu vault, banyak cara menghasilkan uang</span>
+	            <h2 id="format-title">Produk yang sama bisa menjadi sumber income berbeda dalam bisnis Anda.</h2>
+	          </div>
+	          <p>Anda tidak harus menjadi “pembuat aplikasi”. Tempatkan produk ini di titik yang memperkuat model bisnis yang sudah Anda jalankan.</p>
+	        </div>
+	        <div class="format-grid">
+	          <article class="format-card"><div class="format-icon">◈</div><h3>Jual sebagai produk berbayar</h3><p>Jual akses lifetime, source code, atau tool digital untuk niche tertentu. Anda tentukan harganya.</p><div class="format-example"><span>contoh</span>Campaign Blueprint AI — Rp149K–Rp799K</div></article>
+	          <article class="format-card"><div class="format-icon">✦</div><h3>Jadikan bonus premium</h3><p>Tambahkan aplikasi sebagai bonus agar course, mentorship, atau komunitas terasa lebih bernilai — tanpa menambah jam kerja Anda.</p><div class="format-example"><span>contoh</span>Member-only Hook Generator</div></article>
+	          <article class="format-card"><div class="format-icon">⌘</div><h3>Client portal untuk agency</h3><p>Gunakan aplikasi sebagai bagian dari deliverable agar client memperoleh sistem, bukan hanya laporan atau konsultasi.</p><div class="format-example"><span>contoh</span>Creative Direction Portal</div></article>
+	          <article class="format-card"><div class="format-icon">▦</div><h3>Lead magnet bernilai tinggi</h3><p>Gantikan PDF generik dengan tool yang benar-benar bisa dipakai — lalu lanjutkan dengan offer utama Anda.</p><div class="format-example"><span>contoh</span>Free Campaign Planner untuk leads</div></article>
+	        </div>
       </div>
     </section>
 
     <section id="market" class="section market-section" aria-labelledby="market-title">
       <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">pilih market yang sudah Anda pahami</span>
-            <h2 id="market-title">Produk pertama Anda tidak harus rumit. Mulai dari market yang sudah dekat dengan Anda.</h2>
-          </div>
-          <p>Pilih market di bawah. Halaman ini akan menyesuaikan rekomendasi produk dan pilihan niche pack Anda.</p>
-        </div>
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">pilih market pertama Anda</span>
+	            <h2 id="market-title">Produk pertama Anda lahir dari market yang sudah Anda pahami.</h2>
+	          </div>
+	          <p>Pilih market yang paling dekat dengan Anda — kami tunjukkan produk dan pack yang paling logis untuk diluncurkan pertama.</p>
+	        </div>
 
         <div class="market-grid" role="list">
           <button class="market-card selected" type="button" data-market="advertiser" data-track="market_select" role="listitem">
@@ -869,8 +900,8 @@
             <span class="market-tag">Creator & Affiliate</span><h3>Affiliate Content Engine</h3><p>Membantu creator dan affiliate membangun ide konten, hook, script, persona, serta ritme publikasi.</p>
             <div class="app-chip-row"><span class="app-chip">PIKAT</span><span class="app-chip">RITME</span><span class="app-chip">MIMIK</span><span class="app-chip">RUPA</span><span class="app-chip">SUARA</span></div>
           </button>
-          <button class="market-card" type="button" data-market="brand" data-track="market_select" role="listitem">
-            <span class="market-tag">Brand & Launch</span><h3>Brand Compass AI</h3><p>Membantu owner dan consultant membangun brand direction, launch campaign, website copy, dan identitas komunikasi.</p>
+	          <button class="market-card" type="button" data-market="brand_launch" data-track="market_select" role="listitem">
+	            <span class="market-tag">Brand & Launch</span><h3>Brand Compass AI</h3><p>Membantu owner dan consultant membangun brand direction, launch campaign, website copy, dan identitas komunikasi.</p>
             <div class="app-chip-row"><span class="app-chip">ARAH</span><span class="app-chip">MIMIK</span><span class="app-chip">MULA</span><span class="app-chip">TAYANG</span><span class="app-chip">CETAK</span></div>
           </button>
         </div>
@@ -881,9 +912,9 @@
             <h3 id="selected-product-title">Launch it as Campaign Blueprint AI.</h3>
             <p id="selected-product-copy">Ubah ADSprint menjadi produk strategi iklan yang membantu advertiser menyusun campaign direction, audience angle, creative brief, dan eksperimen testing.</p>
           </div>
-          <div class="launch-actions">
-            <a class="btn btn-dark" href="#harga" id="selected-market-cta" data-track="selected_market_pricing_click">Pilih Advertiser Pack <span class="arrow">→</span></a>
-            <p class="selected-note" id="selected-market-note">Pack akan otomatis dipilih di bagian harga.</p>
+	          <div class="launch-actions">
+	            <a class="btn btn-dark" href="#harga" id="selected-market-cta" data-track="selected_market_pricing_click" data-checkout="single-pack">Pilih Advertiser Pack <span class="arrow">→</span></a>
+	            <p class="selected-note" id="selected-market-note">Atau buka Full Vault untuk semua 13 aplikasi.</p>
           </div>
         </div>
       </div>
@@ -891,161 +922,171 @@
 
     <section id="cara-kerja" class="section" aria-labelledby="workflow-title">
       <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">tidak perlu membangun dari nol</span>
-            <h2 id="workflow-title">Tiga langkah untuk punya produk digital yang lebih siap ditawarkan.</h2>
-          </div>
-          <p>Anda tetap yang paling memahami buyer dan market. AppVibe memberi fondasi produk agar Anda tidak mulai dari halaman kosong.</p>
-        </div>
-        <div class="workflow-grid">
-          <article class="workflow-card"><span class="workflow-step">LANGKAH 01</span><div class="workflow-symbol">◎</div><h3>Pilih market yang sudah Anda pahami.</h3><p>Mulai dari market yang sudah punya bahasa, masalah, dan buyer yang Anda kenal: advertiser, seller, creator, atau business owner.</p><span class="workflow-caption">Market → buyer → offer</span></article>
-          <article class="workflow-card"><span class="workflow-step">LANGKAH 02</span><div class="workflow-symbol">✦</div><h3>Pilih fondasi aplikasi yang paling relevan.</h3><p>Ambil niche pack yang sesuai, lalu tentukan produk pertama yang paling masuk akal untuk diluncurkan.</p><span class="workflow-caption">Nama → use case → positioning</span></article>
-          <article class="workflow-card"><span class="workflow-step">LANGKAH 03</span><div class="workflow-symbol">↗</div><h3>Rebrand dan tawarkan dengan cara bisnis Anda.</h3><p>Gunakan sebagai tool berbayar, bonus, bundle, atau client portal sesuai model monetisasi yang ingin Anda pakai.</p><span class="workflow-caption">Sell access → bundle → deliver</span></article>
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">tidak perlu membangun dari nol</span>
+	            <h2 id="workflow-title">Tiga langkah punya produk digital siap dijual — <em>bukan berbulan-bulan.</em></h2>
+	          </div>
+	          <p>Anda tetap yang paling memahami buyer dan market. AppVibe memberi fondasi produk agar Anda tidak mulai dari halaman kosong.</p>
+	        </div>
+	        <div class="workflow-grid">
+	          <article class="workflow-card"><span class="workflow-step">LANGKAH 01</span><div class="workflow-symbol">◎</div><h3>Ambil fondasi produk yang siap pakai.</h3><p>Pilih niche pack yang sesuai dengan market Anda. 13 aplikasi sudah berjalan dan menghasilkan output nyata — bukan template kosong.</p><span class="workflow-caption">Ambil → siap rebrand</span></article>
+	          <article class="workflow-card"><span class="workflow-step">LANGKAH 02</span><div class="workflow-symbol">✦</div><h3>Ganti jadi milik brand Anda.</h3><p>Ubah nama, niche, visual identity, copy, dan harga. Produk tampil bukan sebagai "tool AI" — tetapi sebagai produk buatan brand Anda.</p><span class="workflow-caption">Rebrand → positioning → nama Anda</span></article>
+	          <article class="workflow-card"><span class="workflow-step">LANGKAH 03</span><div class="workflow-symbol">↗</div><h3>Jual dengan cara bisnis Anda.</h3><p>Luncurkan sebagai tool berbayar, source code, bonus program, lead magnet, atau client portal. Anda tentukan harga dan model distribusinya.</p><span class="workflow-caption">Jual → bundle → deliver</span></article>
         </div>
       </div>
     </section>
 
     <section id="isi-vault" class="section-tight" aria-labelledby="included-title">
       <div class="container">
-        <div class="included-shell">
-          <div class="section-head">
-            <div class="section-head-copy">
-              <span class="eyebrow light">lebih dari sekadar akses aplikasi</span>
-              <h2 id="included-title">Yang Anda dapatkan untuk membentuk produk pertama Anda.</h2>
-            </div>
-            <p>Tujuannya bukan membuat Anda menjual “aplikasi AI”. Tujuannya adalah membuat penawaran Anda terasa lebih konkret, relevan, dan bernilai.</p>
-          </div>
-          <div class="included-grid">
-            <article class="included-card"><div class="included-icon">◈</div><h3>Aplikasi siap rebrand</h3><p>Fondasi produk yang dapat disesuaikan dengan niche dan positioning Anda.</p></article>
-            <article class="included-card"><div class="included-icon">⌘</div><h3>Arah positioning</h3><p>Nama produk, target buyer, use case, angle, dan hasil yang ingin dijual.</p></article>
-            <article class="included-card"><div class="included-icon">✦</div><h3>Marketing kit</h3><p>Headline, CTA, ide konten, angle promosi, dan bahan awal sales page.</p></article>
-            <article class="included-card"><div class="included-icon">↗</div><h3>Model monetisasi</h3><p>Contoh lifetime tool, bundle niche, bonus program, atau client portal.</p></article>
-            <article class="included-card"><div class="included-icon">✓</div><h3>Lisensi white-label</h3><p>Hak untuk mengganti identitas produk dan menjual akses kepada buyer Anda.</p></article>
-          </div>
+	        <div class=”included-shell”>
+	          <div class=”section-head”>
+	            <div class=”section-head-copy”>
+	              <span class=”eyebrow light”>paket bisnis digital siap jual</span>
+	              <h2 id=”included-title”>Semua yang Anda butuhkan untuk punya produk — <em>bukan hanya kumpulan aplikasi.</em></h2>
+	            </div>
+	            <p>Ini bukan sekadar akses software. Ini fondasi bisnis produk digital: aplikasi siap rebrand, arah positioning, bahan pemasaran, hak jual ulang, dan model monetisasi.</p>
+	          </div>
+	          <div class=”included-grid”>
+	            <article class=”included-card”><div class=”included-icon”>◈</div><h3>13 aplikasi AI siap rebrand</h3><p>Produk yang sudah berjalan dan menghasilkan output nyata — bukan template atau prompt kosong.</p></article>
+	            <article class=”included-card”><div class=”included-icon”>⌘</div><h3>Arah positioning per niche</h3><p>Nama produk, target buyer, use case, angle penawaran, dan hasil yang ingin dijual ke setiap market.</p></article>
+	            <article class=”included-card”><div class=”included-icon”>✦</div><h3>Marketing & launch kit</h3><p>Headline, CTA, ide konten promosi, angle campaign, dan bahan awal sales page per produk.</p></article>
+	            <article class=”included-card”><div class=”included-icon”>↗</div><h3>Model monetisasi siap pakai</h3><p>Contoh konkret: lifetime tool, jual source code, bonus program, bundle niche, lead magnet, atau client portal.</p></article>
+	            <article class=”included-card”><div class=”included-icon”>✓</div><h3>Lisensi jual ulang + source code</h3><p>Hak rebrand full, jual akses, jual source code, bagikan sebagai bonus/lead magnet — tanpa royalty, tanpa attribution.</p></article>
+	            <article class=”included-card”><div class=”included-icon”>◎</div><h3>4 niche pack siap diluncurkan</h3><p>Setiap pack mencakup aplikasi + marketing kit + positioning untuk market tertentu: advertiser, seller, creator, atau brand builder.</p></article>
+	          </div>
         </div>
       </div>
     </section>
 
     <section id="lisensi" class="section" aria-labelledby="license-title">
       <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">jelas sejak awal</span>
-            <h2 id="license-title">Produk ini sepenuhnya menjadi milik Anda setelah pembelian.</h2>
-          </div>
-          <p>Anda berhak mengaku sebagai pembuat produk, mengubahnya, menjualnya, dan mendistribusikannya sesuai keinginan Anda.</p>
-        </div>
-        <div class="license-grid">
-          <article class="license-card allow">
-            <h3>Anda boleh</h3>
-            <ul>
-              <li><i>✓</i><span>Mengubah nama produk, logo, visual identity, niche, copy, dan positioning.</span></li>
-              <li><i>✓</i><span>Menjual produk kepada customer, member komunitas, atau client agency.</span></li>
-              <li><i>✓</i><span>Mengaku sebagai pembuat produk tanpa kewajiban mencantumkan AppVibe.</span></li>
-              <li><i>✓</i><span>Menggunakannya sebagai produk utama, bonus program, mentorship, bundle, atau client portal premium.</span></li>
-            </ul>
-          </article>
-        </div>
-        <p class="license-note">Ringkasan ini dibuat untuk membantu keputusan pembelian. Setelah pembelian, hak kepemilikan produk berpindah sepenuhnya kepada Anda.</p>
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">hak Anda jelas sejak awal</span>
+	            <h2 id="license-title">Produk ini menjadi milik bisnis Anda setelah pembelian. <em>Tanpa fine print.</em></h2>
+	          </div>
+	          <p>Anda berhak mengaku sebagai pembuat, mengubah identitas, menjual akses atau source code, dan mendistribusikan sesuai strategi bisnis Anda.</p>
+	        </div>
+	        <div class="license-grid">
+	          <article class="license-card allow">
+	            <h3>Anda boleh</h3>
+	            <ul>
+	              <li><i>✓</i><span>Mengubah nama produk, logo, visual identity, niche, copy, dan positioning.</span></li>
+	              <li><i>✓</i><span>Menjual akses produk atau source code kepada customer, member, atau client Anda.</span></li>
+	              <li><i>✓</i><span>Mengaku sebagai pembuat produk tanpa kewajiban mencantumkan AppVibe.</span></li>
+	              <li><i>✓</i><span>Menggunakannya sebagai produk utama, bonus program, lead magnet, bundle, atau client portal.</span></li>
+	            </ul>
+	          </article>
+	          <article class="license-card exclude">
+	            <h3>Tidak ada</h3>
+	            <ul>
+	              <li><i>✗</i><span>Royalty per penjualan — Anda bayar sekali, keuntungan selanjutnya milik Anda.</span></li>
+	              <li><i>✗</i><span>Bagi hasil — berapapun Anda jual, tidak ada potongan untuk AppVibe.</span></li>
+	              <li><i>✗</i><span>Wajib watermark atau attribution — produk tampil 100% dengan brand Anda.</span></li>
+	              <li><i>✗</i><span>Perlu izin per penjualan — distribusi bebas sesuai model bisnis Anda.</span></li>
+	            </ul>
+	          </article>
+	        </div>
+	        <p class="license-note">Ringkasan ini dibuat untuk membantu keputusan pembelian. Setelah pembelian, hak kepemilikan produk berpindah sepenuhnya kepada Anda — termasuk hak menjual source code dan mendistribusikan tanpa batas bagi hasil.</p>
       </div>
     </section>
 
     <section id="harga" class="section pricing-section" aria-labelledby="pricing-title">
       <div class="container">
-        <div class="section-head">
-          <div class="section-head-copy">
-            <span class="eyebrow">pilih seberapa banyak inventory yang ingin Anda buka</span>
-            <h2 id="pricing-title">Mulai dari satu market. Atau buka seluruh lini produk sekaligus.</h2>
-            <div class="pricing-note"><i>✓</i> Semua pilihan termasuk marketing kit dan lisensi jual akses + rebrand.</div>
-          </div>
-          <p>Kedua pilihan memberi hak penggunaan yang sama. Yang berbeda hanya jumlah niche dan aplikasi yang langsung bisa Anda gunakan untuk membangun offer.</p>
-        </div>
+	        <div class="section-head">
+	          <div class="section-head-copy">
+	            <span class="eyebrow">buka inventory produk Anda</span>
+	            <h2 id="pricing-title">Cara tercepat punya produk digital siap jual. <em>Mulai hari ini.</em></h2>
+	            <div class="pricing-note"><i>✓</i> Semua pilihan termasuk marketing kit, lisensi jual ulang + source code, dan hak rebrand.</div>
+	          </div>
+	          <p>Full Vault memberi lebih banyak lini produk, angle promosi, dan ruang jual ke berbagai tipe buyer. Atau mulai dari 1 pack dulu jika ingin validasi market terlebih dahulu.</p>
+	        </div>
 
-        <div class="pricing-grid">
-          <article class="price-card">
-            <span class="price-label">mulai dari satu market</span>
-            <h3>Pilih 1 Niche Pack</h3>
-            <p>Untuk Anda yang sudah tahu market mana yang ingin diuji lebih dulu.</p>
-            <div class="price"><strong>Rp97.000</strong><small>sekali bayar</small></div>
-            <p class="price-hint">Fokus menguji satu lini produk sebelum memperluas katalog.</p>
-            <hr />
-            <ul class="price-list">
-              <li>Pilih tepat 1 dari 4 niche pack</li>
-              <li>Aplikasi yang relevan di pack pilihan</li>
-              <li>Marketing kit untuk niche tersebut</li>
-              <li>Arah positioning dan monetisasi</li>
-              <li>Lisensi jual akses + rebrand</li>
-            </ul>
-            <div class="pack-choices" aria-label="Pilih niche pack">
-              <button class="pack-choice selected" type="button" data-pack="advertiser"><i>✓</i><span>Advertiser & Agency</span></button>
-              <button class="pack-choice" type="button" data-pack="commerce"><i>✓</i><span>Commerce & Marketplace</span></button>
-              <button class="pack-choice" type="button" data-pack="creator"><i>✓</i><span>Creator & Affiliate</span></button>
-              <button class="pack-choice" type="button" data-pack="brand"><i>✓</i><span>Brand & Launch</span></button>
-            </div>
-            <button class="btn btn-dark" type="button" id="single-pack-cta" data-checkout="single-pack" data-track="single_pack_checkout_click">Pilih Advertiser Pack <span class="arrow">→</span></button>
-            <p class="price-foot" id="single-pack-foot">Anda hanya membuka akses ke pack yang dipilih.</p>
-          </article>
+	        <div class="pricing-grid">
+	          <article class="price-card">
+	            <span class="price-label">validasi satu market dulu</span>
+	            <h3>1 Niche Pack</h3>
+	            <p>Untuk Anda yang ingin menguji satu lini produk paling dekat dengan market saat ini.</p>
+	            <div class="price"><strong>Rp97.000</strong><small>sekali bayar</small></div>
+	            <p class="price-hint">Fokus menguji satu produk sebelum memperluas katalog.</p>
+	            <hr />
+	            <ul class="price-list">
+	              <li>Pilih tepat 1 dari 4 niche pack</li>
+	              <li>Aplikasi yang relevan di pack pilihan</li>
+	              <li>Marketing kit untuk niche tersebut</li>
+	              <li>Arah positioning dan monetisasi</li>
+	              <li>Lisensi jual ulang + rebrand + source code</li>
+	            </ul>
+	            <div class="pack-choices" aria-label="Pilih niche pack">
+	              <button class="pack-choice selected" type="button" data-pack="advertiser"><i>✓</i><span>Advertiser & Agency</span></button>
+	              <button class="pack-choice" type="button" data-pack="commerce"><i>✓</i><span>Commerce & Marketplace</span></button>
+	              <button class="pack-choice" type="button" data-pack="creator"><i>✓</i><span>Creator & Affiliate</span></button>
+	              <button class="pack-choice" type="button" data-pack="brand_launch"><i>✓</i><span>Brand & Launch</span></button>
+	            </div>
+	            <button class="btn btn-dark" type="button" id="single-pack-cta" data-checkout="single-pack" data-track="single_pack_checkout_click">Pilih Advertiser Pack <span class="arrow">→</span></button>
+	            <p class="price-foot" id="single-pack-foot">Anda hanya membuka akses ke pack yang dipilih.</p>
+	          </article>
 
-          <article class="price-card best">
-            <span class="price-label">paling rasional untuk punya inventory</span>
-            <h3>Full AppVibe Vault</h3>
-            <p>Untuk Anda yang ingin punya lebih banyak lini produk, angle promosi, dan ruang untuk menjual ke berbagai tipe buyer.</p>
-            <div class="price"><strong>Rp147.000</strong><small>sekali bayar</small></div>
-            <p class="price-hint">Tambah Rp50.000 dari 1 pack untuk membuka semua niche.</p>
-            <hr />
-            <ul class="price-list">
-              <li>Semua 4 niche pack</li>
-              <li>Total 13 aplikasi siap rebrand</li>
-              <li>Semua marketing kit dan arah positioning</li>
-              <li>Lebih banyak produk untuk lebih banyak tipe buyer</li>
-              <li>Lisensi jual akses + rebrand</li>
-            </ul>
-            <div class="vault-upgrade"><i>+</i><span>Hanya tambah Rp50.000 dari 1 pack, tetapi Anda membuka 3 niche pack tambahan.</span></div>
-            <button class="btn btn-primary" type="button" data-checkout="full-vault" data-track="full_vault_checkout_click">Buka semua 13 aplikasi <span class="arrow">→</span></button>
-            <p class="price-foot">Sekitar Rp11.300 per aplikasi saat membuka seluruh vault.</p>
-          </article>
-        </div>
+	          <article class="price-card best">
+	            <span class="price-label">cara tercepat punya inventory produk</span>
+	            <h3>Full AppVibe Vault</h3>
+	            <p>Untuk Anda yang ingin punya lebih banyak produk siap jual, lebih banyak angle promosi, dan lebih banyak tipe buyer yang bisa dilayani.</p>
+	            <div class="price"><strong>Rp147.000</strong><small>sekali bayar</small></div>
+	            <p class="price-hint">Tambah Rp50.000 dari 1 pack untuk membuka seluruh inventory.</p>
+	            <hr />
+	            <ul class="price-list">
+	              <li>Semua 4 niche pack — 13 aplikasi siap rebrand</li>
+	              <li>Semua marketing kit dan arah positioning</li>
+	              <li>Lebih banyak produk untuk lebih banyak tipe buyer</li>
+	              <li>Lisensi jual ulang + rebrand + source code</li>
+	              <li>Bisa jual langung, bundle, bonus, atau client portal</li>
+	            </ul>
+	            <div class="vault-upgrade"><i>+</i><span>Tambah Rp50.000 dari 1 pack, buka 3 niche pack tambahan — dan berpuluh kemungkinan offer baru.</span></div>
+	            <button class="btn btn-primary" type="button" data-checkout="full-vault" data-track="full_vault_checkout_click">Punya 13 produk siap jual <span class="arrow">→</span></button>
+	            <p class="price-foot">Sekitar Rp11.300 per produk — investasi bisnis, bukan langganan software.</p>
+	          </article>
+	        </div>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="faq-title">
-      <div class="container">
-        <div class="faq-shell">
-          <div class="section-head">
-            <div class="section-head-copy">
-              <span class="eyebrow">yang sering ditanyakan</span>
-              <h2 id="faq-title">Jawaban sebelum Anda memilih pack pertama.</h2>
-            </div>
-          </div>
-          <div class="faq-list">
-            <details class="faq-item"><summary>Siapa yang paling cocok menggunakan AppVibe?</summary><p>Marketer, advertiser, agency, mentor, seller, creator, consultant, atau business owner yang sudah memahami satu market dan ingin menambah lini produk digital tanpa membangun aplikasi dari nol.</p></details>
-            <details class="faq-item"><summary>Apakah saya harus bisa coding?</summary><p>Tidak. Anda tidak perlu membangun aplikasi dari nol. Fokus Anda adalah menentukan niche, nama produk, positioning, dan cara menawarkannya kepada buyer yang tepat.</p></details>
-            <details class="faq-item"><summary>Apakah saya wajib menjual semua 13 aplikasi?</summary><p>Tidak. Anda dapat mulai dari satu niche pack dan hanya meluncurkan satu produk pertama yang paling relevan dengan market Anda. Full Vault hanya memberi lebih banyak pilihan produk dan offer.</p></details>
-            <details class="faq-item"><summary>Apakah saya boleh menjual ke client agency?</summary><p>Ya. Lisensi standar mengizinkan Anda menjual akses kepada customer, member komunitas, atau client agency selama mengikuti ketentuan lisensi yang berlaku.</p></details>
-            <details class="faq-item"><summary>Apakah saya bisa menjual file aplikasi kepada buyer saya?</summary><p>Tidak. Yang Anda jual adalah akses ke produk ber-brand Anda, bukan file atau template inti aplikasi.</p></details>
-            <details class="faq-item"><summary>Apa yang perlu saya siapkan sebelum mulai?</summary><p>Cukup tentukan market yang ingin Anda layani dan masalah yang ingin Anda bantu selesaikan. AppVibe membantu Anda membentuk produk, positioning, dan arah penawarannya.</p></details>
-          </div>
-        </div>
-      </div>
-    </section>
+	    <section class="section" aria-labelledby="faq-title">
+	      <div class="container">
+	        <div class="faq-shell">
+	          <div class="section-head">
+	            <div class="section-head-copy">
+	              <span class="eyebrow">yang sering ditanyakan</span>
+	              <h2 id="faq-title">Jawaban sebelum Anda memulai.</h2>
+	            </div>
+	          </div>
+	          <div class="faq-list">
+	            <details class="faq-item"><summary>Apakah saya harus bisa coding?</summary><p>Tidak. 13 aplikasi sudah berjalan dan menghasilkan output nyata. Anda fokus pada rebrand — nama, positioning, copy, dan cara menawarkan — bukan development.</p></details>
+	            <details class="faq-item"><summary>Apakah saya boleh menjual produk ini dengan brand saya sendiri?</summary><p>Ya. Anda boleh mengganti nama, visual, niche, dan positioning — lalu menjual sebagai produk buatan brand Anda. Tidak ada kewajiban mencantumkan AppVibe.</p></details>
+	            <details class="faq-item"><summary>Apakah saya boleh menjual source code kepada buyer saya?</summary><p>Ya. Anda boleh mengemas dan menjual source code sebagai bagian dari produk Anda — termasuk dalam bundle, package template, atau offer digital lainnya.</p></details>
+	            <details class="faq-item"><summary>Apakah ada royalty atau bagi hasil dari penjualan saya?</summary><p>Tidak. Setelah pembelian, Anda tidak membayar royalty per transaksi dan tidak perlu membagikan hasil penjualan Anda. Keuntungan 100% milik Anda.</p></details>
+	            <details class="faq-item"><summary>Apakah saya wajib menjual semua 13 aplikasi?</summary><p>Tidak. Mulai dari satu produk pertama yang paling relevan dengan market Anda. Full Vault memberi lebih banyak pilihan saat Anda ingin membuat offer, bundle, atau niche baru.</p></details>
+	            <details class="faq-item"><summary>Bolehkah saya gunakan sebagai bonus, lead magnet, atau client portal?</summary><p>Ya. Gunakan sebagai tool berbayar, bonus program, lead magnet bernilai tinggi, atau client portal — sesuai model bisnis yang sudah Anda jalankan.</p></details>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
 
     <section class="final-cta" aria-labelledby="final-title">
-      <div class="container">
-        <div class="final-shell">
-          <div class="final-inner">
-            <span class="eyebrow light">jangan mulai dari halaman kosong</span>
-            <h2 id="final-title">Anda sudah punya market untuk dilayani. Sekarang punya produk yang bisa ditawarkan.</h2>
-            <p>Mulai dari satu niche yang paling Anda pahami. Bentuk produk AI dengan brand sendiri, lalu gunakan untuk menjual akses, menaikkan value program, atau memperkuat offer untuk client Anda.</p>
-            <div class="final-actions">
-              <button class="btn btn-primary" type="button" id="final-pack-cta" data-checkout="single-pack" data-track="final_single_pack_checkout_click">Pilih niche pack saya <span class="arrow">→</span></button>
-              <button class="btn btn-secondary" type="button" data-checkout="full-vault" data-track="final_full_vault_checkout_click">Buka Full AppVibe Vault <span class="arrow">→</span></button>
-            </div>
-            <p class="final-meta">Sekali bayar · Marketing kit · Lisensi jual akses · Hak rebrand</p>
-          </div>
-        </div>
-      </div>
-    </section>
+	      <div class="container">
+	        <div class="final-shell">
+	          <div class="final-inner">
+	            <span class="eyebrow light">jangan mulai dari halaman kosong</span>
+	            <h2 id="final-title">Anda sudah punya market. Sekarang punya produk yang bisa dijual <em>hari ini.</em></h2>
+	            <p>Buka Full Vault — 13 produk siap rebrand dengan brand Anda. Jual akses, source code, jadikan bonus, atau gunakan sebagai lead magnet. Mulai sekarang, bukan berbulan-bulan.</p>
+	            <div class="final-actions">
+	              <button class="btn btn-primary" type="button" data-checkout="full-vault" data-track="final_full_vault_checkout_click">Punya 13 produk siap jual <span class="arrow">→</span></button>
+	              <button class="btn btn-secondary" type="button" id="final-pack-cta" data-checkout="single-pack" data-track="final_single_pack_checkout_click">Mulai dari 1 niche pack <span class="arrow">→</span></button>
+	            </div>
+	            <p class="final-meta">Sekali bayar · Marketing kit · Lisensi jual ulang + source code · Hak rebrand</p>
+	          </div>
+	        </div>
+	      </div>
+	    </section>
   </main>
 
   <footer>
@@ -1092,7 +1133,7 @@
         copy: "Ubah PIKAT, RITME, MIMIK, RUPA, dan SUARA menjadi produk sistem konten, hook, script planning, dan persona continuity untuk creator atau affiliate.",
         foot: "Anda hanya membuka akses ke Creator & Affiliate Pack."
       },
-      brand: {
+	      brand_launch: {
         pack: "Brand & Launch",
         label: "untuk strategist & business builder",
         title: "Launch it as Brand Compass AI.",
