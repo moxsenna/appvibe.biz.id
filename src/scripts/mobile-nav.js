@@ -3,12 +3,14 @@ export function initMobileNav() {
   const mobileNav = document.getElementById("mobileNav");
 
   menuBtn?.addEventListener("click", () => {
-    mobileNav?.classList.toggle("show");
+    const isShowing = mobileNav?.classList.toggle("show");
+    menuBtn.textContent = isShowing ? '×' : '☰';
   });
 
   mobileNav?.querySelectorAll("a").forEach(link => {
     link.addEventListener("click", () => {
       mobileNav.classList.remove("show");
+      if (menuBtn) menuBtn.textContent = '☰';
     });
   });
 }

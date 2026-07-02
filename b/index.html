@@ -649,11 +649,12 @@
       .nav-shell { min-height: 61px; padding: 8px 8px 8px 12px; border-radius: 16px; }
       .brand img { width: 134px; }
       .header-actions > .btn { display: none; }
-      .hero { padding: 28px 0 50px; }
-      .hero-shell { min-height: auto; gap: 24px; padding: 30px 22px; border-radius: 25px; }
-      .hero h1 { font-size: clamp(37px, 11.3vw, 52px); letter-spacing: -2.1px; }
-      .hero p { font-size: 13px; }
+      .hero { padding: 12px 0 40px; }
+      .hero-shell { min-height: auto; gap: 16px; padding: 22px 18px; border-radius: 25px; }
+      .hero h1 { font-size: clamp(28px, 8vw, 36px); line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 10px; }
+      .hero p { font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
       .hero-actions .btn { width: 100%; }
+      .reframe-shell { gap: 20px; padding: 24px 18px; border-radius: 25px; }
       .trust-row { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
       .trust-row span { align-items: start; font-size: 10px; line-height: 1.35; }
       .launch-brief { padding: 14px; transform: none; }
@@ -764,12 +765,15 @@
       <div class="container">
         <div class="hero-shell">
           <div class="hero-copy">
-	            <span class="eyebrow light">cara tercepat punya produk AI dengan brand Anda sendiri</span>
-	            <h1 id="hero-title">Punya produk digital sendiri <em>tanpa harus membuat dari nol.</em></h1>
-	            <p>Anda sudah punya skill, audiens, atau komunitas. Sekarang Anda butuh produk yang punya nama Anda, buatan Anda, dan bisa dijual berulang — tanpa menunggu berbulan-bulan membangun software.</p>
+	            <span class="eyebrow light">BERHENTI BERGANTUNG PADA PRODUK ORANG LAIN</span>
+	            <h1 id="hero-title">Ambil Alih 13 Aplikasi AI Ini, Pasang Logo Anda, dan <em>Bangun Aset Digital Sendiri.</em></h1>
+	            <p>Mengapa terus mempromosikan produk kompetitor jika Anda bisa memilikinya sendiri? Kami telah membangun infrastruktur sistemnya. Anda tinggal klaim kepemilikannya, rebrand, dan nikmati 100% margin profit sebagai pemilik produk seutuhnya.</p>
 	            <div class="hero-actions">
 	              <a class="btn btn-primary" href="#harga" data-track="hero_pricing_click" data-checkout="full-vault">Buka Full Vault — punya produk siap jual <span class="arrow">→</span></a>
 	              <a class="btn btn-secondary" href="#masalah" data-track="hero_problem_click">Mengapa ini penting untuk Anda <span class="arrow">↓</span></a>
+	            </div>
+	            <div style="margin-top:16px; display:inline-flex; align-items:center; gap:8px; padding:6px 14px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.15); border-radius:99px; font-size:11px; font-weight:600; color:#fff;">
+	              <span style="color:#FBBF24; letter-spacing:1px; text-shadow:0 1px 2px rgba(251,191,36,0.3);">⭐⭐⭐⭐⭐</span> Kualitas sistem teruji, 100% siap rebrand.
 	            </div>
 	            <div class="trust-row" aria-label="Keunggulan AppVibe">
 	              <span><i>✓</i>Punya produk sendiri minggu ini</span>
@@ -813,17 +817,6 @@
 	      </div>
 	    </section>
 
-	    <!-- SHOWCASE SLIDER -->
-    <section class="showcase" aria-label="Preview produk AppVibe">
-      <div class="container">
-	        <div class="showcase-head">
-	          <span class="eyebrow" style="color:var(--blue);margin-bottom:8px;">BUKTIKAN PRODUK NYATA</span>
-	          <h2>Inilah <em>13 produk AI</em> yang bisa menjadi milik Anda.</h2>
-	          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:8px 0 0;max-width:500px;margin-inline:auto;">Screenshot produk asli — bukan mockup. Setiap aplikasi sudah berjalan dan siap Anda rebrand menjadi produk dengan nama brand sendiri.</p>
-        </div>
-        <div class="showcase-canvas" aria-hidden="true"></div>
-      </div>
-    </section>
 
 	    <section class="section-tight" id="masalah" aria-labelledby="problem-title">
 	      <div class="container">
@@ -952,6 +945,17 @@
       </div>
     </section>
 
+	    <!-- SHOWCASE SLIDER -->
+    <section class="showcase" aria-label="Preview produk AppVibe">
+      <div class="container">
+	        <div class="showcase-head">
+	          <span class="eyebrow" style="color:var(--blue);margin-bottom:8px;">BUKTIKAN PRODUK NYATA</span>
+	          <h2>Inilah <em>13 produk AI</em> yang bisa menjadi milik Anda.</h2>
+	          <p style="color:var(--muted);font-size:13px;line-height:1.6;margin:8px 0 0;max-width:500px;margin-inline:auto;">Screenshot produk asli — bukan mockup. Setiap aplikasi sudah berjalan dan siap Anda rebrand menjadi produk dengan nama brand sendiri.</p>
+        </div>
+        <div class="showcase-canvas" aria-hidden="true"></div>
+      </div>
+    </section>
     <section id="isi-vault" class="section-tight" aria-labelledby="included-title">
       <div class="container">
 	        <div class=”included-shell”>
@@ -1048,16 +1052,16 @@
 	            <h3>Full AppVibe Vault</h3>
 	            <p>Untuk Anda yang ingin punya lebih banyak produk siap jual, lebih banyak angle promosi, dan lebih banyak tipe buyer yang bisa dilayani.</p>
 	            <div class="price"><strong>Rp147.000</strong><small>sekali bayar</small></div>
-	            <p class="price-hint">Tambah Rp50.000 dari 1 pack untuk membuka seluruh inventory.</p>
+
 	            <hr />
 	            <ul class="price-list">
 	              <li>Semua 4 niche pack — 13 aplikasi siap rebrand</li>
 	              <li>Semua marketing kit dan arah positioning</li>
-	              <li>Lebih banyak produk untuk lebih banyak tipe buyer</li>
 	              <li>Lisensi jual ulang + rebrand + source code</li>
-	              <li>Bisa jual langung, bundle, bonus, atau client portal</li>
+	              <li>Bisa jual langsung, bundle, bonus, atau client portal</li>
+	              <li><span><strong>Free Update:</strong> Otomatis dapat akses ke aplikasi baru</span></li>
+	              <li><span><span style="color:#d97706; font-weight:600;">Mumpung murah:</span> Harga akan naik saat aplikasi bertambah</span></li>
 	            </ul>
-	            <div class="vault-upgrade"><i>+</i><span>Tambah Rp50.000 dari 1 pack, buka 3 niche pack tambahan — dan berpuluh kemungkinan offer baru.</span></div>
 	            <button class="btn btn-primary" type="button" data-checkout="full-vault" data-track="full_vault_checkout_click">Punya 13 produk siap jual <span class="arrow">→</span></button>
 	            <p class="price-foot">Sekitar Rp11.300 per produk — investasi bisnis, bukan langganan software.</p>
 	          </article>
@@ -1115,7 +1119,7 @@
   </footer>
 
   <div class="mobile-sticky" aria-label="Akses cepat checkout">
-    <button class="btn btn-primary" type="button" data-checkout="full-vault" data-track="mobile_full_vault_checkout_click">Buka semua 13 aplikasi <span class="arrow">→</span></button>
+    <a href="/checkout/?variant=lp-b&plan=full-vault" class="btn btn-primary" data-checkout="full-vault" data-track="mobile_full_vault_checkout_click">Buka semua 13 aplikasi <span class="arrow">→</span></a>
   </div>
 
   <script>

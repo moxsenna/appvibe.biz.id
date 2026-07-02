@@ -196,10 +196,21 @@ function renderConfirm(packId) {
             </div>
           </div>
 
-          <div class="co-trust-note" style="margin-top:20px; padding:16px; background:rgba(255,255,255,0.05); border-radius:8px; font-size:13px; line-height:1.5;">
-            <strong>Produk digital — tanpa pengiriman fisik</strong><br/>
-            Setelah pembayaran berhasil diverifikasi, akses produk dan panduan berikutnya akan dikirim ke email atau WhatsApp yang Anda masukkan saat checkout.<br/><br/>
-            Butuh bantuan sebelum membeli? Hubungi AppVibe melalui WhatsApp <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer" style="color:#FFF;">0851-1725-9331</a> atau email <a href="mailto:appvibeid@gmail.com" style="color:#FFF;">appvibeid@gmail.com</a>.
+          <div class="co-trust-note" style="margin-top:24px; padding:18px; border:1px solid var(--co-line-soft); border-radius:14px; background:var(--co-surface-muted);">
+            <div style="display:flex; gap:12px; margin-bottom:14px; align-items:flex-start;">
+              <div style="flex:none; width:36px; height:36px; border-radius:10px; background:rgba(18,107,255,.08); display:grid; place-items:center; color:var(--co-blue);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg></div>
+              <div>
+                <strong style="display:block; color:var(--co-text); font-size:13px; margin-bottom:3px;">Akses Instan Otomatis</strong>
+                <span style="color:var(--co-muted); font-size:12px; line-height:1.5;">Akses ke seluruh vault akan langsung terbuka otomatis begitu pembayaran Anda berhasil.</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:12px; align-items:flex-start;">
+              <div style="flex:none; width:36px; height:36px; border-radius:10px; background:rgba(22,134,109,.08); display:grid; place-items:center; color:var(--co-success);"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg></div>
+              <div>
+                <strong style="display:block; color:var(--co-text); font-size:13px; margin-bottom:3px;">Dukungan Admin via WhatsApp</strong>
+                <span style="color:var(--co-muted); font-size:12px; line-height:1.5;">Butuh bantuan kapan pun? Admin kami siap merespons via chat <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer" style="color:var(--co-success); font-weight:600;">0851-1725-9331</a>.</span>
+              </div>
+            </div>
           </div>
 
           <p class="co-privacy-note">Dengan melanjutkan, Anda menyetujui <a href="/terms" target="_blank" rel="noopener noreferrer">ketentuan</a> dan <a href="/privacy" target="_blank" rel="noopener noreferrer">kebijakan privasi</a> AppVibe.</p>
