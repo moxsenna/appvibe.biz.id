@@ -1,6 +1,7 @@
 import { verifyPayCoreEvent } from '../../lib/paycore-verify.js';
 import { PACKS } from '../../lib/packs.js';
 import { createMemberAccessRepo } from '../../lib/db.js';
+import { generateToken, hashToken, MAGIC_LINK_MAX_AGE_SECONDS } from '../../lib/auth-crypto.js';
 
 async function hashData(str) {
   if (!str) return undefined;
@@ -272,7 +273,38 @@ export async function onRequest(context) {
       );
     }
 
-    // 12. Forward to AppVibe Flow autoresponder (best-effort, dynamic import)
+    // 12. Generate magic link for direct access (bypass manual verification)
+    let accessUrl = '';
+    if (member?.id && env.AUTH_TOKEN_PEPPER && env.APP_BASE_URL) {
+      try {
+        const rawToken = generateToken();
+        const tokenHash = await hashToken(rawToken, env.AUTH_TOKEN_PEPPER);
+        const linkId = crypto.randomUUID();
+        const expiresAt = new Date(Date.now() + MAGIC_LINK_MAX_AGE_SECONDS * 1000).toISOString();
+
+        await repo.createMagicLink({
+          id: linkId,
+          member_id: member.id,
+          token_hash: tokenHash,
+          purpose: 'purchase_auto_login',
+          expires_at: expiresAt,
+          requested_phone_hash: null,
+          requested_ip_hash: null,
+        });
+
+        await repo.insertAuditLog({
+          member_id: member.id,
+          event_type: 'magic_link_auto_generated',
+          metadata_json: JSON.stringify({ link_id: linkId, reason: 'payment_succeeded', order_id: orderId }),
+        });
+
+        accessUrl = `${env.APP_BASE_URL.replace(/\/+$/, '')}/access/verify?token=${rawToken}`;
+      } catch (e) {
+        console.error('[AVF] magic link generation failed:', e.message);
+      }
+    }
+
+    // 13. Forward to AppVibe Flow autoresponder (best-effort, dynamic import)
     if (env.AVF_EVENT_URL) {
       await scheduleBackground(
         context,
@@ -291,6 +323,7 @@ export async function onRequest(context) {
                 pack_id: order.pack_id,
                 amount: order.amount,
                 order_id: orderId,
+                access_url: accessUrl,
               },
             });
           } catch (e) {
