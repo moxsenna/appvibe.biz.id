@@ -17,3 +17,9 @@ ADMIN_TOKEN=
 FONNTE_TOKEN=
 APP_BASE_URL=https://appvibe.biz.id
 AUTH_TOKEN_PEPPER=
+
+# AppVibe Flow (Autoresponder)
+AVF_EVENT_URL=https://appvibe-flow-api.bimap.workers.dev/v1/events
+AVF_PROJECT_SLUG=appvibe-biz-id
+AVF_API_KEY=
+AVF_HMAC_SECRET=

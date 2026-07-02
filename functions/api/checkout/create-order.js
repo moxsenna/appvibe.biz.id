@@ -1,69 +1,18 @@
-import { signPayCoreRequest } from '../../lib/paycore-sign.js';
-import { PACKS, VALID_PACK_IDS, purchaseTypeForPack } from '../../lib/packs.js';
+import { PACKS, VALID_PACK_IDS } from '../../lib/packs.js';
 import { normalizePhone, InvalidPhoneError } from '../../lib/phone.js';
 import { createMemberAccessRepo } from '../../lib/db.js';
 import { hashIdentifier } from '../../lib/auth-crypto.js';
 import { checkRateLimit } from '../../lib/rate-limit.js';
 import { clientIp, verifyTurnstile } from '../../lib/turnstile.js';
-
-const APP_ORIGIN = 'https://appvibe.biz.id';
-
-function json(data, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...extraHeaders },
-  });
-}
-
-function corsHeaders(request) {
-  const origin = request.headers.get('Origin') || '';
-  const allowed =
-    origin.startsWith('http://localhost') ||
-    origin.startsWith('http://127.0.0.1') ||
-    origin === APP_ORIGIN;
-  return {
-    'Access-Control-Allow-Origin': allowed ? origin : APP_ORIGIN,
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-}
-
-function pickMeta(body, key) {
-  return typeof body?.[key] === 'string' ? body[key].trim() : '';
-}
-
-async function postJsonFollowingGoogleRedirect(url, payload) {
-  let response = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    redirect: 'manual',
-    body: JSON.stringify(payload),
-  });
-
-  if (response.status === 302) {
-    const location = response.headers.get('location');
-    if (location) {
-      response = await fetch(location, { redirect: 'follow' });
-    }
-  }
-
-  if (!response.ok) {
-    console.warn('[Checkout] order forwarding returned', response.status);
-  }
-}
-
-async function scheduleBackground(context, promise, label) {
-  const guarded = promise.catch((err) => {
-    console.error(label, err);
-  });
-
-  if (typeof context.waitUntil === 'function') {
-    context.waitUntil(guarded);
-    return;
-  }
-
-  await guarded;
-}
+import { postEventToFlow } from '../../lib/avf-client.js';
+import {
+  createPaycoreOrderForPack,
+  corsHeaders,
+  json,
+  pickMeta,
+  postJsonFollowingGoogleRedirect,
+  scheduleBackground,
+} from '../../lib/checkout-order.js';
 
 export async function onRequest(context) {
   const { request, env } = context;
@@ -117,8 +66,14 @@ export async function onRequest(context) {
   const lpVariant = pickMeta(body, 'lp_variant');
   const lpPlan = pickMeta(body, 'lp_plan');
   const lpPack = pickMeta(body, 'lp_pack');
+  
+  // Tracking Meta for CAPI
+  const fbp = pickMeta(body, 'fbp');
+  const fbc = pickMeta(body, 'fbc');
+  const ipAddress = clientIp(request);
+  const userAgent = request.headers.get('User-Agent') || '';
+  const trackingMeta = JSON.stringify({ fbp, fbc, client_ip: ipAddress, user_agent: userAgent });
 
-  // Validate pack
   if (!packId || !VALID_PACK_IDS.includes(packId)) {
     return json(
       { error: 'invalid_pack', message: 'Paket tidak valid. Silakan pilih paket yang tersedia.' },
@@ -127,7 +82,6 @@ export async function onRequest(context) {
     );
   }
 
-  // Validate customer info
   if (!name || name.length < 2) {
     return json(
       { error: 'validation', message: 'Nama lengkap wajib diisi (minimal 2 karakter).' },
@@ -143,7 +97,6 @@ export async function onRequest(context) {
     );
   }
 
-  // WhatsApp number is mandatory and must be a valid Indonesian mobile.
   let phoneE164;
   try {
     phoneE164 = normalizePhone(phoneInput);
@@ -162,7 +115,7 @@ export async function onRequest(context) {
     const turnstile = await verifyTurnstile({
       secret: env.TURNSTILE_SECRET_KEY,
       token: turnstileToken,
-      remoteip: clientIp(request),
+      remoteip: ipAddress,
       fetchImpl: env._fetchImpl || fetch,
     });
     if (!turnstile.ok) {
@@ -179,7 +132,7 @@ export async function onRequest(context) {
     if (env.AUTH_TOKEN_PEPPER) {
       const nowMs = Date.now();
       const phoneKey = await hashIdentifier(`checkout_phone:${phoneE164}`, env.AUTH_TOKEN_PEPPER);
-      const ipKey = await hashIdentifier(`checkout_ip:${clientIp(request)}`, env.AUTH_TOKEN_PEPPER);
+      const ipKey = await hashIdentifier(`checkout_ip:${ipAddress}`, env.AUTH_TOKEN_PEPPER);
 
       const phoneLimit = await checkRateLimit(repo, { kind: 'checkout_phone', key: phoneKey, nowMs });
       const ipLimit = phoneLimit.allowed
@@ -195,97 +148,38 @@ export async function onRequest(context) {
       }
     }
 
-    // Create or find the member by canonical phone. Existing members keep
-    // their original email — a new checkout never overwrites it.
     const member = await repo.findOrCreateMember({ name, email, phone_e164: phoneE164 });
 
-    const externalOrderId = `vault-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
-    const idempotencyKey = crypto.randomUUID();
-    const orderId = crypto.randomUUID();
-
-    const orderBody = {
-      external_order_id: externalOrderId,
-      product_key: pack.product_key,
-      description: pack.description,
-      amount: pack.amount,
-      currency: pack.currency,
-      customer: {
-        name,
-        email,
-        phone: phoneE164,
-      },
-      return_url: returnUrl,
-      fulfillment_data: {
-        pack_id: packId,
-        product_key: pack.product_key,
-        email,
-        name,
-        phone: phoneE164,
-        source: 'appvibe.biz.id_checkout',
+    const created = await createPaycoreOrderForPack({
+      repo,
+      member,
+      name,
+      email,
+      phoneE164,
+      packId,
+      pack,
+      baseUrl,
+      appId,
+      keyId,
+      appSecret,
+      returnUrl,
+      trackingMeta,
+      fulfillmentMeta: {
         lp_variant: lpVariant,
         lp_plan: lpPlan,
         lp_pack: lpPack,
       },
-    };
-
-    const rawBody = JSON.stringify(orderBody);
-    const timestamp = new Date().toISOString();
-    const path = '/v1/orders';
-    const signatureHex = await signPayCoreRequest({
-      appSecret,
-      timestamp,
-      method: 'POST',
-      path,
-      rawBody,
-    });
-
-    // Call PayCore API
-    const paycoreRes = await fetch(`${baseUrl.replace(/\/+$/, '')}${path}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-PayCore-App': appId,
-        'X-PayCore-Key-Id': keyId,
-        'X-PayCore-Timestamp': timestamp,
-        'X-PayCore-Signature': `sha256=${signatureHex}`,
-        'Idempotency-Key': idempotencyKey,
+      leadMeta: {
+        lp_variant: lpVariant,
+        lp_plan: lpPlan,
+        lp_pack: lpPack,
       },
-      body: rawBody,
     });
 
-    const paycoreJson = await paycoreRes.json().catch(() => ({}));
-
-    if (!paycoreRes.ok) {
-      return json(
-        {
-          error: 'paycore_error',
-          status: paycoreRes.status,
-          message: 'Gagal membuat order pembayaran. Silakan coba lagi.',
-        },
-        paycoreRes.status >= 500 ? 502 : 400,
-        cors,
-      );
+    if (!created.ok) {
+      const data = await created.response.json();
+      return json(data, created.response.status, cors);
     }
-
-    if (!paycoreJson.checkout_url) {
-      return json({ error: 'no_checkout_url', message: 'Tidak ada URL pembayaran dari PayCore.' }, 502, cors);
-    }
-
-    // Persist the order to D1, linked to the member, BEFORE redirecting.
-    await repo.createOrder({
-      id: orderId,
-      member_id: member.id,
-      paycore_order_id: paycoreJson.order_id,
-      external_order_id: externalOrderId,
-      pack_id: packId,
-      product_key: pack.product_key,
-      purchase_type: purchaseTypeForPack(packId),
-      amount: pack.amount,
-      currency: pack.currency,
-      lp_variant: lpVariant || undefined,
-      lp_plan: lpPlan || undefined,
-      lp_pack: lpPack || undefined,
-    });
 
     if (env.LEAD_WEBHOOK_URL) {
       const now = new Date().toISOString();
@@ -311,21 +205,46 @@ export async function onRequest(context) {
           lp_variant: lpVariant,
           lp_plan: lpPlan,
           lp_pack: lpPack,
+          fbp,
+          fbc,
           captured_at: now,
-          order_id: paycoreJson.order_id || '',
-          order_status: paycoreJson.payment_status || 'pending',
+          order_id: created.paycoreJson.order_id || '',
+          order_status: created.paycoreJson.payment_status || 'pending',
         }),
         '[Checkout] order forwarding failed:',
       );
     }
 
+    // Forward as AppVibe Flow event (form.submitted → autoresponder)
+    if (env.AVF_EVENT_URL) {
+      await scheduleBackground(
+        context,
+        postEventToFlow(env, {
+          type: 'form.submitted',
+          contact: {
+            name,
+            email,
+            phone: phoneE164,
+            whatsapp_opt_in: true,
+          },
+          data: {
+            product_name: pack.name,
+            pack_id: packId,
+            amount: pack.amount,
+            checkout_url: created.paycoreJson.checkout_url || '',
+          },
+        }),
+        '[AVF] form.submitted event failed:',
+      );
+    }
+
     return json(
       {
-        checkout_url: paycoreJson.checkout_url,
-        order_id: paycoreJson.order_id,
-        external_order_id: paycoreJson.external_order_id,
-        payment_status: paycoreJson.payment_status || 'pending',
-        amount: pack.amount,
+        checkout_url: created.paycoreJson.checkout_url,
+        order_id: created.paycoreJson.order_id,
+        external_order_id: created.paycoreJson.external_order_id,
+        payment_status: created.paycoreJson.payment_status || 'pending',
+        amount: created.amount,
       },
       201,
       cors,

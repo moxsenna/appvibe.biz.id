@@ -1,6 +1,68 @@
 import { verifyPayCoreEvent } from '../../lib/paycore-verify.js';
 import { PACKS } from '../../lib/packs.js';
 import { createMemberAccessRepo } from '../../lib/db.js';
+import { postEventToFlow } from '../../lib/avf-client.js';
+
+async function hashData(str) {
+  if (!str) return undefined;
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str.trim().toLowerCase());
+  const hash = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+async function sendCapiPurchase({ env, eventId, order, member }) {
+  const pixelId = env.META_PIXEL_ID;
+  const token = env.META_CAPI_TOKEN;
+  if (!pixelId || !token) return;
+
+  try {
+    let fbp, fbc, clientIp, userAgent;
+    if (order.tracking_meta) {
+      try {
+        const tm = JSON.parse(order.tracking_meta);
+        fbp = tm.fbp;
+        fbc = tm.fbc;
+        clientIp = tm.client_ip;
+        userAgent = tm.user_agent;
+      } catch (e) {}
+    }
+
+    const emailHash = await hashData(member?.email_normalized);
+    const phoneHash = await hashData(member?.phone_e164?.replace(/[^0-9]/g, ''));
+
+    const payload = {
+      data: [{
+        event_name: 'Purchase',
+        event_time: Math.floor(Date.now() / 1000),
+        action_source: 'website',
+        event_id: eventId,
+        user_data: {
+          client_ip_address: clientIp,
+          client_user_agent: userAgent,
+          fbp,
+          fbc,
+          em: emailHash ? [emailHash] : undefined,
+          ph: phoneHash ? [phoneHash] : undefined,
+        },
+        custom_data: {
+          value: order.amount,
+          currency: order.currency || 'IDR',
+          content_name: order.pack_id,
+        }
+      }]
+    };
+
+    await fetch(`https://graph.facebook.com/v19.0/${pixelId}/events?access_token=${token}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.error('[CAPI] error:', err);
+  }
+}
+
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -153,14 +215,22 @@ export async function onRequest(context) {
       metadata_json: JSON.stringify({ event_id: eventId, amount: order.amount }),
     });
 
-    // 10. Forward fulfillment to configured webhook (best-effort, background).
+    // 10. Fire Meta Conversions API (Purchase)
+    const member = await repo.getMemberById(order.member_id);
+    await scheduleBackground(
+      context,
+      sendCapiPurchase({ env, eventId, order, member }),
+      '[CAPI] Purchase failed:'
+    );
+
+    // 11. Forward fulfillment to configured webhook (best-effort, background).
     const fulfillmentWebhook = env.FULFILLMENT_WEBHOOK_URL || env.LEAD_WEBHOOK_URL;
     if (fulfillmentWebhook) {
       const fulfillmentTimestamp = new Date().toISOString();
       await scheduleBackground(
         context,
         (async () => {
-          const member = await repo.getMemberById(order.member_id);
+
           const body = JSON.stringify({
             name: member?.name || '',
             email: member?.email_normalized || '',
@@ -200,6 +270,28 @@ export async function onRequest(context) {
           }
         })(),
         '[Fulfillment] webhook forwarding failed:',
+      );
+    }
+
+    // 12. Forward as AppVibe Flow event (payment.paid → autoresponder)
+    if (env.AVF_EVENT_URL) {
+      await scheduleBackground(
+        context,
+        postEventToFlow(env, {
+          type: 'payment.paid',
+          contact: {
+            name: member?.name || '',
+            email: member?.email_normalized || '',
+            phone: member?.phone_e164 || '',
+          },
+          data: {
+            product_name: pack.name,
+            pack_id: order.pack_id,
+            amount: order.amount,
+            order_id: orderId,
+          },
+        }),
+        '[AVF] payment.paid event failed:',
       );
     }
 
