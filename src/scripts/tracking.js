@@ -59,6 +59,18 @@ export function initTracking() {
 
     try { window.dataLayer.push(base); } catch (e) {}
 
+    // Direct Meta Pixel tracking
+    try {
+      if (typeof window.fbq === 'function') {
+        const standardEvents = ['PageView', 'Lead', 'InitiateCheckout', 'Purchase'];
+        if (standardEvents.includes(eventName)) {
+          window.fbq('track', eventName, base);
+        } else {
+          window.fbq('trackCustom', eventName, base);
+        }
+      }
+    } catch (e) {}
+
     if (import.meta.env.DEV) {
       console.debug('[VaultTrack]', eventName, base);
     }
@@ -71,11 +83,11 @@ export function initTracking() {
 
   // --- Standard conversion helpers (Forwards to dataLayer for GTM to process) ---
   window.fireStandardConversions = (leadMeta = {}) => {
-    // We just push 'Lead' to dataLayer, and GTM maps it to fbq('track','Lead') and gtag('event','generate_lead')
     window.trackVaultEvent('Lead', leadMeta);
   };
 
-  // Fire PageView
+  // Note: PageView is already fired by the Pixel base code in index.html,
+  // but we can track the custom page_view event for our internal dataLayer/analytics.
   window.trackVaultEvent('page_view');
 }
 
