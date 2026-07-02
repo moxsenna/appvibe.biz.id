@@ -343,8 +343,12 @@ function pushCheckoutEvent(eventName, packId, orderId) {
     window.dataLayer.push(payload);
   }
 
-  if (eventName === 'begin_checkout') {
+  if (eventName === 'add_to_cart') {
     window.fbq?.('track', 'AddToCart', { value: amount, currency: 'IDR', content_name: pack.label });
+    window.gtag?.('event', 'add_to_cart', { currency: 'IDR', value: amount, items: [{ item_id: packId, item_name: pack.label, price: amount, quantity: 1 }] });
+  }
+
+  if (eventName === 'begin_checkout') {
     window.fbq?.('track', 'InitiateCheckout', { value: amount, currency: 'IDR', content_name: pack.label });
     window.gtag?.('event', 'begin_checkout', { currency: 'IDR', value: amount, items: [{ item_id: packId, item_name: pack.label, price: amount, quantity: 1 }] });
   }
@@ -364,6 +368,7 @@ export function initCheckoutUI({ container } = {}) {
   if (!container) throw new Error('Checkout container required');
   let pollInterval = null;
   const trackedPurchases = new Set();
+  const trackedATCs = new Set();
 
   function getContainer() { return container; }
 
@@ -383,6 +388,10 @@ export function initCheckoutUI({ container } = {}) {
         break;
       case 'confirm':
         html = renderConfirm(packId);
+        if (packId && !trackedATCs.has(packId)) {
+          trackedATCs.add(packId);
+          pushCheckoutEvent('add_to_cart', packId);
+        }
         break;
       case 'creating':
       case 'redirecting':
