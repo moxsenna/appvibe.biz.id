@@ -1,7 +1,6 @@
 import { verifyPayCoreEvent } from '../../lib/paycore-verify.js';
 import { PACKS } from '../../lib/packs.js';
 import { createMemberAccessRepo } from '../../lib/db.js';
-import { postEventToFlow } from '../../lib/avf-client.js';
 
 async function hashData(str) {
   if (!str) return undefined;
@@ -273,24 +272,31 @@ export async function onRequest(context) {
       );
     }
 
-    // 12. Forward as AppVibe Flow event (payment.paid → autoresponder)
+    // 12. Forward to AppVibe Flow autoresponder (best-effort, dynamic import)
     if (env.AVF_EVENT_URL) {
       await scheduleBackground(
         context,
-        postEventToFlow(env, {
-          type: 'payment.paid',
-          contact: {
-            name: member?.name || '',
-            email: member?.email_normalized || '',
-            phone: member?.phone_e164 || '',
-          },
-          data: {
-            product_name: pack.name,
-            pack_id: order.pack_id,
-            amount: order.amount,
-            order_id: orderId,
-          },
-        }),
+        (async () => {
+          try {
+            const { postEventToFlow } = await import('../../lib/avf-client.js');
+            await postEventToFlow(env, {
+              type: 'payment.paid',
+              contact: {
+                name: member?.name || '',
+                email: member?.email_normalized || '',
+                phone: member?.phone_e164 || '',
+              },
+              data: {
+                product_name: pack.description || pack.product_key || order.pack_id,
+                pack_id: order.pack_id,
+                amount: order.amount,
+                order_id: orderId,
+              },
+            });
+          } catch (e) {
+            console.error('[AVF] payment.paid event failed:', e.message);
+          }
+        })(),
         '[AVF] payment.paid event failed:',
       );
     }

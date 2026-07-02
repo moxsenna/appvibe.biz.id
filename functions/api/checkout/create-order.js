@@ -4,7 +4,6 @@ import { createMemberAccessRepo } from '../../lib/db.js';
 import { hashIdentifier } from '../../lib/auth-crypto.js';
 import { checkRateLimit } from '../../lib/rate-limit.js';
 import { clientIp, verifyTurnstile } from '../../lib/turnstile.js';
-import { postEventToFlow } from '../../lib/avf-client.js';
 import {
   createPaycoreOrderForPack,
   corsHeaders,
@@ -215,25 +214,32 @@ export async function onRequest(context) {
       );
     }
 
-    // Forward as AppVibe Flow event (form.submitted → autoresponder)
+    // Forward to AppVibe Flow event autoresponder (best-effort, dynamic import)
     if (env.AVF_EVENT_URL) {
       await scheduleBackground(
         context,
-        postEventToFlow(env, {
-          type: 'form.submitted',
-          contact: {
-            name,
-            email,
-            phone: phoneE164,
-            whatsapp_opt_in: true,
-          },
-          data: {
-            product_name: String(pack.description || pack.product_key || packId),
-            pack_id: packId,
-            amount: pack.amount,
-            checkout_url: created.paycoreJson.checkout_url || '',
-          },
-        }),
+        (async () => {
+          try {
+            const { postEventToFlow } = await import('../../lib/avf-client.js');
+            await postEventToFlow(env, {
+              type: 'form.submitted',
+              contact: {
+                name,
+                email,
+                phone: phoneE164,
+                whatsapp_opt_in: true,
+              },
+              data: {
+                product_name: String(pack.description || pack.product_key || packId),
+                pack_id: packId,
+                amount: pack.amount,
+                checkout_url: created.paycoreJson.checkout_url || '',
+              },
+            });
+          } catch (e) {
+            console.error('[AVF] form.submitted event failed:', e.message);
+          }
+        })(),
         '[AVF] form.submitted event failed:',
       );
     }
