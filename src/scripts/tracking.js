@@ -38,6 +38,9 @@ export function initTracking() {
     window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null };
   }
 
+  // Ensure dataLayer exists for GTM
+  window.dataLayer = window.dataLayer || [];
+
   // --- Vault internal events (dataLayer ONLY — GTM forwards to GA4/Meta/TikTok) ---
   window.trackVaultEvent = (eventName, payload = {}) => {
     const base = {
@@ -54,9 +57,7 @@ export function initTracking() {
       timestamp: new Date().toISOString(),
     };
 
-    if (window.dataLayer) {
-      try { dataLayer.push(base); } catch (e) {}
-    }
+    try { window.dataLayer.push(base); } catch (e) {}
 
     if (import.meta.env.DEV) {
       console.debug('[VaultTrack]', eventName, base);
@@ -68,22 +69,10 @@ export function initTracking() {
     window.trackVaultEvent(eventName, params);
   };
 
-  // --- Standard conversion helpers (direct — NOT through dataLayer) ---
+  // --- Standard conversion helpers (Forwards to dataLayer for GTM to process) ---
   window.fireStandardConversions = (leadMeta = {}) => {
-    // Meta Pixel — standard Lead event
-    if (window.fbq) {
-      try { fbq('track', 'Lead'); } catch (e) {}
-    }
-    // GA4 — standard generate_lead
-    if (window.gtag) {
-      try {
-        gtag('event', 'generate_lead', {
-          selected_pack: leadMeta.selected_pack || null,
-          selected_app: leadMeta.selected_app || null,
-          model_penggunaan: leadMeta.model_penggunaan || null,
-        });
-      } catch (e) {}
-    }
+    // We just push 'Lead' to dataLayer, and GTM maps it to fbq('track','Lead') and gtag('event','generate_lead')
+    window.trackVaultEvent('Lead', leadMeta);
   };
 
   // Fire PageView
@@ -110,6 +99,12 @@ export function getSessionMeta() {
   }
 }
 
+function getCookie(name) {
+  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+  if (match) return match[2];
+  return '';
+}
+
 export function getCheckoutAttribution() {
   const utm = getUtmParams();
   const sessionMeta = getSessionMeta();
@@ -125,5 +120,8 @@ export function getCheckoutAttribution() {
     lp_variant: sessionStorage.getItem('lp_variant') || '',
     lp_plan: sessionStorage.getItem('lp_plan') || '',
     lp_pack: sessionStorage.getItem('lp_pack') || '',
+    fbp: getCookie('_fbp') || '',
+    fbc: getCookie('_fbc') || '',
   };
 }
+

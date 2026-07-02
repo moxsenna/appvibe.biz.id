@@ -1,4 +1,5 @@
 import { getAppRegistryItem, getCategoryLabel } from './app-registry.js';
+import { mergeDerivedContext, resolveToneOfVoice } from './brand-derive.js';
 import {
   REBRAND_SCOPES,
   TEMPLATE_VERSION,
@@ -16,21 +17,13 @@ export { REBRAND_SCOPES };
 
 export const REQUIRED_BRAND_FIELDS = [
   'brandName',
-  'niche',
-  'targetBuyer',
-  'buyerProblem',
-  'buyerDesiredOutcome',
-  'positioning',
+  'targetMarket',
   'primaryCta',
 ];
 
 export const REQUIRED_PROJECT_FIELDS = [
   'appId',
   'newAppName',
-  'newTargetMarket',
-  'useCase',
-  'primaryProblem',
-  'promisedOutcome',
 ];
 
 export const TONE_OPTIONS = [
@@ -46,6 +39,45 @@ export const TONE_OPTIONS = [
   'Technical',
 ];
 
+/**
+ * Normalize v1 brand file fields to v2.
+ * - targetBuyer → targetMarket
+ * - toneOfVoice array → tonePreset (best match) + preserve array
+ */
+export function normalizeBrandFile(raw) {
+  if (!raw) return raw;
+  const b = { ...raw };
+
+  // Migrate targetBuyer → targetMarket
+  if (!b.targetMarket?.trim() && b.targetBuyer?.trim()) {
+    b.targetMarket = b.targetBuyer;
+  }
+  delete b.targetBuyer; // clean up old key
+
+  // Infer tonePreset from toneOfVoice if missing
+  if (!b.tonePreset && Array.isArray(b.toneOfVoice) && b.toneOfVoice.length) {
+    b.tonePreset = inferTonePreset(b.toneOfVoice);
+  }
+  if (!b.tonePreset) {
+    b.tonePreset = 'warm';
+  }
+
+  return b;
+}
+
+/**
+ * Best-guess tone preset from a list of tone strings.
+ */
+export function inferTonePreset(tones = []) {
+  const set = new Set(tones.map((t) => t?.toLowerCase()));
+  if (set.has('premium') || set.has('minimal')) return 'premium';
+  if (set.has('bold') || set.has('playful')) return 'bold';
+  if (set.has('professional') || set.has('direct') || set.has('technical')) return 'professional';
+  if (set.has('friendly') || set.has('warm') || set.has('educational')) return 'warm';
+  if (set.size > 0) return 'custom';
+  return 'warm';
+}
+
 export function createDefaultBrandFile(ownerId = 'local') {
   const ts = new Date().toISOString();
   return {
@@ -56,12 +88,15 @@ export function createDefaultBrandFile(ownerId = 'local') {
     tagline: '',
     niche: '',
     productCategory: '',
-    targetBuyer: '',
+    targetMarket: '',
+    targetBuyer: '',   // kept for v1 backward compat — normalizeBrandFile migrates this
     buyerProblem: '',
     buyerDesiredOutcome: '',
     positioning: '',
     differentiator: '',
-    toneOfVoice: ['Friendly', 'Educational'],
+    tonePreset: 'warm',
+    toneOfVoice: ['Friendly', 'Warm', 'Educational'],
+    toneCustom: [],
     mandatoryWords: '',
     forbiddenWords: 'pasti laris, auto kaya, dijamin omzet, testimoni palsu',
     primaryCta: '',
@@ -93,11 +128,11 @@ export function createDefaultProject(ownerId = 'local', app = null, brandFile = 
     scope: 'quick_rebrand',
     newAppName: appName,
     newAppTagline: app?.coreOutcome || app?.output || '',
-    newTargetMarket: brandFile?.targetBuyer || app?.defaultAudience || '',
-    useCase: app?.prompt || app?.promptNotes?.[0] || '',
-    primaryProblem: brandFile?.buyerProblem || '',
-    promisedOutcome: brandFile?.buyerDesiredOutcome || app?.coreOutcome || '',
-    differentiator: brandFile?.differentiator || '',
+    newTargetMarket: '',
+    useCase: '',
+    primaryProblem: '',
+    promisedOutcome: '',
+    differentiator: '',
     visualDirection: 'Premium operating desk, clean, credible, mobile-first, tidak berlebihan efek AI.',
     requiredFeaturesToEmphasize: '',
     featuresNotToChange: '',
@@ -122,17 +157,14 @@ export function normalizeList(value) {
 }
 
 export function validateBrandFile(brandFile = {}) {
+  const b = normalizeBrandFile(brandFile);
   const labels = {
     brandName: 'Brand name',
-    niche: 'Niche',
-    targetBuyer: 'Target buyer',
-    buyerProblem: 'Primary buyer problem',
-    buyerDesiredOutcome: 'Desired buyer outcome',
-    positioning: 'Positioning statement',
+    targetMarket: 'Target market',
     primaryCta: 'Primary CTA',
   };
   return REQUIRED_BRAND_FIELDS.reduce((errors, field) => {
-    if (!String(brandFile[field] || '').trim()) errors[field] = `${labels[field]} wajib diisi.`;
+    if (!String(b[field] || '').trim()) errors[field] = `${labels[field]} wajib diisi.`;
     return errors;
   }, {});
 }
@@ -141,10 +173,6 @@ export function validateProject(project = {}) {
   const labels = {
     appId: 'Aplikasi',
     newAppName: 'Nama aplikasi baru',
-    newTargetMarket: 'Target market baru',
-    useCase: 'Use case',
-    primaryProblem: 'Masalah utama',
-    promisedOutcome: 'Outcome yang dijanjikan',
   };
   return REQUIRED_PROJECT_FIELDS.reduce((errors, field) => {
     if (!String(project[field] || '').trim()) errors[field] = `${labels[field]} wajib diisi.`;
@@ -153,7 +181,8 @@ export function validateProject(project = {}) {
 }
 
 export function validateRebrandInput({ brandFile, project, app }) {
-  const brandErrors = validateBrandFile(brandFile);
+  const normalized = normalizeBrandFile(brandFile);
+  const brandErrors = validateBrandFile(normalized);
   const projectErrors = validateProject(project);
   if (!app) projectErrors.appId = 'Pilih aplikasi yang tersedia terlebih dahulu.';
   if (!REBRAND_SCOPES[project?.scope]) projectErrors.scope = 'Pilih scope rebrand yang valid.';
@@ -164,58 +193,66 @@ export function validateRebrandInput({ brandFile, project, app }) {
   };
 }
 
-export function buildGenerationContext({ brandFile = {}, project = {}, app = {}, generatedAt = new Date().toISOString() }) {
+export function buildGenerationContext({ brandFile = {}, project = {}, app = {}, derived = null, generatedAt = new Date().toISOString() }) {
   const registryApp = getAppRegistryItem(project.appId || app.id) || {};
   const mergedApp = { ...registryApp, ...app };
-  const toneOfVoice = Array.isArray(brandFile.toneOfVoice)
-    ? brandFile.toneOfVoice
-    : normalizeList(brandFile.toneOfVoice);
+
+  // Normalize v1 brand file fields
+  const normalizedBrand = normalizeBrandFile(brandFile);
+
+  // Use derived context if available, otherwise do inline derivation
+  const d = derived || mergeDerivedContext(normalizedBrand, project, mergedApp);
+  const b = d.brandFile;
+  const p = d.project;
+
+  const toneOfVoice = resolveToneOfVoice(b);
 
   return {
     generatedAt,
     projectId: project.id || '',
-    brandName: brandFile.brandName,
-    businessName: brandFile.businessName,
-    niche: brandFile.niche,
-    productCategory: brandFile.productCategory || getCategoryLabel(mergedApp.category || ''),
-    positioning: project.positioning || brandFile.positioning,
-    differentiator: project.differentiator || brandFile.differentiator,
+    brandName: b.brandName,
+    businessName: b.businessName,
+    niche: b.niche,
+    productCategory: b.productCategory || getCategoryLabel(mergedApp.category || ''),
+    positioning: p.positioning || b.positioning,
+    differentiator: p.differentiator || b.differentiator,
     toneOfVoice,
-    mandatoryWords: normalizeList(brandFile.mandatoryWords),
-    forbiddenWords: normalizeList([brandFile.forbiddenWords, brandFile.claimsNeverMake].filter(Boolean).join(', ')),
-    primaryCta: brandFile.primaryCta,
-    primaryCtaUrl: brandFile.primaryCtaUrl,
-    websiteUrl: brandFile.websiteUrl,
-    instagramHandle: brandFile.instagramHandle,
-    whatsappNumber: brandFile.whatsappNumber,
-    primaryColor: brandFile.primaryColor,
-    secondaryColor: brandFile.secondaryColor,
-    accentColor: brandFile.accentColor || mergedApp.accent,
-    typographyPreference: brandFile.typographyPreference,
-    logoReference: brandFile.logoReference,
-    availableProof: brandFile.availableProof,
-    claimBoundaries: [brandFile.claimBoundaries, brandFile.claimsNeverMake].filter(Boolean).join(' '),
+    mandatoryWords: normalizeList(b.mandatoryWords),
+    forbiddenWords: normalizeList([b.forbiddenWords, b.claimsNeverMake].filter(Boolean).join(', ')),
+    primaryCta: b.primaryCta,
+    primaryCtaUrl: b.primaryCtaUrl,
+    websiteUrl: b.websiteUrl,
+    instagramHandle: b.instagramHandle,
+    whatsappNumber: b.whatsappNumber,
+    primaryColor: b.primaryColor,
+    secondaryColor: b.secondaryColor,
+    accentColor: b.accentColor || mergedApp.accent,
+    typographyPreference: b.typographyPreference,
+    logoReference: b.logoReference,
+    availableProof: b.availableProof,
+    claimBoundaries: [b.claimBoundaries, b.claimsNeverMake].filter(Boolean).join(' '),
     originalAppName: mergedApp.name,
     originalAppDescription: mergedApp.shortDescription || mergedApp.function || mergedApp.tagline,
     originalCoreOutcome: mergedApp.coreOutcome || mergedApp.output,
     originalAppCategory: getCategoryLabel(mergedApp.category || ''),
     nonNegotiableLogic: mergedApp.nonNegotiableLogic || [],
     promptNotes: mergedApp.promptNotes || [],
-    newAppName: project.newAppName,
-    newAppTagline: project.newAppTagline,
-    newTargetMarket: project.newTargetMarket || brandFile.targetBuyer || mergedApp.defaultAudience,
-    useCase: project.useCase,
-    primaryProblem: project.primaryProblem || brandFile.buyerProblem,
-    promisedOutcome: project.promisedOutcome || brandFile.buyerDesiredOutcome,
-    visualDirection: project.visualDirection,
-    requiredFeaturesToEmphasize: normalizeList(project.requiredFeaturesToEmphasize),
-    featuresNotToChange: normalizeList(project.featuresNotToChange),
-    additionalInstructions: project.additionalInstructions,
+    newAppName: p.newAppName,
+    newAppTagline: p.newAppTagline,
+    newTargetMarket: p.newTargetMarket || b.targetMarket || mergedApp.defaultAudience,
+    useCase: p.useCase,
+    primaryProblem: p.primaryProblem || b.buyerProblem,
+    promisedOutcome: p.promisedOutcome || b.buyerDesiredOutcome,
+    visualDirection: p.visualDirection,
+    requiredFeaturesToEmphasize: normalizeList(p.requiredFeaturesToEmphasize),
+    featuresNotToChange: normalizeList(p.featuresNotToChange),
+    additionalInstructions: p.additionalInstructions,
   };
 }
 
 export function generateRebrandPack({ brandFile, project, app, generatedAt = new Date().toISOString(), skipValidation = false }) {
-  const validation = validateRebrandInput({ brandFile, project, app });
+  const normalizedBrand = normalizeBrandFile(brandFile);
+  const validation = validateRebrandInput({ brandFile: normalizedBrand, project, app });
   if (!skipValidation && !validation.ok) {
     const err = new Error('Incomplete rebrand input');
     err.validation = validation;
@@ -223,7 +260,8 @@ export function generateRebrandPack({ brandFile, project, app, generatedAt = new
   }
 
   const scope = REBRAND_SCOPES[project.scope] || REBRAND_SCOPES.quick_rebrand;
-  const ctx = buildGenerationContext({ brandFile, project, app, generatedAt });
+  const derived = mergeDerivedContext(normalizedBrand, project, app);
+  const ctx = buildGenerationContext({ brandFile: normalizedBrand, project, app, derived, generatedAt });
   const appRebrandPrompt = cleanupOutput(buildAppRebrandPrompt(ctx));
   const blocks = [{ id: 'appRebrandPrompt', title: 'App Rebrand Prompt', body: appRebrandPrompt }];
 

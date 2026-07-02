@@ -63,17 +63,17 @@ export function createMemberAccessRepo(db) {
   async function createOrder({
     id, member_id, paycore_order_id, external_order_id,
     pack_id, product_key, purchase_type, amount, currency, created_at,
-    lp_variant, lp_plan, lp_pack,
+    lp_variant, lp_plan, lp_pack, tracking_meta,
   }) {
     const ts = created_at || now();
     await db
       .prepare(
-        `INSERT INTO orders (id, member_id, paycore_order_id, external_order_id, pack_id, product_key, purchase_type, amount, currency, payment_status, fulfillment_status, lp_variant, lp_plan, lp_pack, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, ?, ?, ?, ?)`,
+        `INSERT INTO orders (id, member_id, paycore_order_id, external_order_id, pack_id, product_key, purchase_type, amount, currency, payment_status, fulfillment_status, lp_variant, lp_plan, lp_pack, tracking_meta, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', 'pending', ?, ?, ?, ?, ?, ?)`,
       )
-      .bind(id, member_id, paycore_order_id, external_order_id || null, pack_id, product_key, purchase_type, amount, currency, lp_variant || null, lp_plan || null, lp_pack || null, ts, ts)
+      .bind(id, member_id, paycore_order_id, external_order_id || null, pack_id, product_key, purchase_type, amount, currency, lp_variant || null, lp_plan || null, lp_pack || null, tracking_meta || null, ts, ts)
       .run();
-    return { id, member_id, paycore_order_id, external_order_id, pack_id, product_key, purchase_type, amount, currency, payment_status: 'pending', fulfillment_status: 'pending', lp_variant, lp_plan, lp_pack, created_at: ts, updated_at: ts };
+    return { id, member_id, paycore_order_id, external_order_id, pack_id, product_key, purchase_type, amount, currency, payment_status: 'pending', fulfillment_status: 'pending', lp_variant, lp_plan, lp_pack, tracking_meta, created_at: ts, updated_at: ts };
   }
 
   async function getOrderByPaycoreId(paycore_order_id) {

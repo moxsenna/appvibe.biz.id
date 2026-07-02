@@ -47,8 +47,8 @@ export async function postEventToFlow(env, { type, contact, data, metadata = {} 
       whatsapp_opt_in: contact.whatsapp_opt_in ?? true,
     },
     data: {
-      product_name: data.product_name || '',
       ...data,
+      product_name: data.product_name || '',
     },
     metadata: {
       source: 'appvibe-biz-id',

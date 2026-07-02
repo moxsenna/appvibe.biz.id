@@ -32,7 +32,6 @@
     ul,ol{list-style:none;padding:0;margin:0}
     img{max-width:100%;display:block}
 
-    /* ─── Header ─── */
     .vh-header{position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(201,212,229,.78);background:rgba(255,255,255,.88);backdrop-filter:blur(18px)}
     .vh-header-inner{display:flex;align-items:center;justify-content:space-between;width:min(1200px,calc(100% - 32px));min-height:60px;margin:0 auto;gap:12px;flex-wrap:wrap}
     .vh-brand{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:1rem;color:var(--navy);flex-shrink:0}
@@ -45,14 +44,12 @@
     .vh-logout-btn:hover{border-color:var(--danger);color:var(--danger)}
     .vh-logout-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
-    /* ─── Layout ─── */
     .vh-main{width:min(1200px,calc(100% - 32px));margin:0 auto;padding:28px 0 72px}
     .vh-section{margin-bottom:40px}
     .vh-section:last-child{margin-bottom:0}
     .vh-section-title{font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-weight:700;letter-spacing:-.03em;color:var(--navy);margin:0 0 16px;font-size:clamp(18px,3vw,22px)}
     .vh-mono-label{color:var(--muted-light);font:700 9px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
 
-    /* ─── Hero Welcome ─── */
     .vh-hero{border-radius:var(--radius-xl);padding:clamp(24px,5vw,40px);background:radial-gradient(circle at 20% 20%,rgba(25,140,255,.12),transparent 35%),radial-gradient(circle at 78% 70%,rgba(109,53,255,.1),transparent 34%),var(--navy);color:#fff;margin-bottom:32px}
     .vh-hero h1{margin:0 0 6px;font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,5vw,42px);letter-spacing:-.06em;line-height:1.05}
     .vh-hero p{margin:0 0 20px;color:rgba(255,255,255,.65);font-size:clamp(14px,2.5vw,16px);line-height:1.6;max-width:600px}
@@ -64,25 +61,35 @@
     .vh-metric{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:var(--radius-lg);padding:16px;text-align:center}
     .vh-metric-num{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:clamp(24px,4vw,32px);color:#fff;line-height:1}
     .vh-metric-label{font:600 10px/1.3 'DM Mono',monospace;color:rgba(255,255,255,.5);margin-top:6px;text-transform:uppercase;letter-spacing:.3px}
+    .vh-upgrade-panel{margin-top:18px;border:1px solid rgba(16,220,213,.18);border-radius:var(--radius-xl);background:linear-gradient(135deg,rgba(18,107,255,.13),rgba(16,220,213,.08));padding:18px}
+    .vh-upgrade-panel .vh-mono-label{color:rgba(255,255,255,.58)}
+    .vh-upgrade-panel-title{margin:0 0 6px;font-family:'Space Grotesk',sans-serif;font-size:clamp(20px,4vw,28px);letter-spacing:-.04em;color:#fff}
+    .vh-upgrade-panel-desc{margin:0 0 14px;color:rgba(255,255,255,.74);font-size:14px;max-width:760px}
+    .vh-upgrade-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .vh-upgrade-cta{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;border:0;border-radius:var(--radius-md);padding:11px 18px;background:#fff;color:var(--navy);font:800 13px/1 'Plus Jakarta Sans',sans-serif;box-shadow:0 12px 28px rgba(0,0,0,.16)}
+    .vh-upgrade-cta:hover{background:#f4f8ff;text-decoration:none}
+    .vh-upgrade-note{font-size:12px;color:rgba(255,255,255,.68)}
 
-    /* ─── Quick Steps ─── */
     .vh-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:32px}
     .vh-step{display:flex;gap:12px;padding:16px;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface)}
     .vh-step-num{flex:none;width:28px;height:28px;display:grid;place-items:center;border-radius:8px;background:var(--gradient-brand);color:#fff;font:700 12px/1 'Space Grotesk',sans-serif}
     .vh-step-text{font-size:13px;font-weight:500;color:var(--text);line-height:1.5}
 
-    /* ─── Filter Chips ─── */
     .vh-filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
     .vh-chip{border:1px solid var(--line);border-radius:var(--radius-pill);padding:7px 16px;background:var(--surface);font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);transition:all .15s;cursor:pointer;white-space:nowrap}
     .vh-chip:hover{border-color:var(--blue);color:var(--blue)}
     .vh-chip.active{border-color:var(--blue);color:#fff;background:var(--blue)}
     .vh-chip:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
 
-    /* ─── App Grid ─── */
+    .vh-upsell-strip{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border:1px solid rgba(18,107,255,.16);border-radius:var(--radius-lg);background:linear-gradient(135deg,rgba(18,107,255,.06),rgba(16,220,213,.06));padding:14px 16px;margin-bottom:18px}
+    .vh-upsell-strip strong{display:block;color:var(--navy);font-size:14px}
+    .vh-upsell-strip span{display:block;color:var(--muted);font-size:12px;line-height:1.45}
+
     .vh-app-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
     .vh-app-card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface);overflow:hidden;transition:box-shadow .2s,border-color .2s;cursor:pointer}
     .vh-app-card:hover{box-shadow:var(--shadow);border-color:var(--line)}
     .vh-app-card:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+    .vh-app-card.locked{opacity:.8;filter:grayscale(.3);background:#F9FBFF}
     .vh-app-icon{width:48px;height:48px;border-radius:var(--radius-md);display:grid;place-items:center;font:700 16px/1 'Space Grotesk',sans-serif;color:#fff;margin:16px 16px 0;flex:none}
     .vh-app-body{padding:12px 16px 16px;flex:1;display:flex;flex-direction:column}
     .vh-app-name{font-weight:800;font-size:15px;letter-spacing:-.02em;margin-bottom:2px}
@@ -95,8 +102,9 @@
     .vh-app-detail-btn{min-height:36px;border:1px solid var(--line);border-radius:var(--radius-sm);padding:6px 12px;background:var(--surface);font:600 11px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);transition:border-color .14s,color .14s;width:100%}
     .vh-app-detail-btn:hover{border-color:var(--blue);color:var(--blue)}
     .vh-app-detail-btn:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+    .vh-upgrade-badge{display:inline-flex;align-self:flex-start;padding:5px 10px;border-radius:var(--radius-pill);background:rgba(18,107,255,.08);color:var(--blue);font:800 10px/1 'DM Mono',monospace;text-transform:uppercase;letter-spacing:.35px;margin:0 0 8px}
+    .vh-app-locked-note{margin:0 0 10px;color:var(--muted);font-size:12px;line-height:1.45}
 
-    /* ─── Detail Drawer (mobile bottom sheet) ─── */
     .vh-drawer-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(5,11,29,.45);backdrop-filter:blur(4px)}
     .vh-drawer-overlay.open{display:block}
     .vh-drawer{position:fixed;bottom:0;left:0;right:0;z-index:101;max-height:85vh;overflow-y:auto;border-radius:var(--radius-xl) var(--radius-xl) 0 0;background:var(--surface);box-shadow:var(--shadow-float);transform:translateY(100%);transition:transform .3s ease}
@@ -115,13 +123,8 @@
     .vh-drawer-launch{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:48px;border:0;border-radius:var(--radius-md);padding:12px 24px;color:#fff;background:var(--blue);font:700 14px/1 'Plus Jakarta Sans',sans-serif;transition:background .14s}
     .vh-drawer-launch:hover{background:var(--blue-hover)}
     .vh-drawer-launch svg{width:16px;height:16px}
+    @media(min-width:640px){.vh-drawer{left:50%;right:auto;transform:translateX(-50%) translateY(100%);width:min(560px,calc(100% - 32px));border-radius:var(--radius-xl)}.vh-drawer-overlay.open .vh-drawer{transform:translateX(-50%) translateY(0)}}
 
-    @media(min-width:640px){
-      .vh-drawer{left:50%;right:auto;transform:translateX(-50%) translateY(100%);width:min(560px,calc(100% - 32px));border-radius:var(--radius-xl)}
-      .vh-drawer-overlay.open .vh-drawer{transform:translateX(-50%) translateY(0)}
-    }
-
-    /* ─── Assets Section ─── */
     .vh-asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
     .vh-asset-card{display:flex;flex-direction:column;gap:10px;padding:20px;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface)}
     .vh-asset-icon{width:40px;height:40px;border-radius:var(--radius-md);display:grid;place-items:center;font:700 16px/1;color:#fff;flex:none}
@@ -132,7 +135,6 @@
     .vh-asset-btn:disabled{border-color:var(--line-light);color:var(--muted-light);cursor:not-allowed;background:var(--bg)}
     .vh-asset-btn.vh-configured{border-color:var(--blue);color:var(--blue);background:rgba(18,107,255,.04)}
 
-    /* ─── Orders (collapsible) ─── */
     .vh-orders-toggle{display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line-light);border-radius:var(--radius-md);background:var(--surface);font:600 13px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);cursor:pointer;width:100%;transition:color .14s}
     .vh-orders-toggle:hover{color:var(--text)}
     .vh-orders-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -149,14 +151,12 @@
     .vh-order-badge.pending{color:var(--warn);background:var(--warn-bg)}
     .vh-order-detail{display:flex;gap:16px;font-size:12px;color:var(--muted);flex-wrap:wrap}
 
-    /* ─── Empty / Pending ─── */
     .vh-empty{text-align:center;padding:clamp(28px,5vw,48px);border:1px dashed var(--line);border-radius:var(--radius-xl);background:var(--surface)}
     .vh-empty h3{margin:0 0 8px;font-family:'Space Grotesk',sans-serif;font-size:20px;letter-spacing:-.03em}
     .vh-empty p{margin:0 0 16px;color:var(--muted);font-size:14px;max-width:400px;margin-inline:auto}
     .vh-empty-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:0;border-radius:var(--radius-md);padding:10px 24px;color:#fff;background:var(--blue);font:700 13px/1 'Plus Jakarta Sans',sans-serif;transition:background .14s}
     .vh-empty-btn:hover{background:var(--blue-hover)}
 
-    /* ─── Login ─── */
     .vh-login-wrap{max-width:520px;margin:0 auto}
     .vh-login-card{border:1px solid rgba(201,212,229,.95);border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow);padding:clamp(24px,5vw,42px)}
     .vh-login-card h1{margin:0 0 6px;font-family:'Space Grotesk','Plus Jakarta Sans',sans-serif;font-size:clamp(26px,5vw,36px);letter-spacing:-.06em;line-height:1.05}
@@ -171,16 +171,15 @@
     .vh-status.show{display:block}
     .vh-status.error{border:1px solid #FFCFC6;color:var(--danger);background:var(--danger-bg)}
     .vh-status.success{border:1px solid #B8EEE9;color:#1F5F68;background:#EBFBFA}
+    .vh-status.info{border:1px solid var(--line-light);color:var(--muted);background:var(--surface)}
     .vh-login-note{font-size:12px;color:var(--muted-light);line-height:1.6;margin-top:16px}
     .vh-login-note strong{color:var(--muted)}
 
-    /* ─── Loading ─── */
     .vh-loader{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:80px 0}
     .vh-spinner{width:36px;height:36px;border:3px solid var(--line-light);border-top-color:var(--blue);border-radius:50%;animation:spin .75s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .vh-loader p{color:var(--muted);font-size:13px;margin-top:12px}
 
-    /* ─── Mobile ─── */
     @media(max-width:639px){
       .vh-field{flex-direction:column}
       .vh-metrics{grid-template-columns:repeat(2,1fr)}
@@ -189,18 +188,11 @@
       .vh-steps{grid-template-columns:1fr}
       .vh-hero{padding:20px}
       .vh-header-inner{min-height:52px}
+      .vh-upgrade-row{flex-direction:column;align-items:stretch}
+      .vh-upgrade-cta{width:100%}
     }
-
-    @media(max-width:359px){
-      .vh-app-grid{grid-template-columns:1fr}
-    }
-
-    /* ─── Reduced Motion ─── */
-    @media(prefers-reduced-motion:reduce){
-      *{animation-duration:0s!important;transition-duration:0s!important}
-    }
-
-    /* ─── Focus ─── */
+    @media(max-width:359px){.vh-app-grid{grid-template-columns:1fr}}
+    @media(prefers-reduced-motion:reduce){*{animation-duration:0s!important;transition-duration:0s!important}}
     :focus-visible{outline:2px solid var(--blue);outline-offset:2px}
   </style>
 </head>
@@ -216,11 +208,8 @@
     </div>
   </header>
 
-  <main class="vh-main" id="vhMain" aria-live="polite">
-    <!-- JS renders everything here -->
-  </main>
+  <main class="vh-main" id="vhMain" aria-live="polite"></main>
 
-  <!-- Detail drawer -->
   <div class="vh-drawer-overlay" id="vhDrawerOverlay" role="dialog" aria-modal="true" aria-label="Detail aplikasi">
     <div class="vh-drawer">
       <div class="vh-drawer-handle"></div>
@@ -230,6 +219,11 @@
   </div>
 
   <script type="module">
+    import { APP_REGISTRY } from "/src/scripts/rebrand/app-registry.js";
+    import { initTracking } from "/src/scripts/tracking.js";
+
+    initTracking();
+
     const main = document.getElementById('vhMain');
     const drawerOverlay = document.getElementById('vhDrawerOverlay');
     const drawerInner = document.getElementById('vhDrawerInner');
@@ -246,192 +240,116 @@
     let cooldownTimer = null;
     let currentData = null;
 
-    // ── Utilities ──
     function esc(s){ const d=document.createElement('div'); d.textContent=String(s); return d.innerHTML; }
     function formatPrice(a){ return 'Rp'+Number(a||0).toLocaleString('id-ID'); }
     function formatDate(s){ if(!s)return'-'; return new Date(s).toLocaleDateString('id-ID',{year:'numeric',month:'short',day:'numeric'}); }
-    function statusLabel(s){
-      const m = {paid:'Dibayar',delivered:'Terkirim',pending:'Menunggu',created:'Dibuat',expired:'Kedaluwarsa',failed:'Gagal'};
-      return m[s]||s;
+    function statusLabel(s){ const m={paid:'Dibayar',delivered:'Terkirim',pending:'Menunggu',created:'Dibuat',expired:'Kedaluwarsa',failed:'Gagal'}; return m[s]||s; }
+    const TOTAL_APP_COUNT = APP_REGISTRY.length;
+    const TOTAL_BUNDLE_COUNT = 4;
+
+    function canShowUpgrade(data){ return Boolean(data?.upgrade_offer?.eligible || (!data?.has_full_vault && (data?.bundle_ids?.length||0) > 0)); }
+    function lockedAppCount(data){ return Math.max(0, TOTAL_APP_COUNT - (data?.app_ids?.length || 0)); }
+    function mergePortalApps(data){
+      const owned = new Set(data.app_ids || []);
+      return APP_REGISTRY.map((app) => ({
+        id: app.id,
+        name: app.name,
+        label: app.name.slice(0,3).toUpperCase(),
+        function: app.shortDescription,
+        output: app.coreOutcome,
+        rebrand: app.promptNotes?.[0] || app.name,
+        prompt: app.promptNotes?.[0] || app.coreOutcome,
+        accent: '#126BFF',
+        packs: app.bundleIds,
+        hasAccess: data.has_full_vault || owned.has(app.id),
+      })).sort((a,b)=> Number(b.hasAccess)-Number(a.hasAccess));
     }
 
-    // ── Login View ──
     function renderLogin(){
-      vaultBadge.style.display = 'none';
-      headerRight.innerHTML = '<a href="/" style="color:var(--blue);font:700 11px/1 \'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.3px">&larr; Beranda</a>';
-      main.innerHTML = `
-        <div class="vh-login-wrap">
-          <div class="vh-login-card">
-            <h1>Masuk ke AppVibe Vault</h1>
-            <p>Masukkan nomor WhatsApp yang Anda gunakan saat checkout. Tautan akses akan dikirim ke WhatsApp tersebut.</p>
-            <div class="vh-field" role="group" aria-label="Nomor WhatsApp">
-              <input type="tel" id="vhPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" style="font-size:16px" aria-label="Nomor WhatsApp" />
-              <button id="vhSend">Kirim tautan akses</button>
-            </div>
-            <div class="vh-status" id="vhStatus" role="alert" aria-live="assertive"></div>
-            <p class="vh-login-note"><strong>Keamanan:</strong> Tautan berlaku 15 menit dan hanya dapat digunakan satu kali. Kami tidak pernah mengungkap apakah nomor Anda terdaftar atau tidak.</p>
-          </div>
-        </div>
-      `;
-      const phoneInput = document.getElementById('vhPhone');
-      const sendBtn = document.getElementById('vhSend');
-      const statusEl = document.getElementById('vhStatus');
-      try {
-        const savedPhone = sessionStorage.getItem('av_checkout_phone');
-        if (savedPhone) phoneInput.value = savedPhone;
-      } catch {}
-      sendBtn.addEventListener('click', () => handleSend(phoneInput, sendBtn, statusEl));
-      phoneInput.addEventListener('keydown', (e) => { if(e.key==='Enter') sendBtn.click(); });
+      vaultBadge.style.display='none';
+      headerRight.innerHTML='<a href="/" style="color:var(--blue);font:700 11px/1 \'DM Mono\',monospace;text-transform:uppercase;letter-spacing:.3px">&larr; Beranda</a>';
+      main.innerHTML=`<div class="vh-login-wrap"><div class="vh-login-card"><h1>Masuk ke AppVibe Vault</h1><p>Masukkan nomor WhatsApp yang Anda gunakan saat checkout. Tautan akses akan dikirim ke WhatsApp tersebut.</p><div class="vh-field" role="group" aria-label="Nomor WhatsApp"><input type="tel" id="vhPhone" placeholder="08xxxxxxxxxx" autocomplete="tel" inputmode="tel" style="font-size:16px" aria-label="Nomor WhatsApp" /><button id="vhSend">Kirim tautan akses</button></div><div class="vh-status" id="vhStatus" role="alert" aria-live="assertive"></div><p class="vh-login-note"><strong>Keamanan:</strong> Tautan berlaku 15 menit dan hanya dapat digunakan satu kali. Kami tidak pernah mengungkap apakah nomor Anda terdaftar atau tidak.</p></div></div>`;
+      const phoneInput=document.getElementById('vhPhone'); const sendBtn=document.getElementById('vhSend'); const statusEl=document.getElementById('vhStatus');
+      try{ const savedPhone=sessionStorage.getItem('av_checkout_phone'); if(savedPhone) phoneInput.value=savedPhone; }catch{}
+      sendBtn.addEventListener('click',()=>handleSend(phoneInput,sendBtn,statusEl));
+      phoneInput.addEventListener('keydown',(e)=>{if(e.key==='Enter') sendBtn.click();});
     }
 
-    function setStatus(el, type, msg){
-      el.className = 'vh-status show ' + type;
-      el.textContent = msg;
-    }
+    function setStatus(el,type,msg){ el.className='vh-status show '+type; el.textContent=msg; }
 
-    async function handleSend(input, btn, statusEl){
-      const phone = input.value.trim();
-      if(!phone || phone.length < 8){
-        setStatus(statusEl, 'error', 'Masukkan nomor WhatsApp yang valid.');
-        input.focus(); return;
-      }
-      btn.disabled = true;
-      setStatus(statusEl, 'info', 'Mengirim…');
+    async function handleSend(input,btn,statusEl){
+      const phone=input.value.trim();
+      if(!phone||phone.length<8){ setStatus(statusEl,'error','Masukkan nomor WhatsApp yang valid.'); input.focus(); return; }
+      btn.disabled=true; setStatus(statusEl,'info','Mengirim…');
       try {
-        const res = await fetch('/api/auth/request-magic-link', {
-          method: 'POST', headers: {'Content-Type':'application/json'},
-          body: JSON.stringify({phone}),
-        });
-        const data = await res.json().catch(()=>({}));
-        setStatus(statusEl, 'success', data.message || 'Jika nomor terdaftar, tautan akses telah dikirim melalui WhatsApp.');
+        const res=await fetch('/api/auth/request-magic-link',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phone})});
+        const data=await res.json().catch(()=>({}));
+        setStatus(statusEl,'success',data.message || 'Jika nomor terdaftar, tautan akses telah dikirim melalui WhatsApp.');
         startCooldown(btn);
       } catch {
-        setStatus(statusEl, 'error', 'Koneksi bermasalah. Silakan coba lagi.');
-        btn.disabled = false;
+        setStatus(statusEl,'error','Koneksi bermasalah. Silakan coba lagi.'); btn.disabled=false;
       }
     }
 
-    function startCooldown(btn){
-      let rem = COOLDOWN_SEC;
-      btn.textContent = `Kirim ulang (${rem}s)`;
-      cooldownTimer = setInterval(()=>{
-        rem--;
-        if(rem<=0){clearInterval(cooldownTimer);btn.disabled=false;btn.textContent='Kirim tautan akses';return;}
-        btn.textContent = `Kirim ulang (${rem}s)`;
-      },1000);
-    }
+    function startCooldown(btn){ let rem=COOLDOWN_SEC; btn.textContent=`Kirim ulang (${rem}s)`; cooldownTimer=setInterval(()=>{ rem--; if(rem<=0){clearInterval(cooldownTimer);btn.disabled=false;btn.textContent='Kirim tautan akses';return;} btn.textContent=`Kirim ulang (${rem}s)`; },1000); }
 
-    // ── Dashboard View ──
     function renderDashboard(data){
       currentData = data;
-      const {member_name, first_name, has_full_vault, bundle_ids, app_ids, apps, bundles, resources, orders} = data;
+      const { first_name, has_full_vault, bundle_ids, app_ids, bundles, orders } = data;
+      const apps = mergePortalApps(data);
 
-      vaultBadge.style.display = '';
-      headerRight.innerHTML = `
-        <span class="vh-access-pill">Aktif</span>
-        <button class="vh-logout-btn" id="vhLogout">Keluar</button>
-      `;
+      vaultBadge.style.display='';
+      headerRight.innerHTML=`<span class="vh-access-pill">Aktif</span><button class="vh-logout-btn" id="vhLogout">Keluar</button>`;
       document.getElementById('vhLogout').addEventListener('click', handleLogout);
 
       const mkCount = bundles.reduce((n,b)=>n+(b.resources?.marketing_kit?1:0),0);
-
-      // Hero
       const heroBadgeHtml = has_full_vault
         ? '<span class="vh-badge vh-badge--full">Full Vault — Semua Akses</span>'
         : bundle_ids.map(b=>`<span class="vh-badge vh-badge--bundle">${esc(PACK_LABELS[b]||b)}</span>`).join('');
+      const heroUpgradeHtml = canShowUpgrade(data) ? `
+        <div class="vh-upgrade-panel">
+          <div class="vh-mono-label">Upgrade akses</div>
+          <h2 class="vh-upgrade-panel-title">Buka semua ${TOTAL_APP_COUNT} aplikasi dan ${TOTAL_BUNDLE_COUNT} bundle</h2>
+          <p class="vh-upgrade-panel-desc">Akses Anda sudah aktif di ${bundle_ids.length} bundle. Tambah Rp50.000 untuk membuka seluruh AppVibe Vault.</p>
+          <div class="vh-upgrade-row">
+            <button class="vh-upgrade-cta" type="button" data-upgrade-full-vault data-placement="hero">Upgrade ke Full Vault — +Rp50.000</button>
+            <span class="vh-upgrade-note">Termasuk semua aplikasi, marketing kit, dan panduan bundle lainnya.</span>
+          </div>
+        </div>` : '';
 
-      // Steps
-      const stepsHtml = `
-        <div class="vh-steps">
-          <div class="vh-step"><span class="vh-step-num">1</span><span class="vh-step-text">Pilih aplikasi yang sesuai dengan market Anda.</span></div>
-          <div class="vh-step"><span class="vh-step-num">2</span><span class="vh-step-text">Buka dan sesuaikan menjadi brand Anda.</span></div>
-          <div class="vh-step"><span class="vh-step-num">3</span><span class="vh-step-text">Gunakan marketing kit untuk mulai mengenalkan produk.</span></div>
-        </div>
-      `;
-
-      // App filter chips
+      const stepsHtml = `<div class="vh-steps"><div class="vh-step"><span class="vh-step-num">1</span><span class="vh-step-text">Pilih aplikasi yang sesuai dengan market Anda.</span></div><div class="vh-step"><span class="vh-step-num">2</span><span class="vh-step-text">Buka dan sesuaikan menjadi brand Anda.</span></div><div class="vh-step"><span class="vh-step-num">3</span><span class="vh-step-text">Gunakan marketing kit untuk mulai mengenalkan produk.</span></div></div>`;
       const chipBundles = has_full_vault ? ['all','advertiser','commerce','creator','brand_launch'] : ['all',...bundle_ids];
-      const chipHtml = chipBundles.map((id,i)=>{
-        const label = id==='all' ? 'Semua aplikasi' : (PACK_LABELS[id]||id).replace(' App Pack','').replace(' & Marketplace',' & MKP').replace(' & Affiliate',' & Aff');
-        return `<button class="vh-chip${i===0?' active':''}" data-filter="${id}">${esc(label)}</button>`;
-      }).join('');
+      const chipHtml = chipBundles.map((id,i)=>{ const label=id==='all' ? 'Semua aplikasi' : (PACK_LABELS[id]||id).replace(' App Pack','').replace(' & Marketplace',' & MKP').replace(' & Affiliate',' & Aff'); return `<button class="vh-chip${i===0?' active':''}" data-filter="${id}">${esc(label)}</button>`; }).join('');
 
-      // App grid
       const appCardsHtml = apps.map(app=>`
-        <article class="vh-app-card" data-app-id="${app.id}">
+        <article class="vh-app-card ${app.hasAccess ? '' : 'locked'}" data-app-id="${app.id}">
           <div class="vh-app-icon" style="background:${esc(app.accent)}">${esc(app.label)}</div>
           <div class="vh-app-body">
             <div class="vh-app-name">${esc(app.name)}</div>
             <div class="vh-app-func">${esc(app.function)}</div>
+            ${app.hasAccess ? '' : `<p class="vh-app-locked-note">Belum termasuk akses Anda.</p>`}
             <div class="vh-app-actions">
-              <button class="vh-app-cta" data-launch="${app.id}">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                Buka aplikasi
-              </button>
+              ${app.hasAccess ? `
+                <button class="vh-app-cta" data-launch="${app.id}">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  Buka aplikasi
+                </button>` : `${canShowUpgrade(data) ? `<button class="vh-app-cta" data-upgrade-full-vault data-app-id="${app.id}" data-placement="card">Upgrade ke Full Vault — +Rp50.000</button>` : `<button class="vh-app-cta vh-disabled" disabled>Tidak termasuk akses</button>`}`}
               <button class="vh-app-detail-btn" data-detail="${app.id}">Detail</button>
             </div>
           </div>
-        </article>
-      `).join('');
+        </article>`).join('');
 
-      // Assets
       const assetCards = bundles.map(b=>{
-        const mk = b.resources?.marketing_kit;
-        const guide = b.resources?.guide;
-        return `
-          <div class="vh-asset-card">
-            <div class="vh-asset-icon" style="background:var(--blue)">${esc(b.name.charAt(0))}</div>
-            <div class="vh-asset-title">${esc(b.name)}</div>
-            <div class="vh-asset-desc">Marketing kit dan aset peluncuran untuk ${esc(b.name)}.</div>
-            <button class="vh-asset-btn${mk?' vh-configured':''}" ${mk?'':'disabled'} data-resource="${b.id}:marketing_kit">
-              ${mk ? 'Buka marketing kit' : 'Marketing kit belum tersedia'}
-            </button>
-            ${guide ? `<button class="vh-asset-btn vh-configured" data-resource="${b.id}:guide">Buka panduan mulai</button>` : ''}
-          </div>
-        `;
+        const mk=b.resources?.marketing_kit; const guide=b.resources?.guide;
+        return `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--blue)">${esc(b.name.charAt(0))}</div><div class="vh-asset-title">${esc(b.name)}</div><div class="vh-asset-desc">Marketing kit dan aset peluncuran untuk ${esc(b.name)}.</div><button class="vh-asset-btn${mk?' vh-configured':''}" ${mk?'':'disabled'} data-resource="${b.id}:marketing_kit">${mk ? 'Buka marketing kit' : 'Marketing kit belum tersedia'}</button>${guide ? `<button class="vh-asset-btn vh-configured" data-resource="${b.id}:guide">Buka panduan mulai</button>` : ''}</div>`;
       }).join('');
+      const upgradeAssetCard = canShowUpgrade(data) ? `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--gradient-brand)">FV</div><div class="vh-asset-title">Upgrade Full Vault</div><div class="vh-asset-desc">Buka aset, marketing kit, dan panduan dari bundle lain hanya dengan tambahan Rp50.000.</div><button class="vh-asset-btn vh-configured" type="button" data-upgrade-full-vault data-placement="asset_card">Upgrade sekarang</button></div>` : '';
+      const licenseCard = `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--violet)">&#x2713;</div><div class="vh-asset-title">Lisensi Rebrand</div><div class="vh-asset-desc">Hak kepemilikan produk yang sudah Anda beli dan ketentuan penggunaannya.</div><a class="vh-asset-btn vh-configured" href="/license/" style="text-decoration:none;text-align:center">Baca lisensi rebrand</a></div>`;
+      const rebrandWorkspaceCard = `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--gradient-brand)">RW</div><div class="vh-asset-title">Rebrand Workspace</div><div class="vh-asset-desc">Buat Brand File, pilih aplikasi yang Anda miliki, lalu generate prompt rebrand dan marketing kit.</div><a class="vh-asset-btn vh-configured" href="/access/rebrand/" style="text-decoration:none;text-align:center">Buka Rebrand Workspace</a></div>`;
 
-      const licenseCard = `
-        <div class="vh-asset-card">
-          <div class="vh-asset-icon" style="background:var(--violet)">&#x2713;</div>
-          <div class="vh-asset-title">Lisensi Rebrand</div>
-          <div class="vh-asset-desc">Hak kepemilikan produk yang sudah Anda beli dan ketentuan penggunaannya.</div>
-          <a class="vh-asset-btn vh-configured" href="/license/" style="text-decoration:none;text-align:center">Baca lisensi rebrand</a>
-        </div>
-      `;
+      const ordersHtml = orders.length > 0 ? `<button class="vh-orders-toggle" id="vhOrdersToggle" aria-expanded="false">Riwayat pembelian (${orders.length})<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div class="vh-orders-body" id="vhOrdersBody">${orders.map(o=>{ const badge=o.payment_status==='paid'||o.fulfillment_status==='delivered'?'paid':o.payment_status; return `<div class="vh-order-row"><div class="vh-order-head"><h3>${esc(PACK_LABELS[o.pack_id]||o.pack_id)}</h3><span class="vh-order-badge ${badge}">${esc(statusLabel(badge))}</span></div><div class="vh-order-detail"><span>${formatPrice(o.amount)}</span><span>${formatDate(o.created_at)}</span>${o.paid_at?`<span>Dibayar ${formatDate(o.paid_at)}</span>`:''}</div></div>`; }).join('')}</div>` : '';
 
-      const rebrandWorkspaceCard = `
-        <div class="vh-asset-card">
-          <div class="vh-asset-icon" style="background:var(--gradient-brand)">RW</div>
-          <div class="vh-asset-title">Rebrand Workspace</div>
-          <div class="vh-asset-desc">Buat Brand File, pilih aplikasi yang Anda miliki, lalu generate prompt rebrand dan marketing kit.</div>
-          <a class="vh-asset-btn vh-configured" href="/access/rebrand/" style="text-decoration:none;text-align:center">Buka Rebrand Workspace</a>
-        </div>
-      `;
-
-      // Orders
-      const ordersHtml = orders.length > 0 ? `
-        <button class="vh-orders-toggle" id="vhOrdersToggle" aria-expanded="false">
-          Riwayat pembelian (${orders.length})
-          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="vh-orders-body" id="vhOrdersBody">
-          ${orders.map(o=>{
-            const badge = o.payment_status==='paid'||o.fulfillment_status==='delivered'?'paid':o.payment_status;
-            return `<div class="vh-order-row">
-              <div class="vh-order-head">
-                <h3>${esc(PACK_LABELS[o.pack_id]||o.pack_id)}</h3>
-                <span class="vh-order-badge ${badge}">${esc(statusLabel(badge))}</span>
-              </div>
-              <div class="vh-order-detail">
-                <span>${formatPrice(o.amount)}</span>
-                <span>${formatDate(o.created_at)}</span>
-                ${o.paid_at?`<span>Dibayar ${formatDate(o.paid_at)}</span>`:''}
-              </div>
-            </div>`;
-          }).join('')}
-        </div>
-      ` : '';
+      const appUpsellStrip = canShowUpgrade(data) ? `<div class="vh-upsell-strip"><div><strong>Masih ada ${lockedAppCount(data)} aplikasi di bundle lain yang belum terbuka.</strong><span>Full Vault membuka seluruh 13 aplikasi untuk semua niche.</span></div><button class="vh-upgrade-cta" type="button" data-upgrade-full-vault data-placement="strip">Upgrade +Rp50.000</button></div>` : '';
 
       main.innerHTML = `
         <section class="vh-hero" aria-label="Selamat datang">
@@ -439,91 +357,50 @@
           <p>Aset produk yang bisa Anda gunakan untuk membangun lini produk digital Anda.</p>
           <div class="vh-hero-badges">${heroBadgeHtml}</div>
           <div class="vh-metrics">
-            <div class="vh-metric"><div class="vh-metric-num">${app_ids.length}</div><div class="vh-metric-label">Aplikasi</div></div>
-            <div class="vh-metric"><div class="vh-metric-num">${bundles.length}</div><div class="vh-metric-label">Bundle</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${app_ids.length}</div><div class="vh-metric-label">Aplikasi aktif</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${bundles.length}</div><div class="vh-metric-label">Bundle aktif</div></div>
             <div class="vh-metric"><div class="vh-metric-num">${mkCount}</div><div class="vh-metric-label">Mkt Kit</div></div>
-            <div class="vh-metric"><div class="vh-metric-num">${has_full_vault?'Aktif':bundle_ids.length + ' aktif'}</div><div class="vh-metric-label">Lisensi</div></div>
+            <div class="vh-metric"><div class="vh-metric-num">${has_full_vault?'Full Vault':bundle_ids.length + ' / 4'}</div><div class="vh-metric-label">Lisensi</div></div>
           </div>
+          ${heroUpgradeHtml}
         </section>
 
-        <section class="vh-section" aria-label="Langkah awal">
-          <h2 class="vh-section-title">Mulai dari sini</h2>
-          ${stepsHtml}
-        </section>
+        <section class="vh-section" aria-label="Langkah awal"><h2 class="vh-section-title">Mulai dari sini</h2>${stepsHtml}</section>
 
-        <section class="vh-section" aria-label="Aplikasi Anda">
-          <h2 class="vh-section-title">Aplikasi Anda</h2>
-          <div class="vh-filters" role="tablist" aria-label="Filter bundle">${chipHtml}</div>
-          <div class="vh-app-grid" id="vhAppGrid">${appCardsHtml}</div>
-        </section>
+        <section class="vh-section" aria-label="Aplikasi Anda"><h2 class="vh-section-title">Aplikasi Anda</h2>${appUpsellStrip}<div class="vh-filters" role="tablist" aria-label="Filter bundle">${chipHtml}</div><div class="vh-app-grid" id="vhAppGrid">${appCardsHtml}</div></section>
 
-        <section class="vh-section" aria-label="Aset peluncuran">
-          <h2 class="vh-section-title">Aset Peluncuran</h2>
-          <div class="vh-asset-grid">${assetCards}${rebrandWorkspaceCard}${licenseCard}</div>
-        </section>
+        <section class="vh-section" aria-label="Aset peluncuran"><h2 class="vh-section-title">Aset Peluncuran</h2><div class="vh-asset-grid">${assetCards}${upgradeAssetCard}${rebrandWorkspaceCard}${licenseCard}</div></section>
 
         ${ordersHtml ? `<section class="vh-section" aria-label="Riwayat pembelian"><h2 class="vh-section-title">Riwayat Pembelian</h2>${ordersHtml}</section>` : ''}
       `;
 
-      wireDashboardEvents(apps);
+      wireDashboardEvents(apps, data);
     }
 
-    function wireDashboardEvents(apps){
-      // Filter chips
+    function wireDashboardEvents(apps, data){
       const chips = main.querySelectorAll('.vh-chip');
       const grid = document.getElementById('vhAppGrid');
-      chips.forEach(chip=>{
-        chip.addEventListener('click',()=>{
-          chips.forEach(c=>c.classList.remove('active'));
-          chip.classList.add('active');
-          const filter = chip.dataset.filter;
-          grid.querySelectorAll('.vh-app-card').forEach(card=>{
-            if(filter==='all'){card.style.display='';return;}
-            const app = apps.find(a=>a.id===card.dataset.appId);
-            card.style.display = (app&&app.packs.includes(filter)) ? '' : 'none';
-          });
-        });
-      });
+      chips.forEach(chip=>{ chip.addEventListener('click',()=>{ chips.forEach(c=>c.classList.remove('active')); chip.classList.add('active'); const filter=chip.dataset.filter; grid.querySelectorAll('.vh-app-card').forEach(card=>{ if(filter==='all'){card.style.display='';return;} const app=apps.find(a=>a.id===card.dataset.appId); card.style.display=(app&&app.packs.includes(filter))?'':'none'; }); }); });
 
-      // Detail buttons → drawer
-      grid.querySelectorAll('[data-detail]').forEach(btn=>{
-        btn.addEventListener('click',()=>openDrawer(btn.dataset.detail, apps));
-      });
+      grid.querySelectorAll('[data-detail]').forEach(btn=>{ btn.addEventListener('click',()=>openDrawer(btn.dataset.detail, apps, data)); });
+      grid.querySelectorAll('[data-launch]').forEach(btn=>{ btn.addEventListener('click',()=>launchApp(btn.dataset.launch)); });
+      main.querySelectorAll('[data-resource]').forEach(btn=>{ btn.addEventListener('click',()=>{ const [bundleId, type]=btn.dataset.resource.split(':'); launchResource(bundleId, type); }); });
+      main.querySelectorAll('[data-upgrade-full-vault]').forEach(btn=>{ btn.addEventListener('click',()=>startFullVaultUpgrade(btn.dataset.appId || '', btn.dataset.placement || 'unknown')); });
 
-      // Launch buttons
-      grid.querySelectorAll('[data-launch]').forEach(btn=>{
-        btn.addEventListener('click',()=>launchApp(btn.dataset.launch));
-      });
-
-      // Resource buttons
-      main.querySelectorAll('[data-resource]').forEach(btn=>{
-        btn.addEventListener('click',()=>{
-          const [bundleId, type] = btn.dataset.resource.split(':');
-          launchResource(bundleId, type);
-        });
-      });
-
-      // Orders toggle
-      const ordersToggle = document.getElementById('vhOrdersToggle');
-      const ordersBody = document.getElementById('vhOrdersBody');
-      if(ordersToggle && ordersBody){
-        ordersToggle.addEventListener('click',()=>{
-          const open = ordersToggle.classList.toggle('open');
-          ordersBody.classList.toggle('open');
-          ordersToggle.setAttribute('aria-expanded', open);
-        });
-      }
+      const ordersToggle=document.getElementById('vhOrdersToggle'); const ordersBody=document.getElementById('vhOrdersBody');
+      if(ordersToggle && ordersBody){ ordersToggle.addEventListener('click',()=>{ const open=ordersToggle.classList.toggle('open'); ordersBody.classList.toggle('open'); ordersToggle.setAttribute('aria-expanded', open); }); }
     }
 
-    // ── Drawer ──
     let drawerOriginator = null;
 
-    function openDrawer(appId, apps){
-      const app = apps.find(a=>a.id===appId);
-      if(!app) return;
-      // Remember which button opened the drawer for return-focus.
+    function openDrawer(appId, apps, data){
+      const app = apps.find(a=>a.id===appId); if(!app) return;
       drawerOriginator = document.querySelector(`[data-detail="${appId}"]`);
       const packLabels = app.packs.map(p=>PACK_LABELS[p]||p).join(', ');
+      const lockedHtml = !app.hasAccess ? `
+        <p class="vh-app-locked-note">Termasuk dalam bundle yang belum Anda miliki.</p>
+        ${canShowUpgrade(data) ? `<button class="vh-drawer-launch" data-upgrade-full-vault data-app-id="${app.id}" data-placement="drawer">Upgrade ke Full Vault — +Rp50.000</button>` : ''}
+      ` : `<button class="vh-drawer-launch" data-launch="${app.id}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Buka ${esc(app.name)}</button>`;
       drawerInner.innerHTML = `
         <h2 tabindex="-1">${esc(app.name)}</h2>
         <p class="vh-drawer-func">${esc(app.function)}</p>
@@ -534,80 +411,58 @@
           <div class="vh-drawer-item"><dt>Pack terkait</dt><dd>${esc(packLabels)}</dd></div>
           <div class="vh-drawer-item"><dt>Langkah pertama</dt><dd>${esc(app.prompt)}</dd></div>
         </div>
-        <button class="vh-drawer-launch" data-launch="${app.id}">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7V17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Buka ${esc(app.name)}
-        </button>
-      `;
-      drawerInner.querySelector('[data-launch]').addEventListener('click',()=>launchApp(app.id));
+        ${lockedHtml}`;
+      const launchBtn = drawerInner.querySelector('[data-launch]'); if(launchBtn) launchBtn.addEventListener('click',()=>launchApp(app.id));
+      const upgradeBtn = drawerInner.querySelector('[data-upgrade-full-vault]'); if(upgradeBtn) upgradeBtn.addEventListener('click',()=>startFullVaultUpgrade(app.id, upgradeBtn.dataset.placement || 'unknown'));
       drawerOverlay.classList.add('open');
-      // Focus the heading (tabindex=-1) so screen readers announce the dialog.
       drawerInner.querySelector('h2').focus();
     }
 
-    function closeDrawer(){
-      drawerOverlay.classList.remove('open');
-      // Return focus to the button that opened the drawer.
-      if(drawerOriginator){ drawerOriginator.focus(); drawerOriginator = null; }
-    }
+    function closeDrawer(){ drawerOverlay.classList.remove('open'); if(drawerOriginator){ drawerOriginator.focus(); drawerOriginator=null; } }
     drawerClose.addEventListener('click', closeDrawer);
     drawerOverlay.addEventListener('click',(e)=>{if(e.target===drawerOverlay) closeDrawer();});
-    document.addEventListener('keydown',(e)=>{
-      if(e.key==='Escape' && drawerOverlay.classList.contains('open')){ closeDrawer(); return; }
-      // Focus trap: Tab cycles within the drawer when open.
-      if(e.key==='Tab' && drawerOverlay.classList.contains('open')){
-        const drawer = drawerOverlay.querySelector('.vh-drawer');
-        const focusable = drawer.querySelectorAll('button, [tabindex]:not([tabindex="-1"]), a[href]');
-        if(focusable.length === 0) return;
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-        if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
-        else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    document.addEventListener('keydown',(e)=>{ if(e.key==='Escape'&&drawerOverlay.classList.contains('open')){ closeDrawer(); return; } if(e.key==='Tab'&&drawerOverlay.classList.contains('open')){ const drawer=drawerOverlay.querySelector('.vh-drawer'); const focusable=drawer.querySelectorAll('button, [tabindex]:not([tabindex="-1"]), a[href]'); if(focusable.length===0) return; const first=focusable[0]; const last=focusable[focusable.length-1]; if(e.shiftKey&&document.activeElement===first){ e.preventDefault(); last.focus(); } else if(!e.shiftKey&&document.activeElement===last){ e.preventDefault(); first.focus(); } } });
+
+    function launchApp(appId){ window.open(`/api/member/launch?app_id=${encodeURIComponent(appId)}`, '_blank', 'noopener'); }
+    function launchResource(bundleId, type){ window.open(`/api/member/resource?bundle_id=${encodeURIComponent(bundleId)}&type=${encodeURIComponent(type)}`, '_blank', 'noopener'); }
+
+    async function startFullVaultUpgrade(appId='', placement='unknown'){
+      if (window.trackVaultEvent) {
+        window.trackVaultEvent('initiate_checkout', { page_type: 'portal', selected_pack: 'vault_full', selected_app: appId, placement });
       }
-    });
-
-    // ── Launch ──
-    function launchApp(appId){
-      // Opens the launch endpoint in a new tab. The server validates
-      // session + entitlement and 302-redirects to the real URL.
-      window.open(`/api/member/launch?app_id=${encodeURIComponent(appId)}`, '_blank', 'noopener');
+      const triggerButtons = main.querySelectorAll('[data-upgrade-full-vault]');
+      triggerButtons.forEach((btn)=>{ btn.disabled = true; });
+      try {
+        const res = await fetch('/api/checkout/create-upgrade-order', {
+          method: 'POST',
+          credentials: 'same-origin',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify({ source: 'access_portal', app_id: appId, lp_variant: 'access_portal', lp_plan: 'upgrade', lp_pack: 'vault_full' }),
+        });
+        const data = await res.json().catch(()=>({}));
+        if (!res.ok || !data.checkout_url) {
+          main.insertAdjacentHTML('afterbegin', `<div class="vh-status show error" role="alert">${esc(data.message || 'Upgrade belum bisa diproses saat ini.')}</div>`);
+          triggerButtons.forEach((btn)=>{ btn.disabled = false; });
+          return;
+        }
+        window.location.href = data.checkout_url;
+      } catch {
+        main.insertAdjacentHTML('afterbegin', '<div class="vh-status show error" role="alert">Gagal membuka checkout upgrade. Silakan coba lagi.</div>');
+        triggerButtons.forEach((btn)=>{ btn.disabled = false; });
+      }
     }
 
-    function launchResource(bundleId, type){
-      // Resources are also launched via server-side redirect for consistency.
-      window.open(`/api/member/resource?bundle_id=${encodeURIComponent(bundleId)}&type=${encodeURIComponent(type)}`, '_blank', 'noopener');
-    }
+    async function handleLogout(){ try{await fetch('/api/auth/logout',{method:'POST'});}catch{} renderLogin(); }
+    function renderPending(){ vaultBadge.style.display='none'; headerRight.innerHTML=''; main.innerHTML=`<div class="vh-empty"><h3>Pembayaran sedang diproses</h3><p>Akses Anda sedang diverifikasi. Jika Anda sudah membayar, silakan tunggu beberapa saat lalu muat ulang halaman ini.</p><button class="vh-empty-btn" onclick="location.reload()">Muat ulang</button></div>`; }
 
-    async function handleLogout(){
-      try{await fetch('/api/auth/logout',{method:'POST'});}catch{}
-      renderLogin();
-    }
-
-    // ── Pending state ──
-    function renderPending(){
-      vaultBadge.style.display = 'none';
-      headerRight.innerHTML = '';
-      main.innerHTML = `
-        <div class="vh-empty">
-          <h3>Pembayaran sedang diproses</h3>
-          <p>Akses Anda sedang diverifikasi. Jika Anda sudah membayar, silakan tunggu beberapa saat lalu muat ulang halaman ini.</p>
-          <button class="vh-empty-btn" onclick="location.reload()">Muat ulang</button>
-        </div>
-      `;
-    }
-
-    // ── Init ──
     async function init(){
       main.innerHTML = '<div class="vh-loader"><div class="vh-spinner"></div><p>Memeriksa sesi…</p></div>';
       try {
         const res = await fetch('/api/member/me');
         if(res.ok){
           const data = await res.json();
-          if(data.app_ids && data.app_ids.length > 0){
-            renderDashboard(data);
-          } else {
-            renderPending();
-          }
+          if(data.app_ids && data.app_ids.length > 0){ renderDashboard(data); }
+          else { renderPending(); }
           return;
         }
       } catch {}
@@ -617,27 +472,14 @@
     init();
   </script>
 
-      <footer class="appvibe-footer">
-      <div class="wrap">
-        <div class="appvibe-footer-grid">
-          <div class="footer-col-about">
-            <strong>AppVibe</strong>
-            <p>Produk digital dan marketing kit untuk membantu pengguna membangun, rebrand, dan menjual produk digital.</p>
-          </div>
-          <div class="footer-col-contact">
-            <strong>Butuh bantuan?</strong>
-            <p>
-              Email: <a href="mailto:appvibeid@gmail.com">appvibeid@gmail.com</a><br/>
-              WhatsApp: <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer">0851-1725-9331</a><br/>
-              Alamat: Syuhada Timur 7B, Tlogosari Wetan, Semarang, Indonesia
-            </p>
-          </div>
-        </div>
-        <div class="appvibe-footer-bottom">
-          <div class="footer-brand"><span class="foot-brand">AppVibe</span> &mdash; White-Label AI App Vault</div>
-          <div class="footer-links">&copy; 2026 &middot; <a href="/terms/">Ketentuan</a> &middot; <a href="/privacy/">Privasi</a> &middot; <a href="/license/">Lisensi</a> &middot; <a href="/support/">Bantuan</a></div>
-        </div>
+  <footer class="appvibe-footer">
+    <div class="wrap">
+      <div class="appvibe-footer-grid">
+        <div class="footer-col-about"><strong>AppVibe</strong><p>Produk digital dan marketing kit untuk membantu pengguna membangun, rebrand, dan menjual produk digital.</p></div>
+        <div class="footer-col-contact"><strong>Butuh bantuan?</strong><p>Email: <a href="mailto:appvibeid@gmail.com">appvibeid@gmail.com</a><br/>WhatsApp: <a href="https://wa.me/6285117259331" target="_blank" rel="noopener noreferrer">0851-1725-9331</a><br/>Alamat: Syuhada Timur 7B, Tlogosari Wetan, Semarang, Indonesia</p></div>
       </div>
-    </footer>
+      <div class="appvibe-footer-bottom"><div class="footer-brand"><span class="foot-brand">AppVibe</span> &mdash; White-Label AI App Vault</div><div class="footer-links">&copy; 2026 &middot; <a href="/terms/">Ketentuan</a> &middot; <a href="/privacy/">Privasi</a> &middot; <a href="/license/">Lisensi</a> &middot; <a href="/support/">Bantuan</a></div></div>
+    </div>
+  </footer>
 </body>
 </html>

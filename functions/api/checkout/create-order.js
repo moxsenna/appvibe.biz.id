@@ -228,7 +228,7 @@ export async function onRequest(context) {
             whatsapp_opt_in: true,
           },
           data: {
-            product_name: pack.name,
+            product_name: String(pack.description || pack.product_key || packId),
             pack_id: packId,
             amount: pack.amount,
             checkout_url: created.paycoreJson.checkout_url || '',

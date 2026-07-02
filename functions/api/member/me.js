@@ -83,6 +83,12 @@ export async function onRequest(context) {
     resources: resources.resources[bid] || { marketing_kit: false, guide: false },
   }));
 
+  const upgrade_offer = {
+    eligible: !access.hasFullVault && access.bundleIds.length > 0,
+    price: 50000,
+    pack_id: 'vault_full',
+  };
+
   return json({
     member_name: session.member.name,
     member_key: session.member.id,
@@ -95,5 +101,6 @@ export async function onRequest(context) {
     bundles,
     resources: resources.resources,
     orders: orderSummary,
+    upgrade_offer,
   });
 }
