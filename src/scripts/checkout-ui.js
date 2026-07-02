@@ -344,6 +344,7 @@ function pushCheckoutEvent(eventName, packId, orderId) {
   }
 
   if (eventName === 'begin_checkout') {
+    window.fbq?.('track', 'AddToCart', { value: amount, currency: 'IDR', content_name: pack.label });
     window.fbq?.('track', 'InitiateCheckout', { value: amount, currency: 'IDR', content_name: pack.label });
     window.gtag?.('event', 'begin_checkout', { currency: 'IDR', value: amount, items: [{ item_id: packId, item_name: pack.label, price: amount, quantity: 1 }] });
   }

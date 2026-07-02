@@ -62,7 +62,7 @@ export function initTracking() {
     // Direct Meta Pixel tracking
     try {
       if (typeof window.fbq === 'function') {
-        const standardEvents = ['PageView', 'Lead', 'InitiateCheckout', 'Purchase'];
+        const standardEvents = ['PageView', 'Lead', 'AddToCart', 'InitiateCheckout', 'Purchase'];
         if (standardEvents.includes(eventName)) {
           window.fbq('track', eventName, base);
         } else {
