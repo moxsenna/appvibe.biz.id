@@ -5,6 +5,7 @@ import { initMobileNav } from './scripts/mobile-nav.js';
 import { initTracking } from './scripts/tracking.js';
 import { initPricing } from './scripts/pricing.js';
 import { initShowcase3D } from './scripts/showcase-3d.js';
+import { setActivePack } from './scripts/pack-state.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   // Force scroll to top on page load (prevent browser scroll restoration)
@@ -27,23 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Pack card CTA — redirect to dedicated checkout page
+  // Pack card CTA — set active pack + scroll to first-product section
+  // (previously redirected to checkout, causing surprise for cold-traffic users)
   document.querySelectorAll('[data-sel]').forEach(btn => {
     btn.addEventListener('click', () => {
       const packId = btn.dataset.pack;
       if (!packId) return;
-      const params = new URLSearchParams({ plan: 'single-pack', pack: packId });
-
-      const utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term'];
-      utmKeys.forEach((key) => {
-        const val = sessionStorage.getItem(key);
-        if (val) params.set(key, val);
-      });
-
-      const entryPoint = sessionStorage.getItem('entry_point') || 'pack_card';
-      params.set('ref', entryPoint);
-
-      window.location.href = `/checkout/?${params.toString()}`;
+      setActivePack(packId, 'niche_section');
+      const target = document.getElementById('first-product');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 

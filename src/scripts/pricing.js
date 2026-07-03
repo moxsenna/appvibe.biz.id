@@ -1,14 +1,14 @@
 import { PLANS, PACK_ORDER, vaultPacks, validateOffer, getAppIdsForOffer } from './data/offer-catalog.js';
+import { setActivePack, getActivePack } from './pack-state.js';
 
 /**
  * PRICING STATE
- * Defaults to advertiser pack so single-pack CTA is clickable immediately.
- * User can change pack or choose Full Vault.
+ * Plan defaults to single-pack. Pack is synced from pack-state.js.
  */
 let selectedPlanId = 'single-pack';
-let selectedPackId = 'advertiser';
 
 export function getSelectedOffer() {
+  const selectedPackId = getActivePack();
   return {
     plan: selectedPlanId ? PLANS[selectedPlanId] : null,
     pack: selectedPackId ? vaultPacks[selectedPackId] : null,
@@ -23,16 +23,8 @@ function trackPricingEvent(eventName, properties) {
   window.dataLayer?.push({ event: eventName, ...properties });
 }
 
-function setSelectedOffer(planId, packId = null) {
-  selectedPlanId = planId;
-  selectedPackId = packId;
-
-  const offer = getSelectedOffer();
-  window.dispatchEvent(new CustomEvent('appvibe:offer-change', { detail: { offer } }));
-  return offer;
-}
-
 function renderPackChoice(packButtons, singleCta, helper) {
+  const selectedPackId = getActivePack();
   packButtons.forEach((button) => {
     const isSelected = button.dataset.packId === selectedPackId;
     button.setAttribute('aria-checked', String(isSelected));
@@ -79,12 +71,16 @@ export function initPricing() {
 
   renderPackChoice(packButtons, singleCta, helper);
 
+  // When user clicks a pack option inside the pricing section
   packButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const packId = button.dataset.packId;
-      const offer = setSelectedOffer('single-pack', packId);
+      selectedPlanId = 'single-pack';
+      // Broadcast via pack-state so all sections sync
+      setActivePack(packId, 'pricing');
 
       renderPackChoice(packButtons, singleCta, helper);
+      const offer = getSelectedOffer();
       trackPricingEvent('vault_pack_select', {
         plan_id: offer.plan.id,
         pack_id: offer.pack.id,
@@ -93,6 +89,12 @@ export function initPricing() {
         currency: 'IDR',
       });
     });
+  });
+
+  // Listen to pack changes from OTHER sections (niche-pack, app-launcher, etc.)
+  window.addEventListener('appvibe:pack-change', (e) => {
+    if (e.detail.source === 'pricing') return; // avoid echo
+    renderPackChoice(packButtons, singleCta, helper);
   });
 
   singleCta.addEventListener('click', () => {
@@ -112,7 +114,8 @@ export function initPricing() {
   });
 
   fullCta.addEventListener('click', () => {
-    const offer = setSelectedOffer('full-vault');
+    selectedPlanId = 'full-vault';
+    const offer = getSelectedOffer();
 
     trackPricingEvent('vault_checkout_intent', {
       plan_id: offer.plan.id,
@@ -124,3 +127,4 @@ export function initPricing() {
     redirectToCheckout(offer.plan.id);
   });
 }
+

@@ -234,6 +234,8 @@ details p{margin:14px 0 0;color:var(--muted);font-size:11px;line-height:1.72}
 .btn.cta-dark{background:var(--av-navy-900);color:#fff;box-shadow:0 6px 0 #000}
 .btn.cta-paper{background:rgba(255,255,255,.92);border-color:rgba(255,255,255,.3);color:var(--av-navy-900)}
 .cta-note{margin-top:22px;color:rgba(255,255,255,.6);font:500 10px/1.5 "DM Mono",monospace}
+.cta-trust{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px;color:rgba(255,255,255,.7);font:600 11px/1.4 "Plus Jakarta Sans",sans-serif}
+.cta-trust span{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:1px solid rgba(255,255,255,.15);border-radius:99px;background:rgba(255,255,255,.06)}
 
 /* ===== FOOTER ===== */
 

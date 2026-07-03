@@ -1,33 +1,11 @@
 import { vaultPacks } from './data/vault-packs.js';
 import { vaultApps } from './data/vault-apps.js';
+import { setActivePack, getActivePack } from './pack-state.js';
 
 export function initFirstProduct() {
   const recommendationCard = document.getElementById('firstProductCard');
   const recommendationContent = document.getElementById('firstProductContent');
   if (!recommendationCard || !recommendationContent) return;
-
-  const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
-
-  // ===== SINGLE ORCHESTRATION POINT =====
-  function setSelectedPack(packId, entryPoint) {
-    state.selectedPack = packId;
-
-    // Update active pack card
-    document.querySelectorAll('.pack').forEach(p => p.classList.remove('selected'));
-    document.querySelectorAll(`.pack[data-sel="${packId}"]`).forEach(b => b.closest('.pack')?.classList.add('selected'));
-
-    // Render first-product recommendation
-    renderRecommendation(packId);
-
-    // Fire tracking event ONCE
-    if (typeof window.trackVaultEvent === 'function') {
-      window.trackVaultEvent('vault_pack_selected', {
-        pack_id: packId,
-        entry_point: entryPoint || 'unknown'
-      });
-    }
-  }
-  window.setSelectedPack = setSelectedPack;
 
   // ===== RECOMMENDATION CARD =====
   function renderRecommendation(packId) {
@@ -73,15 +51,33 @@ export function initFirstProduct() {
     });
 
     recommendationContent.querySelector('[data-open-form]')?.addEventListener('click', (e) => {
-      state.lastFormPlacement = 'first_product';
       if (typeof window.openModal === 'function') {
         window.openModal('first_product', packId, null);
       }
     });
   }
 
-  // ===== PRODUCT SHOWCASE (3 apps) — DISABLED per owner request =====
+  // ===== LISTEN TO PACK STATE CHANGES =====
+  window.addEventListener('appvibe:pack-change', (e) => {
+    const { packId } = e.detail;
+
+    // Update active pack card visual
+    document.querySelectorAll('.pack').forEach(p => p.classList.remove('selected'));
+    document.querySelectorAll(`.pack[data-pack="${packId}"]`).forEach(p => p.classList.add('selected'));
+
+    // Re-render recommendation
+    renderRecommendation(packId);
+
+    // Fire tracking event
+    if (typeof window.trackVaultEvent === 'function') {
+      window.trackVaultEvent('vault_pack_selected', {
+        pack_id: packId,
+        entry_point: e.detail.source || 'unknown',
+      });
+    }
+  });
 
   // ===== INITIAL RENDER =====
-  renderRecommendation(state.recommendedPack);
+  renderRecommendation(getActivePack());
 }
+

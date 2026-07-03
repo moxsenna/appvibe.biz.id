@@ -1,5 +1,6 @@
 import { vaultApps } from './data/vault-apps.js';
 import { vaultPacks } from './data/vault-packs.js';
+import { setActivePack } from './pack-state.js';
 
 export function initAppLauncher() {
   const launcherButtons = document.querySelectorAll(".app-card");
@@ -10,7 +11,7 @@ export function initAppLauncher() {
   const detailFooter = document.getElementById("detailFooter");
   const detailCta = document.getElementById("detailCta");
 
-  const state = window.vaultState || (window.vaultState = { recommendedPack: 'advertiser', selectedPack: null, selectedApp: null, lastFormPlacement: null });
+  const state = { selectedApp: null, lastFormPlacement: null };
   let activeAppId = null; // displayed app (default display, NOT user selection)
 
   function track(name, params) {
@@ -47,14 +48,12 @@ export function initAppLauncher() {
     button.addEventListener("click", () => setActiveApp(button.dataset.app, true));
   });
 
-  // Pack CTAs — delegate to single orchestration point
+  // Pack CTAs — delegate to centralized pack-state
   document.querySelectorAll("[data-pack]").forEach(btn => {
     btn.addEventListener("click", () => {
       const packId = btn.dataset.pack;
       if (!packId || !vaultPacks[packId]) return;
-      if (typeof window.setSelectedPack === 'function') {
-        window.setSelectedPack(packId, 'app_launcher');
-      }
+      setActivePack(packId, 'app_launcher');
     });
   });
 
