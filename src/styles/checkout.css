@@ -505,6 +505,15 @@ a { color: inherit; }
 .co-status-already_paid .co-status-mark { color: #0b7962; background: #e4f8f2; }
 .co-status-failed .co-status-mark,
 .co-status-error .co-status-mark { color: #af402f; background: #fff0ed; }
+
+@keyframes coStatusPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.92); }
+}
+.co-status-pending .co-status-mark,
+.co-status-preparing_access .co-status-mark {
+  animation: coStatusPulse 1.5s infinite ease-in-out;
+}
 .co-status-card h1 { margin-top: 13px; font-size: clamp(28px, 4.5vw, 44px); }
 .co-status-card > p:not(.co-kicker):not(.co-order-reference) { max-width: 500px; margin: 0 auto; color: var(--co-muted); font-size: 13px; line-height: 1.7; }
 .co-order-reference { margin: 17px 0 0; color: var(--co-muted-light); font: 500 10px/1.5 'DM Mono', monospace; }

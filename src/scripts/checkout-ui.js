@@ -295,16 +295,16 @@ function renderStatus(type, { orderId, error } = {}) {
     preparing_access: {
       mark: '…',
       kicker: 'PEMBAYARAN DITERIMA',
-      title: 'Menyiapkan akses Anda.',
-      text: 'Pembayaran sudah diterima. Halaman ini akan lanjut otomatis setelah akses aktif.',
-      action: '<a href="/" class="co-status-secondary">Kembali ke beranda</a>',
+      title: 'Menyiapkan akses Anda...',
+      text: 'Proses ini hanya memakan waktu beberapa detik. Halaman akan dialihkan otomatis.',
+      action: '',
     },
     pending: {
       mark: '…',
-      kicker: 'MENUNGGU KONFIRMASI',
-      title: 'Pembayaran sedang diverifikasi.',
-      text: 'Halaman ini akan memeriksa status secara otomatis. Akses dikirim setelah pembayaran terkonfirmasi.',
-      action: '<a href="/" class="co-status-secondary">Kembali ke beranda</a>',
+      kicker: 'MOHON TUNGGU SEBENTAR',
+      title: 'Pembayaran sedang diverifikasi...',
+      text: 'Halaman ini akan memeriksa status secara otomatis. Mohon jangan menutup halaman ini.',
+      action: '',
     },
     error: {
       mark: '!',
