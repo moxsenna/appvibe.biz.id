@@ -315,15 +315,20 @@ function renderStatus(type, { orderId, error } = {}) {
     },
   };
 
-  const status = definitions[type] || definitions.error;
+  const isLoading = type === 'pending' || type === 'preparing_access';
+  const markHtml = isLoading
+    ? `<span class="co-status-loader" aria-hidden="true"><span></span><span></span><span></span></span>`
+    : `<span class="co-status-mark" aria-hidden="true">${status.mark}</span>`;
+
+  const status2 = definitions[type] || definitions.error;
   return `
     <section class="co-status-card co-status-${esc(type)}" aria-live="polite">
-      <span class="co-status-mark" aria-hidden="true">${status.mark}</span>
-      <p class="co-kicker">${status.kicker}</p>
-      <h1>${status.title}</h1>
-      <p>${esc(status.text)}</p>
+      ${markHtml}
+      <p class="co-kicker">${status2.kicker}</p>
+      <h1>${status2.title}</h1>
+      <p>${esc(status2.text)}</p>
       ${orderId ? `<p class="co-order-reference">Referensi order: <strong>${esc(orderId)}</strong></p>` : ''}
-      <div class="co-status-actions">${status.action}</div>
+      <div class="co-status-actions">${status2.action}</div>
     </section>
   `;
 }

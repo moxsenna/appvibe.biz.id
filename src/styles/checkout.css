@@ -514,6 +514,31 @@ a { color: inherit; }
 .co-status-preparing_access .co-status-mark {
   animation: coStatusPulse 1.5s infinite ease-in-out;
 }
+
+/* Bouncing dots loader for pending/preparing states */
+.co-status-loader {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 20px;
+  height: 52px;
+}
+.co-status-loader span {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--co-blue);
+  animation: coLoaderBounce 1.2s infinite ease-in-out;
+}
+.co-status-loader span:nth-child(1) { animation-delay: 0s; }
+.co-status-loader span:nth-child(2) { animation-delay: 0.2s; }
+.co-status-loader span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes coLoaderBounce {
+  0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+  40% { transform: translateY(-14px); opacity: 1; }
+}
 .co-status-card h1 { margin-top: 13px; font-size: clamp(28px, 4.5vw, 44px); }
 .co-status-card > p:not(.co-kicker):not(.co-order-reference) { max-width: 500px; margin: 0 auto; color: var(--co-muted); font-size: 13px; line-height: 1.7; }
 .co-order-reference { margin: 17px 0 0; color: var(--co-muted-light); font: 500 10px/1.5 'DM Mono', monospace; }
