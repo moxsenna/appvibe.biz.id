@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SUARA — Voice Direction Desk</title>
+  <meta name="description" content="Landing page reseller template untuk SUARA Voice Direction Desk.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&family=Unbounded:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --obsidian:#121416;--graphite:#1b1f22;--panel:#252a2d;--panel2:#303639;--steel:#d5dbdc;--paper:#f0f1ed;
+      --muted:#8b9698;--line:rgba(224,231,232,.16);--red:#ec473f;--orange:#ff9d47;--cyan:#41d7d7;--lime:#c9ed67;
+      --danger:#ff6d6d;--shadow:0 20px 48px rgba(0,0,0,.28);--r:20px;
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:var(--obsidian);color:#f5f8f7;font-family:"IBM Plex Sans",system-ui,sans-serif;overflow-x:hidden}
+    body:before{content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;background:radial-gradient(circle at 14% 19%,rgba(65,215,215,.11),transparent 23%),radial-gradient(circle at 82% 8%,rgba(236,71,63,.14),transparent 25%),linear-gradient(125deg,#101214,#171c1e 45%,#101214)}
+    body:after{content:"";position:fixed;inset:0;z-index:-2;opacity:.28;pointer-events:none;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.035) 0,rgba(255,255,255,.035) 1px,transparent 1px,transparent 4px)}
+    a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    header{position:sticky;top:0;z-index:50;background:rgba(18,20,22,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,255,255,.08)}
+    .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px}.mark{width:43px;height:43px;border-radius:14px;display:grid;place-items:center;background:var(--red);color:#fff;font:600 19px/1 Unbounded,sans-serif;box-shadow:inset 0 -5px 0 rgba(0,0,0,.18),0 0 0 5px rgba(236,71,63,.11)}.brand b{display:block;font:600 22px/1 Unbounded,sans-serif;letter-spacing:-1px}.brand small{display:block;margin-top:5px;color:#aab5b6;font:500 8px/1 "DM Mono",monospace;letter-spacing:1.15px;text-transform:uppercase}.links{display:flex;gap:22px;color:#a4b0b1;font-size:12px;font-weight:700}.links a:hover{color:var(--cyan)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:12px;padding:12px 15px;font-size:12px;font-weight:800;line-height:1;transition:.18s}.btn:hover{transform:translateY(-2px);filter:brightness(1.06)}.btn.primary{background:var(--red);color:#fff;box-shadow:0 6px 0 #a92e2a}.btn.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #a92e2a}.btn.cyan{background:var(--cyan);color:#0d1c1c;box-shadow:0 6px 0 #1e8f8f}.btn.steel{background:#edf1ef;color:#172021;box-shadow:0 5px 0 #aeb7b7}.btn.dark{background:#161a1c;color:#e9eeee;border-color:rgba(255,255,255,.14)}.btn.ghost{background:transparent;color:#c6cecf;border-color:rgba(255,255,255,.15)}.btn.ghost:hover{background:rgba(255,255,255,.06)}
+    .hero{padding:73px 0 58px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:570px;height:570px;right:-220px;top:-300px;border-radius:50%;background:radial-gradient(circle,rgba(65,215,215,.18),transparent 66%);border:1px solid rgba(65,215,215,.18)}.hero:after{content:"";position:absolute;width:350px;height:350px;left:-175px;bottom:-230px;border-radius:50%;background:radial-gradient(circle,rgba(236,71,63,.14),transparent 66%)}
+    .hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center;position:relative}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--cyan);font:500 10px/1 "DM Mono",monospace;letter-spacing:1.35px;text-transform:uppercase}.eyebrow i{width:9px;height:9px;border-radius:2px;background:var(--red);box-shadow:0 0 0 3px rgba(236,71,63,.12)}
+    h1{margin:18px 0 15px;max-width:770px;font:600 clamp(40px,5.6vw,74px)/.98 Unbounded,sans-serif;letter-spacing:-3.7px}h1 span{color:var(--orange)}.hero p{margin:0;max-width:625px;color:#bfc9c8;font-size:15px;line-height:1.75}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}.note{display:flex;align-items:flex-start;gap:11px;margin-top:25px;max-width:590px;color:#939e9f;font-size:11px;line-height:1.6}.note i{width:29px;height:29px;display:grid;place-items:center;flex:none;border:1px solid rgba(65,215,215,.35);border-radius:9px;color:var(--cyan);font-style:normal;font-weight:900}
+    .sound-rack{position:relative;z-index:1;padding:20px;border:1px solid rgba(255,255,255,.12);border-radius:23px;background:linear-gradient(145deg,#30373a,#1b2022);box-shadow:inset 0 1px 0 rgba(255,255,255,.1),12px 14px 0 rgba(0,0,0,.18)}.rack-head{display:flex;align-items:center;justify-content:space-between;color:#c8d3d2;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.rack-head b{color:var(--cyan)}.rack-sub{margin-top:8px;color:#9aa6a7;font-size:11px;line-height:1.45}
+    .vu{display:grid;grid-template-columns:repeat(28,1fr);align-items:end;gap:4px;height:116px;margin:20px 0 16px;padding:11px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:#161a1c}.vu i{display:block;height:14px;border-radius:3px 3px 1px 1px;background:linear-gradient(to top,var(--cyan),var(--lime));opacity:.88}.vu i:nth-child(2n){height:42px}.vu i:nth-child(3n){height:73px}.vu i:nth-child(5n){height:97px;background:linear-gradient(to top,var(--orange),var(--red))}.vu i:nth-child(7n){height:31px}.vu i:nth-child(11n){height:61px}.rack-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.knob-card{padding:11px;border:1px solid rgba(255,255,255,.09);border-radius:13px;background:rgba(0,0,0,.12)}.knob-card span{display:block;color:#8f9b9c;font:500 8px/1 "DM Mono",monospace;letter-spacing:.65px;text-transform:uppercase}.knob-line{display:flex;align-items:center;justify-content:space-between;margin-top:10px}.knob{position:relative;width:38px;height:38px;border-radius:50%;background:#3a4145;border:2px solid #5a6468;box-shadow:inset 0 0 0 6px #202729,0 2px 4px rgba(0,0,0,.3)}.knob:after{content:"";position:absolute;width:2px;height:10px;left:50%;top:3px;background:#fff;transform:translateX(-50%) rotate(25deg);transform-origin:center 15px}.knob-value{font:600 14px/1 Unbounded,sans-serif;color:#f6fbf9}
+    .strip{padding:15px 0;background:rgba(25,29,31,.82);border-top:1px solid rgba(255,255,255,.09);border-bottom:1px solid rgba(255,255,255,.09)}.stripin{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stripin div{text-align:center;color:#ccd4d3;font-size:11px;font-weight:800}.stripin i{font-style:normal;color:var(--cyan);font-size:16px;margin-right:7px}
+    section{padding:80px 0}.head{text-align:center;max-width:760px;margin:0 auto 35px}.head h2{margin:14px 0;color:#f1f5f3;font:600 clamp(31px,4vw,49px)/1.04 Unbounded,sans-serif;letter-spacing:-2.2px}.head p{margin:0;color:#a8b3b3;font-size:14px;line-height:1.72}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:22px;border:1px solid rgba(255,255,255,.1);border-radius:20px;background:linear-gradient(145deg,rgba(47,54,57,.84),rgba(29,34,36,.92));box-shadow:0 10px 26px rgba(0,0,0,.14)}.card:nth-child(2){background:linear-gradient(145deg,rgba(52,58,56,.92),rgba(33,39,37,.95))}.card:nth-child(3){background:linear-gradient(145deg,rgba(61,44,41,.88),rgba(34,30,30,.96))}.icon{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:#171c1e;border:1px solid rgba(255,255,255,.1);font-size:19px}.card h3{margin:17px 0 8px;color:#f6f9f8;font-size:17px;letter-spacing:-.35px}.card p{margin:0;color:#abb5b5;font-size:12px;line-height:1.65}
+    .flow{background:#edf1ef;color:#172021;position:relative;overflow:hidden}.flow:before{content:"";position:absolute;right:-195px;top:-225px;width:520px;height:520px;border-radius:50%;border:1px solid rgba(236,71,63,.28);box-shadow:0 0 0 45px rgba(236,71,63,.05),0 0 0 90px rgba(65,215,215,.04)}.flow-grid{position:relative;display:grid;grid-template-columns:.88fr 1.12fr;gap:42px;align-items:center}.flow .eyebrow{color:#b93630}.flow h2{margin:15px 0;font:600 clamp(33px,4vw,51px)/1 "Unbounded",sans-serif;letter-spacing:-2px}.flow h2 span{color:#1e8f8f}.flow p{margin:0;color:#596567;font-size:14px;line-height:1.72}.steps{display:grid;gap:12px;margin-top:25px}.step{display:flex;gap:11px;align-items:flex-start;color:#374346;font-size:12px;line-height:1.52}.num{display:grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--red);color:#fff;flex:none;font:600 9px "DM Mono",monospace}
+    .take-board{padding:18px;border-radius:22px;background:#172021;color:#eff4f2;box-shadow:13px 17px 0 rgba(0,0,0,.14)}.take-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.11)}.take-head b{font:600 18px "Unbounded",sans-serif;letter-spacing:-.7px}.take-head span{padding:7px 8px;border:1px solid rgba(65,215,215,.3);border-radius:999px;color:var(--cyan);font:500 8px "DM Mono",monospace}.take{padding:13px 0;border-bottom:1px solid rgba(255,255,255,.1)}.take:last-child{border:0}.take-top{display:flex;gap:10px;align-items:flex-start}.take-no{display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:rgba(65,215,215,.12);color:var(--cyan);font:500 9px "DM Mono",monospace}.take b{display:block;font-size:12px}.take p{margin:5px 0 0;color:#b3bfbe;font-size:10px;line-height:1.52}.take-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{padding:5px 6px;border:1px solid rgba(255,255,255,.09);border-radius:999px;color:#9ca9aa;font:500 8px "DM Mono",monospace}
+    .feature{position:relative;overflow:hidden}.feature .tag{font:500 9px "DM Mono",monospace;color:#95a2a3}.feature h3{font:600 23px/1.05 Unbounded,sans-serif;letter-spacing:-1.2px}.feature:nth-child(2){background:linear-gradient(145deg,rgba(36,54,54,.91),rgba(29,34,36,.95))}.feature:nth-child(3){background:linear-gradient(145deg,rgba(63,39,36,.9),rgba(34,30,30,.96))}
+    .kit{background:#e9ece9;color:#172021}.kit .head h2{color:#172021}.kit .head p{color:#647174}.kitgrid{display:grid;grid-template-columns:1.08fr .92fr;gap:17px}.kitbox{padding:28px;border:1px solid #cfd7d5;border-radius:23px;background:#fff}.kitbox h2{margin:14px 0;font:600 33px/1.02 Unbounded,sans-serif;letter-spacing:-1.7px}.kitbox p{margin:0;color:#647174;font-size:13px;line-height:1.7}.items{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.items div{color:#506063;font-size:12px;line-height:1.4}.items i{font-style:normal;color:#16857e;font-weight:900;margin-right:7px}.licensebox{background:#171c1e;border-color:#171c1e;color:#fff}.licensebox p{color:#b8c2c1}.license{padding:12px 0;border-top:1px solid rgba(255,255,255,.13);font-size:12px;line-height:1.5}.license b{color:var(--lime)}
+    .handover{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.handover-card{min-height:183px;padding:18px;border:1px solid rgba(255,255,255,.1);background:#1c2022}.handover-card i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#252e2f;color:var(--cyan);font-style:normal;font:600 10px "DM Mono",monospace}.handover-card b{display:block;margin-top:14px;color:#f0f5f4;font-size:13px}.handover-card p{margin:6px 0 0;color:#a9b4b3;font-size:11px;line-height:1.52}
+    .cta{padding:82px 0}.ctaBox{position:relative;overflow:hidden;padding:54px;text-align:center;color:#fff;background:linear-gradient(135deg,#262e30,#161b1d 58%,#1d3131);border:1px solid rgba(255,255,255,.14);box-shadow:var(--shadow)}.ctaBox:before{content:"";position:absolute;left:50%;bottom:-490px;transform:translateX(-50%);width:610px;height:610px;border-radius:50%;border:1px solid rgba(65,215,215,.7);box-shadow:0 0 0 45px rgba(65,215,215,.07),0 0 0 90px rgba(65,215,215,.045)}.ctaBox>*{position:relative}.ctaBox h2{max-width:800px;margin:14px auto;font:600 clamp(34px,4.5vw,59px)/.98 Unbounded,sans-serif;letter-spacing:-2.8px}.ctaBox h2 span{color:var(--orange)}.ctaBox p{max-width:620px;margin:auto;color:#c8d3d2;font-size:14px;line-height:1.67}.ctaBox .actions{justify-content:center}
+    .faq{max-width:820px;margin:auto}.faq details{padding:17px 0;border-top:1px solid rgba(255,255,255,.12)}.faq details:last-child{border-bottom:1px solid rgba(255,255,255,.12)}summary{display:flex;justify-content:space-between;gap:16px;cursor:pointer;list-style:none;color:#eef3f2;font-size:14px;font-weight:800}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:19px;color:var(--cyan)}details[open] summary:after{content:"–"}.faq p{margin:10px 32px 0 0;color:#a7b1b1;font-size:12px;line-height:1.7}
+    footer{padding:30px 0 38px;color:#8d9898;font-size:10px}.foot{padding-top:20px;border-top:1px solid rgba(255,255,255,.1);display:flex;justify-content:space-between;gap:20px}.foot b{color:#d4dcdb}
+    @media(max-width:860px){.hero-grid,.flow-grid,.kitgrid{grid-template-columns:1fr}.sound-rack{max-width:510px;margin:10px auto 0}.grid3{grid-template-columns:1fr 1fr}.stripin{grid-template-columns:1fr 1fr}.handover{grid-template-columns:1fr 1fr}.links{display:none}}
+    @media(max-width:560px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.nav .btn{padding:10px;font-size:10px}.mark{width:35px;height:35px}.brand b{font-size:18px}.hero{padding:48px 0}.hero h1{font-size:40px;letter-spacing:-2.6px}.sound-rack{transform:scale(.96);margin:-4px auto -12px}.grid3,.items,.handover{grid-template-columns:1fr}.head{text-align:left}.head h2{font-size:31px}.flow,section{padding:58px 0}.ctaBox{padding:38px 20px}.actions{display:grid}.btn{width:100%}.foot{display:block}.foot span{display:block;margin-top:8px}.vu{gap:3px}}
+  </style>
+</head>
+<body>
+  <!-- TEMPLATE RESELLER SUARA. Ganti seluruh [PLACEHOLDER] sebelum dipublikasikan. -->
+  <header>
+    <div class="wrap nav">
+      <a href="#top" class="brand"><span class="mark">S</span><span><b>[NAMA BRAND]</b><small>voice direction toolkit</small></span></a>
+      <nav class="links"><a href="#fitur">Fitur</a><a href="#kit">Yang didapat</a><a href="#faq">FAQ</a></nav>
+      <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn primary">Dapatkan SUARA →</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><i></i> Untuk creator, brand, agency & reseller digital</div>
+          <h1>Jangan hanya memilih suara. <span>Arahkan cara ia berbicara.</span></h1>
+          <p>SUARA membantu mengubah brief campaign menjadi naskah voice-over, pilihan take, arahan delivery, pengaturan karakter suara, catatan sound bed, dan handover audio yang lebih siap diproduksi.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn primary">Ambil SUARA Sekarang →</a>
+            <a href="#fitur" class="btn ghost">Lihat cara kerjanya ↓</a>
+          </div>
+          <div class="note"><i>✓</i><span><b>Lebih dari text-to-speech generik.</b><br>Mulai dari pesan, target audience, fakta pendukung, CTA, dan guardrail agar naskah serta delivery tidak terdengar lepas dari campaign Anda.</span></div>
+        </div>
+
+        <div class="sound-rack" aria-label="Ilustrasi voice direction desk">
+          <div class="rack-head"><span>SUARA / VOICE BOOTH</span><b>● READY TO DIRECT</b></div>
+          <div class="rack-sub">Naskah aktif: [Judul campaign] · Bahasa Indonesia natural</div>
+          <div class="vu">
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+            <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+          </div>
+          <div class="rack-grid">
+            <div class="knob-card"><span>Pacing</span><div class="knob-line"><i class="knob"></i><b class="knob-value">MID</b></div></div>
+            <div class="knob-card"><span>Energy</span><div class="knob-line"><i class="knob" style="transform:rotate(38deg)"></i><b class="knob-value">58</b></div></div>
+            <div class="knob-card"><span>Emphasis</span><div class="knob-line"><i class="knob" style="transform:rotate(-18deg)"></i><b class="knob-value">NAT</b></div></div>
+            <div class="knob-card"><span>Delivery</span><div class="knob-line"><i class="knob" style="transform:rotate(18deg)"></i><b class="knob-value">WARM</b></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"><div class="wrap stripin">
+      <div><i>✎</i> Script brief</div>
+      <div><i>◉</i> Take lab</div>
+      <div><i>◌</i> Voice booth</div>
+      <div><i>⇢</i> Voice-over pack</div>
+    </div></div>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Masalah yang sering terjadi</div>
+          <h2>Voice-over bisa terdengar jelas, tetapi belum tentu terdengar tepat untuk pesan dan audience Anda.</h2>
+          <p>Banyak audio promosi dimulai dari script yang masih generik. Ketika delivery, pace, emphasis, dan mood tidak diputuskan dengan sengaja, suara hanya menjadi pelengkap—bukan bagian dari direction campaign.</p>
+        </div>
+        <div class="grid3">
+          <article class="card"><div class="icon">✎</div><h3>Naskah terdengar seperti tulisan</h3><p>Kalimat mungkin benar secara tata bahasa, tetapi tidak punya napas, jeda, penekanan, atau ritme yang terasa wajar saat diucapkan.</p></article>
+          <article class="card"><div class="icon">◉</div><h3>Suara dipilih tanpa direction</h3><p>Karakter suara ada, tetapi alasan memilih pace, energy, emphasis, dan delivery belum dikaitkan dengan target, message, atau tujuan campaign.</p></article>
+          <article class="card"><div class="icon">▤</div><h3>Editor masih perlu menerka mood audio</h3><p>Voice-over dikirim tanpa catatan sound bed, cue, transition, pengucapan kata penting, atau standar review sebelum publish.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="flow">
+      <div class="wrap flow-grid">
+        <div>
+          <div class="eyebrow"><i></i> Voice direction workflow</div>
+          <h2>Naskah yang lebih baik bukan hanya ditulis. <span>Ia juga diarahkan.</span></h2>
+          <p>SUARA membangun konteks terlebih dahulu—brand, tipe project, audience, message, proof, CTA, tujuan, tone, dan batas klaim—sebelum menghasilkan beberapa take yang layak dipilih dan direkam.</p>
+          <div class="steps">
+            <div class="step"><span class="num">01</span><span>Isi Script Brief dengan informasi jujur tentang campaign, audience, pesan utama, fakta pendukung, CTA, durasi, tone, dan guardrail.</span></div>
+            <div class="step"><span class="num">02</span><span>Hasilkan beberapa naskah/take dengan angle, hook, natural spoken style, energi adegan, pause notes, dan kata yang perlu ditekankan.</span></div>
+            <div class="step"><span class="num">03</span><span>Pilih voice, pacing, emphasis, serta energy; lalu gunakan sound direction dan delivery pack untuk proses render atau editing audio.</span></div>
+          </div>
+        </div>
+
+        <div class="take-board">
+          <div class="take-head"><b>Take Lab / Preview</b><span>03 ROUTES</span></div>
+          <div class="take">
+            <div class="take-top"><i class="take-no">01</i><div><b>Familiar friction</b><p>Mulai dari situasi kecil yang audience kenal, lalu arahkan mereka pada solusi tanpa membanjiri dengan klaim.</p><div class="take-meta"><span class="chip">HOOK: RELATABLE</span><span class="chip">PACE: CONVERSATIONAL</span></div></div></div>
+          </div>
+          <div class="take">
+            <div class="take-top"><i class="take-no">02</i><div><b>Clear product relief</b><p>Masuk dengan rasa lega yang spesifik: apa yang menjadi lebih mudah, lebih rapi, atau lebih praktis bagi audience.</p><div class="take-meta"><span class="chip">HOOK: RELIEF</span><span class="chip">EMPHASIS: BENEFIT</span></div></div></div>
+          </div>
+          <div class="take">
+            <div class="take-top"><i class="take-no">03</i><div><b>Direct invitation</b><p>Bangun satu alasan yang jelas, lalu tutup dengan CTA yang sesuai brief agar audience tahu langkah berikutnya.</p><div class="take-meta"><span class="chip">HOOK: DIRECT</span><span class="chip">ENERGY: RISE</span></div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Apa yang dibangun SUARA</div>
+          <h2>Satu desk untuk merangkai kata, karakter, delivery, dan handover audio.</h2>
+          <p>SUARA membantu Anda menjaga voice-over sebagai bagian dari workflow produksi—bukan output yang dipisahkan setelah video dan campaign selesai dibuat.</p>
+        </div>
+        <div class="grid3">
+          <article class="card feature"><span class="tag">01 / SCRIPT BRIEF + TAKE LAB</span><h3>Susun naskah yang siap diucapkan.</h3><p>Mulai dari fakta campaign, lalu bentuk beberapa take dengan hook, angle, scene energy, delivery notes, pause, dan emphasis yang lebih jelas.</p></article>
+          <article class="card feature"><span class="tag">02 / VOICE BOOTH</span><h3>Pilih karakter dan cara delivery.</h3><p>Pilih voice, pacing, emphasis, dan level energy agar output audio lebih sesuai dengan nada komunikasi yang ingin dibangun.</p></article>
+          <article class="card feature"><span class="tag">03 / SOUND + DELIVERY</span><h3>Kirim satu pack yang bisa diproduksi.</h3><p>Rangkum script aktif, voice direction, sound bed notes, mix notes, dan checklist publish ke dalam Voice-over Pack yang mudah diteruskan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Handover yang tidak membuat tim menebak</div>
+          <h2>Dari booth ke proses produksi audio atau video Anda.</h2>
+          <p>SUARA menyiapkan arahan yang dapat dipakai untuk render audio, pengeditan, penyesuaian loudness, atau penggabungan dengan video di tool pilihan Anda.</p>
+        </div>
+        <div class="handover">
+          <article class="handover-card"><i>01</i><b>Script Brief</b><p>Brand, project type, platform, audience, message, proof, CTA, tone, duration, dan guardrail yang menjadi konteks naskah.</p></article>
+          <article class="handover-card"><i>02</i><b>Selected Take</b><p>Naskah terpilih dengan delivery, pause notes, emphasis words, dan safety note untuk dicek sebelum produksi.</p></article>
+          <article class="handover-card"><i>03</i><b>Voice Direction</b><p>Pilihan karakter suara, pacing, emphasis, serta energy yang menjaga cara delivery tetap sesuai strategi.</p></article>
+          <article class="handover-card"><i>04</i><b>Sound + Mix Notes</b><p>Catatan mood, sound bed, opening, transition, closing, serta hal yang perlu dihindari oleh editor audio.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kit" id="kit">
+      <div class="wrap kitgrid">
+        <article class="kitbox">
+          <div class="eyebrow" style="color:#16857e"><i></i> Bonus untuk pembeli</div>
+          <h2>Marketing kit agar Anda tidak menjual SUARA dari halaman kosong.</h2>
+          <p>Saat membeli dari [NAMA BRAND], Anda juga mendapatkan materi promosi yang dapat disesuaikan untuk menjual SUARA sebagai produk digital, bonus creative service, atau bagian dari katalog aplikasi Anda.</p>
+          <div class="items">
+            <div><i>✓</i>Angle promosi & hook iklan</div><div><i>✓</i>Template caption organik</div>
+            <div><i>✓</i>Materi carousel & visual brief</div><div><i>✓</i>Copy landing page dasar</div>
+            <div><i>✓</i>Script WhatsApp follow-up</div><div><i>✓</i>Checklist launch singkat</div>
+          </div>
+        </article>
+
+        <article class="kitbox licensebox">
+          <div class="eyebrow" style="color:var(--lime)"><i style="background:var(--lime)"></i> Dibuat sebagai aset bisnis</div>
+          <h2>Gunakan sendiri atau jadikan voice direction produk Anda sendiri.</h2>
+          <p>SUARA dapat diposisikan sebagai audio production toolkit, bonus layanan video, atau produk digital dengan nama serta identitas brand Anda sendiri.</p>
+          <div class="license"><b>✓ Lisensi jual ulang</b><br>Jual ulang akses atau produk sesuai ketentuan paket yang Anda pilih.</div>
+          <div class="license"><b>✓ Lisensi rebrand</b><br>Sesuaikan nama, identitas visual, dan penawaran agar cocok dengan brand Anda.</div>
+          <div class="license"><b>✓ Marketing kit</b><br>Mulai promosi dengan materi yang sudah memiliki struktur campaign.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Cara mulai</div><h2>Mulai dari pesan yang jujur, lalu arahkan bagaimana suara itu menyampaikannya.</h2></div>
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Dapatkan akses</h3><p>Setelah pembelian, akses SUARA melalui link yang diberikan oleh [NAMA BRAND].</p></article>
+          <article class="card"><div class="icon">02</div><h3>Isi Script Brief</h3><p>Masukkan fakta project, audience, message, proof, CTA, tone, durasi, dan hal yang tidak boleh diklaim atau diucapkan.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Pilih take lalu produksi</h3><p>Review naskah dan delivery, pilih voice direction, lalu gunakan Voice-over Pack untuk render dan proses editing audio Anda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="ctaBox">
+          <div class="eyebrow"><i></i> SUARA VOICE DIRECTION DESK</div>
+          <h2>Suara Anda tidak harus sekadar terdengar. <span>Ia harus menyampaikan sesuatu dengan tepat.</span></h2>
+          <p>Dapatkan SUARA beserta marketing kit dari [NAMA BRAND], lalu ubah brief campaign menjadi script, take direction, voice setting, dan handover audio yang lebih siap diproduksi.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn steel">Dapatkan SUARA →</a>
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn ghost">Tanya via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top:18px">
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Pertanyaan umum</div><h2>Hal yang perlu diketahui sebelum menggunakan SUARA.</h2></div>
+        <div class="faq">
+          <details><summary>SUARA cocok untuk siapa?</summary><p>SUARA cocok untuk creator, pemilik brand, marketer, agency, video editor, freelancer, dan reseller digital yang ingin menyiapkan voice-over secara lebih terarah sebelum audio diproduksi atau dipasang ke konten.</p></details>
+          <details><summary>Apakah SUARA dapat meniru suara orang tertentu?</summary><p>Tidak. Gunakan hanya karakter suara yang tersedia dan jangan menyatakan atau memberi kesan bahwa output adalah suara orang nyata tertentu. Pastikan penggunaan audio tetap mematuhi aturan platform dan hak yang berlaku.</p></details>
+          <details><summary>Apakah SUARA membuat musik atau sound effect otomatis?</summary><p>SUARA menyediakan sound bed dan mix notes untuk editor. Musik serta sound effect perlu dipilih atau dibuat secara terpisah dengan aset yang berlisensi dan sesuai kebutuhan produksi Anda.</p></details>
+          <details><summary>Apakah SUARA menjamin audio atau iklan akan menghasilkan penjualan?</summary><p>Tidak. SUARA membantu memperjelas naskah dan arahan delivery. Hasil tetap dipengaruhi produk, offer, visual, pesan, target audience, distribusi, serta kualitas eksekusi campaign Anda.</p></details>
+          <details><summary>Apakah boleh dijual ulang atau di-rebrand?</summary><p>Ya, sesuai lisensi dan ketentuan paket dari [NAMA BRAND]. Ubah bagian ini bila aturan lisensi Anda berbeda.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap foot"><span><b>[NAMA BRAND]</b> · SUARA Voice Direction Desk</span><span>© 2026 · Semua merek dagang milik pemiliknya masing-masing.</span></div></footer>
+</body>
+</html>

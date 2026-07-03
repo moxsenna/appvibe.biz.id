@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>CETAK — Print Campaign Studio</title>
+  <meta name="description" content="Landing page reseller template untuk CETAK Print Campaign Studio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --paper:#fff5e1;--paper2:#f3e6ce;--ink:#182338;--ink2:#283650;--muted:#6d7280;
+      --line:#d7c7ac;--blue:#2855d7;--red:#e84d3d;--green:#14755f;--yellow:#ffc945;
+      --white:#fffdf8;--shadow:8px 8px 0 rgba(24,35,56,.15);--soft:0 18px 44px rgba(53,43,30,.10);
+      --r:22px;
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.42;background-image:radial-gradient(rgba(24,35,56,.18) .55px,transparent .65px);background-size:6px 6px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 10% 0%,rgba(255,255,255,.86),transparent 34%),radial-gradient(circle at 89% 15%,rgba(255,201,69,.2),transparent 26%),radial-gradient(circle at 90% 81%,rgba(40,85,215,.08),transparent 31%)}
+    a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    header{position:sticky;top:0;z-index:50;background:rgba(255,245,225,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(215,199,172,.85)}
+    .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;display:grid;place-items:center;background:var(--red);color:#fff;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--blue);font-family:"Archivo Black",sans-serif;font-size:24px;transform:rotate(-4deg)}.brand b{display:block;font-family:"Archivo Black",sans-serif;font-size:24px;letter-spacing:-1.4px;line-height:1}.brand small{display:block;margin-top:5px;color:#667085;font:500 8px/1 "IBM Plex Mono",monospace;letter-spacing:1.2px;text-transform:uppercase}.links{display:flex;gap:22px;color:#5e6879;font-size:12px;font-weight:800}.links a:hover{color:var(--blue)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);background:var(--white);color:var(--ink);padding:13px 17px;font-size:12px;font-weight:800;line-height:1;box-shadow:3px 3px 0 var(--ink);transition:.16s}.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.btn.primary{background:var(--yellow)}.btn.blue{background:var(--blue);border-color:var(--blue);color:#fff}.btn.dark{background:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--blue)}.btn.ghost{background:transparent;box-shadow:none}.btn.ghost:hover{background:rgba(255,255,255,.6)}
+    .hero{padding:72px 0 58px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:500px;height:500px;right:-145px;top:-280px;border-radius:50%;background:var(--yellow);opacity:.52;border:2px solid var(--ink);box-shadow:0 0 0 32px rgba(255,201,69,.10),0 0 0 64px rgba(255,201,69,.05)}.hero:after{content:"";position:absolute;width:380px;height:380px;left:-210px;bottom:-250px;border-radius:50%;background:var(--blue);opacity:.08}
+    .hero-grid{position:relative;display:grid;grid-template-columns:1.03fr .97fr;gap:42px;align-items:center}.overline{display:inline-flex;align-items:center;gap:8px;color:var(--blue);font:600 10px/1 "IBM Plex Mono",monospace;letter-spacing:1.3px;text-transform:uppercase}.overline i{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 0 4px rgba(232,77,61,.12)}
+    h1{margin:17px 0;font-family:"Archivo Black",sans-serif;font-size:clamp(47px,6vw,79px);line-height:.89;letter-spacing:-3.8px;max-width:760px}h1 span{color:var(--blue)}.hero p{max-width:615px;margin:0;color:#5b6370;font-size:15px;line-height:1.74}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}.note{display:flex;gap:11px;align-items:flex-start;margin-top:26px;max-width:585px;color:#646b71;font-size:11px;line-height:1.58}.note i{display:grid;place-items:center;width:30px;height:30px;background:var(--green);color:#fff;border:1.5px solid var(--ink);font-style:normal;font-weight:900;flex:none}
+    .poster-zone{position:relative;min-height:382px}.poster-stack{position:absolute;left:50%;top:50%;width:302px;height:352px;transform:translate(-50%,-50%) rotate(-4deg);background:var(--blue);border:2px solid var(--ink);box-shadow:10px 10px 0 var(--red);overflow:hidden;color:#fff;padding:20px}.poster-stack:before{content:"";position:absolute;width:210px;height:210px;border-radius:50%;right:-80px;top:-53px;border:2px solid rgba(255,255,255,.78);box-shadow:0 0 0 16px rgba(255,255,255,.14),0 0 0 32px rgba(255,255,255,.10)}.poster-stack:after{content:"";position:absolute;width:178px;height:178px;border-radius:50%;left:-79px;bottom:-76px;background:var(--yellow);border:2px solid var(--ink)}.poster-meta{position:relative;z-index:2;display:flex;justify-content:space-between;font:600 8px/1 "IBM Plex Mono",monospace;letter-spacing:.7px;text-transform:uppercase}.poster-title{position:relative;z-index:2;margin-top:52px;font-family:"Archivo Black",sans-serif;font-size:43px;line-height:.83;letter-spacing:-2px}.poster-title span{color:var(--yellow)}.poster-bars{position:absolute;z-index:3;right:18px;bottom:18px;display:grid;gap:5px}.poster-bars i{display:block;height:7px;background:var(--ink);border:1px solid rgba(255,255,255,.3)}.poster-bars i:nth-child(1){width:80px}.poster-bars i:nth-child(2){width:59px;background:var(--yellow)}.poster-bars i:nth-child(3){width:91px}.paper-card{position:absolute;width:168px;background:#fffdf8;border:2px solid var(--ink);box-shadow:6px 6px 0 var(--ink);padding:12px;right:3px;bottom:13px;transform:rotate(7deg);z-index:4}.paper-card small{font:600 8px "IBM Plex Mono",monospace;color:#536173}.paper-card b{display:block;margin-top:6px;font-size:11px;line-height:1.35}.paper-card div{height:42px;margin-top:9px;background:linear-gradient(135deg,#f9d8a6,#ffd5d1);border:1px solid var(--ink)}
+    .strip{padding:15px 0;background:#fffdf8;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink)}.stripin{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stripin div{text-align:center;font-size:11px;font-weight:800;color:#516072}.stripin i{font-style:normal;color:var(--red);font-size:16px;margin-right:7px}
+    section{padding:80px 0}.head{text-align:center;max-width:735px;margin:0 auto 34px}.head h2{margin:13px 0;font-family:"Archivo Black",sans-serif;font-size:clamp(31px,4vw,49px);line-height:.94;letter-spacing:-2.2px}.head p{margin:0;color:#657080;font-size:14px;line-height:1.72}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fffdf8;border:1.5px solid var(--ink);box-shadow:5px 5px 0 rgba(24,35,56,.12);padding:22px}.icon{display:grid;place-items:center;width:42px;height:42px;background:var(--yellow);border:1.5px solid var(--ink);font-family:"Archivo Black",sans-serif;font-size:16px}.card h3{margin:17px 0 8px;font-size:17px;letter-spacing:-.4px}.card p{margin:0;color:#68717b;font-size:12px;line-height:1.65}
+    .system{background:var(--blue);color:#fff;position:relative;overflow:hidden;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink)}.system:before{content:"";position:absolute;width:520px;height:520px;right:-190px;top:-250px;border-radius:50%;border:2px solid rgba(255,255,255,.4);box-shadow:0 0 0 35px rgba(255,255,255,.09),0 0 0 70px rgba(255,255,255,.05)}.system-grid{position:relative;display:grid;grid-template-columns:.87fr 1.13fr;gap:42px;align-items:center}.system h2{margin:15px 0;font-family:"Archivo Black",sans-serif;font-size:clamp(34px,4vw,53px);line-height:.92;letter-spacing:-2.3px}.system h2 span{color:var(--yellow)}.system p{margin:0;color:#e1e9ff;font-size:14px;line-height:1.72}.steps{display:grid;gap:12px;margin-top:25px}.step{display:flex;gap:11px;align-items:flex-start;color:#f3f6ff;font-size:12px;line-height:1.5}.num{display:grid;place-items:center;width:24px;height:24px;background:var(--yellow);color:var(--ink);border:1.5px solid var(--ink);flex:none;font:600 9px "IBM Plex Mono",monospace}
+    .print-map{padding:18px;background:#fffdf8;border:2px solid var(--ink);color:var(--ink);box-shadow:11px 13px 0 var(--ink)}.map-head{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #ded6c6}.map-head b{font-family:"Archivo Black",sans-serif;font-size:18px;letter-spacing:-.8px}.map-head span{padding:7px 8px;background:var(--yellow);border:1px solid var(--ink);font:600 8px "IBM Plex Mono",monospace}.map-row{display:flex;gap:10px;padding:13px 0;border-bottom:1px solid #e9e2d5}.map-row:last-child{border:0}.map-row i{display:grid;place-items:center;width:27px;height:27px;flex:none;background:#e8edff;color:var(--blue);border:1px solid var(--ink);font-style:normal;font:600 9px "IBM Plex Mono",monospace}.map-row b{display:block;font-size:12px}.map-row small{display:block;margin-top:3px;color:#737b86;font-size:10px;line-height:1.45}
+    .feature{position:relative;overflow:hidden}.feature .tag{font:600 9px "IBM Plex Mono",monospace;color:#657080}.feature h3{font-family:"Archivo Black",sans-serif;font-size:24px;line-height:1;letter-spacing:-1.2px}.feature:nth-child(2){background:linear-gradient(145deg,#eef1ff,#fffdf8)}.feature:nth-child(3){background:linear-gradient(145deg,#fff5d7,#fffdf8)}
+    .kit{background:#f3e6ce}.kitgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:17px}.kitbox{padding:28px;border:1.5px solid var(--ink);background:#fffdf8;box-shadow:var(--shadow)}.kitbox h2{margin:14px 0;font-family:"Archivo Black",sans-serif;font-size:34px;line-height:.94;letter-spacing:-1.7px}.kitbox p{margin:0;color:#67727c;font-size:13px;line-height:1.7}.items{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.items div{color:#55616e;font-size:12px;line-height:1.4}.items i{font-style:normal;color:var(--green);font-weight:900;margin-right:7px}.licensebox{background:var(--ink);border-color:var(--ink);color:#fff}.licensebox p{color:#d1dbe5}.license{padding:12px 0;border-top:1px solid rgba(255,255,255,.13);font-size:12px;line-height:1.5}.license b{color:var(--yellow)}
+    .handovers{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.handover{min-height:194px}.handover .icon{background:#e8edff;color:var(--blue)}
+    .cta{padding:82px 0}.ctaBox{position:relative;overflow:hidden;color:#fff;text-align:center;background:var(--red);border:2px solid var(--ink);box-shadow:12px 12px 0 var(--blue);padding:54px}.ctaBox:before{content:"";position:absolute;width:600px;height:600px;border-radius:50%;left:50%;bottom:-485px;transform:translateX(-50%);border:2px solid rgba(255,201,69,.82);box-shadow:0 0 0 36px rgba(255,201,69,.11),0 0 0 72px rgba(255,201,69,.07)}.ctaBox>*{position:relative}.ctaBox h2{margin:14px auto;max-width:785px;font-family:"Archivo Black",sans-serif;font-size:clamp(35px,4.5vw,59px);line-height:.91;letter-spacing:-2.8px}.ctaBox h2 span{color:var(--yellow)}.ctaBox p{margin:auto;max-width:610px;color:#ffe7df;font-size:14px;line-height:1.65}.ctaBox .actions{justify-content:center}.ctaBox .btn{box-shadow:3px 3px 0 var(--ink)}
+    .faq{max-width:820px;margin:auto}.faq details{padding:17px 0;border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}summary{display:flex;justify-content:space-between;gap:16px;cursor:pointer;list-style:none;font-size:14px;font-weight:800}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:19px;color:var(--red)}details[open] summary:after{content:"–"}.faq p{margin:10px 32px 0 0;color:#68717c;font-size:12px;line-height:1.7}
+    footer{padding:30px 0 38px;color:#77808c;font-size:10px}.foot{display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid var(--line)}.foot b{color:#435165}
+    @media(max-width:860px){.hero-grid,.system-grid,.kitgrid{grid-template-columns:1fr}.poster-zone{max-width:450px;margin:15px auto 0}.grid3,.handovers{grid-template-columns:1fr 1fr}.links{display:none}.stripin{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.nav .btn{padding:10px;font-size:10px}.mark{width:35px;height:35px}.brand b{font-size:21px}.hero{padding:48px 0}.hero h1{font-size:48px;letter-spacing:-2.8px}.poster-zone{min-height:348px;transform:scale(.92);margin:-5px auto -18px}.grid3,.handovers,.items{grid-template-columns:1fr}.head{text-align:left}.head h2{font-size:36px}.system,section{padding:58px 0}.ctaBox{padding:38px 20px}.actions{display:grid}.btn{width:100%}.foot{display:block}.foot span{display:block;margin-top:8px}}
+  </style>
+</head>
+<body>
+  <!-- TEMPLATE RESELLER CETAK. Ganti semua [PLACEHOLDER] sebelum dipublikasikan. -->
+  <header>
+    <div class="wrap nav">
+      <a href="#top" class="brand"><span class="mark">C</span><span><b>[NAMA BRAND]</b><small>print campaign toolkit</small></span></a>
+      <nav class="links"><a href="#fitur">Fitur</a><a href="#kit">Yang didapat</a><a href="#faq">FAQ</a></nav>
+      <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn dark">Dapatkan CETAK →</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="overline"><i></i> Untuk brand, designer, agency & reseller digital</div>
+          <h1>BUAT VISUAL <span>YANG TERASA DICETAK.</span></h1>
+          <p>CETAK mengubah brief campaign menjadi arah poster, carousel, dan social graphic yang konsisten—lengkap dengan copy hierarchy, art direction, key visual direction, serta production handover yang lebih mudah dieksekusi.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn primary">Ambil CETAK Sekarang →</a>
+            <a href="#fitur" class="btn ghost">Lihat isi aplikasinya ↓</a>
+          </div>
+          <div class="note"><i>✓</i><span><b>Mulai dari pesan dan fakta campaign, bukan prompt visual acak.</b><br>CETAK tidak mengarang klaim, testimoni, diskon, atau bukti yang belum tersedia dalam brief Anda.</span></div>
+        </div>
+
+        <div class="poster-zone" aria-label="Ilustrasi direction poster">
+          <div class="poster-stack">
+            <div class="poster-meta"><span>PRINT SERIES / 01</span><span>[BRAND]</span></div>
+            <div class="poster-title">MAKE<br>IT<br><span>SEEN.</span></div>
+            <div class="poster-bars"><i></i><i></i><i></i></div>
+          </div>
+          <div class="paper-card"><small>CAMPAIGN SYSTEM</small><b>Message → hierarchy → key visual → production.</b><div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"><div class="wrap stripin">
+      <div><i>✎</i> Copy hierarchy</div>
+      <div><i>◫</i> Art direction</div>
+      <div><i>▣</i> Poster + carousel</div>
+      <div><i>⇢</i> Production handover</div>
+    </div></div>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="overline"><i></i> Kenapa visual promosi sering tidak terasa satu campaign?</div>
+          <h2>Karena headline, layout, visual, dan copy dibuat tanpa sistem yang menyatukannya.</h2>
+          <p>Satu poster bisa terlihat menarik. Tetapi ketika masuk ke carousel, social graphic, atau versi ukuran lain, pesannya berubah, prioritasnya bergeser, dan semua aset terlihat dibuat secara terpisah.</p>
+        </div>
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Mulai dari estetika, bukan pesan</h3><p>Visual dibuat karena terlihat keren, sementara audience, objective, offer, proof, CTA, dan hierarki informasi belum diputuskan.</p></article>
+          <article class="card"><div class="icon">02</div><h3>Copy tidak punya tingkat prioritas</h3><p>Headline, subheadline, benefit, harga, CTA, dan catatan penting bersaing dalam satu ruang tanpa aturan layout yang jelas.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Handover tidak cukup presisi</h3><p>Designer, editor, atau tool visual akhirnya masih harus menebak tujuan setiap frame, treatment gambar, serta detail produksi yang dibutuhkan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="system">
+      <div class="wrap system-grid">
+        <div>
+          <div class="overline" style="color:#dce6ff"><i style="background:var(--yellow)"></i> Independent print campaign system</div>
+          <h2>DARI PESAN KE <span>SISTEM CETAK.</span></h2>
+          <p>CETAK menyusun campaign visual melalui tahap yang dapat ditinjau: brief, campaign statement, copy hierarchy, visual route, layout rules, slide adaptation, lalu production checklist.</p>
+          <div class="steps">
+            <div class="step"><span class="num">01</span><span>Masukkan brand, target audience, objective, message, offer/facts, proof yang tersedia, CTA, format, dan tone campaign.</span></div>
+            <div class="step"><span class="num">02</span><span>Pilih salah satu dari beberapa visual route dengan headline, subheadline, art direction, layout, dan carousel adaptation yang relevan.</span></div>
+            <div class="step"><span class="num">03</span><span>Gunakan artboard direction dan handover untuk membuat key visual serta adaptasi asset tanpa kehilangan konteks campaign.</span></div>
+          </div>
+        </div>
+
+        <div class="print-map">
+          <div class="map-head"><b>Print Campaign Map</b><span>REVIEW FIRST</span></div>
+          <div class="map-row"><i>01</i><div><b>Campaign statement</b><small>Satu kalimat yang menjelaskan fokus pesan sebelum copy dan visual dibuat.</small></div></div>
+          <div class="map-row"><i>02</i><div><b>Copy hierarchy</b><small>Aturan prioritas untuk headline, subheadline, proof, offer, CTA, dan detail pendukung.</small></div></div>
+          <div class="map-row"><i>03</i><div><b>Art direction & layout</b><small>Rute visual, palette, motif, image treatment, serta layout rules untuk key visual.</small></div></div>
+          <div class="map-row"><i>04</i><div><b>Carousel + handover</b><small>Adaptasi story per frame dan dokumen produksi yang bisa dibawa ke editor atau tim.</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="wrap">
+        <div class="head">
+          <div class="overline"><i></i> Apa yang dibangun CETAK</div>
+          <h2>Poster tidak harus berdiri sendiri. Jadikan ia pusat dari satu rangkaian campaign.</h2>
+          <p>Rancang message hierarchy dan visual system yang dapat dipakai untuk poster, carousel, launch graphic, social asset, dan adaptasi ukuran lain.</p>
+        </div>
+        <div class="grid3">
+          <article class="card feature"><span class="tag">01 / CAMPAIGN BRIEF</span><h3>Masukkan fakta campaign.</h3><p>Brand, target, offer, proof, CTA, tujuan, format, tone, dan arah visual menjadi batas agar output tidak mengarang informasi.</p></article>
+          <article class="card feature"><span class="tag">02 / DESIGN SYSTEM</span><h3>Pilih bahasa visual.</h3><p>Dapatkan beberapa visual route dengan copy system, layout, palette, typography, motif, image treatment, dan production checklist.</p></article>
+          <article class="card feature"><span class="tag">03 / ARTBOARD + HANDOVER</span><h3>Turunkan ke produksi.</h3><p>Siapkan key visual direction, prompt art direction, slide plan, serta handover markdown agar proses produksi tidak mulai dari tebakan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kit" id="kit">
+      <div class="wrap kitgrid">
+        <article class="kitbox">
+          <div class="overline"><i></i> Bonus untuk pembeli</div>
+          <h2>Marketing kit supaya Anda tidak mulai menjual CETAK dari halaman kosong.</h2>
+          <p>Saat membeli dari [NAMA BRAND], Anda juga memperoleh materi promosi yang dapat disesuaikan untuk menawarkan CETAK sebagai produk digital, bonus layanan, atau bagian dari katalog aplikasi Anda.</p>
+          <div class="items">
+            <div><i>✓</i>Angle promosi & hook iklan</div><div><i>✓</i>Template caption organik</div>
+            <div><i>✓</i>Materi carousel & visual brief</div><div><i>✓</i>Copy landing page dasar</div>
+            <div><i>✓</i>Script WhatsApp follow-up</div><div><i>✓</i>Checklist launch singkat</div>
+          </div>
+        </article>
+
+        <article class="kitbox licensebox">
+          <div class="overline" style="color:var(--yellow)"><i style="background:var(--yellow)"></i> Dibuat sebagai aset bisnis</div>
+          <h2>Gunakan sendiri atau jadikan CETAK bagian dari penawaran Anda.</h2>
+          <p>Posisikan CETAK sebagai toolkit campaign visual, bonus produk, atau layanan tambahan dengan nama serta identitas brand Anda sendiri.</p>
+          <div class="license"><b>✓ Lisensi jual ulang</b><br>Jual ulang akses atau produk sesuai ketentuan paket yang Anda pilih.</div>
+          <div class="license"><b>✓ Lisensi rebrand</b><br>Sesuaikan nama, identitas visual, dan penawaran agar selaras dengan brand Anda.</div>
+          <div class="license"><b>✓ Marketing kit</b><br>Mulai promosi dengan materi yang sudah punya struktur campaign.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="overline"><i></i> Output yang lebih siap untuk diproduksi</div>
+          <h2>Satu campaign, beberapa bahan kerja untuk tim atau tool Anda.</h2>
+        </div>
+        <div class="handovers">
+          <article class="card handover"><div class="icon">01</div><h3>Key visual direction</h3><p>Arah artboard yang menjelaskan fokus visual, ruang untuk teks, komposisi, image treatment, dan karakter campaign.</p></article>
+          <article class="card handover"><div class="icon">02</div><h3>Carousel adaptation deck</h3><p>Urutan slide dengan role, title, body, serta adaptasi copy agar campaign tetap menyampaikan satu cerita.</p></article>
+          <article class="card handover"><div class="icon">03</div><h3>Production handover</h3><p>Dokumen ringkas untuk owner, designer, editor, atau tool lain: brief, copy, art direction, layout rules, dan checklist.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head"><div class="overline"><i></i> Cara mulai</div><h2>Mulai dari campaign yang benar, lalu ubah menjadi visual yang bisa diproduksi ulang.</h2></div>
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Dapatkan akses</h3><p>Setelah pembelian, akses CETAK melalui link yang diberikan oleh [NAMA BRAND].</p></article>
+          <article class="card"><div class="icon">02</div><h3>Isi campaign brief</h3><p>Masukkan fakta produk, target, offer, bukti yang tersedia, CTA, format asset, serta batas komunikasi brand Anda.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Review lalu produksi</h3><p>Pilih rute desain yang paling tepat, cek kembali semua klaim, lalu gunakan direction serta handover untuk membuat asset final.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="ctaBox">
+          <div class="overline" style="color:#fff0dc"><i style="background:var(--yellow)"></i> CETAK PRINT CAMPAIGN STUDIO</div>
+          <h2>Jangan hanya membuat poster. <span>Buat campaign yang terlihat seperti satu sistem.</span></h2>
+          <p>Dapatkan CETAK beserta marketing kit dari [NAMA BRAND], lalu ubah brief campaign menjadi poster direction, carousel adaptation, dan production handover yang lebih siap digunakan.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn primary">Dapatkan CETAK →</a>
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn" style="background:transparent;color:#fff;border-color:rgba(255,255,255,.5)">Tanya via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top:18px">
+      <div class="wrap">
+        <div class="head"><div class="overline"><i></i> Pertanyaan umum</div><h2>Hal yang perlu diketahui sebelum menggunakan CETAK.</h2></div>
+        <div class="faq">
+          <details><summary>CETAK cocok untuk siapa?</summary><p>CETAK cocok untuk pemilik brand, marketer, designer, freelancer, agency, creator, atau reseller digital yang ingin merencanakan visual campaign dengan sistem copy dan art direction yang lebih jelas.</p></details>
+          <details><summary>Apakah CETAK menghasilkan file desain siap cetak otomatis?</summary><p>CETAK membantu membuat direction, copy hierarchy, art direction, dan handover produksi. Finalisasi file untuk cetak atau publish tetap perlu dilakukan di editor desain yang sesuai serta ditinjau oleh manusia.</p></details>
+          <details><summary>Apakah CETAK membuat klaim atau testimoni untuk materi iklan?</summary><p>Tidak. CETAK menggunakan fakta, offer, proof, dan guardrail yang Anda masukkan. Jangan memasukkan atau mempublikasikan klaim, testimoni, diskon, atau bukti yang tidak dapat diverifikasi.</p></details>
+          <details><summary>Apakah boleh dijual ulang atau di-rebrand?</summary><p>Ya, sesuai lisensi dan ketentuan paket dari [NAMA BRAND]. Ubah bagian ini bila aturan lisensi Anda berbeda.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap foot"><span><b>[NAMA BRAND]</b> · CETAK Print Campaign Studio</span><span>© 2026 · Semua merek dagang milik pemiliknya masing-masing.</span></div></footer>
+</body>
+</html>

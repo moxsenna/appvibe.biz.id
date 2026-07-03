@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RUPA — Visual Commerce Studio</title>
+  <meta name="description" content="Landing page reseller template untuk RUPA Visual Commerce Studio.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#10121a; --ink-2:#1b2030; --paper:#f8f7f2; --paper-2:#ebeaf0; --white:#fff;
+      --line:#cfd1d9; --electric:#1d43ff; --acid:#dfff35; --violet:#d946ef; --orange:#ff6b3d;
+      --sky:#a7ccff; --muted:#687183; --success:#156d4a; --shadow:0 20px 45px rgba(17,19,27,.13);
+      --soft-shadow:0 10px 24px rgba(17,19,27,.07); --r:22px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:"Space Grotesk",system-ui,sans-serif}
+    body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:-2;opacity:.16;background-image:radial-gradient(rgba(17,19,27,.18) .65px,transparent .72px);background-size:18px 18px}
+    a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    header{position:sticky;top:0;z-index:50;background:rgba(248,247,242,.88);backdrop-filter:blur(16px);border-bottom:1px solid rgba(207,209,217,.8)}
+    .nav{height:75px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:11px}.mark{width:40px;height:40px;display:grid;place-items:center;background:var(--acid);border:2px solid var(--ink);box-shadow:4px 4px 0 var(--electric);font-family:Syne,sans-serif;font-size:23px;font-weight:800;transform:rotate(-5deg)}.brand b{display:block;font:700 24px/1 Syne,sans-serif;letter-spacing:-1.3px}.brand small{display:block;margin-top:4px;color:#5d6373;font:500 8px/1 "DM Mono",monospace;letter-spacing:1.2px;text-transform:uppercase}.links{display:flex;gap:22px;color:#5e6675;font-size:12px;font-weight:700}.links a:hover{color:var(--electric)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);padding:13px 17px;border-radius:0;background:var(--white);font-size:12px;font-weight:800;line-height:1;box-shadow:3px 3px 0 var(--ink);transition:.16s}.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.btn.primary{background:var(--acid)}.btn.dark{background:var(--ink);border-color:var(--ink);color:#fff;box-shadow:3px 3px 0 var(--electric)}.btn.blue{background:var(--electric);border-color:var(--electric);color:#fff}.btn.ghost{background:transparent;box-shadow:none;color:#3d4656}.btn.ghost:hover{background:#eceeff}
+    .hero{padding:72px 0 58px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;right:-210px;top:-300px;width:680px;height:680px;background:radial-gradient(circle,rgba(223,255,53,.52) 0,rgba(223,255,53,.20) 30%,transparent 68%);border-radius:50%}.hero:after{content:"";position:absolute;left:-150px;bottom:-300px;width:520px;height:520px;border-radius:50%;border:1px dashed rgba(29,67,255,.32)}
+    .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:42px;align-items:center;position:relative}.eyebrow{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;background:var(--ink);color:#fff;font:500 9px/1 "DM Mono",monospace;letter-spacing:1px;text-transform:uppercase}.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--acid);box-shadow:0 0 0 4px rgba(223,255,53,.12)}
+    h1{margin:18px 0;font:800 clamp(45px,6vw,76px)/.9 Syne,sans-serif;letter-spacing:-3.6px;max-width:690px}h1 span{color:var(--electric)}.hero p{margin:0;max-width:620px;color:#596475;font-size:15px;line-height:1.76}.actions{display:flex;flex-wrap:wrap;gap:11px;margin-top:28px}.proof{display:flex;gap:10px;margin-top:25px;align-items:flex-start;color:#657083;font-size:11px;line-height:1.55}.proof i{display:grid;place-items:center;width:26px;height:26px;background:var(--acid);border:1px solid var(--ink);font-style:normal;font-weight:900;flex:none}
+    .board{position:relative;background:var(--ink);border:2px solid var(--ink);padding:15px;box-shadow:12px 15px 0 var(--electric);transform:rotate(1deg);max-width:475px;margin-left:auto}.board-head{display:flex;align-items:center;justify-content:space-between;color:#c2c8d7;font:500 9px/1 "DM Mono",monospace;letter-spacing:.7px;padding:2px 2px 14px}.board-head span:last-child{color:var(--acid)}.canvas{background:#f7f7f4;padding:15px;color:var(--ink)}.canvas h3{font:700 20px/1 Syne,sans-serif;letter-spacing:-.8px;margin:0}.canvas p{margin:6px 0 12px;color:#6e7481;font-size:10px}.visual-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:8px;height:204px}.shot{position:relative;overflow:hidden;border:1px solid var(--ink);background:linear-gradient(135deg,#c6ddff,#f3f4f8)}.shot:before{content:"";position:absolute;width:88px;height:116px;left:50%;top:52%;transform:translate(-50%,-50%);border-radius:50px 50px 22px 22px;background:linear-gradient(140deg,#1d43ff,#826cff);box-shadow:16px -9px 0 rgba(223,255,53,.72)}.shot:after{content:"";position:absolute;left:9px;bottom:8px;right:9px;padding:6px;background:rgba(255,255,255,.86);font:500 8px "DM Mono",monospace;content:"HERO PRODUCT / 4:5"}.shot.two{background:linear-gradient(135deg,#ffcbce,#fff0ce)}.shot.two:before{width:90px;height:90px;border-radius:50%;background:linear-gradient(145deg,#ff6b3d,#d946ef);box-shadow:-26px 25px 0 rgba(223,255,53,.85)}.shot.two:after{content:"DETAIL / TEXTURE"}.shot.three{background:linear-gradient(135deg,#d4f2e9,#b7d7ff)}.shot.three:before{width:74px;height:120px;border-radius:18px;background:linear-gradient(145deg,#17211f,#47586f);box-shadow:23px 19px 0 rgba(223,255,53,.8)}.shot.three:after{content:"LIFESTYLE / 1:1"}.shot.tall{grid-row:span 2}.side-shots{display:grid;grid-template-rows:1fr 1fr;gap:8px}.sticker{position:absolute;right:-18px;bottom:18px;background:var(--acid);border:2px solid var(--ink);padding:10px 12px;box-shadow:4px 4px 0 var(--ink);font:800 10px/1.3 "DM Mono",monospace;transform:rotate(-4deg)}
+    .strip{background:#fff;border-top:1.5px solid var(--ink);border-bottom:1.5px solid var(--ink);padding:16px 0}.stripin{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stripin div{text-align:center;font-size:11px;font-weight:800;color:#47505e}.stripin i{font-style:normal;font-size:17px;color:var(--electric);margin-right:7px}
+    section{padding:80px 0}.head{text-align:center;max-width:720px;margin:0 auto 34px}.head h2{margin:14px 0;font:700 clamp(31px,4vw,48px)/1 Syne,sans-serif;letter-spacing:-2px}.head p{margin:0;color:#647083;font-size:14px;line-height:1.72}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{background:#fff;border:1.5px solid var(--line);padding:22px;box-shadow:var(--soft-shadow)}.icon{display:grid;place-items:center;width:42px;height:42px;border:1.5px solid var(--ink);background:var(--acid);font-size:19px}.card h3{margin:17px 0 8px;font-size:17px;letter-spacing:-.5px}.card p{margin:0;color:#687386;font-size:12px;line-height:1.66}
+    .process{background:var(--ink);color:#fff;position:relative;overflow:hidden}.process:before{content:"";position:absolute;width:540px;height:540px;border-radius:50%;right:-190px;top:-190px;border:1px solid rgba(223,255,53,.54);box-shadow:0 0 0 45px rgba(223,255,53,.055),0 0 0 90px rgba(223,255,53,.035)}.process-grid{position:relative;display:grid;grid-template-columns:.86fr 1.14fr;gap:44px;align-items:center}.process h2{margin:16px 0;font:700 clamp(34px,4vw,52px)/.98 Syne,sans-serif;letter-spacing:-2px}.process p{color:#cbd0de;font-size:14px;line-height:1.7}.steps{display:grid;gap:12px;margin-top:25px}.step{display:flex;gap:11px;align-items:flex-start;color:#f0f3f4;font-size:12px;line-height:1.5}.num{width:24px;height:24px;display:grid;place-items:center;flex:none;color:var(--ink);background:var(--acid);font:700 9px "DM Mono",monospace}
+    .direction{background:#fff;padding:18px;border:2px solid var(--ink);box-shadow:12px 14px 0 rgba(29,67,255,.45);color:var(--ink)}.direction-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #dfe1e7}.direction-head b{font:700 19px Syne,sans-serif}.label{background:#dfff35;border:1px solid var(--ink);padding:6px 7px;font:500 8px "DM Mono",monospace}.direction-row{padding:13px 0;border-bottom:1px solid #e5e6eb}.direction-row:last-child{border:0}.direction-row small{display:block;color:#798191;font:500 8px "DM Mono",monospace}.direction-row b{display:block;margin-top:5px;font-size:12px;line-height:1.4}.palette{display:flex;gap:6px;margin-top:9px}.palette span{width:18px;height:18px;border:1px solid var(--ink)}.palette span:nth-child(1){background:#1d43ff}.palette span:nth-child(2){background:#dfff35}.palette span:nth-child(3){background:#ff6b3d}.palette span:nth-child(4){background:#e9e8f0}
+    .feature{position:relative;overflow:hidden}.feature .mini{font:500 9px "DM Mono",monospace;color:#627087}.feature h3{font:700 25px/1.04 Syne,sans-serif;letter-spacing:-1px}.feature:nth-child(2){background:linear-gradient(135deg,#eef1ff,#fff)}.feature:nth-child(3){background:linear-gradient(135deg,#f5ffd8,#fff)}
+    .kit{background:#e9e8ed}.kitgrid{display:grid;grid-template-columns:1.08fr .92fr;gap:17px}.kitbox{background:#fff;border:1.5px solid var(--line);padding:28px}.kitbox h2{margin:14px 0;font:700 35px/.98 Syne,sans-serif;letter-spacing:-1.8px}.kitbox p{color:#667184;font-size:13px;line-height:1.7}.items{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.items div{color:#526073;font-size:12px;line-height:1.45}.items i{font-style:normal;color:var(--electric);font-weight:900;margin-right:7px}.licensebox{background:var(--ink);border-color:var(--ink);color:#fff}.licensebox p{color:#cbd1dd}.license{border-top:1px solid rgba(255,255,255,.14);padding:12px 0;font-size:12px;line-height:1.5}.license b{color:var(--acid)}
+    .cta{padding:82px 0}.ctaBox{position:relative;overflow:hidden;background:var(--electric);padding:52px;text-align:center;color:#fff;border:2px solid var(--ink);box-shadow:12px 12px 0 var(--ink)}.ctaBox:before{content:"";position:absolute;width:620px;height:620px;border-radius:50%;left:50%;bottom:-505px;transform:translateX(-50%);border:1px solid rgba(223,255,53,.78);box-shadow:0 0 0 45px rgba(223,255,53,.11),0 0 0 90px rgba(223,255,53,.07)}.ctaBox>*{position:relative}.ctaBox h2{margin:15px auto;max-width:790px;font:700 clamp(34px,4.5vw,58px)/.94 Syne,sans-serif;letter-spacing:-2.6px}.ctaBox p{margin:auto;max-width:610px;color:#e6ebff;font-size:14px;line-height:1.65}.ctaBox .actions{justify-content:center}.ctaBox .paper{box-shadow:3px 3px 0 var(--ink)}
+    .faq{max-width:820px;margin:auto}.faq details{padding:17px 0;border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}summary{display:flex;justify-content:space-between;gap:16px;cursor:pointer;list-style:none;font-weight:800;font-size:14px}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:19px;color:var(--electric)}details[open] summary:after{content:"–"}.faq p{margin:10px 35px 0 0;color:#687386;font-size:12px;line-height:1.7}
+    footer{padding:30px 0 38px;color:#77808d;font-size:10px}.foot{padding-top:21px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px}.foot b{color:#384253}
+    @media(max-width:860px){.hero-grid,.process-grid,.kitgrid{grid-template-columns:1fr}.board{margin:12px auto 0}.grid3{grid-template-columns:1fr 1fr}.links{display:none}.stripin{grid-template-columns:1fr 1fr}.process-grid{gap:34px}}
+    @media(max-width:560px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.nav .btn{padding:10px;font-size:10px}.mark{width:35px;height:35px}.brand b{font-size:21px}.hero{padding:48px 0}.hero h1{font-size:48px;letter-spacing:-2.8px}.grid3,.items{grid-template-columns:1fr}.head{text-align:left}.head h2{font-size:36px}.process,section{padding:58px 0}.ctaBox{padding:38px 20px}.actions{display:grid}.btn{width:100%}.foot{display:block}.foot span{display:block;margin-top:8px}.visual-grid{height:185px}}
+  </style>
+</head>
+<body>
+  <!-- TEMPLATE RESELLER RUPA. Ganti semua placeholder [....] sebelum dipublikasikan. -->
+  <header>
+    <div class="wrap nav">
+      <a href="#top" class="brand" aria-label="Beranda">
+        <span class="mark">R</span>
+        <span><b>[NAMA BRAND]</b><small>visual commerce toolkit</small></span>
+      </a>
+      <nav class="links"><a href="#fitur">Fitur</a><a href="#kit">Yang didapat</a><a href="#faq">FAQ</a></nav>
+      <a class="btn dark" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Dapatkan RUPA →</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><i></i> Untuk brand, seller, agency & reseller digital</div>
+          <h1>Jadikan produk Anda <span>objek yang sulit dilewati.</span></h1>
+          <p>RUPA membantu Anda membangun visual product direction dari satu brief: konsep, set, cahaya, komposisi, shot list, hingga prompt render. Bukan sekadar “generate gambar”, tetapi membuat visual commerce yang terasa satu campaign.</p>
+          <div class="actions">
+            <a class="btn primary" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Ambil RUPA Sekarang →</a>
+            <a class="btn ghost" href="#fitur">Lihat isi aplikasinya ↓</a>
+          </div>
+          <div class="proof"><i>✓</i><span><b>Untuk marketplace, ads, dan social commerce.</b><br>Mulai dari brief produk, review arahan kreatif, lalu render hanya shot yang memang ingin dipakai.</span></div>
+        </div>
+
+        <div class="board" aria-label="Ilustrasi RUPA visual direction board">
+          <div class="board-head"><span>RUPA / VISUAL DIRECTION BOARD</span><span>● READY TO REVIEW</span></div>
+          <div class="canvas">
+            <h3>Product campaign / 04 frames</h3>
+            <p>Creative track: Clean commerce · Ratio: 4:5</p>
+            <div class="visual-grid">
+              <div class="shot tall"></div>
+              <div class="side-shots"><div class="shot two"></div><div class="shot three"></div></div>
+            </div>
+          </div>
+          <div class="sticker">ONE BRIEF →<br>COHESIVE VISUALS</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"><div class="wrap stripin">
+      <div><i>◩</i> Art direction</div>
+      <div><i>◫</i> Shot list</div>
+      <div><i>✦</i> Render prompts</div>
+      <div><i>⇢</i> Asset handover</div>
+    </div></div>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Masalahnya bukan hanya “kurang gambar”</div>
+          <h2>Visual produk sering terlihat acak karena tidak dimulai dari keputusan komersial.</h2>
+          <p>Brand atau seller bisa punya produk bagus, tetapi aset visualnya tidak berbicara dalam bahasa yang sama: foto katalog, iklan, marketplace, dan social post terasa seperti dibuat oleh empat brand berbeda.</p>
+        </div>
+
+        <div class="grid3">
+          <article class="card"><div class="icon">⌁</div><h3>Prompt dibuat tanpa arah</h3><p>Hasil visual berubah-ubah karena target, benefit produk, konteks campaign, dan batasan brand belum diterjemahkan menjadi brief yang jelas.</p></article>
+          <article class="card"><div class="icon">◫</div><h3>Setiap gambar berdiri sendiri</h3><p>Satu gambar mungkin terlihat menarik, tetapi tidak ada sistem visual yang membuat seluruh aset terasa seperti satu rangkaian campaign.</p></article>
+          <article class="card"><div class="icon">✦</div><h3>Tim masih menebak-nebak</h3><p>Designer, creator, atau tool gambar tidak mendapat keputusan yang cukup tentang set, cahaya, shot purpose, dan komposisi.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="wrap process-grid">
+        <div>
+          <div class="eyebrow" style="background:rgba(255,255,255,.08);color:#fff"><i></i> Visual commerce workflow</div>
+          <h2>Bukan hanya minta gambar. Bangun sistem visual sebelum render.</h2>
+          <p>RUPA menjaga konteks produk dari awal sampai output agar setiap shot memiliki peran yang jelas: menarik perhatian, menjelaskan detail, membangun desire, atau memperkuat kepercayaan.</p>
+          <div class="steps">
+            <div class="step"><span class="num">01</span><span>Masukkan produk, audience, benefit, konteks campaign, offer, dan batas komunikasi brand.</span></div>
+            <div class="step"><span class="num">02</span><span>Susun art direction: visual track, environment, lighting, komposisi, palette, dan shot plan.</span></div>
+            <div class="step"><span class="num">03</span><span>Review prompt setiap shot, render yang dipilih, lalu gunakan output terbaik sebagai asset campaign atau handover tim.</span></div>
+          </div>
+        </div>
+
+        <div class="direction">
+          <div class="direction-head"><b>Direction Board</b><span class="label">REVIEW FIRST</span></div>
+          <div class="direction-row"><small>CREATIVE THESIS</small><b>Produk diposisikan sebagai objek modern yang rapi, kontras, dan mudah dikenali saat orang sedang scroll.</b></div>
+          <div class="direction-row"><small>VISUAL SYSTEM</small><b>Clean commerce · studio colour-block · hero product center · soft editorial lighting</b><div class="palette"><span></span><span></span><span></span><span></span></div></div>
+          <div class="direction-row"><small>SHOT 01 / ROLE</small><b>Hero frame untuk menarik perhatian dan memperjelas bentuk produk.</b></div>
+          <div class="direction-row"><small>SHOT 02 / ROLE</small><b>Detail texture untuk memperkuat alasan beli secara visual.</b></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Apa yang dikerjakan RUPA</div>
+          <h2>Satu workspace untuk mengarahkan visual produk sebelum diproduksi.</h2>
+          <p>RUPA menyatukan brief, art direction, shot plan, prompt, dan output agar proses visual tidak bergantung pada trial-and-error yang tanpa arah.</p>
+        </div>
+
+        <div class="grid3">
+          <article class="card feature"><span class="mini">01 / VISUAL FOUNDATION</span><h3>Tulis brief yang berguna.</h3><p>Definisikan target buyer, manfaat utama, visual goal, campaign moment, rasio, komposisi, dan referensi produk agar AI tidak menebak positioning.</p></article>
+          <article class="card feature"><span class="mini">02 / ART DIRECTION</span><h3>Rancang set, cahaya, dan seri shot.</h3><p>Bentuk visual system yang dapat dipakai bersama: creative thesis, art notes, palette, direction, serta beberapa shot yang punya fungsi berbeda.</p></article>
+          <article class="card feature"><span class="mini">03 / ASSET ROOM</span><h3>Render hanya yang dipilih.</h3><p>Review prompt setiap frame sebelum render, simpan asset yang tepat, lalu handover visual direction ke designer, creator, atau tim Anda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kit" id="kit">
+      <div class="wrap kitgrid">
+        <article class="kitbox">
+          <div class="eyebrow"><i></i> Bonus untuk pembeli</div>
+          <h2>Marketing kit supaya Anda punya bahan untuk menjual RUPA.</h2>
+          <p>Saat membeli dari [NAMA BRAND], Anda mendapat materi promosi yang bisa disesuaikan untuk menjual RUPA sebagai produk digital, bonus layanan, atau bagian dari katalog aplikasi Anda.</p>
+          <div class="items">
+            <div><i>✓</i>Angle promosi & hook iklan</div>
+            <div><i>✓</i>Template caption organik</div>
+            <div><i>✓</i>Materi carousel & visual brief</div>
+            <div><i>✓</i>Copy landing page dasar</div>
+            <div><i>✓</i>Script WhatsApp follow-up</div>
+            <div><i>✓</i>Checklist launch singkat</div>
+          </div>
+        </article>
+
+        <article class="kitbox licensebox">
+          <div class="eyebrow" style="background:rgba(255,255,255,.08);color:#fff"><i></i> Siap menjadi aset bisnis</div>
+          <h2>Gunakan sendiri atau jadikan bagian dari penawaran Anda.</h2>
+          <p>RUPA dapat diposisikan sebagai toolkit internal, bonus pembelian, atau produk tambahan dalam katalog digital Anda.</p>
+          <div class="license"><b>✓ Lisensi jual ulang</b><br>Jual ulang akses atau produk sesuai ketentuan paket yang Anda beli.</div>
+          <div class="license"><b>✓ Lisensi rebrand</b><br>Sesuaikan nama, tampilan, dan penawaran agar menyatu dengan brand Anda.</div>
+          <div class="license"><b>✓ Marketing kit</b><br>Mulai promosi dengan materi yang sudah memiliki struktur, bukan halaman kosong.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Cara mulai</div>
+          <h2>Mulai dari fakta produk. Bukan dari prompt random.</h2>
+        </div>
+
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Dapatkan akses</h3><p>Setelah pembelian, akses RUPA melalui link yang diberikan oleh [NAMA BRAND].</p></article>
+          <article class="card"><div class="icon">02</div><h3>Isi visual brief</h3><p>Masukkan informasi produk, target, benefit, tujuan visual, aset referensi, dan guardrail brand Anda.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Review lalu produksi</h3><p>Gunakan direction board dan prompt shot sebagai bahan produksi untuk tool gambar, designer, atau content team Anda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="ctaBox">
+          <div class="eyebrow" style="background:var(--ink);color:#fff"><i></i> RUPA VISUAL COMMERCE STUDIO</div>
+          <h2>Produk Anda bukan sekadar barang. Buat ia terlihat seperti brand yang layak diperhatikan.</h2>
+          <p>Dapatkan RUPA beserta marketing kit dari [NAMA BRAND], lalu ubah product brief menjadi arah visual yang lebih teratur dan siap dieksekusi.</p>
+          <div class="actions">
+            <a class="btn primary" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Dapatkan RUPA →</a>
+            <a class="btn" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Tanya via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top:18px">
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Pertanyaan umum</div><h2>Hal yang perlu diketahui sebelum mulai.</h2></div>
+        <div class="faq">
+          <details><summary>RUPA cocok untuk siapa?</summary><p>RUPA cocok untuk pemilik brand, seller marketplace, freelancer, agency, creator, atau reseller digital yang ingin merencanakan aset visual produk lebih sistematis.</p></details>
+          <details><summary>Apakah RUPA menjamin gambar AI pasti sempurna?</summary><p>Tidak. RUPA membantu Anda menyusun brief, direction, dan prompt yang lebih terarah. Hasil render tetap perlu ditinjau untuk memastikan konsistensi produk, logo, detail, serta kesesuaian dengan brief.</p></details>
+          <details><summary>Apakah bisa digunakan untuk produk apa saja?</summary><p>RUPA dapat membantu berbagai kategori produk dan layanan. Untuk kategori sensitif atau regulatif, pastikan visual, klaim, dan penggunaan aset mematuhi aturan platform serta hukum yang berlaku.</p></details>
+          <details><summary>Apakah saya boleh menjual ulang atau rebrand RUPA?</summary><p>Ya, sesuai ketentuan lisensi dari [NAMA BRAND]. Ubah bagian ini bila aturan lisensi paket Anda berbeda.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap foot"><span><b>[NAMA BRAND]</b> · RUPA Visual Commerce Studio</span><span>© 2026 · Semua merek dagang milik pemiliknya masing-masing.</span></div></footer>
+</body>
+</html>

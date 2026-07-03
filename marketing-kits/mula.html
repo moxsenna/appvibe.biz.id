@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>MULA — Launch Campaign Atelier</title>
+  <meta name="description" content="Landing page reseller template untuk MULA Launch Campaign Atelier.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#1c2126;--ink-soft:#4a5056;--paper:#fcfaf5;--paper-deep:#f0e8dc;--cloud:#fff;
+      --line:#e8dfd3;--coral:#e06c59;--wine:#9d475b;--olive:#596a55;--olive-pale:#dbe4d2;
+      --gold:#edae49;--sky:#c6ddeb;--lavender:#dcd6ef;--muted:#73736d;--shadow:0 16px 40px rgba(62,45,28,.09);--r:28px
+    }
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:Manrope,system-ui,sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.48;background-image:linear-gradient(rgba(190,170,140,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(190,170,140,.10) 1px,transparent 1px);background-size:28px 28px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 4% 3%,rgba(255,255,255,.92),transparent 30%),radial-gradient(circle at 92% 8%,rgba(237,174,73,.11),transparent 29%),radial-gradient(circle at 85% 95%,rgba(157,71,91,.08),transparent 30%)}
+    a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    header{position:sticky;top:0;z-index:50;background:rgba(252,250,245,.85);backdrop-filter:blur(16px);border-bottom:1px solid rgba(232,223,211,.82)}
+    .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px}.mark{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:var(--coral);color:#fff;box-shadow:inset 0 -4px 0 rgba(0,0,0,.1);font:400 25px/1 "DM Serif Display",serif}.brand b{display:block;font:400 26px/1 "DM Serif Display",Georgia,serif;letter-spacing:-.8px}.brand small{display:block;margin-top:4px;color:#8c857b;font:600 8px/1 "DM Mono",monospace;letter-spacing:1.25px;text-transform:uppercase}.links{display:flex;gap:21px;color:#697069;font-size:12px;font-weight:700}.links a:hover{color:var(--wine)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:14px 19px;font-size:12px;font-weight:800;line-height:1;transition:.2s}.btn:hover{transform:translateY(-2px);box-shadow:0 9px 16px rgba(49,39,26,.1)}.btn.primary{background:var(--coral);color:#fff;box-shadow:0 6px 0 #c75644}.btn.primary:active{transform:translateY(3px);box-shadow:0 2px 0 #c75644}.btn.dark{background:var(--ink);color:#fff;box-shadow:0 6px 0 #0f1215}.btn.paper{background:var(--cloud);border-color:rgba(220,205,185,.85);color:var(--ink)}.btn.olive{background:var(--olive);color:#fff;box-shadow:0 6px 0 #3e4a3c}
+    .hero{padding:74px 0 58px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:460px;height:460px;right:-170px;top:-245px;border-radius:50%;border:1px dashed rgba(157,71,91,.28);box-shadow:0 0 0 45px rgba(157,71,91,.04),0 0 0 90px rgba(237,174,73,.045)}.hero:after{content:"";position:absolute;width:240px;height:240px;right:12%;bottom:-148px;border-radius:50%;background:rgba(237,174,73,.2);filter:blur(2px)}
+    .hero-grid{position:relative;display:grid;grid-template-columns:1.08fr .92fr;gap:42px;align-items:center}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--wine);font:600 10px/1 "DM Mono",monospace;letter-spacing:1.25px;text-transform:uppercase}.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px rgba(224,108,89,.12)}
+    h1{margin:17px 0;font:400 clamp(47px,6vw,79px)/.93 "DM Serif Display",Georgia,serif;letter-spacing:-2.8px;max-width:735px}h1 em{font-style:italic;color:var(--coral)}.hero p{max-width:620px;margin:0;color:#5e6465;font-size:15px;line-height:1.75}.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:28px}.note{display:flex;align-items:flex-start;gap:11px;margin-top:26px;color:#6c6a65;font-size:11px;line-height:1.6;max-width:570px}.seal{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--olive-pale);color:var(--olive);font-weight:900;flex:none}
+    .dossier{position:relative;max-width:425px;margin-left:auto;padding:20px;background:var(--ink);border-radius:27px;color:#fff;box-shadow:18px 24px 0 rgba(157,71,91,.13);transform:rotate(1deg)}.dossier-top{display:flex;justify-content:space-between;gap:12px;color:#a9b2bf;font:500 9px/1 "DM Mono",monospace;letter-spacing:.8px;text-transform:uppercase}.dossier-top b{font-weight:500;color:#fff0d8}.dossier h3{margin:27px 0 17px;font:400 34px/1.05 "DM Serif Display",Georgia,serif;letter-spacing:-.8px}.rule{height:1px;background:rgba(255,255,255,.14);margin:18px 0}.dossier-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dossier-cell{padding:12px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);border-radius:15px}.dossier-cell small{display:block;color:#8d98a6;font:500 8px/1 "DM Mono",monospace;letter-spacing:.9px;text-transform:uppercase}.dossier-cell b{display:block;margin-top:7px;color:#fff;font-size:11px;line-height:1.42}.stamp{margin-top:17px;padding:11px 12px;border:1px dashed rgba(237,174,73,.52);border-radius:13px;color:#f0ddc4;font:500 10px/1.5 "DM Mono",monospace}
+    .strip{padding:15px 0;background:#fffdfa;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.stripin{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}.stripin div{text-align:center;color:#59625e;font-size:11px;font-weight:800}.stripin i{font-style:normal;color:var(--wine);font-size:16px;margin-right:7px}
+    section{padding:80px 0}.head{text-align:center;max-width:735px;margin:0 auto 34px}.head h2{margin:13px 0;font:400 clamp(33px,4vw,50px)/1 "DM Serif Display",Georgia,serif;letter-spacing:-1.4px}.head p{margin:0;color:#69706c;font-size:14px;line-height:1.72}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:23px;background:rgba(255,255,255,.86);border:1px solid var(--line);border-radius:22px;box-shadow:0 8px 24px rgba(62,45,28,.045)}.card-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:15px;background:var(--paper-deep);color:var(--wine);font:500 15px "DM Mono",monospace}.card h3{margin:17px 0 8px;font-size:17px;letter-spacing:-.35px}.card p{margin:0;color:#6d716d;font-size:12px;line-height:1.65}
+    .system{background:var(--ink);color:#fff;position:relative;overflow:hidden}.system:before{content:"";position:absolute;width:520px;height:520px;right:-190px;top:-230px;border-radius:50%;border:1px solid rgba(237,174,73,.45);box-shadow:0 0 0 45px rgba(237,174,73,.055),0 0 0 90px rgba(237,174,73,.035)}.system-grid{position:relative;display:grid;grid-template-columns:.9fr 1.1fr;gap:42px;align-items:center}.system h2{margin:15px 0;font:400 clamp(34px,4vw,52px)/1 "DM Serif Display",Georgia,serif;letter-spacing:-1.7px}.system p{margin:0;color:#cbd1d9;font-size:14px;line-height:1.72}.steps{display:grid;gap:11px;margin-top:25px}.step{display:flex;gap:11px;align-items:flex-start;color:#eef1f3;font-size:12px;line-height:1.5}.num{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#422d0a;flex:none;font:600 9px "DM Mono",monospace}
+    .map{padding:18px;background:#fffdfa;border-radius:24px;color:var(--ink);box-shadow:14px 19px 0 rgba(0,0,0,.15)}.map-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:14px;border-bottom:1px solid #e5dccf}.map-top b{font:400 22px "DM Serif Display",Georgia,serif}.map-top span{padding:7px 9px;border-radius:999px;background:var(--olive-pale);color:var(--olive);font:600 8px "DM Mono",monospace}.map-row{display:flex;gap:10px;padding:13px 0;border-bottom:1px solid #eee6da}.map-row:last-child{border:0}.map-row i{display:grid;place-items:center;width:26px;height:26px;flex:none;border-radius:9px;background:#f2ebdf;color:var(--wine);font-style:normal;font:600 9px "DM Mono",monospace}.map-row b{display:block;font-size:12px}.map-row small{display:block;margin-top:3px;color:#73746f;font-size:10px;line-height:1.45}
+    .feature{position:relative;overflow:hidden}.feature .tag{font:600 9px "DM Mono",monospace;color:#887a6c}.feature h3{font:400 27px/1.05 "DM Serif Display",Georgia,serif;letter-spacing:-.7px}.feature:nth-child(2){background:linear-gradient(145deg,#fff6e1,#fff)}.feature:nth-child(3){background:linear-gradient(145deg,#edf3e7,#fff)}
+    .kit{background:#eee7db}.kit-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:17px}.kitbox{padding:28px;border:1px solid var(--line);border-radius:25px;background:#fffdfa}.kitbox h2{margin:14px 0;font:400 36px/1 "DM Serif Display",Georgia,serif;letter-spacing:-1.2px}.kitbox p{margin:0;color:#68706b;font-size:13px;line-height:1.7}.items{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.items div{color:#54605a;font-size:12px;line-height:1.4}.items i{font-style:normal;color:var(--olive);font-weight:900;margin-right:7px}.licensebox{background:var(--ink);border-color:var(--ink);color:#fff}.licensebox p{color:#cbd0d8}.license{padding:12px 0;border-top:1px solid rgba(255,255,255,.13);font-size:12px;line-height:1.5}.license b{color:#f5ce7c}
+    .deliver{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.deliver .card{min-height:200px}.deliver .card-icon{background:var(--lavender);color:#554275}
+    .cta{padding:82px 0}.cta-box{position:relative;overflow:hidden;padding:54px;text-align:center;color:#fff;border-radius:32px;background:linear-gradient(135deg,#9d475b,#7e394a 58%,#4f3039);box-shadow:var(--shadow)}.cta-box:before{content:"";position:absolute;left:50%;bottom:-450px;transform:translateX(-50%);width:570px;height:570px;border-radius:50%;border:1px solid rgba(237,174,73,.6);box-shadow:0 0 0 45px rgba(237,174,73,.07),0 0 0 90px rgba(237,174,73,.04)}.cta-box>*{position:relative}.cta-box h2{max-width:760px;margin:13px auto;font:400 clamp(35px,4.5vw,58px)/.96 "DM Serif Display",Georgia,serif;letter-spacing:-1.8px}.cta-box p{max-width:600px;margin:auto;color:#f0dfe3;font-size:14px;line-height:1.67}.cta-box .actions{justify-content:center}.cta-box .paper{border:0}
+    .faq{max-width:820px;margin:auto}.faq details{padding:17px 0;border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}summary{display:flex;justify-content:space-between;gap:16px;cursor:pointer;list-style:none;font-size:14px;font-weight:800}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:19px;color:var(--coral)}details[open] summary:after{content:"–"}.faq p{margin:10px 32px 0 0;color:#6a706c;font-size:12px;line-height:1.7}
+    footer{padding:28px 0 38px;color:#7b7d78;font-size:10px}.foot{display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid var(--line)}.foot b{color:#46504a}
+    @media(max-width:860px){.hero-grid,.system-grid,.kit-grid{grid-template-columns:1fr}.dossier{margin:10px auto 0}.grid3,.deliver{grid-template-columns:1fr 1fr}.links{display:none}.stripin{grid-template-columns:1fr 1fr}}
+    @media(max-width:560px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.nav .btn{padding:10px;font-size:10px}.mark{width:35px;height:35px}.brand b{font-size:22px}.hero{padding:48px 0}.hero h1{font-size:48px;letter-spacing:-2px}.grid3,.deliver,.items{grid-template-columns:1fr}.head{text-align:left}.head h2{font-size:37px}.system,section{padding:58px 0}.cta-box{padding:38px 20px}.actions{display:grid}.btn{width:100%}.foot{display:block}.foot span{display:block;margin-top:7px}}
+  </style>
+</head>
+<body>
+  <!-- TEMPLATE RESELLER MULA. Ganti seluruh [PLACEHOLDER] sebelum dipublikasikan. -->
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top"><span class="mark">M</span><span><b>[NAMA BRAND]</b><small>launch campaign toolkit</small></span></a>
+      <nav class="links"><a href="#fitur">Fitur</a><a href="#kit">Yang didapat</a><a href="#faq">FAQ</a></nav>
+      <a class="btn dark" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Dapatkan MULA →</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><i></i> Untuk brand, creator, agency & reseller digital</div>
+          <h1>Jangan meluncurkan produk dengan <em>postingan yang berdiri sendiri.</em></h1>
+          <p>MULA membantu mengubah informasi produk menjadi launch campaign yang lebih utuh: positioning, offer, urutan fase, sales page blueprint, dan creative kit yang bisa dibawa ke tim atau dieksekusi sendiri.</p>
+          <div class="actions">
+            <a class="btn primary" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Ambil MULA Sekarang →</a>
+            <a class="btn paper" href="#fitur">Lihat cara kerjanya ↓</a>
+          </div>
+          <div class="note"><span class="seal">✓</span><span><b>Bukan sekadar pembuat caption launch.</b><br>MULA menyusun bahan campaign sebagai satu sistem—dari brief yang jujur sampai handover yang lebih siap dijalankan.</span></div>
+        </div>
+
+        <div class="dossier">
+          <div class="dossier-top"><span>Launch dossier / 01</span><b>Direction ready</b></div>
+          <h3>[Nama Produk]<br>siap diluncurkan.</h3>
+          <div class="rule"></div>
+          <div class="dossier-grid">
+            <div class="dossier-cell"><small>Audience</small><b>Buyer yang butuh solusi lebih sederhana</b></div>
+            <div class="dossier-cell"><small>Goal</small><b>Purchase / lead / booking</b></div>
+            <div class="dossier-cell"><small>Campaign</small><b>Open cart / batch / launch day</b></div>
+            <div class="dossier-cell"><small>Voice</small><b>Warm authority</b></div>
+          </div>
+          <div class="stamp">✦ Campaign direction tersusun. Lanjutkan ke sales page & creative kit.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"><div class="wrap stripin">
+      <div><i>⌁</i> Campaign brief</div><div><i>◫</i> Launch map</div><div><i>✎</i> Sales page</div><div><i>✦</i> Creative kit</div>
+    </div></div>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Masalah yang sering terjadi</div>
+          <h2>Produk sudah siap, tapi saat mau launching semuanya terasa terpisah-pisah.</h2>
+          <p>Offer ada, desain ada, ide konten ada. Namun tidak ada satu campaign yang menghubungkan alasan beli, pesan utama, urutan komunikasi, bukti, dan CTA ke dalam satu jalur keputusan.</p>
+        </div>
+        <div class="grid3">
+          <article class="card"><div class="card-icon">01</div><h3>Mulai dari desain atau caption</h3><p>Campaign dibuat dari aset yang kebetulan tersedia, bukan dari positioning, audience, masalah, dan offer yang perlu dipahami terlebih dahulu.</p></article>
+          <article class="card"><div class="card-icon">02</div><h3>Offer terasa kurang meyakinkan</h3><p>Value stack, proof, batas klaim, urgency, serta objection handling belum dirangkai menjadi alasan yang jelas untuk mengambil keputusan.</p></article>
+          <article class="card"><div class="card-icon">03</div><h3>Tim tidak punya satu source of truth</h3><p>Copywriter, designer, ads operator, dan owner bergerak dengan interpretasi sendiri sehingga pesan campaign mudah pecah di tengah jalan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="system">
+      <div class="wrap system-grid">
+        <div>
+          <div class="eyebrow" style="color:#f8d890"><i style="background:#f8d890"></i> Launch campaign atelier</div>
+          <h2>Dari bahan mentah ke campaign yang bisa dijalankan.</h2>
+          <p>MULA dimulai dari fakta bisnis: produk, audience, problem, offer, channel, proof, dan batasan. Setelah itu, sistem menerjemahkannya menjadi peta launch yang lebih mudah ditinjau sebelum produksi dimulai.</p>
+          <div class="steps">
+            <div class="step"><span class="num">01</span><span>Isi campaign brief: produk, target audience, tujuan, harga, offer, proof, channel, dan guardrail komunikasi.</span></div>
+            <div class="step"><span class="num">02</span><span>Susun launch map: positioning, core promise, offer architecture, fase campaign, aset, dan sinyal keberhasilan.</span></div>
+            <div class="step"><span class="num">03</span><span>Turunkan strategi ke sales page blueprint, creative concepts, dan campaign handover yang bisa dipakai tim Anda.</span></div>
+          </div>
+        </div>
+        <div class="map">
+          <div class="map-top"><b>Launch Map / Preview</b><span>REVIEW FIRST</span></div>
+          <div class="map-row"><i>01</i><div><b>Positioning & core promise</b><small>Memastikan campaign punya satu alasan utama untuk diperhatikan.</small></div></div>
+          <div class="map-row"><i>02</i><div><b>Offer architecture</b><small>Merangkai value stack, proof, CTA, dan batas klaim yang tersedia.</small></div></div>
+          <div class="map-row"><i>03</i><div><b>Campaign phases</b><small>Urutan warming, launch, conversion, dan follow-up yang lebih terarah.</small></div></div>
+          <div class="map-row"><i>04</i><div><b>Sales page + creative kit</b><small>Bahan eksekusi untuk halaman jualan dan materi promosi campaign.</small></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Satu studio. Beberapa deliverable penting.</div>
+          <h2>Semua yang perlu disepakati sebelum campaign mulai tersebar ke mana-mana.</h2>
+          <p>MULA membantu Anda menyiapkan dasar campaign agar copy, visual, sales page, iklan, dan follow-up memiliki konteks yang sama.</p>
+        </div>
+        <div class="grid3">
+          <article class="card feature"><span class="tag">01 / CAMPAIGN BRIEF</span><h3>Mulai dari yang benar tentang produk.</h3><p>Kumpulkan konteks audience, masalah, penawaran, harga, proof, channel, dan batasan agar campaign tidak dibangun dari asumsi kosong.</p></article>
+          <article class="card feature"><span class="tag">02 / LAUNCH MAP</span><h3>Susun urutan yang masuk akal.</h3><p>Bangun positioning, promise, offer architecture, phase plan, asset checklist, dan sinyal yang perlu ditinjau di tiap fase.</p></article>
+          <article class="card feature"><span class="tag">03 / SALES + CREATIVE KIT</span><h3>Turunkan strategi ke bahan kerja.</h3><p>Siapkan struktur sales page, copy per section, area proof, FAQ, dan konsep creative untuk iklan atau konten launch.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kit" id="kit">
+      <div class="wrap kit-grid">
+        <article class="kitbox">
+          <div class="eyebrow"><i></i> Bonus untuk pembeli</div>
+          <h2>Marketing kit supaya Anda tidak mulai menjual MULA dari halaman kosong.</h2>
+          <p>Saat membeli dari [NAMA BRAND], Anda juga memperoleh materi promosi yang dapat disesuaikan untuk menjual MULA sebagai produk, bonus, atau bagian dari layanan strategi Anda.</p>
+          <div class="items">
+            <div><i>✓</i>Angle promosi & hook iklan</div><div><i>✓</i>Template caption organik</div>
+            <div><i>✓</i>Materi carousel & visual brief</div><div><i>✓</i>Copy landing page dasar</div>
+            <div><i>✓</i>Script WhatsApp follow-up</div><div><i>✓</i>Checklist launch singkat</div>
+          </div>
+        </article>
+
+        <article class="kitbox licensebox">
+          <div class="eyebrow" style="color:#f5ce7c"><i style="background:#f5ce7c"></i> Dibuat sebagai aset bisnis</div>
+          <h2>Gunakan untuk sendiri atau masukkan ke katalog Anda.</h2>
+          <p>MULA bisa Anda pakai untuk membantu campaign internal, layanan klien, atau penawaran produk digital dengan identitas brand Anda sendiri.</p>
+          <div class="license"><b>✓ Lisensi jual ulang</b><br>Jual ulang akses atau produk sesuai ketentuan paket yang Anda pilih.</div>
+          <div class="license"><b>✓ Lisensi rebrand</b><br>Sesuaikan nama, identitas visual, dan penawaran agar selaras dengan brand Anda.</div>
+          <div class="license"><b>✓ Marketing kit</b><br>Mulai promosi dengan bahan yang sudah memiliki struktur campaign.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Setelah membeli, bagaimana mulainya?</div>
+          <h2>Tiga langkah untuk mulai membangun launch yang lebih rapi.</h2>
+        </div>
+        <div class="deliver">
+          <article class="card"><div class="card-icon">01</div><h3>Dapatkan akses</h3><p>Setelah pembelian, akses MULA melalui link yang diberikan oleh [NAMA BRAND].</p></article>
+          <article class="card"><div class="card-icon">02</div><h3>Isi campaign brief</h3><p>Masukkan informasi yang benar tentang produk, audience, offer, bukti yang tersedia, serta batasan campaign Anda.</p></article>
+          <article class="card"><div class="card-icon">03</div><h3>Review lalu eksekusi</h3><p>Pilih arahan yang paling tepat, cek kembali seluruh klaim, lalu gunakan dossier sebagai sumber kerja tim atau campaign Anda.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="cta-box">
+          <div class="eyebrow" style="color:#f8d890"><i style="background:#f8d890"></i> MULA LAUNCH CAMPAIGN ATELIER</div>
+          <h2>Produk Anda sudah layak diluncurkan. Sekarang beri ia campaign yang lebih dari sekadar ramai di hari pertama.</h2>
+          <p>Dapatkan MULA beserta marketing kit dari [NAMA BRAND], lalu ubah brief produk menjadi launch map, sales page blueprint, dan creative kit yang lebih siap dipakai.</p>
+          <div class="actions">
+            <a class="btn paper" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Dapatkan MULA →</a>
+            <a class="btn" style="border-color:rgba(255,255,255,.38);color:#fff" href="[LINK_CHECKOUT_ATAU_WHATSAPP]">Tanya via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top:18px">
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Pertanyaan umum</div><h2>Hal yang perlu diketahui sebelum mulai.</h2></div>
+        <div class="faq">
+          <details><summary>MULA cocok untuk produk atau bisnis seperti apa?</summary><p>MULA dapat dipakai untuk produk digital, jasa, program, batch, produk fisik, SaaS, atau event. Yang paling penting adalah Anda punya informasi jujur tentang produk, audience, offer, dan konteks campaign.</p></details>
+          <details><summary>Apakah MULA menjamin campaign akan laris?</summary><p>Tidak. MULA membantu menyusun strategi dan bahan campaign yang lebih terorganisasi. Hasil tetap dipengaruhi produk, offer, harga, proof, creative, channel, distribusi, eksekusi, dan proses optimasi Anda.</p></details>
+          <details><summary>Apakah MULA bisa membuat copy dan desain secara otomatis?</summary><p>MULA membantu menyusun blueprint, copy direction, serta creative concept. Semua output tetap perlu direview sebelum dipakai, terutama untuk memastikan fakta, angka, testimoni, dan klaim sesuai kondisi bisnis Anda.</p></details>
+          <details><summary>Apakah boleh dijual ulang atau di-rebrand?</summary><p>Ya, sesuai lisensi dan ketentuan paket dari [NAMA BRAND]. Ubah bagian ini bila aturan lisensi Anda berbeda.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer><div class="wrap foot"><span><b>[NAMA BRAND]</b> · MULA Launch Campaign Atelier</span><span>© 2026 · Semua merek dagang milik pemiliknya masing-masing.</span></div></footer>
+</body>
+</html>

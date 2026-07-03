@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>BUKTI — Social Proof Ledger</title>
+  <meta name="description" content="Landing page reseller template untuk BUKTI Social Proof Ledger.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#13242b; --ink2:#213941; --paper:#f4f0e7; --paper-deep:#e7dfd0; --cream:#fffdf8;
+      --line:#d8d0c2; --slate:#567078; --blue:#28536b; --blue-pale:#dce9ed; --clay:#c15a3b;
+      --clay-pale:#f6e0d8; --sage:#557966; --sage-pale:#dce9df; --gold:#dfb750; --gold-pale:#f5edcc;
+      --danger:#b9453f; --shadow:0 16px 38px rgba(30,42,43,.09); --soft:0 7px 20px rgba(30,42,43,.055);
+      --r:28px;
+    }
+    *{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;min-width:320px;background:var(--paper);color:var(--ink);font-family:"Instrument Sans",system-ui,sans-serif}
+    body:before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;opacity:.32;background-image:radial-gradient(rgba(19,36,43,.13) .7px,transparent .7px);background-size:14px 14px}
+    body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 3% 0%,rgba(40,83,107,.10),transparent 28%),radial-gradient(circle at 98% 12%,rgba(193,90,59,.08),transparent 30%),linear-gradient(115deg,rgba(255,255,255,.44),rgba(255,255,255,0))}
+    a{text-decoration:none;color:inherit}.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+    header{position:sticky;top:0;z-index:50;background:rgba(244,240,231,.87);backdrop-filter:blur(16px);border-bottom:1px solid rgba(216,208,194,.82)}
+    .nav{height:76px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:12px}.mark{width:43px;height:43px;border-radius:14px;background:var(--gold);color:var(--ink);display:grid;place-items:center;font:700 22px/1 Newsreader,serif;box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}.brand b{display:block;font:700 25px/1 Newsreader,Georgia,serif;letter-spacing:-.75px}.brand b span{color:var(--gold)}.brand small{display:block;margin-top:5px;color:#7a8587;font:500 8px/1 "DM Mono",monospace;text-transform:uppercase;letter-spacing:1.2px}.links{display:flex;gap:22px;color:#637075;font-size:12px;font-weight:800}.links a:hover{color:var(--blue)}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:13px 18px;font-size:12px;font-weight:800;line-height:1;transition:.18s}.btn:hover{transform:translateY(-2px);box-shadow:0 9px 17px rgba(17,31,34,.12)}.btn.gold{background:var(--gold);color:var(--ink);box-shadow:0 5px 0 #a88433}.btn.gold:active{transform:translateY(3px);box-shadow:0 2px 0 #a88433}.btn.ink{background:var(--ink);color:#fff;box-shadow:0 5px 0 #091417}.btn.paper{background:var(--cream);border-color:var(--line);color:var(--ink);box-shadow:0 2px 0 rgba(20,33,35,.07)}.btn.sage{background:var(--sage);color:#fff;box-shadow:0 5px 0 #395545}
+    .hero{padding:74px 0 58px;position:relative;overflow:hidden}.hero:before{content:"";position:absolute;width:510px;height:510px;right:-175px;top:-245px;border-radius:50%;border:1px solid rgba(223,183,80,.42);box-shadow:0 0 0 43px rgba(223,183,80,.055),0 0 0 86px rgba(223,183,80,.035)}.hero:after{content:"";position:absolute;width:270px;height:270px;left:-105px;bottom:-150px;border-radius:50%;background:rgba(40,83,107,.08)}
+    .hero-grid{display:grid;grid-template-columns:1.03fr .97fr;gap:42px;align-items:center;position:relative}.eyebrow{display:inline-flex;align-items:center;gap:8px;color:var(--clay);font:600 10px/1 "DM Mono",monospace;letter-spacing:1.22px;text-transform:uppercase}.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--clay);box-shadow:0 0 0 4px rgba(193,90,59,.1)}
+    h1{margin:17px 0;font:700 clamp(47px,6vw,78px)/.91 Newsreader,Georgia,serif;letter-spacing:-3px;max-width:760px}h1 em{font-style:italic;color:var(--clay)}.hero p{max-width:620px;margin:0;color:#5e6e72;font-size:15px;line-height:1.76}.actions{display:flex;gap:11px;flex-wrap:wrap;margin-top:28px}.note{display:flex;gap:11px;align-items:flex-start;margin-top:26px;max-width:590px;color:#67767a;font-size:11px;line-height:1.6}.note i{display:grid;place-items:center;width:30px;height:30px;flex:none;border-radius:50%;background:var(--sage-pale);color:var(--sage);font-style:normal;font-weight:900}
+    .evidence-board{position:relative;max-width:450px;margin-left:auto;padding:17px;border-radius:24px;background:var(--ink);box-shadow:15px 20px 0 rgba(40,83,107,.13);color:#fff;transform:rotate(1deg)}.board-head{display:flex;align-items:center;justify-content:space-between;color:#b9c9cd;font:500 9px/1 "DM Mono",monospace;letter-spacing:.8px;text-transform:uppercase}.board-head strong{color:#9fd1b2;font:500 9px "DM Mono",monospace}.board-title{margin:21px 0 8px;font:700 28px/.98 Newsreader,Georgia,serif;letter-spacing:-.8px;color:#fffaf0}.board-text{color:#c6d3d2;font-size:11px;line-height:1.55}.evidence-stack{display:grid;gap:9px;margin-top:16px}.evidence{padding:11px 12px;border-radius:12px;background:#203941;border:1px solid rgba(255,255,255,.09)}.evidence:nth-child(2){background:#2b4144}.evidence:nth-child(3){background:#253a33}.evidence-top{display:flex;align-items:center;justify-content:space-between;font:500 8px "DM Mono",monospace;color:#b8c9ca}.evidence-top span:last-child{padding:4px 6px;border-radius:999px;background:rgba(255,255,255,.08);color:#d9e4e0}.evidence q{display:block;margin-top:7px;font:500 11px/1.47 "Instrument Sans",sans-serif;color:#f4f6f0}.evidence small{display:block;margin-top:6px;color:#9daeb0;font-size:9px}.ledger-card{position:absolute;right:-17px;bottom:18px;width:176px;padding:12px;background:var(--cream);color:var(--ink);border:1px solid var(--line);box-shadow:5px 5px 0 var(--gold);transform:rotate(-5deg)}.ledger-card small{display:block;color:#748086;font:500 8px "DM Mono",monospace}.ledger-card b{display:block;margin-top:6px;font-size:12px;line-height:1.38}.ledger-card div{margin-top:9px;padding:7px 8px;border-left:3px solid var(--sage);background:#eef6f0;font-size:9px;line-height:1.4;color:#426052}
+    .strip{padding:15px 0;background:#fffdf8;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.stripin{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stripin div{text-align:center;color:#586a70;font-size:11px;font-weight:800}.stripin i{font-style:normal;color:var(--clay);font-size:16px;margin-right:7px}
+    section{padding:80px 0}.head{text-align:center;max-width:750px;margin:0 auto 35px}.head h2{margin:13px 0;font:700 clamp(34px,4vw,51px)/1 Newsreader,Georgia,serif;letter-spacing:-1.5px}.head p{margin:0;color:#67767b;font-size:14px;line-height:1.72}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{padding:23px;background:rgba(255,253,248,.9);border:1px solid var(--line);border-radius:22px;box-shadow:var(--soft)}.icon{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--gold-pale);color:#7e5e1c;font:700 17px Newsreader,Georgia,serif}.card h3{margin:17px 0 8px;font-size:17px;letter-spacing:-.35px}.card p{margin:0;color:#68767b;font-size:12px;line-height:1.66}
+    .system{background:var(--ink);color:#fff;position:relative;overflow:hidden}.system:before{content:"";position:absolute;width:550px;height:550px;right:-190px;top:-240px;border-radius:50%;border:1px solid rgba(223,183,80,.48);box-shadow:0 0 0 45px rgba(223,183,80,.055),0 0 0 90px rgba(223,183,80,.035)}.system-grid{position:relative;display:grid;grid-template-columns:.89fr 1.11fr;gap:42px;align-items:center}.system h2{margin:15px 0;color:#f5efe2;font:700 clamp(35px,4vw,53px)/.98 Newsreader,Georgia,serif;letter-spacing:-1.7px}.system h2 em{font-style:italic;color:#e5bb68}.system p{margin:0;color:#cbd8d6;font-size:14px;line-height:1.72}.steps{display:grid;gap:12px;margin-top:25px}.step{display:flex;gap:11px;align-items:flex-start;color:#eef3f1;font-size:12px;line-height:1.5}.num{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--gold);color:#3d2d0a;flex:none;font:600 9px "DM Mono",monospace}
+    .claim-ledger{padding:18px;border-radius:24px;background:#fffdf8;color:var(--ink);box-shadow:14px 18px 0 rgba(0,0,0,.16)}.ledger-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #e5dccf}.ledger-head b{font:700 22px Newsreader,Georgia,serif}.ledger-head span{padding:7px 9px;border-radius:999px;background:var(--sage-pale);color:var(--sage);font:600 8px "DM Mono",monospace}.claim{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:13px 0;border-bottom:1px solid #ece5d8}.claim:last-child{border:0}.claim i{display:grid;place-items:center;width:27px;height:27px;border-radius:9px;background:#edf4f5;color:var(--blue);font-style:normal;font:600 9px "DM Mono",monospace}.claim b{display:block;font-size:12px}.claim small{display:block;margin-top:4px;color:#717b80;font-size:10px;line-height:1.43}.claim .status{display:inline-block;margin-top:7px;padding:4px 6px;border-radius:999px;background:#eef6f0;color:#477558;font:500 8px "DM Mono",monospace}.claim.caution .status{background:#fff0e7;color:#9a5a2b}.claim.caution i{background:#fff1e8;color:#a75b2a}
+    .feature{position:relative;overflow:hidden}.feature .tag{font:500 9px "DM Mono",monospace;color:#7b898d}.feature h3{font:700 27px/1.05 Newsreader,Georgia,serif;letter-spacing:-.8px}.feature:nth-child(2){background:linear-gradient(145deg,#edf5f6,#fffdf8)}.feature:nth-child(3){background:linear-gradient(145deg,#eef5ed,#fffdf8)}
+    .rules{padding-top:15px}.rule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.rule{min-height:168px;padding:21px;border-radius:18px;border:1px solid var(--line);background:#fffdf8}.rule i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--blue-pale);color:var(--blue);font-style:normal;font:600 10px "DM Mono",monospace}.rule:nth-child(2) i{background:var(--sage-pale);color:var(--sage)}.rule:nth-child(3) i{background:var(--clay-pale);color:var(--clay)}.rule b{display:block;margin-top:14px;font-size:14px}.rule p{margin:6px 0 0;color:#6b787c;font-size:11px;line-height:1.53}
+    .kit{background:var(--paper-deep)}.kitgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:17px}.kitbox{padding:28px;border:1px solid var(--line);border-radius:25px;background:#fffdf8}.kitbox h2{margin:14px 0;font:700 36px/1 Newsreader,Georgia,serif;letter-spacing:-1.3px}.kitbox p{margin:0;color:#68757a;font-size:13px;line-height:1.7}.items{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:20px}.items div{color:#526167;font-size:12px;line-height:1.42}.items i{font-style:normal;color:var(--sage);font-weight:900;margin-right:7px}.licensebox{background:var(--ink);border-color:var(--ink);color:#fff}.licensebox p{color:#cbd5d4}.license{padding:12px 0;border-top:1px solid rgba(255,255,255,.13);font-size:12px;line-height:1.5}.license b{color:#e9c676}
+    .handover{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.handover-card{min-height:185px;padding:18px;border:1px solid var(--line);background:#fffdf8;border-radius:15px}.handover-card i{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:#eef4f5;color:var(--blue);font-style:normal;font:600 10px "DM Mono",monospace}.handover-card b{display:block;margin-top:14px;font-size:13px}.handover-card p{margin:6px 0 0;color:#6c787c;font-size:11px;line-height:1.5}
+    .cta{padding:82px 0}.ctaBox{position:relative;overflow:hidden;padding:54px;border-radius:32px;color:#fff;text-align:center;background:linear-gradient(135deg,#203e49,#28536b 58%,#3e6978);box-shadow:var(--shadow)}.ctaBox:before{content:"";position:absolute;left:50%;bottom:-465px;transform:translateX(-50%);width:590px;height:590px;border-radius:50%;border:1px solid rgba(223,183,80,.7);box-shadow:0 0 0 45px rgba(223,183,80,.07),0 0 0 90px rgba(223,183,80,.045)}.ctaBox>*{position:relative}.ctaBox h2{max-width:785px;margin:14px auto;font:700 clamp(36px,4.5vw,60px)/.96 Newsreader,Georgia,serif;letter-spacing:-2px}.ctaBox h2 em{color:#e8c46f}.ctaBox p{max-width:620px;margin:auto;color:#dde8e6;font-size:14px;line-height:1.67}.ctaBox .actions{justify-content:center}.ctaBox .paper{border:0}
+    .faq{max-width:820px;margin:auto}.faq details{padding:17px 0;border-top:1px solid var(--line)}.faq details:last-child{border-bottom:1px solid var(--line)}summary{display:flex;justify-content:space-between;gap:16px;cursor:pointer;list-style:none;font-size:14px;font-weight:800}summary::-webkit-details-marker{display:none}summary:after{content:"+";font-size:19px;color:var(--clay)}details[open] summary:after{content:"–"}.faq p{margin:10px 32px 0 0;color:#69767a;font-size:12px;line-height:1.7}
+    footer{padding:30px 0 38px;color:#7f898b;font-size:10px}.foot{display:flex;justify-content:space-between;gap:20px;padding-top:20px;border-top:1px solid var(--line)}.foot b{color:#4b5e62}
+    @media(max-width:860px){.hero-grid,.system-grid,.kitgrid{grid-template-columns:1fr}.evidence-board{margin:11px auto 0}.grid3,.rule-grid{grid-template-columns:1fr 1fr}.stripin{grid-template-columns:1fr 1fr}.handover{grid-template-columns:1fr 1fr}.links{display:none}}
+    @media(max-width:560px){.wrap{width:min(100% - 22px,1160px)}.nav{height:64px}.nav .btn{padding:10px;font-size:10px}.mark{width:35px;height:35px}.brand b{font-size:22px}.hero{padding:48px 0}.hero h1{font-size:49px;letter-spacing:-2px}.evidence-board{transform:scale(.96);margin:-5px auto -12px}.grid3,.items,.rule-grid,.handover{grid-template-columns:1fr}.head{text-align:left}.head h2{font-size:37px}.system,section{padding:58px 0}.ctaBox{padding:38px 20px}.actions{display:grid}.btn{width:100%}.foot{display:block}.foot span{display:block;margin-top:8px}}
+  </style>
+</head>
+<body>
+  <!-- TEMPLATE RESELLER BUKTI. Ganti seluruh [PLACEHOLDER] sebelum dipublikasikan. -->
+  <header>
+    <div class="wrap nav">
+      <a href="#top" class="brand"><span class="mark">B</span><span><b>[NAMA BRAND]</b><small>social proof toolkit</small></span></a>
+      <nav class="links"><a href="#fitur">Fitur</a><a href="#kit">Yang didapat</a><a href="#faq">FAQ</a></nav>
+      <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn ink">Dapatkan BUKTI →</a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow"><i></i> Evidence-first communication system</div>
+          <h1>Jadikan klaim <em>layak dipercaya.</em></h1>
+          <p>BUKTI membantu Anda mengubah feedback pelanggan, hasil survei, rekaman wawancara, catatan support, dan bukti yang tersedia menjadi aset social proof yang lebih rapi—tanpa mengarang testimoni, angka, atau hasil.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn gold">Ambil BUKTI Sekarang →</a>
+            <a href="#fitur" class="btn paper">Lihat cara kerjanya ↓</a>
+          </div>
+          <div class="note"><i>✓</i><span><b>Proof yang bertanggung jawab dimulai dari sumbernya.</b><br>Kutipan disimpan bersama konteks dan status izin. Klaim yang belum cukup kuat ditandai sebagai gap, bukan dipaksakan menjadi materi promosi.</span></div>
+        </div>
+
+        <div class="evidence-board">
+          <div class="board-head"><span>Evidence locker / 001</span><strong>TRACEABLE</strong></div>
+          <div class="board-title">Bukan sekadar “review bagus”.</div>
+          <div class="board-text">Bangun jalur dari sumber mentah → klaim yang dapat dipakai → aset komunikasi dengan disclosure yang tepat.</div>
+          <div class="evidence-stack">
+            <article class="evidence">
+              <div class="evidence-top"><span>SOURCE / CHAT FEEDBACK</span><span>CONSENT: REVIEW</span></div>
+              <q>Setelah punya alur ini, tim saya tidak lagi bingung mau mulai dari mana saat menyiapkan campaign.</q>
+              <small>Gunakan dengan konteks pembeli dan izin publikasi yang jelas.</small>
+            </article>
+            <article class="evidence">
+              <div class="evidence-top"><span>SOURCE / SURVEY</span><span>STATUS: APPROVED</span></div>
+              <q>Bagian yang paling membantu adalah karena semua bahan campaign jadi lebih mudah dipahami tim.</q>
+              <small>Jangan ubah menjadi klaim hasil bisnis yang tidak dinyatakan sumber.</small>
+            </article>
+            <article class="evidence">
+              <div class="evidence-top"><span>SOURCE / INTERVIEW</span><span>CONTEXT: KEEP</span></div>
+              <q>“Saya bisa melihat alasan di balik setiap keputusan, bukan hanya menerima template jadi.”</q>
+              <small>Simpan sumber dan konteks sebelum menurunkan quote ke aset publik.</small>
+            </article>
+          </div>
+          <div class="ledger-card"><small>CLAIM LEDGER</small><b>“Membantu tim menyusun campaign lebih terarah.”</b><div>✓ Approved wording<br>Source refs: E01, E02</div></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="strip"><div class="wrap stripin">
+      <div><i>▤</i> Source intake</div>
+      <div><i>⌁</i> Claim ledger</div>
+      <div><i>✎</i> Proof studio</div>
+      <div><i>⇢</i> Evidence handover</div>
+    </div></div>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Masalah yang sering terjadi</div>
+          <h2>Social proof mudah terlihat meyakinkan, tetapi lebih mudah lagi menjadi tidak dapat dipertanggungjawabkan.</h2>
+          <p>Quote dipotong tanpa konteks. Feedback internal berubah menjadi klaim publik. Testimoni tidak punya status izin. Atau yang paling berbahaya: angka, hasil, dan review dibuat karena terasa “dibutuhkan” untuk menjual.</p>
+        </div>
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Bukti tersimpan di banyak tempat</h3><p>Chat, form, call note, survei, screenshot, dan review tidak pernah dikumpulkan dalam satu struktur yang mudah ditelusuri kembali.</p></article>
+          <article class="card"><div class="icon">02</div><h3>Klaim menjadi lebih besar dari sumbernya</h3><p>Quote yang awalnya membahas pengalaman pribadi berubah menjadi janji hasil yang luas, spesifik, atau tidak bisa diverifikasi.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Proof dibuat tanpa aturan publikasi</h3><p>Asset promosi tidak menyertakan context note, disclosure, source rule, atau penanda bagian mana yang masih perlu izin dan verifikasi.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="system">
+      <div class="wrap system-grid">
+        <div>
+          <div class="eyebrow" style="color:#e9c676"><i style="background:#e9c676"></i> Evidence workflow</div>
+          <h2>Dari sumber mentah ke <em>proof yang lebih bertanggung jawab.</em></h2>
+          <p>BUKTI menyusun sistem agar setiap klaim memiliki jejak: apa sumbernya, apa yang didukung, konteks apa yang wajib dipertahankan, bagaimana status izinnya, dan apa yang tidak boleh disampaikan.</p>
+          <div class="steps">
+            <div class="step"><span class="num">01</span><span>Masukkan brief: brand, offer, audience, goal, channel, consent status, proof inventory, dan guardrail komunikasi.</span></div>
+            <div class="step"><span class="num">02</span><span>Kumpulkan sumber ke Evidence Desk lalu bentuk Claim Ledger yang memisahkan wording aman, context rule, flag, dan gap bukti.</span></div>
+            <div class="step"><span class="num">03</span><span>Gunakan Proof Studio untuk membuat asset dengan source ref, disclosure, creative handoff, dan handover review sebelum publish.</span></div>
+          </div>
+        </div>
+
+        <div class="claim-ledger">
+          <div class="ledger-head"><b>Claim Ledger / Preview</b><span>KEEP CONTEXT</span></div>
+          <div class="claim">
+            <i>E01</i><div><b>“Membantu merapikan proses kerja tim.”</b><small>Didukung oleh feedback tentang alur dan kejelasan proses. Gunakan sebagai pengalaman pengguna, bukan jaminan outcome untuk semua orang.</small><span class="status">APPROVED WORDING</span></div>
+          </div>
+          <div class="claim caution">
+            <i>E02</i><div><b>“Meningkatkan penjualan hingga [X]%.”</b><small>Sumber belum menunjukkan baseline, timeframe, dan izin publikasi. Jangan gunakan sebagai claim publik sebelum diverifikasi.</small><span class="status">CONTEXT / REVIEW</span></div>
+          </div>
+          <div class="claim">
+            <i>E03</i><div><b>“Membantu buyer lebih cepat memahami offer.”</b><small>Gunakan hanya bila kutipan dan konteks pembeli dapat ditelusuri, serta tidak disajikan sebagai hasil universal.</small><span class="status">SOURCE LINKED</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="fitur">
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Social proof yang punya jejak</div>
+          <h2>BUKTI membantu Anda tidak hanya memakai proof, tetapi juga memahami batas pemakaiannya.</h2>
+          <p>Setiap tahap mengurangi risiko klaim yang terlalu kuat dan membuat bahan social proof lebih mudah ditinjau oleh owner, marketer, atau pihak yang bertanggung jawab.</p>
+        </div>
+        <div class="grid3">
+          <article class="card feature"><span class="tag">01 / SOURCE INTAKE</span><h3>Kumpulkan sumber apa adanya.</h3><p>Masukkan feedback, review, survey, interview, case note, atau bukti lain beserta label sumber, izin, dan konteksnya—tanpa dipoles menjadi klaim dulu.</p></article>
+          <article class="card feature"><span class="tag">02 / CLAIM LEDGER</span><h3>Bedakan yang aman dari yang belum cukup.</h3><p>Susun wording yang didukung bukti, source reference, required context, flag, consent note, serta pertanyaan yang perlu dijawab sebelum publish.</p></article>
+          <article class="card feature"><span class="tag">03 / PROOF STUDIO</span><h3>Turunkan ke materi komunikasi.</h3><p>Buat proof card, quote, case snapshot, FAQ proof, sales page section, atau creative brief tanpa mengamplifikasi bukti di luar konteks sumber.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="rules">
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Guardrail yang menjaga proof tetap kuat</div>
+          <h2>Karena bukti yang baik tidak perlu dibesar-besarkan.</h2>
+          <p>Gunakan BUKTI untuk mengurangi risiko komunikasi yang menyesatkan dan membangun kebiasaan dokumentasi proof yang lebih disiplin.</p>
+        </div>
+        <div class="rule-grid">
+          <article class="rule"><i>01</i><b>Jaga kutipan tetap sesuai sumber.</b><p>Jangan menyusun ulang quote agar terdengar lebih dramatis bila makna atau batas konteksnya ikut berubah.</p></article>
+          <article class="rule"><i>02</i><b>Simpan izin dan disclosure.</b><p>Catat apakah kutipan boleh dipublikasikan, perlu disamarkan, atau memerlukan context note sebelum dipakai di materi publik.</p></article>
+          <article class="rule"><i>03</i><b>Jangan ubah gap menjadi klaim.</b><p>Ketika bukti belum cukup, jadikan ia daftar pertanyaan atau kebutuhan riset—bukan alasan untuk menciptakan proof yang belum ada.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="kit" id="kit">
+      <div class="wrap kitgrid">
+        <article class="kitbox">
+          <div class="eyebrow"><i></i> Bonus untuk pembeli</div>
+          <h2>Marketing kit agar Anda tidak mulai menjual BUKTI dari halaman kosong.</h2>
+          <p>Saat membeli dari [NAMA BRAND], Anda juga mendapatkan bahan promosi yang dapat disesuaikan untuk menawarkan BUKTI sebagai produk digital, bonus audit campaign, atau bagian dari layanan strategi Anda.</p>
+          <div class="items">
+            <div><i>✓</i>Angle promosi & hook iklan</div><div><i>✓</i>Template caption organik</div>
+            <div><i>✓</i>Materi carousel & visual brief</div><div><i>✓</i>Copy landing page dasar</div>
+            <div><i>✓</i>Script WhatsApp follow-up</div><div><i>✓</i>Checklist launch singkat</div>
+          </div>
+        </article>
+
+        <article class="kitbox licensebox">
+          <div class="eyebrow" style="color:#e9c676"><i style="background:#e9c676"></i> Dibuat sebagai aset bisnis</div>
+          <h2>Gunakan sendiri atau jadikan proof system sebagai produk Anda.</h2>
+          <p>BUKTI dapat diposisikan sebagai evidence ledger, social proof toolkit, bonus audit, atau produk digital beridentitas brand Anda sendiri.</p>
+          <div class="license"><b>✓ Lisensi jual ulang</b><br>Jual ulang akses atau produk sesuai ketentuan paket yang Anda pilih.</div>
+          <div class="license"><b>✓ Lisensi rebrand</b><br>Sesuaikan nama, identitas visual, dan penawaran agar cocok dengan brand Anda.</div>
+          <div class="license"><b>✓ Marketing kit</b><br>Mulai promosi dengan materi yang sudah memiliki struktur campaign.</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head">
+          <div class="eyebrow"><i></i> Output yang dapat diteruskan dengan aman</div>
+          <h2>Dari source vault ke handover yang lebih mudah direview.</h2>
+          <p>Setiap deliverable dibuat agar proof dapat ditinjau oleh pemilik brand, marketer, copywriter, dan pihak yang bertanggung jawab sebelum dipublikasikan.</p>
+        </div>
+        <div class="handover">
+          <article class="handover-card"><i>01</i><b>Evidence inventory</b><p>Daftar sumber, quote asli, label bukti, status izin, apa yang didukung, serta aturan publikasi dari setiap bukti.</p></article>
+          <article class="handover-card"><i>02</i><b>Claim ledger</b><p>Wording aman, source reference, context required, flags, proof gaps, dan daftar pertanyaan untuk menutup celah bukti.</p></article>
+          <article class="handover-card"><i>03</i><b>Proof asset pack</b><p>Asset proof dengan disclosure, source ref, creative direction, serta “do not say” agar pesan tidak melampaui sumbernya.</p></article>
+          <article class="handover-card"><i>04</i><b>Evidence handover</b><p>Dokumen markdown untuk dibawa ke campaign, landing page, sales enablement, atau aplikasi lain sambil mempertahankan rules bukti.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Cara mulai</div><h2>Bangun social proof dengan cara yang lebih mudah ditelusuri dan direview.</h2></div>
+        <div class="grid3">
+          <article class="card"><div class="icon">01</div><h3>Dapatkan akses</h3><p>Setelah pembelian, akses BUKTI melalui link yang diberikan oleh [NAMA BRAND].</p></article>
+          <article class="card"><div class="icon">02</div><h3>Masukkan source & context</h3><p>Kumpulkan sumber yang benar-benar tersedia, lalu tulis status izin, konteks kutipan, serta batas komunikasi yang perlu dijaga.</p></article>
+          <article class="card"><div class="icon">03</div><h3>Review sebelum publish</h3><p>Gunakan Claim Ledger dan Proof Pack untuk memeriksa wording, disclosure, source reference, serta hal yang belum boleh disampaikan.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <div class="ctaBox">
+          <div class="eyebrow" style="color:#e9c676"><i style="background:#e9c676"></i> BUKTI SOCIAL PROOF LEDGER</div>
+          <h2>Jangan cari cara agar klaim terdengar lebih besar. <em>Bangun bukti yang memang layak dipakai.</em></h2>
+          <p>Dapatkan BUKTI beserta marketing kit dari [NAMA BRAND], lalu ubah proof yang Anda miliki menjadi sistem evidence, claim ledger, dan asset komunikasi yang lebih bertanggung jawab.</p>
+          <div class="actions">
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn paper">Dapatkan BUKTI →</a>
+            <a href="[LINK_CHECKOUT_ATAU_WHATSAPP]" class="btn" style="border-color:rgba(255,255,255,.35);color:#fff">Tanya via WhatsApp</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq" style="padding-top:18px">
+      <div class="wrap">
+        <div class="head"><div class="eyebrow"><i></i> Pertanyaan umum</div><h2>Hal yang perlu diketahui sebelum menggunakan BUKTI.</h2></div>
+        <div class="faq">
+          <details><summary>BUKTI cocok untuk siapa?</summary><p>BUKTI cocok untuk pemilik brand, marketer, agency, copywriter, freelancer, product team, atau reseller digital yang ingin mengelola social proof dengan sumber, konteks, dan aturan penggunaan yang lebih jelas.</p></details>
+          <details><summary>Apakah BUKTI membuat testimoni atau angka hasil otomatis?</summary><p>Tidak. BUKTI tidak dirancang untuk membuat testimoni, rating, angka, atau klaim hasil yang tidak memiliki dasar. Gunakan hanya sumber nyata yang dapat ditinjau dan diberi konteks yang tepat.</p></details>
+          <details><summary>Apakah semua quote pelanggan boleh langsung dipublikasikan?</summary><p>Tidak selalu. Periksa izin, identitas, konteks, aturan platform, dan kebutuhan disclosure sebelum memakai quote atau data pelanggan di materi publik.</p></details>
+          <details><summary>Apakah BUKTI menggantikan legal review atau verifikasi?</summary><p>Tidak. BUKTI adalah drafting dan review aid. Untuk kategori sensitif, klaim terukur, data pelanggan, atau materi yang diatur secara khusus, lakukan verifikasi dan review yang sesuai sebelum publish.</p></details>
+          <details><summary>Apakah boleh dijual ulang atau di-rebrand?</summary><p>Ya, sesuai lisensi dan ketentuan paket dari [NAMA BRAND]. Ubah bagian ini bila aturan lisensi Anda berbeda.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer><div class="wrap foot"><span><b>[NAMA BRAND]</b> · BUKTI Social Proof Ledger</span><span>© 2026 · Semua merek dagang milik pemiliknya masing-masing.</span></div></footer>
+</body>
+</html>
