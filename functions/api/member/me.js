@@ -12,6 +12,7 @@ import { summarizeAccess } from '../../lib/entitlements.js';
 import { PACKS } from '../../lib/packs.js';
 import { APP_CATALOG, packsForApp } from '../../lib/catalog.js';
 import { getResourceAvailability } from '../../lib/access-resources.js';
+import { hasKit } from '../../lib/marketing-kits.js';
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -50,6 +51,7 @@ export async function onRequest(context) {
       prompt: meta?.prompt || '',
       accent: meta?.accent || '#126BFF',
       packs: packsForApp(appId),
+      marketing_kit_available: hasKit(appId),
     };
   });
 
