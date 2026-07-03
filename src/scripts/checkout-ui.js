@@ -44,7 +44,7 @@ function getPackMeta(pack) {
       heading: 'Semua produk yang Anda butuhkan untuk mulai menjual.',
       subcopy: 'Buka seluruh 4 bundle dan pilih produk yang paling tepat untuk setiap tipe buyer di audiens Anda.',
       badge: 'Buka 4 bundle sekaligus',
-      valueLine: 'Tambah Rp50.000 untuk membuka 3 bundle tambahan.',
+      valueLine: 'Cara paling hemat untuk memiliki 13 produk digital sekaligus.',
       featureRows: [
         '13 aplikasi AI siap rebrand',
         'Semua 4 niche bundle',
@@ -60,7 +60,7 @@ function getPackMeta(pack) {
     heading: `Mulai dari produk yang paling relevan untuk audiens ${esc(pack?.targetAudience || 'Anda')}.`,
     subcopy: pack?.productOutcome || 'Akses aplikasi dan kit yang dibutuhkan untuk membentuk satu produk digital siap jual.',
     badge: `${appCount} aplikasi di dalam pack`,
-    valueLine: 'Anda dapat meng-upgrade ke Full AppVibe Vault kapan saja.',
+    valueLine: 'Tambah Rp50.000 untuk membuka 3 bundle tambahan.',
     featureRows: [
       `${appCount} aplikasi siap rebrand`,
       'Marketing kit untuk pack pilihan',
