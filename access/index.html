@@ -135,6 +135,25 @@
     .vh-asset-btn:disabled{border-color:var(--line-light);color:var(--muted-light);cursor:not-allowed;background:var(--bg)}
     .vh-asset-btn.vh-configured{border-color:var(--blue);color:var(--blue);background:rgba(18,107,255,.04)}
 
+    .vh-kit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .vh-kit-card{display:flex;flex-direction:column;gap:10px;padding:20px;border:1px solid var(--line-light);border-radius:var(--radius-lg);background:var(--surface)}
+    .vh-kit-actions{display:flex;flex-direction:column;gap:6px}
+    .vh-kit-btn{display:inline-flex;align-items:center;justify-content:center;min-height:44px;border:1px solid var(--blue);border-radius:var(--radius-md);padding:10px 16px;background:rgba(18,107,255,.04);font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--blue);width:100%;cursor:pointer}
+    .vh-kit-btn--ghost{border-color:var(--line);color:var(--text);background:var(--surface)}
+    .vh-modal-overlay{display:none;position:fixed;inset:0;z-index:110;background:rgba(5,11,29,.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:16px}
+    .vh-modal-overlay.open{display:flex}
+    .vh-modal{width:min(720px,100%);max-height:85vh;display:flex;flex-direction:column;border-radius:var(--radius-xl);background:var(--surface);box-shadow:var(--shadow-float);position:relative}
+    .vh-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--line-light)}
+    .vh-modal-head h3{margin:0;font-size:16px;font-weight:800}
+    .vh-modal-tabs{display:flex;gap:8px;padding:12px 20px 0}
+    .vh-modal-tab{border:0;background:transparent;font:700 11px/1 'DM Mono',monospace;text-transform:uppercase;color:var(--muted);padding:8px 0;cursor:pointer;border-bottom:2px solid transparent}
+    .vh-modal-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+    .vh-modal-body{padding:16px 20px 20px;overflow:auto;flex:1}
+    .vh-modal-pre{margin:0;padding:14px;border:1px solid var(--line-light);border-radius:var(--radius-md);background:#f8fafc;font:400 11px/1.5 'DM Mono',monospace;white-space:pre-wrap;word-break:break-word;max-height:45vh;overflow:auto}
+    .vh-modal-foot{padding:12px 20px 20px;display:flex;gap:10px;flex-wrap:wrap}
+    .vh-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:var(--radius-pill);background:var(--navy);color:#fff;font-size:12px;font-weight:600;z-index:120;opacity:0;transition:opacity .2s;pointer-events:none}
+    .vh-toast.show{opacity:1}
+
     .vh-orders-toggle{display:flex;align-items:center;gap:8px;padding:12px 16px;border:1px solid var(--line-light);border-radius:var(--radius-md);background:var(--surface);font:600 13px/1 'Plus Jakarta Sans',sans-serif;color:var(--muted);cursor:pointer;width:100%;transition:color .14s}
     .vh-orders-toggle:hover{color:var(--text)}
     .vh-orders-toggle:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
@@ -218,6 +237,24 @@
     </div>
   </div>
 
+  <div class="vh-modal-overlay" id="vhKitModal" role="dialog" aria-modal="true" aria-labelledby="vhKitModalTitle">
+    <div class="vh-modal">
+      <div class="vh-modal-head">
+        <h3 id="vhKitModalTitle">Template landing</h3>
+        <button type="button" class="vh-drawer-close" id="vhKitModalClose" aria-label="Tutup">×</button>
+      </div>
+      <div class="vh-modal-tabs">
+        <button type="button" class="vh-modal-tab active" data-kit-tab="html">Salin HTML</button>
+        <button type="button" class="vh-modal-tab" data-kit-tab="plain">Salin teks</button>
+      </div>
+      <div class="vh-modal-body"><pre class="vh-modal-pre" id="vhKitModalPre"></pre></div>
+      <div class="vh-modal-foot">
+        <button type="button" class="vh-kit-btn" id="vhKitCopyBtn">Salin ke clipboard</button>
+      </div>
+    </div>
+  </div>
+  <div class="vh-toast" id="vhToast" role="status" aria-live="polite"></div>
+
   <script type="module">
     import { APP_REGISTRY } from "/src/scripts/rebrand/app-registry.js";
     import { initTracking } from "/src/scripts/tracking.js";
@@ -251,6 +288,7 @@
     function lockedAppCount(data){ return Math.max(0, TOTAL_APP_COUNT - (data?.app_ids?.length || 0)); }
     function mergePortalApps(data){
       const owned = new Set(data.app_ids || []);
+      const kitById = new Map((data.apps || []).map((a) => [a.id, a.marketing_kit_available]));
       return APP_REGISTRY.map((app) => ({
         id: app.id,
         name: app.name,
@@ -262,6 +300,7 @@
         accent: '#126BFF',
         packs: app.bundleIds,
         hasAccess: data.has_full_vault || owned.has(app.id),
+        marketing_kit_available: Boolean(kitById.get(app.id)),
       })).sort((a,b)=> Number(b.hasAccess)-Number(a.hasAccess));
     }
 
@@ -302,7 +341,7 @@
       headerRight.innerHTML=`<span class="vh-access-pill">Aktif</span><button class="vh-logout-btn" id="vhLogout">Keluar</button>`;
       document.getElementById('vhLogout').addEventListener('click', handleLogout);
 
-      const mkCount = bundles.reduce((n,b)=>n+(b.resources?.marketing_kit?1:0),0);
+      const mkCount = apps.filter((a) => a.hasAccess && a.marketing_kit_available).length;
       const heroBadgeHtml = has_full_vault
         ? '<span class="vh-badge vh-badge--full">Full Vault — Semua Akses</span>'
         : bundle_ids.map(b=>`<span class="vh-badge vh-badge--bundle">${esc(PACK_LABELS[b]||b)}</span>`).join('');
@@ -339,9 +378,30 @@
           </div>
         </article>`).join('');
 
+      const kitApps = apps.filter((a) => a.hasAccess && a.marketing_kit_available);
+      const kitSectionHtml = kitApps.length ? `
+        <section class="vh-section" aria-label="Template landing page">
+          <h2 class="vh-section-title">Template Landing Page</h2>
+          <p style="margin:0 0 16px;color:var(--muted);font-size:13px">Unduh atau salin template HTML reseller per produk. Ganti placeholder seperti [NAMA BRAND] sebelum publish.</p>
+          <div class="vh-kit-grid">${kitApps.map((app) => `
+            <article class="vh-kit-card">
+              <div class="vh-app-icon" style="background:${esc(app.accent)}">${esc(app.label)}</div>
+              <div class="vh-asset-title">${esc(app.name)}</div>
+              <div class="vh-asset-desc">Landing page siap rebrand untuk ${esc(app.name)}.</div>
+              <div class="vh-kit-actions">
+                <button type="button" class="vh-kit-btn" data-kit-preview="${app.id}">Preview & salin</button>
+                <button type="button" class="vh-kit-btn vh-kit-btn--ghost" data-kit-download="${app.id}">Unduh HTML</button>
+              </div>
+            </article>`).join('')}
+          </div>
+        </section>` : '';
+
       const assetCards = bundles.map(b=>{
-        const mk=b.resources?.marketing_kit; const guide=b.resources?.guide;
-        return `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--blue)">${esc(b.name.charAt(0))}</div><div class="vh-asset-title">${esc(b.name)}</div><div class="vh-asset-desc">Marketing kit dan aset peluncuran untuk ${esc(b.name)}.</div><button class="vh-asset-btn${mk?' vh-configured':''}" ${mk?'':'disabled'} data-resource="${b.id}:marketing_kit">${mk ? 'Buka marketing kit' : 'Marketing kit belum tersedia'}</button>${guide ? `<button class="vh-asset-btn vh-configured" data-resource="${b.id}:guide">Buka panduan mulai</button>` : ''}</div>`;
+        const guide=b.resources?.guide;
+        const guideBtn = guide
+          ? `<button class="vh-asset-btn vh-configured" data-resource="${b.id}:guide">Buka panduan mulai</button>`
+          : '';
+        return `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--blue)">${esc(b.name.charAt(0))}</div><div class="vh-asset-title">${esc(b.name)}</div><div class="vh-asset-desc">Panduan peluncuran untuk ${esc(b.name)}.</div>${guideBtn}</div>`;
       }).join('');
       const upgradeAssetCard = canShowUpgrade(data) ? `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--gradient-brand)">FV</div><div class="vh-asset-title">Upgrade Full Vault</div><div class="vh-asset-desc">Buka aset, marketing kit, dan panduan dari bundle lain hanya dengan tambahan Rp50.000.</div><button class="vh-asset-btn vh-configured" type="button" data-upgrade-full-vault data-placement="asset_card">Upgrade sekarang</button></div>` : '';
       const licenseCard = `<div class="vh-asset-card"><div class="vh-asset-icon" style="background:var(--violet)">&#x2713;</div><div class="vh-asset-title">Lisensi Rebrand</div><div class="vh-asset-desc">Hak kepemilikan produk yang sudah Anda beli dan ketentuan penggunaannya.</div><a class="vh-asset-btn vh-configured" href="/license/" style="text-decoration:none;text-align:center">Baca lisensi rebrand</a></div>`;
@@ -369,6 +429,8 @@
 
         <section class="vh-section" aria-label="Aplikasi Anda"><h2 class="vh-section-title">Aplikasi Anda</h2>${appUpsellStrip}<div class="vh-filters" role="tablist" aria-label="Filter bundle">${chipHtml}</div><div class="vh-app-grid" id="vhAppGrid">${appCardsHtml}</div></section>
 
+        ${kitSectionHtml}
+
         <section class="vh-section" aria-label="Aset peluncuran"><h2 class="vh-section-title">Aset Peluncuran</h2><div class="vh-asset-grid">${assetCards}${upgradeAssetCard}${rebrandWorkspaceCard}${licenseCard}</div></section>
 
         ${ordersHtml ? `<section class="vh-section" aria-label="Riwayat pembelian"><h2 class="vh-section-title">Riwayat Pembelian</h2>${ordersHtml}</section>` : ''}
@@ -385,6 +447,8 @@
       grid.querySelectorAll('[data-detail]').forEach(btn=>{ btn.addEventListener('click',()=>openDrawer(btn.dataset.detail, apps, data)); });
       grid.querySelectorAll('[data-launch]').forEach(btn=>{ btn.addEventListener('click',()=>launchApp(btn.dataset.launch)); });
       main.querySelectorAll('[data-resource]').forEach(btn=>{ btn.addEventListener('click',()=>{ const [bundleId, type]=btn.dataset.resource.split(':'); launchResource(bundleId, type); }); });
+      main.querySelectorAll('[data-kit-preview]').forEach((btn) => { btn.addEventListener('click', () => openKitModal(btn.dataset.kitPreview)); });
+      main.querySelectorAll('[data-kit-download]').forEach((btn) => { btn.addEventListener('click', () => downloadKit(btn.dataset.kitDownload)); });
       main.querySelectorAll('[data-upgrade-full-vault]').forEach(btn=>{ btn.addEventListener('click',()=>startFullVaultUpgrade(btn.dataset.appId || '', btn.dataset.placement || 'unknown')); });
 
       const ordersToggle=document.getElementById('vhOrdersToggle'); const ordersBody=document.getElementById('vhOrdersBody');
@@ -425,6 +489,70 @@
 
     function launchApp(appId){ window.open(`/api/member/launch?app_id=${encodeURIComponent(appId)}`, '_blank', 'noopener'); }
     function launchResource(bundleId, type){ window.open(`/api/member/resource?bundle_id=${encodeURIComponent(bundleId)}&type=${encodeURIComponent(type)}`, '_blank', 'noopener'); }
+
+    let kitModalState = { appId: null, tab: 'html', html: '', plain: '' };
+
+    function showToast(msg) {
+      const el = document.getElementById('vhToast');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2200);
+    }
+
+    function renderKitTab() {
+      const pre = document.getElementById('vhKitModalPre');
+      if (!pre) return;
+      pre.textContent = kitModalState.tab === 'plain' ? kitModalState.plain : kitModalState.html;
+    }
+
+    async function openKitModal(appId) {
+      const overlay = document.getElementById('vhKitModal');
+      const pre = document.getElementById('vhKitModalPre');
+      const title = document.getElementById('vhKitModalTitle');
+      kitModalState = { appId, tab: 'html', html: '', plain: '' };
+      document.querySelectorAll('[data-kit-tab]').forEach((t) => t.classList.toggle('active', t.dataset.kitTab === 'html'));
+      if (title) title.textContent = `Template — ${appId}`;
+      if (pre) pre.textContent = 'Memuat…';
+      overlay?.classList.add('open');
+      try {
+        const [htmlRes, plainRes] = await Promise.all([
+          fetch(`/api/member/marketing-kit?app_id=${encodeURIComponent(appId)}&format=html`, { credentials: 'include' }),
+          fetch(`/api/member/marketing-kit?app_id=${encodeURIComponent(appId)}&format=plain`, { credentials: 'include' }),
+        ]);
+        const htmlData = await htmlRes.json();
+        const plainData = await plainRes.json();
+        kitModalState.html = htmlData.html || '';
+        kitModalState.plain = plainData.plain_text || '';
+        renderKitTab();
+      } catch {
+        if (pre) pre.textContent = 'Gagal memuat template.';
+      }
+    }
+
+    function downloadKit(appId) {
+      window.location.href = `/api/member/marketing-kit?app_id=${encodeURIComponent(appId)}&download=1`;
+    }
+
+    document.getElementById('vhKitModalClose')?.addEventListener('click', () => document.getElementById('vhKitModal')?.classList.remove('open'));
+    document.getElementById('vhKitModal')?.addEventListener('click', (e) => { if (e.target.id === 'vhKitModal') e.currentTarget.classList.remove('open'); });
+    document.querySelectorAll('[data-kit-tab]').forEach((tab) => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('[data-kit-tab]').forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+        kitModalState.tab = tab.dataset.kitTab;
+        renderKitTab();
+      });
+    });
+    document.getElementById('vhKitCopyBtn')?.addEventListener('click', async () => {
+      const text = kitModalState.tab === 'plain' ? kitModalState.plain : kitModalState.html;
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Disalin ke clipboard');
+      } catch {
+        showToast('Salin manual dari kotak preview');
+      }
+    });
 
     async function startFullVaultUpgrade(appId='', placement='unknown'){
       if (window.trackVaultEvent) {

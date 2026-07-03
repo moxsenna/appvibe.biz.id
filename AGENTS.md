@@ -27,6 +27,10 @@ This repository is for `appvibe.biz.id`.
 - Buyer returns to `PAYCORE_RETURN_URL`, which should point to `/checkout/` on `appvibe.biz.id` unless a real dedicated return page is added.
 - `/api/checkout/status` polls local KV and can reconcile pending orders with PayCore.
 
+## Buyer access & marketing kits
+
+- Per-app reseller landing templates live in `marketing-kits/` and are bundled into Functions via `npm run bundle:kits` (runs on `npm run build`). Kits are served only through `/api/member/marketing-kit`, not as public static files under `dist/`.
+
 ## Documentation Rules
 
 - Use `appvibe.biz.id` for this repository's public URL, canonical URL, checkout return URL, robots/sitemap URL, and examples.
