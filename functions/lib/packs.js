@@ -43,7 +43,7 @@ export const PACKS = {
   vault_full: {
     product_key: 'vault_full_license',
     description: 'White-Label AI App Vault — Full License (13 apps)',
-    amount: 1000,
+    amount: 147000,
     currency: 'IDR',
     resourceType: 'vault',
     appIds: ['adsprint', 'rupa', 'adegan', 'bukti', 'mula', 'katalog', 'pikat', 'ritme', 'mimik', 'suara', 'arah', 'tayang', 'cetak'],
