@@ -39,6 +39,20 @@ export const TONE_OPTIONS = [
   'Technical',
 ];
 
+export const OFFER_PRICING_MODELS = {
+  sekali_bayar: 'Sekali bayar',
+  berlangganan: 'Berlangganan',
+  tiered: 'Tiered (beberapa paket)',
+};
+
+export const OFFER_GUARANTEE_TYPES = {
+  '30_hari': '30 hari uang kembali',
+  '7_hari': '7 hari uang kembali',
+  kepuasan: 'Garansi kepuasan',
+  tanpa: 'Tanpa garansi',
+  custom: 'Custom',
+};
+
 /**
  * Normalize v1 brand file fields to v2.
  * - targetBuyer → targetMarket
@@ -112,6 +126,8 @@ export function createDefaultBrandFile(ownerId = 'local') {
     availableProof: '',
     claimBoundaries: '',
     claimsNeverMake: 'Jangan klaim revenue, jumlah customer, hasil iklan, atau testimoni jika belum ada bukti nyata.',
+    offerGuaranteeType: '30_hari',
+    offerGuaranteeCustom: '',
     createdAt: ts,
     updatedAt: ts,
   };
@@ -137,6 +153,10 @@ export function createDefaultProject(ownerId = 'local', app = null, brandFile = 
     requiredFeaturesToEmphasize: '',
     featuresNotToChange: '',
     additionalInstructions: '',
+    offerPrice: '',
+    offerPricingModel: 'sekali_bayar',
+    offerIncludes: '',
+    offerBonus: '',
     generatedAt: '',
     createdAt: ts,
     updatedAt: ts,
@@ -247,6 +267,16 @@ export function buildGenerationContext({ brandFile = {}, project = {}, app = {},
     requiredFeaturesToEmphasize: normalizeList(p.requiredFeaturesToEmphasize),
     featuresNotToChange: normalizeList(p.featuresNotToChange),
     additionalInstructions: p.additionalInstructions,
+    // Offer fields
+    offerPrice: p.offerPrice || '',
+    offerPricingModel: p.offerPricingModel || 'sekali_bayar',
+    offerPricingModelLabel: OFFER_PRICING_MODELS[p.offerPricingModel] || OFFER_PRICING_MODELS.sekali_bayar,
+    offerIncludes: p.offerIncludes || '',
+    offerBonus: p.offerBonus || '',
+    offerGuaranteeType: b.offerGuaranteeType || '30_hari',
+    offerGuaranteeLabel: OFFER_GUARANTEE_TYPES[b.offerGuaranteeType] || OFFER_GUARANTEE_TYPES['30_hari'],
+    offerGuaranteeCustom: b.offerGuaranteeCustom || '',
+    originalAppId: mergedApp.id || project.appId || '',
   };
 }
 

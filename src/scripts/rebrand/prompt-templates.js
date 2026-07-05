@@ -149,49 +149,96 @@ Return the fully updated app implementation. Before finalizing, verify that the 
 }
 
 export function buildLandingPagePrompt(ctx) {
-  return `# LANDING PAGE & OFFER BRIEF — ${inlineValue(ctx.newAppName)}
+  const appId = ctx.originalAppId || 'app';
+  const templateFile = `${appId}-landing-template.html`;
 
-Create a conversion-focused Indonesian landing page for the product below.
+  const placeholders = [
+    { text: '[NAMA BRAND]', value: ctx.brandName },
+    { text: '[LINK_CHECKOUT_ATAU_WHATSAPP]', value: inlineValue(ctx.primaryCtaUrl, ctx.whatsappNumber) },
+    { text: '[LINK_CHECKOUT]', value: inlineValue(ctx.primaryCtaUrl) },
+    { text: '[HARGA]', value: inlineValue(ctx.offerPrice, 'RpXX.XXX') },
+    { text: '[NAMA PRODUK ANDA]', value: inlineValue(ctx.newAppName) },
+  ].filter((p) => p.value && p.value !== 'Belum ditentukan');
 
-## Product
-- Product name: ${inlineValue(ctx.newAppName)}
-- Category: ${inlineValue(ctx.productCategory, ctx.originalAppCategory)}
-- Original app foundation: ${inlineValue(ctx.originalAppName)} — ${inlineValue(ctx.originalAppDescription)}
+  return `# LANDING PAGE REBRAND PROMPT — ${inlineValue(ctx.newAppName)}
+
+Kamu sudah punya template landing page HTML: **${templateFile}**
+
+> **Unduh dari Portal Akses AppVibe → bagian Template Landing Page → ${inlineValue(ctx.originalAppName)}**
+
+## Instruksi utama
+
+${ctx.offerPrice ? 'Template sudah berisi placeholder. GANTI placeholder dengan data brand & penawaran di bawah. JANGAN buat landing page dari nol.' : 'GANTI semua placeholder di template dengan data brand di bawah. JANGAN ubah struktur HTML dan CSS yang sudah ada.'}
+
+## Placeholder yang harus diganti
+${placeholders.map((p) => `- \`${p.text}\` → **${escValue(p.value)}**`).join('\n')}
+
+## Data brand & penawaran
+- Brand: ${inlineValue(ctx.brandName)}
+- Produk: ${inlineValue(ctx.newAppName)}
+- Harga: ${inlineValue(ctx.offerPrice, 'Belum ditentukan — ganti dengan harga kamu')}
+- Model harga: ${inlineValue(ctx.offerPricingModelLabel, 'Sekali bayar')}
+- Yang didapat buyer: ${inlineValue(ctx.offerIncludes, 'Belum ditentukan — isi sesuai produk')}
+- Bonus: ${inlineValue(ctx.offerBonus, 'Tidak ada bonus (hapus section bonus di template jika kosong)')}
+- Garansi: ${buildGuaranteeLine(ctx)}
+
+## Brand identity (untuk copywriting)
+- Tone: ${inlineValue(ctx.toneOfVoice)}
+- CTA utama: ${inlineValue(ctx.primaryCta)}
+- Warna utama: ${inlineValue(ctx.primaryColor)} / Sekunder: ${inlineValue(ctx.secondaryColor)} / Aksen: ${inlineValue(ctx.accentColor)}
+
+## Target market (untuk menyesuaikan headline & copy)
 - Target buyer: ${inlineValue(ctx.newTargetMarket)}
-- Buyer problem: ${inlineValue(ctx.primaryProblem)}
-- Desired outcome: ${inlineValue(ctx.promisedOutcome)}
+- Masalah buyer: ${inlineValue(ctx.primaryProblem)}
+- Outcome yang dijanjikan: ${inlineValue(ctx.promisedOutcome)}
 - Positioning: ${inlineValue(ctx.positioning)}
 - Differentiator: ${inlineValue(ctx.differentiator, 'Tidak disebutkan')}
-- Primary use case: ${inlineValue(ctx.useCase)}
-
-## Brand
-- Brand name: ${inlineValue(ctx.brandName)}
-- Tone: ${inlineValue(ctx.toneOfVoice)}
-- Primary CTA: ${inlineValue(ctx.primaryCta)}
-- CTA URL: ${inlineValue(ctx.primaryCtaUrl, 'Belum ditentukan')}
-- Website: ${inlineValue(ctx.websiteUrl, 'Belum ditentukan')}
-- Instagram: ${inlineValue(ctx.instagramHandle, 'Belum ditentukan')}
-- WhatsApp: ${inlineValue(ctx.whatsappNumber, 'Belum ditentukan')}
 
 ## Real proof only
-- Available proof: ${proofValue(ctx.availableProof)}
-- Claim boundaries: ${claimBoundaryValue(ctx.claimBoundaries)}
+- Bukti yang tersedia: ${proofValue(ctx.availableProof)}
+- Batas klaim: ${claimBoundaryValue(ctx.claimBoundaries)}
 
-## Requirements
-Create:
-1. Hero headline, subheadline, CTA, and trust note.
-2. Problem-awareness section.
-3. How the product works section.
-4. Feature-to-benefit section that keeps the original app capabilities intact.
-5. Use case section for ${inlineValue(ctx.newTargetMarket)}.
-6. Honest proof section: use supplied proof only; if unavailable, use a proof-neutral format such as product walkthrough, creator note, or feature transparency.
-7. FAQ that handles reasonable objections without inventing claims.
-8. Closing CTA.
+## Daftar section template (PERTAHANKAN struktur ini)
+1. Header & navigasi.
+2. Hero: headline, subheadline, CTA, trust note.
+3. Pain points / problem-awareness.
+4. Fitur & benefit (sesuaikan dengan ${inlineValue(ctx.newAppName)}, jangan ubah jumlah section).
+5. Solution block.
+6. What's included / yang didapat.
+7. License / lisensi.
+8. Steps / cara kerja.
+9. CTA penutup.
+10. FAQ.
+11. Footer.
+
+## Yang boleh diubah
+- Headline, subheadline, body copy di semua section.
+- Teks tombol CTA (tapi tetap satu CTA utama).
+- Warna (via CSS variables — ganti :root block).
+- Font family (jika brand font tersedia di Google Fonts).
+- Semua placeholder [NAMA BRAND], [LINK_CHECKOUT], dll.
+- Harga dan detail penawaran.
+
+## Yang TIDAK BOLEH diubah
+- Struktur grid dan layout HTML.
+- Urutan section.
+- Class names dan selector CSS.
+- Jumlah section (11 section di atas).
+- Responsive breakpoints dan mobile-first behavior.
 
 ## Guardrails
 ${listToMarkdown(GENERAL_PROMPT_RULES)}
-- Avoid generic claims such as “terbaik”, “pasti laris”, or “menghasilkan jutaan” unless the supplied proof explicitly supports them.
-- Treat the buyer as the full owner and creator of the rebranded product. AppVibe attribution is not required.`;
+- **PERTAHANKAN struktur HTML dan CSS template.** JANGAN buat layout dari nol.
+- Setiap placeholder yang tidak disebutkan di atas (misalnya testimoni/klien) → jika tidak ada data brand, hapus section tersebut, jangan isi dengan konten palsu.
+- Buyer adalah full owner produk. AppVibe tidak perlu disebut sebagai creator.
+- Hindari klaim “terbaik”, “pasti laris”, “menghasilkan jutaan” kecuali ada bukti di atas.`;
+}
+
+function escValue(v) { return String(v || ''); }
+
+function buildGuaranteeLine(ctx) {
+  if (ctx.offerGuaranteeType === 'custom') return inlineValue(ctx.offerGuaranteeCustom, 'Custom (belum ditentukan)');
+  return ctx.offerGuaranteeLabel || '30 hari uang kembali';
 }
 
 export function buildContentAdsPrompt(ctx) {

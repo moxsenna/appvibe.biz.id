@@ -3,6 +3,7 @@ import { copyText, downloadMarkdown } from './download-markdown.js';
 import { canUseQaMockMode, getMockMemberData, getQaMockMode } from './mock-member-data.js';
 import {
   REBRAND_SCOPES, TONE_OPTIONS,
+  OFFER_PRICING_MODELS, OFFER_GUARANTEE_TYPES,
   createDefaultBrandFile, createDefaultProject, generateRebrandPack,
   normalizeBrandFile, validateBrandFile, validateProject,
 } from './generate-rebrand-pack.js';
@@ -277,6 +278,10 @@ function renderBrandEditModal(state) {
           ${textarea('claimBoundaries','Klaim yang boleh',b.claimBoundaries,e.claimBoundaries,{scope:'brand',rows:3})}
           ${textarea('claimsNeverMake','Klaim dilarang',b.claimsNeverMake,e.claimsNeverMake,{scope:'brand',rows:3})}
         </fieldset>
+        <fieldset class="rw-fieldset"><legend>Informasi Penawaran</legend>
+          <label class="rw-field"><span>Garansi</span><select data-brand-field="offerGuaranteeType">${Object.entries(OFFER_GUARANTEE_TYPES).map(([k,v])=>`<option value="${esc(k)}" ${b.offerGuaranteeType===k?'selected':''}>${esc(v)}</option>`).join('')}</select></label>
+          ${b.offerGuaranteeType==='custom'?textarea('offerGuaranteeCustom','Detail garansi (custom)',b.offerGuaranteeCustom,e.offerGuaranteeCustom,{scope:'brand',rows:2}):''}
+        </fieldset>
       </form>
       <div class="rw-modal-footer"><button class="rw-primary" type="button" data-brand-modal-save>Simpan & Tutup</button></div>
     </section></div>`;
@@ -327,6 +332,7 @@ function renderAppCard(state, app) {
         ${pf('requiredFeaturesToEmphasize','Fitur ditonjolkan',proj.requiredFeaturesToEmphasize,3,app.id)}
         ${pf('featuresNotToChange','Fitur tidak diubah',proj.featuresNotToChange,3,app.id)}
         ${pf('additionalInstructions','Instruksi tambahan',proj.additionalInstructions,3,app.id)}
+        ${(proj.scope==='market_repositioning'||proj.scope==='full_white_label_launch')?renderOfferFields(proj,app.id):''}
       </div>
       ${isExp&&pack?renderResultsInline(state,app,pack):''}
     `:`
@@ -343,6 +349,18 @@ function renderAppCard(state, app) {
 
 function pf(name,label,value,rows,appId) {
   return `<label class="rw-field rw-field--textarea"><span>${esc(label)}</span><textarea rows="${rows}" data-project-field="${esc(name)}" data-app-id="${esc(appId)}">${esc(value||'')}</textarea></label>`;
+}
+
+function renderOfferFields(proj, appId) {
+  const pmOptions = Object.entries(OFFER_PRICING_MODELS).map(([k,v])=>`<option value="${esc(k)}" ${proj.offerPricingModel===k?'selected':''}>${esc(v)}</option>`).join('');
+  return `<fieldset class="rw-fieldset"><legend>Data Penawaran</legend>
+    <div class="rw-grid rw-grid--2">
+      <label class="rw-field"><span>Harga produk</span><input type="text" value="${esc(proj.offerPrice||'')}" data-project-field="offerPrice" data-app-id="${esc(appId)}" placeholder="Rp97.000"/></label>
+      <label class="rw-field"><span>Model harga</span><select data-project-field="offerPricingModel" data-app-id="${esc(appId)}">${pmOptions}</select></label>
+    </div>
+    <label class="rw-field rw-field--textarea"><span>Yang didapat buyer</span><textarea rows="3" data-project-field="offerIncludes" data-app-id="${esc(appId)}" placeholder="Akses seumur hidup, update gratis, support WhatsApp…">${esc(proj.offerIncludes||'')}</textarea></label>
+    <label class="rw-field rw-field--textarea"><span>Bonus (opsional)</span><textarea rows="2" data-project-field="offerBonus" data-app-id="${esc(appId)}" placeholder="Template Canva, guide tambahan…">${esc(proj.offerBonus||'')}</textarea></label>
+  </fieldset>`;
 }
 
 function renderResultsInline(state, app, pack) {

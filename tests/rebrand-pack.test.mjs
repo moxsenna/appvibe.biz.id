@@ -368,7 +368,8 @@ test('market repositioning adds landing page and offer prompt', () => {
   const pack = generateRebrandPack({ brandFile: sampleBrand(), project: sampleProject('market_repositioning'), app });
 
   assert.deepEqual(pack.blocks.map((block) => block.title), ['App Rebrand Prompt', 'Landing Page & Offer Prompt']);
-  assert.match(pack.landingPagePrompt, /LANDING PAGE & OFFER BRIEF/);
+  assert.match(pack.landingPagePrompt, /LANDING PAGE REBRAND PROMPT/);
+  assert.match(pack.landingPagePrompt, /landing-template\.html/);
   assert.match(pack.handoverMarkdown, /## 4\. Landing Page & Offer Prompt/);
   assertCleanOutput(pack);
 });
@@ -429,6 +430,39 @@ test('generateRebrandPack accepts v1 brand with targetBuyer', () => {
   };
   const pack = generateRebrandPack({ brandFile: brand, project, app });
   assert.match(pack.appRebrandPrompt, /V1 App/);
+  assertCleanOutput(pack);
+});
+
+test('offer fields flow into landing page prompt with template reference', () => {
+  const app = getAppRegistryItem('adsprint');
+  const brand = {
+    ...createDefaultBrandFile('member_test'),
+    brandName: 'Neon Ads',
+    primaryCta: 'Ambil Sekarang',
+    primaryCtaUrl: 'https://neonads.com/buy',
+    targetMarket: 'media buyer dan UMKM yang butuh strategi iklan',
+    offerGuaranteeType: '7_hari',
+  };
+  const project = {
+    ...createDefaultProject('member_test', app, brand),
+    appId: 'adsprint',
+    newAppName: 'Neon Adsprint',
+    scope: 'market_repositioning',
+    offerPrice: 'Rp197.000',
+    offerPricingModel: 'sekali_bayar',
+    offerIncludes: 'Akses seumur hidup, 3 template bonus',
+    offerBonus: 'Panduan copywriting 15 halaman',
+  };
+  const pack = generateRebrandPack({ brandFile: brand, project, app });
+
+  assert.match(pack.landingPagePrompt, /adsprint-landing-template\.html/);
+  assert.match(pack.landingPagePrompt, /Neon Ads/);
+  assert.match(pack.landingPagePrompt, /Rp197\.000/);
+  assert.match(pack.landingPagePrompt, /Sekali bayar/);
+  assert.match(pack.landingPagePrompt, /7 hari uang kembali/);
+  assert.match(pack.landingPagePrompt, /Akses seumur hidup/);
+  assert.match(pack.landingPagePrompt, /Panduan copywriting/);
+  assert.match(pack.landingPagePrompt, /PERTAHANKAN struktur/);
   assertCleanOutput(pack);
 });
 
