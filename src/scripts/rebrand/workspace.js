@@ -1117,29 +1117,30 @@ const WALKTHROUGH_STEPS = [
     position: { desktop: 'right', fallback: 'bottom' },
   },
   {
-    selector: '.rw-app-card.owned',
+    selector: '.rw-app-card.owned:first-of-type',
     title: 'Pilih Aplikasi & Scope',
     desc: 'Pilih app dari vault kamu, beri <b>nama baru</b> (contoh: "Campaign Blueprint AI"), lalu pilih scope: <b>Quick</b> (cepat), <b>Market</b> (menengah + landing page), atau <b>Full Launch</b> (lengkap).',
     position: { desktop: 'right', fallback: 'bottom' },
   },
   {
-    selector: '.rw-app-card.owned .rw-advanced-toggle',
+    selector: '.rw-app-card.owned:first-of-type .rw-app-config',
     title: 'Lengkapi Data Penawaran',
-    desc: 'Untuk scope Market/Full Launch — buka <b>Opsi lanjutan ▼</b> dan isi section <b>Data Penawaran</b>: harga, yang didapat buyer, bonus. Bikin prompt landing page lebih siap pakai.',
+    desc: 'Untuk scope Market/Full Launch — buka <b>Opsi lanjutan ▼</b> di bawah ini dan isi section <b>Data Penawaran</b>: harga, yang didapat buyer, bonus. Bikin prompt landing page lebih siap pakai.',
     position: { desktop: 'top', fallback: 'bottom' },
   },
   {
-    selector: '.rw-app-card.owned [data-generate-pack]',
+    selector: '.rw-app-card.owned:first-of-type .rw-app-actions',
     title: 'Generate & Rebrand',
     desc: 'Klik <b>Buat Prompt</b> → hasil prompt bisa kamu salin per bagian atau download sebagai .md. Prompt sudah menyebut <b>template HTML</b> yang bisa diunduh dari Portal Akses → Template Landing Page. Copas prompt ke LLM favorit kamu.',
-    position: { desktop: 'top', fallback: 'bottom' },
+    position: { desktop: 'bottom', fallback: 'bottom' },
   },
 ];
 
 function startWalkthrough(state) {
   state.walkthrough = { active: true, step: 0 };
   createWalkthroughDOM(state);
-  positionWalkthrough(state);
+  // Wait a bit for layout to settle
+  setTimeout(() => positionWalkthrough(state), 50);
 }
 
 function createWalkthroughDOM(state) {
@@ -1161,6 +1162,28 @@ function createWalkthroughDOM(state) {
   document.body.appendChild(backdrop);
   document.body.appendChild(spot);
   document.body.appendChild(tooltip);
+
+  const scrollHandler = () => {
+    if (!state.walkthrough.active) { window.removeEventListener('scroll', scrollHandler); return; }
+    const step = WALKTHROUGH_STEPS[state.walkthrough.step];
+    if (step) {
+      const el = document.querySelector(step.selector);
+      if (el) {
+        // Disable transition during scroll so cutout sticks perfectly to element
+        spot.style.transition = 'none';
+        tooltip.style.transition = 'none';
+        updateSpotAndTooltip(el, spot, tooltip, step, state);
+        
+        // Restore transition after scroll stops
+        clearTimeout(spot._scrollTid);
+        spot._scrollTid = setTimeout(() => {
+          spot.style.transition = '';
+          tooltip.style.transition = '';
+        }, 50);
+      }
+    }
+  };
+  window.addEventListener('scroll', scrollHandler, { passive: true });
 }
 
 function removeWalkthroughDOM() {
@@ -1177,7 +1200,6 @@ function positionWalkthrough(state) {
   const spot = document.getElementById('rwWtSpot');
   const tooltip = document.getElementById('rwWtTooltip');
 
-  // If target missing (e.g. offer fields hidden for quick scope), advance.
   if (!el) {
     if (state.walkthrough.step < WALKTHROUGH_STEPS.length - 1) {
       state.walkthrough.step++;
@@ -1188,10 +1210,33 @@ function positionWalkthrough(state) {
     return;
   }
 
+  // Auto-scroll target into view if outside
+  const r = el.getBoundingClientRect();
+  if (r.top < 100 || r.bottom > window.innerHeight - 100) {
+    // Disable transition for jump
+    spot.style.transition = 'none';
+    tooltip.style.transition = 'none';
+    window.scrollBy({ top: r.top - 120, behavior: 'instant' });
+    
+    // Allow DOM to process the scroll
+    requestAnimationFrame(() => {
+      updateSpotAndTooltip(el, spot, tooltip, step, state);
+      spot.style.transition = '';
+      tooltip.style.transition = '';
+    });
+    return;
+  }
+
+  updateSpotAndTooltip(el, spot, tooltip, step, state);
+}
+
+function updateSpotAndTooltip(el, spot, tooltip, step, state) {
   const r = el.getBoundingClientRect();
   const pad = 6;
+  
   spot.style.left = `${r.left - pad}px`;
-  spot.style.top = `${r.top - pad + window.scrollY}px`;
+  // Fixed overlay — do not add scrollY
+  spot.style.top = `${r.top - pad}px`;
   spot.style.width = `${r.width + pad * 2}px`;
   spot.style.height = `${r.height + pad * 2}px`;
 
@@ -1223,21 +1268,21 @@ function positionWalkthrough(state) {
 
   if (pos === 'right') {
     tx = r.right + 20;
-    ty = r.top + r.height / 2 - th / 2 + window.scrollY;
+    ty = r.top + r.height / 2 - th / 2;
   } else if (pos === 'left') {
     tx = r.left - tw - 20;
-    ty = r.top + r.height / 2 - th / 2 + window.scrollY;
+    ty = r.top + r.height / 2 - th / 2;
   } else if (pos === 'top') {
     tx = r.left + r.width / 2 - tw / 2;
-    ty = r.top - th - 16 + window.scrollY;
+    ty = r.top - th - 16;
   } else { // bottom
     tx = r.left + r.width / 2 - tw / 2;
-    ty = r.bottom + 16 + window.scrollY;
+    ty = r.bottom + 16;
   }
 
   // Clamp to viewport
   tx = Math.max(16, Math.min(tx, window.innerWidth - tw - 16));
-  ty = Math.max(16, Math.min(ty, window.innerHeight + window.scrollY - th - 16));
+  ty = Math.max(16, Math.min(ty, window.innerHeight - th - 16));
 
   tooltip.style.left = `${tx}px`;
   tooltip.style.top = `${ty}px`;
