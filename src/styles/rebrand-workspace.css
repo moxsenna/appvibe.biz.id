@@ -251,6 +251,26 @@ img{max-width:100%;display:block}
   .rw-batch-bar{position:fixed;left:12px;right:12px;bottom:12px;margin:0}
 }
 
+/* ── Walkthrough ── */
+
+.rw-wt-backdrop{position:fixed;inset:0;z-index:200;background:rgba(5,11,29,.72);backdrop-filter:blur(2px)}
+.rw-wt-spot{position:fixed;z-index:201;border-radius:12px;box-shadow:0 0 0 9999px rgba(5,11,29,.72);pointer-events:none;transition:all .35s ease}
+.rw-wt-tooltip{position:fixed;z-index:202;background:var(--surface,#fff);border-radius:var(--radius-lg,16px);padding:20px 22px;max-width:340px;box-shadow:0 20px 60px rgba(0,0,0,.35);transition:all .35s ease}
+.rw-wt-tooltip h4{margin:0 0 4px;font-size:15px;color:var(--text,#10203F)}
+.rw-wt-tooltip>p{margin:0 0 14px;font-size:13px;color:var(--muted,#66748D);line-height:1.55}
+.rw-wt-actions{display:flex;gap:8px;align-items:center}
+.rw-wt-dots{display:flex;gap:6px;margin-right:auto}
+.rw-wt-dot{width:8px;height:8px;border-radius:50%;background:var(--line,#C9D4E5);transition:all .2s}
+.rw-wt-dot.active{background:var(--blue,#126BFF);width:20px;border-radius:99px}
+.rw-wt-skip{font-size:12px;color:var(--muted);background:none;border:0;cursor:pointer;padding:6px 8px}
+.rw-wt-btn{min-height:38px;padding:8px 16px;border:0;border-radius:var(--radius-sm,10px);font:700 12px/1 'Plus Jakarta Sans',sans-serif;cursor:pointer;transition:background .14s}
+.rw-wt-btn--primary{background:var(--blue,#126BFF);color:#fff}
+.rw-wt-btn--primary:hover{background:var(--blue-hover,#2579ff)}
+.rw-wt-btn--ghost{background:transparent;color:var(--muted);border:1px solid var(--line,#C9D4E5)}
+.rw-wt-help{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;border:1.5px solid var(--line,#C9D4E5);background:transparent;font:700 15px/1 'Space Grotesk',sans-serif;color:var(--muted,#66748D);cursor:pointer;transition:border-color .14s,color .14s}
+.rw-wt-help:hover{border-color:var(--blue,#126BFF);color:var(--blue,#126BFF)}
+@media(max-width:639px){.rw-wt-tooltip{left:16px!important;right:16px!important;max-width:none;bottom:24px!important;top:auto!important}}
+
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:0s!important;transition-duration:0s!important;scroll-behavior:auto!important}
 }

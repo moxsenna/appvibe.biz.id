@@ -11,8 +11,9 @@ import {
   deriveBrandContext, TONE_PRESETS,
 } from './brand-derive.js';
 import {
-  clearRebrandWorkspace, detectStalePacks, loadGeneratedPack,
-  loadRebrandWorkspace, saveBrandFile, saveGeneratedPack, saveProject,
+  clearRebrandWorkspace, detectStalePacks, isWalkthroughSeen, loadGeneratedPack,
+  loadRebrandWorkspace, markWalkthroughSeen, saveBrandFile, saveGeneratedPack, saveProject,
+  clearWalkthroughFlag,
 } from './storage.js';
 
 const CATEGORY_FILTERS = [
@@ -55,12 +56,14 @@ export async function initRebrandWorkspace({ rootId = 'rebrandWorkspace' } = {})
     detailAppId: null, searchQuery: '', batchApps: new Set(), batchRunning: false,
     statusMessage: '', statusType: 'idle', copyMessage: '', autosaveLabel: '',
     lastFocusedTrigger: null,
+    walkthrough: { active: false, step: 0 },
   };
+  root._walkthroughState = state;
 
   root.addEventListener('input', (e) => handleInput(e, state));
   root.addEventListener('change', (e) => handleChange(e, state));
-  root.addEventListener('click', (e) => handleClick(e, state));
-  document.addEventListener('keydown', (e) => handleKeydown(e, state));
+  root.addEventListener('click', (e) => handleWalkthroughClick(e, state) || handleClick(e, state));
+  document.addEventListener('keydown', (e) => handleWalkthroughKey(e, state) || handleKeydown(e, state));
   renderLoading(root);
 
   try {
@@ -174,6 +177,11 @@ function render(state) {
     ${state.brandFullModalOpen ? renderBrandEditModal(state) : ''}
   `;
   focusOpenedModalIfNeeded(state);
+
+  // Start walkthrough for first-time visitors
+  if (!state.walkthrough.active && !isWalkthroughSeen(state.memberKey)) {
+    requestAnimationFrame(() => startWalkthrough(state));
+  }
 }
 
 function renderStatus(state) {
@@ -1098,3 +1106,203 @@ function cssEscape(value) {
   if (typeof CSS !== 'undefined' && CSS.escape) return CSS.escape(String(value));
   return String(value).replace(/[^a-zA-Z0-9_-]/g, '\\$&');
 }
+
+// ── Walkthrough ──
+
+const WALKTHROUGH_STEPS = [
+  {
+    selector: '.rw-brand-setup',
+    title: 'Isi Brand File',
+    desc: 'Nama brand, target market, dan CTA utama — ini dipakai ulang untuk semua aplikasi yang kamu rebrand. Isi minimal 3 field wajib lalu klik <b>Kunci Identitas</b>.',
+    position: { desktop: 'right', fallback: 'bottom' },
+  },
+  {
+    selector: '.rw-app-card.owned',
+    title: 'Pilih Aplikasi & Scope',
+    desc: 'Pilih app dari vault kamu, beri <b>nama baru</b> (contoh: "Campaign Blueprint AI"), lalu pilih scope: <b>Quick</b> (cepat), <b>Market</b> (menengah + landing page), atau <b>Full Launch</b> (lengkap).',
+    position: { desktop: 'right', fallback: 'bottom' },
+  },
+  {
+    selector: '.rw-app-card.owned .rw-advanced-toggle',
+    title: 'Lengkapi Data Penawaran',
+    desc: 'Untuk scope Market/Full Launch — buka <b>Opsi lanjutan ▼</b> dan isi section <b>Data Penawaran</b>: harga, yang didapat buyer, bonus. Bikin prompt landing page lebih siap pakai.',
+    position: { desktop: 'top', fallback: 'bottom' },
+  },
+  {
+    selector: '.rw-app-card.owned [data-generate-pack]',
+    title: 'Generate & Rebrand',
+    desc: 'Klik <b>Buat Prompt</b> → hasil prompt bisa kamu salin per bagian atau download sebagai .md. Prompt sudah menyebut <b>template HTML</b> yang bisa diunduh dari Portal Akses → Template Landing Page. Copas prompt ke LLM favorit kamu.',
+    position: { desktop: 'top', fallback: 'bottom' },
+  },
+];
+
+function startWalkthrough(state) {
+  state.walkthrough = { active: true, step: 0 };
+  createWalkthroughDOM(state);
+  positionWalkthrough(state);
+}
+
+function createWalkthroughDOM(state) {
+  removeWalkthroughDOM();
+  const backdrop = document.createElement('div');
+  backdrop.className = 'rw-wt-backdrop';
+  backdrop.id = 'rwWtBackdrop';
+  backdrop.addEventListener('click', () => dismissWalkthrough(state));
+
+  const spot = document.createElement('div');
+  spot.className = 'rw-wt-spot';
+  spot.id = 'rwWtSpot';
+
+  const tooltip = document.createElement('div');
+  tooltip.className = 'rw-wt-tooltip';
+  tooltip.id = 'rwWtTooltip';
+  tooltip.addEventListener('click', (e) => e.stopPropagation());
+
+  document.body.appendChild(backdrop);
+  document.body.appendChild(spot);
+  document.body.appendChild(tooltip);
+}
+
+function removeWalkthroughDOM() {
+  document.getElementById('rwWtBackdrop')?.remove();
+  document.getElementById('rwWtSpot')?.remove();
+  document.getElementById('rwWtTooltip')?.remove();
+}
+
+function positionWalkthrough(state) {
+  const step = WALKTHROUGH_STEPS[state.walkthrough.step];
+  if (!step) { dismissWalkthrough(state); return; }
+
+  const el = document.querySelector(step.selector);
+  const spot = document.getElementById('rwWtSpot');
+  const tooltip = document.getElementById('rwWtTooltip');
+
+  // If target missing (e.g. offer fields hidden for quick scope), advance.
+  if (!el) {
+    if (state.walkthrough.step < WALKTHROUGH_STEPS.length - 1) {
+      state.walkthrough.step++;
+      requestAnimationFrame(() => positionWalkthrough(state));
+    } else {
+      dismissWalkthrough(state);
+    }
+    return;
+  }
+
+  const r = el.getBoundingClientRect();
+  const pad = 6;
+  spot.style.left = `${r.left - pad}px`;
+  spot.style.top = `${r.top - pad + window.scrollY}px`;
+  spot.style.width = `${r.width + pad * 2}px`;
+  spot.style.height = `${r.height + pad * 2}px`;
+
+  const stepIndex = state.walkthrough.step;
+  const isLast = stepIndex === WALKTHROUGH_STEPS.length - 1;
+  tooltip.innerHTML = `
+    <h4>${step.title} <span style="font-weight:400;color:var(--muted-light);font-size:11px">${stepIndex + 1}/4</span></h4>
+    <p>${step.desc}</p>
+    <div class="rw-wt-actions">
+      <div class="rw-wt-dots">${WALKTHROUGH_STEPS.map((_, i) => `<span class="rw-wt-dot ${i === stepIndex ? 'active' : ''}"></span>`).join('')}</div>
+      <button class="rw-wt-skip" id="rwWtSkip">Lewati</button>
+      ${stepIndex > 0 ? '<button class="rw-wt-btn rw-wt-btn--ghost" id="rwWtPrev">← Kembali</button>' : ''}
+      <button class="rw-wt-btn rw-wt-btn--primary" id="rwWtNext">${isLast ? 'Selesai ✓' : 'Lanjut →'}</button>
+    </div>`;
+
+  document.getElementById('rwWtSkip')?.addEventListener('click', () => dismissWalkthrough(state));
+  document.getElementById('rwWtPrev')?.addEventListener('click', () => { state.walkthrough.step--; positionWalkthrough(state); });
+  document.getElementById('rwWtNext')?.addEventListener('click', () => {
+    if (state.walkthrough.step >= WALKTHROUGH_STEPS.length - 1) { dismissWalkthrough(state); return; }
+    state.walkthrough.step++;
+    positionWalkthrough(state);
+  });
+
+  // Position tooltip
+  const isMobile = window.innerWidth < 640;
+  const pos = isMobile ? 'bottom' : (step.position.desktop || 'right');
+  const tw = 340, th = tooltip.offsetHeight || 200;
+  let tx, ty;
+
+  if (pos === 'right') {
+    tx = r.right + 20;
+    ty = r.top + r.height / 2 - th / 2 + window.scrollY;
+  } else if (pos === 'left') {
+    tx = r.left - tw - 20;
+    ty = r.top + r.height / 2 - th / 2 + window.scrollY;
+  } else if (pos === 'top') {
+    tx = r.left + r.width / 2 - tw / 2;
+    ty = r.top - th - 16 + window.scrollY;
+  } else { // bottom
+    tx = r.left + r.width / 2 - tw / 2;
+    ty = r.bottom + 16 + window.scrollY;
+  }
+
+  // Clamp to viewport
+  tx = Math.max(16, Math.min(tx, window.innerWidth - tw - 16));
+  ty = Math.max(16, Math.min(ty, window.innerHeight + window.scrollY - th - 16));
+
+  tooltip.style.left = `${tx}px`;
+  tooltip.style.top = `${ty}px`;
+}
+
+function dismissWalkthrough(state) {
+  removeWalkthroughDOM();
+  state.walkthrough = { active: false, step: 0 };
+  markWalkthroughSeen(state.memberKey);
+}
+
+function restartWalkthrough(state) {
+  clearWalkthroughFlag(state.memberKey);
+  state.walkthrough = { active: false, step: 0 };
+  removeWalkthroughDOM();
+  startWalkthrough(state);
+}
+
+function handleWalkthroughKey(event, state) {
+  if (!state.walkthrough.active) return false;
+  if (event.key === 'Escape') { dismissWalkthrough(state); return true; }
+  if (event.key === 'ArrowRight') {
+    if (state.walkthrough.step >= WALKTHROUGH_STEPS.length - 1) { dismissWalkthrough(state); return true; }
+    state.walkthrough.step++;
+    positionWalkthrough(state);
+    return true;
+  }
+  if (event.key === 'ArrowLeft') {
+    if (state.walkthrough.step <= 0) return true;
+    state.walkthrough.step--;
+    positionWalkthrough(state);
+    return true;
+  }
+  return false;
+}
+
+function handleWalkthroughClick(event, state) {
+  if (!state.walkthrough.active) return false;
+  // Block all normal clicks during walkthrough
+  const tooltipEl = document.getElementById('rwWtTooltip');
+  if (tooltipEl && !tooltipEl.contains(event.target)) {
+    return true; // consume click outside tooltip
+  }
+  return false;
+}
+
+// ── Header help button bind ──
+document.addEventListener('DOMContentLoaded', () => {
+  // Add help button to header if workspace becomes active later
+  const observer = new MutationObserver(() => {
+    const headerRight = document.querySelector('.rw-header-right');
+    if (headerRight && !headerRight.querySelector('.rw-wt-help')) {
+      const helpBtn = document.createElement('button');
+      helpBtn.className = 'rw-wt-help';
+      helpBtn.textContent = '?';
+      helpBtn.title = 'Tutorial';
+      headerRight.prepend(helpBtn);
+      helpBtn.addEventListener('click', () => {
+        // re-open walkthrough via global state (find the workspace instance)
+        const root = document.getElementById('rebrandWorkspace');
+        if (!root) return;
+        // We need to reach the state object. Use a global ref pattern.
+        if (root._walkthroughState) restartWalkthrough(root._walkthroughState);
+      });
+    }
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});

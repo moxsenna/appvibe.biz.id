@@ -55,6 +55,7 @@ export function getRebrandStorageKeys(memberKey) {
     brandFile: keyFor(memberKey, 'brand-file'),
     brandUpdatedAt: keyFor(memberKey, 'brand-updated-at'),
     activeStep: keyFor(memberKey, 'active-step'),
+    walkthroughSeen: keyFor(memberKey, 'walkthrough-seen'),
   };
 }
 
@@ -117,6 +118,26 @@ export function loadActiveStep(memberKey) {
 
 export function saveActiveStep(memberKey, activeStep) {
   return write(getRebrandStorageKeys(memberKey).activeStep, activeStep);
+}
+
+// ── Walkthrough ──
+
+export function isWalkthroughSeen(memberKey) {
+  try {
+    return localStorage.getItem(getRebrandStorageKeys(memberKey).walkthroughSeen) === '1';
+  } catch { return false; }
+}
+
+export function markWalkthroughSeen(memberKey) {
+  try {
+    localStorage.setItem(getRebrandStorageKeys(memberKey).walkthroughSeen, '1');
+  } catch { /* non-critical */ }
+}
+
+export function clearWalkthroughFlag(memberKey) {
+  try {
+    localStorage.removeItem(getRebrandStorageKeys(memberKey).walkthroughSeen);
+  } catch { /* non-critical */ }
 }
 
 // ── Project (per app) ──
